@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BlackRoots &mdash; D2C Command Center & Admin Dashboard</title>
   <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -397,35 +400,22 @@
       if (tabId === 'settings') loadSettings();
     }
 
-    async function handleAdminLogin(e) {
+        function handleAdminLogin(e) {
       e.preventDefault();
       const pass = document.getElementById('admin-pass-input').value.trim();
       const btn = document.getElementById('login-btn');
       const err = document.getElementById('login-error');
-
-      btn.disabled = true;
-      btn.innerText = 'Verifying...';
-      err.classList.add('hidden');
-
       const savedPass = localStorage.getItem('br_admin_pass') || 'blackroots2026';
 
-      // 1. Try server verification
-      let serverRes = await apiFetch('login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: pass })
-      });
+      err.classList.add('hidden');
 
-      btn.disabled = false;
-      btn.innerText = 'Access Dashboard →';
-
-      if ((serverRes && serverRes.success) || pass === savedPass || pass === 'blackroots2026') {
+      if (pass === savedPass || pass === 'blackroots2026') {
         sessionStorage.setItem('br_admin_auth', '1');
         document.getElementById('AdminLoginScreen').classList.add('hidden');
         document.getElementById('AdminDashboardApp').classList.remove('hidden');
         loadDashboard();
       } else {
-        err.textContent = (serverRes && serverRes.error) ? serverRes.error : 'Incorrect admin password.';
+        err.textContent = 'Incorrect admin password. Please try again.';
         err.classList.remove('hidden');
       }
     }

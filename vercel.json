@@ -4,7 +4,10 @@
   "routes": [
     {
       "src": "/admin",
-      "dest": "/admin/index.html"
+      "dest": "/admin/index.html",
+      "headers": {
+        "cache-control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
+      }
     },
     {
       "src": "/(.*)",
