@@ -684,16 +684,31 @@ window.switchToSimPage = switchToSimPage;
             const price = window.selectedPack ? window.selectedPack.price : 499;
             const bundleName = window.selectedPack ? window.selectedPack.name : '1 Bottle (250ml)';
             
-            fetch('api/abandoned.php', {
+            const abPayload = {
+              name: nameInput ? nameInput.value.trim() : 'Visitor',
+              phone: rawPhone,
+              bundle: bundleName,
+              price: price
+            };
+            // Try Vercel Serverless then Hostinger
+            fetch('api/abandoned', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                name: nameInput ? nameInput.value.trim() : 'Visitor',
-                phone: rawPhone,
-                bundle: bundleName,
-                price: price
-              })
-            }).catch(function() {});
+              body: JSON.stringify(abPayload)
+            }).catch(function() {
+              fetch('api/abandoned.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(abPayload)
+              }).catch(function() {});
+            });
+
+            // Local cache for immediate admin view
+            try {
+              let cur = JSON.parse(localStorage.getItem('br_abandoned_leads') || '[]');
+              cur.unshift(abPayload);
+              localStorage.setItem('br_abandoned_leads', JSON.stringify(cur.slice(0, 50)));
+            } catch(e) {}
           }
         }
 
@@ -706,7 +721,7 @@ window.switchToSimPage = switchToSimPage;
       }
 
       // 2. Full Order Submission Handler
-      form.onsubmit = function(e) {
+      form.onsubmit = async function(e) {
         e.preventDefault();
         const submitBtn = form.querySelector('button[type="submit"]');
         const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Confirm Order';
@@ -728,19 +743,38 @@ window.switchToSimPage = switchToSimPage;
           submitBtn.innerHTML = '<span>⏳ Confirming Logistics Order...</span>';
         }
 
-        fetch('api/order.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(orderPayload)
-        })
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnText;
-          }
+        let orderData = null;
+        const endpoints = ['api/order', 'api/order.js', 'api/order.php'];
+        for (let ep of endpoints) {
+          try {
+            let res = await fetch(ep, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(orderPayload)
+            });
+            if (res.ok) {
+              orderData = await res.json();
+              if (orderData && orderData.success) break;
+            }
+          } catch(err) {}
+        }
 
-          const orderId = (data && data.order_id) ? data.order_id : ('#BR-' + Math.floor(1000 + Math.random() * 9000));
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnText;
+        }
+
+        const orderId = (orderData && orderData.order_id) ? orderData.order_id : ('#BR-' + Math.floor(1000 + Math.random() * 9000));
+        orderPayload.order_id = orderId;
+        orderPayload.status = 'New';
+        orderPayload.created_at = new Date().toLocaleString();
+
+        // Local cache for immediate admin view
+        try {
+          let curOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
+          curOrders.unshift(orderPayload);
+          localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 100)));
+        } catch(e) {}
 
           // Hide form, show success screen
           form.classList.add('hidden');
