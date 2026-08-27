@@ -752,6 +752,10 @@ window.switchToSimPage = switchToSimPage;
         const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Confirm Order';
 
         const allInputs = form.querySelectorAll('input, textarea');
+        let basePrice = window.selectedPack ? window.selectedPack.price : 499;
+        let appliedCoupon = window.appliedCouponData ? window.appliedCouponData.code : (localStorage.getItem('br_active_coupon') || '');
+        let finalPrice = window.appliedCouponData ? window.appliedCouponData.finalPrice : basePrice;
+
         let orderPayload = {
           name: allInputs[0] ? allInputs[0].value.trim() : '',
           phone: allInputs[1] ? allInputs[1].value.trim() : '',
@@ -759,8 +763,10 @@ window.switchToSimPage = switchToSimPage;
           city: allInputs[3] ? allInputs[3].value.trim() : '',
           address: allInputs[4] ? allInputs[4].value.trim() : '',
           bundle: window.selectedPack ? window.selectedPack.name : '1 Bottle (250ml)',
-          price: window.selectedPack ? window.selectedPack.price : 499,
-          payment_method: 'COD'
+          price: finalPrice,
+          payment_method: 'COD',
+          coupon: appliedCoupon,
+          discount: basePrice - finalPrice
         };
 
         if (submitBtn) {
@@ -795,11 +801,27 @@ window.switchToSimPage = switchToSimPage;
           orderPayload.status = 'New';
           orderPayload.created_at = new Date().toLocaleString();
 
-          // Local cache for immediate admin view
+          // Local cache for immediate admin view & Influencer Credit
           try {
             let curOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
             curOrders.unshift(orderPayload);
             localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 100)));
+
+            // Credit Commission to Influencer
+            if (orderPayload.coupon) {
+              let db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
+              let inf = db.find(u => u.code && u.code.toUpperCase() === orderPayload.coupon.toUpperCase());
+              if (inf) {
+                let commRate = inf.comm_rate || 10;
+                let commAmt = Math.round(orderPayload.price * (commRate / 100));
+                inf.total_orders = (Number(inf.total_orders) || 0) + 1;
+                inf.total_sales = (Number(inf.total_sales) || 0) + Number(orderPayload.price);
+                inf.total_earned = (Number(inf.total_earned) || 0) + commAmt;
+                inf.unpaid_balance = (Number(inf.unpaid_balance) || 0) + commAmt;
+                orderPayload.influencer = inf.name;
+                localStorage.setItem('br_influencers_db', JSON.stringify(db));
+              }
+            }
           } catch(e) {}
 
           // Hide form, show success screen
@@ -1143,3 +1165,109 @@ window.closeIngredientModal = closeIngredientModal;
   }
 })();
 
+
+
+
+/* ==========================================================================
+   🤝 BLACKROOTS VIP INFLUENCER & COUPON TRACKING ENGINE
+   ========================================================================== */
+(function() {
+  'use strict';
+
+  // 1. Detect and persist URL referral codes (?ref=CODE or ?coupon=CODE)
+  function initInfluencerReferral() {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const refCode = (urlParams.get('ref') || urlParams.get('coupon') || '').trim().toUpperCase();
+      
+      if (refCode) {
+        localStorage.setItem('br_active_coupon', refCode);
+        localStorage.setItem('br_influencer_ref', refCode);
+
+        // Track click count for this influencer
+        let db = [];
+        try {
+          db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
+        } catch(e) {}
+        
+        let creator = db.find(u => u.code && u.code.toUpperCase() === refCode);
+        if (creator) {
+          creator.clicks = (Number(creator.clicks) || 0) + 1;
+          localStorage.setItem('br_influencers_db', JSON.stringify(db));
+        }
+
+        // Show subtle notification banner
+        showAffiliateBanner(refCode);
+      }
+    } catch(e) {}
+  }
+
+  function showAffiliateBanner(code) {
+    if (document.getElementById('AffiliatePromoBanner')) return;
+    const banner = document.createElement('div');
+    banner.id = 'AffiliatePromoBanner';
+    banner.className = 'fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 z-40 bg-[#11141b]/95 backdrop-blur-xl border border-[#d4af37] text-white p-3.5 rounded-2xl shadow-2xl flex items-center justify-between gap-3 text-xs max-w-md';
+    banner.innerHTML = `
+      <div class="flex items-center gap-2.5">
+        <span class="text-base">🎉</span>
+        <div>
+          <span class="font-bold text-amber-300">Creator Promo: <code class="bg-black/60 px-1.5 py-0.5 rounded text-white">${code}</code></span>
+          <p class="text-[11px] text-gray-300">10% OFF will automatically apply at checkout!</p>
+        </div>
+      </div>
+      <button onclick="this.parentElement.remove()" class="text-gray-400 hover:text-white font-bold text-sm px-1.5 cursor-pointer">&times;</button>
+    `;
+    document.body.appendChild(banner);
+  }
+
+  // 2. Global Coupon Validator & Applicator
+  window.applyCheckoutCoupon = function() {
+    const input = document.getElementById('OrderCouponInput');
+    const note = document.getElementById('CouponDiscountNote');
+    const priceDisplay = document.getElementById('OrderModalPriceDisplay');
+    if (!input) return;
+
+    const rawCode = input.value.trim().toUpperCase();
+    if (!rawCode) {
+      alert('Please enter a coupon code.');
+      return;
+    }
+
+    let db = [];
+    try {
+      db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
+    } catch(e) {}
+
+    let creator = db.find(u => u.code && u.code.toUpperCase() === rawCode);
+    let commRate = creator ? (creator.comm_rate || 10) : 10;
+    let basePrice = window.selectedPack ? window.selectedPack.price : 499;
+
+    // Calculate 10% discount
+    let discount = Math.round(basePrice * 0.10);
+    let finalPrice = basePrice - discount;
+
+    window.appliedCouponData = {
+      code: rawCode,
+      discount: discount,
+      finalPrice: finalPrice,
+      influencer_id: creator ? creator.id : null,
+      comm_rate: commRate
+    };
+
+    if (note) {
+      note.textContent = `✓ Code ${rawCode} Applied (-₹${discount})`;
+      note.classList.remove('hidden');
+    }
+
+    if (priceDisplay) {
+      priceDisplay.innerHTML = `<span class="line-through text-gray-400 text-sm font-normal">₹${basePrice}</span> <span class="text-emerald-400 font-black">₹${finalPrice}</span>`;
+    }
+  };
+
+  // Run on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initInfluencerReferral);
+  } else {
+    initInfluencerReferral();
+  }
+})();

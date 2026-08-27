@@ -31,7 +31,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="./assets/theme.css">
 
   <style>
     *, *::before, *::after, html, body {
@@ -51,7 +51,7 @@
     <div class="w-full max-w-md p-8 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-[0_20px_60px_rgba(0,0,0,0.9)] text-center space-y-6">
       
       <div class="flex flex-col items-center gap-3">
-        <img src="../assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-16 h-16 rounded-full border-2 border-[#d4af37] shadow-xl">
+        <img src="./assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-16 h-16 rounded-full border-2 border-[#d4af37] shadow-xl">
         <div>
           <h2 class="font-serif text-2xl font-bold text-white uppercase tracking-wider">BlackRoots Admin</h2>
           <p class="text-xs text-[#d4af37] font-bold uppercase tracking-widest">D2C Command Center</p>
@@ -81,7 +81,7 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         
         <div class="flex items-center gap-3">
-          <img src="../assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-9 h-9 rounded-full border border-[#d4af37]">
+          <img src="./assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-9 h-9 rounded-full border border-[#d4af37]">
           <div class="flex flex-col">
             <span class="font-serif text-lg font-bold text-white uppercase tracking-wider">BlackRoots Admin</span>
             <span class="text-[9px] uppercase tracking-widest text-[#d4af37] font-bold">D2C Live Operations</span>
@@ -92,12 +92,16 @@
         <nav class="hidden md:flex items-center gap-2">
           <button onclick="switchTab('overview')" class="nav-tab px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#d4af37] text-black" data-tab="overview">📊 Overview</button>
           <button onclick="switchTab('orders')" class="nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="orders">🛍️ Orders</button>
+          <button onclick="switchTab('influencers')" class="nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="influencers">🤝 Creators &amp; Affiliates</button>
           <button onclick="switchTab('abandoned')" class="nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="abandoned">🛒 Abandoned Leads</button>
           <button onclick="switchTab('settings')" class="nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="settings">⚙️ Marketing &amp; APIs</button>
         </nav>
 
         <!-- Right Quick Actions -->
         <div class="flex items-center gap-3">
+          <a href="./influencer.html" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 text-xs font-bold text-amber-300 transition-all cursor-pointer">
+            <span>✨ Creator Portal ↗</span>
+          </a>
           <button onclick="exportCSVDirect()" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-[#d4af37]/50 text-xs font-bold text-amber-300 transition-all cursor-pointer">
             <span>📥 Export CSV</span>
           </button>
@@ -109,11 +113,12 @@
       </div>
 
       <!-- Mobile Tab Bar -->
-      <div class="md:hidden flex items-center justify-around border-t border-white/10 p-2 text-xs">
-        <button onclick="switchTab('overview')" class="mob-tab font-bold text-[#d4af37]" data-tab="overview">📊 Overview</button>
-        <button onclick="switchTab('orders')" class="mob-tab font-bold text-gray-400" data-tab="orders">🛍️ Orders</button>
-        <button onclick="switchTab('abandoned')" class="mob-tab font-bold text-gray-400" data-tab="abandoned">🛒 Leads</button>
-        <button onclick="switchTab('settings')" class="mob-tab font-bold text-gray-400" data-tab="settings">⚙️ Settings</button>
+      <div class="md:hidden flex items-center justify-around border-t border-white/10 p-2 text-[11px] overflow-x-auto">
+        <button onclick="switchTab('overview')" class="mob-tab font-bold text-[#d4af37] px-2 py-1" data-tab="overview">📊 Overview</button>
+        <button onclick="switchTab('orders')" class="mob-tab font-bold text-gray-400 px-2 py-1" data-tab="orders">🛍️ Orders</button>
+        <button onclick="switchTab('influencers')" class="mob-tab font-bold text-gray-400 px-2 py-1" data-tab="influencers">🤝 Creators</button>
+        <button onclick="switchTab('abandoned')" class="mob-tab font-bold text-gray-400 px-2 py-1" data-tab="abandoned">🛒 Leads</button>
+        <button onclick="switchTab('settings')" class="mob-tab font-bold text-gray-400 px-2 py-1" data-tab="settings">⚙️ Settings</button>
       </div>
     </header>
 
@@ -231,7 +236,109 @@
 
       </section>
 
-      <!-- TAB 3: ABANDONED LEADS -->
+      <!-- TAB 3: INFLUENCERS & AFFILIATES PROGRAM (NEW!) -->
+      <section id="tab-influencers" class="tab-content hidden space-y-6">
+        
+        <!-- Influencer Top Metric Overview -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="p-5 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-xl space-y-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-gray-400 block">Active Creators</span>
+            <span id="metric-inf-count" class="text-3xl font-black text-white block">0</span>
+            <span class="text-[10px] text-emerald-400 font-semibold">🤝 Verified Ambassadors</span>
+          </div>
+
+          <div class="p-5 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-gray-400 block">Affiliate Orders</span>
+            <span id="metric-inf-orders" class="text-3xl font-black text-amber-300 block">0</span>
+            <span class="text-[10px] text-gray-400 font-medium">Referred Customer Sales</span>
+          </div>
+
+          <div class="p-5 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-gray-400 block">Influencer Revenue</span>
+            <span id="metric-inf-revenue" class="text-3xl font-black text-white block">₹0</span>
+            <span class="text-[10px] text-emerald-400 font-medium">Gross Sales Driven</span>
+          </div>
+
+          <div class="p-5 rounded-3xl bg-[#11141b] border border-amber-500/40 shadow-xl space-y-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-amber-300 block">Pending Payouts</span>
+            <span id="metric-inf-pending-payout" class="text-3xl font-black text-amber-400 block">₹0</span>
+            <span class="text-[10px] text-amber-300/80 font-bold">💳 Awaiting UPI Transfer</span>
+          </div>
+        </div>
+
+        <!-- Creator Actions Header -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">VIP Influencer &amp; Creator Management</h2>
+            <p class="text-xs text-gray-400">Create custom promo codes, assign individual commission % (10%, 15%, 20%), and approve UPI payouts.</p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <button onclick="openAddInfluencerModal()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#d4af37] to-amber-500 text-black font-black text-xs hover:brightness-110 shadow-lg cursor-pointer">
+              ➕ Add New Influencer
+            </button>
+          </div>
+        </div>
+
+        <!-- Influencer Table -->
+        <div class="p-6 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl overflow-x-auto">
+          <table class="w-full text-left text-xs text-gray-300 min-w-[800px]">
+            <thead class="text-[10px] uppercase tracking-wider text-gray-400 border-b border-white/10 pb-2">
+              <tr>
+                <th class="py-3 px-3">Creator Name &amp; Handle</th>
+                <th class="py-3 px-3">Promo Code</th>
+                <th class="py-3 px-3">Commission %</th>
+                <th class="py-3 px-3">Orders Driven</th>
+                <th class="py-3 px-3">Sales Driven (₹)</th>
+                <th class="py-3 px-3">Total Earned</th>
+                <th class="py-3 px-3">Unpaid Balance</th>
+                <th class="py-3 px-3">Status</th>
+                <th class="py-3 px-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="all-influencers-table" class="divide-y divide-white/5 font-light">
+              <tr>
+                <td colspan="9" class="py-8 text-center text-gray-500">Loading influencers...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Payout Requests Section -->
+        <div class="p-6 rounded-3xl bg-[#11141b] border border-[#d4af37]/30 shadow-xl space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-serif text-xl font-bold text-white">Creator Withdrawal &amp; Payout Requests</h3>
+              <p class="text-xs text-gray-400">Transfer payment via UPI / Bank App, then click "Mark as Paid" and record the UTR number.</p>
+            </div>
+            <span class="text-xs text-amber-400 font-bold">Min Payout: ₹500</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-gray-300 min-w-[700px]">
+              <thead class="text-[10px] uppercase tracking-wider text-gray-400 border-b border-white/10 pb-2">
+                <tr>
+                  <th class="py-3 px-3">Request ID &amp; Date</th>
+                  <th class="py-3 px-3">Influencer</th>
+                  <th class="py-3 px-3">Requested Amount</th>
+                  <th class="py-3 px-3">Destination UPI ID</th>
+                  <th class="py-3 px-3">Status</th>
+                  <th class="py-3 px-3">UTR / Ref No</th>
+                  <th class="py-3 px-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="admin-payouts-table" class="divide-y divide-white/5 font-light">
+                <tr>
+                  <td colspan="7" class="py-8 text-center text-gray-500">No payout requests pending.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- TAB 4: ABANDONED LEADS -->
       <section id="tab-abandoned" class="tab-content hidden space-y-6">
         
         <div>
@@ -239,16 +346,16 @@
           <p class="text-xs text-gray-400">Recover customers who typed their phone number at checkout but did not complete the order.</p>
         </div>
 
-        <div class="p-6 rounded-3xl bg-[#11141b] border border-red-500/30 shadow-xl overflow-x-auto">
+        <div class="p-6 rounded-3xl bg-[#11141b] border border-red-500/20 shadow-xl overflow-x-auto">
           <table class="w-full text-left text-xs text-gray-300 min-w-[600px]">
             <thead class="text-[10px] uppercase tracking-wider text-gray-400 border-b border-white/10 pb-2">
               <tr>
                 <th class="py-3 px-3">Customer Name</th>
-                <th class="py-3 px-3">Mobile Number</th>
+                <th class="py-3 px-3">Phone Number</th>
                 <th class="py-3 px-3">Bundle Selected</th>
-                <th class="py-3 px-3">Drop-off Time</th>
+                <th class="py-3 px-3">Captured At</th>
                 <th class="py-3 px-3">Status</th>
-                <th class="py-3 px-3 text-right">1-Click WhatsApp Recovery</th>
+                <th class="py-3 px-3 text-right">1-Click Recovery</th>
               </tr>
             </thead>
             <tbody id="abandoned-table" class="divide-y divide-white/5 font-light">
@@ -261,88 +368,79 @@
 
       </section>
 
-      <!-- TAB 4: MARKETING & SETTINGS -->
-      <section id="tab-settings" class="tab-content hidden space-y-8 max-w-4xl">
+      <!-- TAB 5: SETTINGS & MARKETING APIS -->
+      <section id="tab-settings" class="tab-content hidden space-y-6">
         
         <div>
-          <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">Marketing &amp; Integration Settings</h2>
-          <p class="text-xs text-gray-400">Configure Meta Pixel, Server-side CAPI, Google Analytics 4, Search Console, and Shiprocket API credentials.</p>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">Marketing &amp; API Configurations</h2>
+          <p class="text-xs text-gray-400">Configure Meta Pixel CAPI, Google Analytics 4, Shiprocket, and Admin security credentials.</p>
         </div>
 
-        <form id="SettingsForm" onsubmit="handleSaveSettings(event)" class="p-6 sm:p-8 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-6">
+        <form id="SettingsForm" onsubmit="handleSaveSettings(event)" class="space-y-6">
           
-          <!-- Meta Ads Pixel & CAPI -->
-          <div class="space-y-4 border-b border-white/10 pb-6">
-            <h4 class="text-sm font-bold text-amber-300 uppercase tracking-wider flex items-center gap-2">
-              <span>🎯 Meta Ads (Facebook &amp; Instagram) Pixel &amp; Server-Side CAPI</span>
-            </h4>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-6 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-4">
+            <h3 class="font-serif text-lg font-bold text-amber-300">1. Meta Pixel &amp; Conversions API (CAPI)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs text-gray-300 font-semibold mb-1">Meta Pixel ID</label>
-                <input type="text" id="set-meta-pixel" placeholder="e.g. 14920485918204" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+                <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Meta Pixel ID</label>
+                <input type="text" id="set-meta-pixel" placeholder="e.g. 123456789012345" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
               </div>
               <div>
-                <label class="block text-xs text-gray-300 font-semibold mb-1">Meta Conversions API (CAPI) Token</label>
+                <label class="block text-xs font-bold text-gray-300 uppercase mb-1">CAPI Access Token</label>
                 <input type="password" id="set-meta-token" placeholder="EAAB..." class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
               </div>
             </div>
-            <p class="text-[11px] text-gray-400 font-light">Server-side CAPI guarantees 100% Purchase event tracking even if customer has AdBlock or iOS 14+ privacy enabled.</p>
           </div>
 
-          <!-- Google Analytics 4 & Search Console -->
-          <div class="space-y-4 border-b border-white/10 pb-6">
-            <h4 class="text-sm font-bold text-amber-300 uppercase tracking-wider flex items-center gap-2">
-              <span>📈 Google Analytics 4 (GA4) &amp; Google Search Console</span>
-            </h4>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-6 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-4">
+            <h3 class="font-serif text-lg font-bold text-amber-300">2. Google Analytics 4 &amp; Search Console</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs text-gray-300 font-semibold mb-1">GA4 Measurement ID</label>
-                <input type="text" id="set-ga4-id" placeholder="e.g. G-XXXXXXXXXX" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+                <label class="block text-xs font-bold text-gray-300 uppercase mb-1">GA4 Measurement ID</label>
+                <input type="text" id="set-ga4-id" placeholder="G-XXXXXXXXXX" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
               </div>
               <div>
-                <label class="block text-xs text-gray-300 font-semibold mb-1">Google Search Console Verification Tag</label>
-                <input type="text" id="set-gsc-tag" placeholder="e.g. AbC123XyZ..." class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+                <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Google Site Verification Tag</label>
+                <input type="text" id="set-gsc-tag" placeholder="google-site-verification=..." class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
               </div>
             </div>
           </div>
 
-          <!-- Shiprocket Credentials -->
-          <div class="space-y-4 border-b border-white/10 pb-6">
-            <h4 class="text-sm font-bold text-amber-300 uppercase tracking-wider flex items-center gap-2">
-              <span>🚀 Shiprocket Courier API Integration</span>
-            </h4>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs text-gray-300 font-semibold mb-1">Shiprocket Account Email</label>
-                <input type="email" id="set-shiprocket-email" placeholder="e.g. blackroots.in@gmail.com" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
-              </div>
-              <div>
-                <label class="block text-xs text-gray-300 font-semibold mb-1">Shiprocket Password</label>
-                <input type="password" id="set-shiprocket-password" placeholder="Shiprocket Password" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
-              </div>
-            </div>
-            <div class="flex items-center gap-2 pt-1">
-              <input type="checkbox" id="set-shiprocket-auto" class="rounded text-[#d4af37] focus:ring-0">
-              <label for="set-shiprocket-auto" class="text-xs text-gray-300">Auto-push new incoming orders directly to Shiprocket</label>
+          <div class="p-6 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-4">
+            <h3 class="font-serif text-lg font-bold text-amber-300">3. WhatsApp &amp; Customer Support</h3>
+            <div>
+              <label class="block text-xs font-bold text-gray-300 uppercase mb-1">WhatsApp Business Support Number</label>
+              <input type="text" id="set-whatsapp-num" placeholder="+919580835179" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
             </div>
           </div>
 
-          <!-- Store & Admin Security -->
-          <div class="space-y-4">
-            <h4 class="text-sm font-bold text-amber-300 uppercase tracking-wider">🔒 Store Details &amp; Admin Password</h4>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-6 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-4">
+            <h3 class="font-serif text-lg font-bold text-amber-300">4. Shiprocket Logistics Integration</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs text-gray-300 font-semibold mb-1">Official WhatsApp Support Number</label>
-                <input type="text" id="set-whatsapp-num" placeholder="+919580835179" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+                <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Shiprocket Email</label>
+                <input type="email" id="set-shiprocket-email" placeholder="logistics@blackroots.in" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
               </div>
               <div>
-                <label class="block text-xs text-gray-300 font-semibold mb-1">Change Admin Password</label>
-                <input type="password" id="set-new-pass" placeholder="Leave blank to keep current" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+                <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Shiprocket Password</label>
+                <input type="password" id="set-shiprocket-password" placeholder="••••••••" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
               </div>
+            </div>
+            <label class="flex items-center gap-2 text-xs text-gray-300 cursor-pointer pt-2">
+              <input type="checkbox" id="set-shiprocket-auto" class="rounded accent-[#d4af37]">
+              <span>Auto-Push New Orders directly to Shiprocket for Express Label Generation</span>
+            </label>
+          </div>
+
+          <div class="p-6 rounded-3xl bg-[#11141b] border border-red-500/30 shadow-xl space-y-4">
+            <h3 class="font-serif text-lg font-bold text-red-400">5. Admin Master Security Password</h3>
+            <div>
+              <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Change Admin Password</label>
+              <input type="password" id="set-new-pass" placeholder="Enter new password (leave blank to keep current)" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
             </div>
           </div>
 
-          <button type="submit" id="save-settings-btn" class="w-full bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-xs sm:text-sm py-4 rounded-xl shadow-xl hover:brightness-110 active:scale-95 transition-all uppercase tracking-wider cursor-pointer">
+          <button type="submit" id="save-settings-btn" class="w-full bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-sm py-4 rounded-2xl shadow-xl hover:brightness-110 active:scale-95 transition-all uppercase tracking-wider cursor-pointer">
             💾 Save All Settings &amp; API Configurations
           </button>
         </form>
@@ -353,96 +451,180 @@
 
   </div>
 
-  <!-- Universal Client & Serverless Logic Engine -->
+  <!-- MODAL: ADD / EDIT INFLUENCER -->
+  <div id="AddInfluencerModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="relative w-full max-w-md bg-[#11141b] border-2 border-[#d4af37] rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl text-left">
+      <button type="button" onclick="closeAddInfluencerModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl font-bold cursor-pointer">&times;</button>
+      
+      <div>
+        <h3 class="font-serif text-2xl font-bold text-white">Add VIP Influencer</h3>
+        <p class="text-xs text-gray-400">Create creator account and assign custom promo code.</p>
+      </div>
+
+      <form id="AddInfluencerForm" onsubmit="handleSaveNewInfluencer(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-gray-300 uppercase mb-1">Creator Full Name</label>
+          <input type="text" id="inf-name-input" required placeholder="e.g. Pooja Hegde" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white focus:outline-none focus:border-[#d4af37]">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-gray-300 uppercase mb-1">Mobile / WhatsApp</label>
+            <input type="tel" id="inf-phone-input" required placeholder="10-Digit Phone" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white focus:outline-none focus:border-[#d4af37]">
+          </div>
+          <div>
+            <label class="block font-bold text-gray-300 uppercase mb-1">Instagram Handle</label>
+            <input type="text" id="inf-handle-input" required placeholder="@handle" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white focus:outline-none focus:border-[#d4af37]">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-gray-300 uppercase mb-1">Custom Promo Code</label>
+            <input type="text" id="inf-code-input" required placeholder="e.g. POOJA10" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white uppercase font-bold focus:outline-none focus:border-[#d4af37]">
+          </div>
+          <div>
+            <label class="block font-bold text-gray-300 uppercase mb-1">Commission Rate %</label>
+            <input type="number" id="inf-comm-input" required value="10" min="1" max="50" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white font-bold focus:outline-none focus:border-[#d4af37]">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-gray-300 uppercase mb-1">Login Password</label>
+          <input type="text" id="inf-pass-input" required value="blackroots" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white font-mono focus:outline-none focus:border-[#d4af37]">
+        </div>
+
+        <button type="submit" class="w-full bg-gradient-to-r from-[#d4af37] to-amber-500 text-black font-black py-3.5 rounded-xl uppercase tracking-wider shadow-xl hover:brightness-110 cursor-pointer">
+          Create &amp; Activate Creator
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: PROCESS PAYOUT -->
+  <div id="ProcessPayoutModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="relative w-full max-w-md bg-[#11141b] border-2 border-emerald-500 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl text-left">
+      <button type="button" onclick="closeProcessPayoutModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl font-bold cursor-pointer">&times;</button>
+      
+      <div>
+        <h3 class="font-serif text-2xl font-bold text-emerald-400">Confirm UPI Payout</h3>
+        <p class="text-xs text-gray-400">Record bank UTR number to complete payout.</p>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-2 text-xs">
+        <div class="flex justify-between"><span class="text-gray-400">Creator:</span><strong id="modal-pay-creator" class="text-white">Priya Sharma</strong></div>
+        <div class="flex justify-between"><span class="text-gray-400">Amount:</span><strong id="modal-pay-amount" class="text-amber-300 font-mono text-base font-black">₹1,438</strong></div>
+        <div class="flex justify-between"><span class="text-gray-400">Destination UPI:</span><strong id="modal-pay-upi" class="text-emerald-400 font-mono">priya@okaxis</strong></div>
+      </div>
+
+      <form id="ConfirmPayoutForm" onsubmit="handleConfirmPayout(event)" class="space-y-4 text-xs">
+        <input type="hidden" id="modal-pay-id">
+        <div>
+          <label class="block font-bold text-gray-300 uppercase mb-1">Bank Transaction UTR / Ref ID</label>
+          <input type="text" id="modal-pay-utr" required placeholder="e.g. 423589102456" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white font-mono focus:outline-none focus:border-emerald-400">
+        </div>
+
+        <button type="submit" class="w-full bg-emerald-500 text-black font-black py-3.5 rounded-xl uppercase tracking-wider shadow-xl hover:brightness-110 cursor-pointer">
+          ✓ Mark as Paid &amp; Notify Creator
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT STATE ENGINE -->
   <script>
-    let searchTimer = null;
+    'use strict';
 
-    // Universal API Caller with fallback for Vercel / Node / PHP / Local
-    async function apiFetch(endpoint, options = {}) {
-      const urls = [
-        '../api/admin?action=' + endpoint,
-        '../api/admin.js?action=' + endpoint,
-        '../api/admin.php?action=' + endpoint
-      ];
+    let currentTab = 'overview';
+    let ordersSearchTimeout = null;
 
-      for (let url of urls) {
-        try {
-          const res = await fetch(url, options);
-          if (res.ok) {
-            const data = await res.json();
-            return data;
-          }
-        } catch (e) {}
-      }
-      return null;
-    }
-
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      const activeContent = document.getElementById('tab-' + tabId);
-      if (activeContent) activeContent.classList.remove('hidden');
-
-      document.querySelectorAll('.nav-tab').forEach(b => {
-        if (b.dataset.tab === tabId) {
-          b.className = 'nav-tab px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#d4af37] text-black';
-        } else {
-          b.className = 'nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all';
-        }
-      });
-
-      document.querySelectorAll('.mob-tab').forEach(b => {
-        b.className = b.dataset.tab === tabId ? 'mob-tab font-bold text-[#d4af37]' : 'mob-tab font-bold text-gray-400';
-      });
-
-      if (tabId === 'overview') loadDashboard();
-      if (tabId === 'orders') loadOrders();
-      if (tabId === 'abandoned') loadAbandoned();
-      if (tabId === 'settings') loadSettings();
-    }
-
-            function handleAdminLogin(e) {
+    // 1. Auth Handling
+    function handleAdminLogin(e) {
       e.preventDefault();
-      const pass = document.getElementById('admin-pass-input').value.trim();
-      const err = document.getElementById('login-error');
+      const pass = document.getElementById('admin-pass-input').value;
+      const error = document.getElementById('login-error');
       const savedPass = localStorage.getItem('br_admin_pass') || 'blackroots2026';
-
-      err.classList.add('hidden');
 
       if (pass === savedPass || pass === 'blackroots2026') {
         sessionStorage.setItem('br_admin_auth', '1');
         document.getElementById('AdminLoginScreen').classList.add('hidden');
         document.getElementById('AdminDashboardApp').classList.remove('hidden');
-        if (typeof loadDashboard === 'function') loadDashboard();
+        loadDashboard();
       } else {
-        err.textContent = 'Incorrect admin password. Please try again.';
-        err.classList.remove('hidden');
+        error.textContent = 'Incorrect admin password. Please try again.';
+        error.classList.remove('hidden');
       }
     }
 
     function handleLogout() {
       sessionStorage.removeItem('br_admin_auth');
-      location.reload();
+      window.location.reload();
     }
 
+    // 2. Tab Navigation
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.nav-tab').forEach(el => {
+        if (el.dataset.tab === tab) {
+          el.className = 'nav-tab px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#d4af37] text-black';
+        } else {
+          el.className = 'nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all';
+        }
+      });
+
+      document.querySelectorAll('.mob-tab').forEach(el => {
+        if (el.dataset.tab === tab) {
+          el.className = 'mob-tab font-bold text-[#d4af37] px-2 py-1';
+        } else {
+          el.className = 'mob-tab font-bold text-gray-400 px-2 py-1';
+        }
+      });
+
+      const tabEl = document.getElementById('tab-' + tab);
+      if (tabEl) tabEl.classList.remove('hidden');
+
+      if (tab === 'overview') loadDashboard();
+      if (tab === 'orders') loadOrders();
+      if (tab === 'influencers') loadInfluencers();
+      if (tab === 'abandoned') loadAbandoned();
+      if (tab === 'settings') loadSettings();
+    }
+
+    // 3. API Communication
+    async function apiFetch(action, options = {}) {
+      try {
+        let url = 'api/admin?action=' + action;
+        let res = await fetch(url, options);
+        if (res.ok) return await res.json();
+      } catch(e) {}
+      return null;
+    }
+
+    // 4. Load Overview Dashboard
     async function loadDashboard() {
       let data = await apiFetch('get_dashboard');
-      if (data && data.success) {
-        document.getElementById('metric-today-revenue').textContent = '₹' + (data.today_revenue || 0).toLocaleString('en-IN');
-        document.getElementById('metric-today-orders').textContent = '(' + (data.today_orders || 0) + ' Orders)';
-        document.getElementById('metric-total-revenue').textContent = '₹' + (data.total_revenue || 0).toLocaleString('en-IN');
-        document.getElementById('metric-total-orders').textContent = (data.total_orders || 0) + ' Total Orders';
-        document.getElementById('metric-pending-orders').textContent = data.pending_orders || 0;
-        document.getElementById('metric-abandoned-leads').textContent = data.abandoned_leads || 0;
+      let orders = [];
+      try {
+        orders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
+      } catch(e) {}
 
-        renderRecentOrders(data.recent_orders || []);
-      } else {
-        // Local fallback
-        const localOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
-        const totalRev = localOrders.reduce((sum, o) => sum + (Number(o.price) || 0), 0);
-        document.getElementById('metric-total-revenue').textContent = '₹' + totalRev.toLocaleString('en-IN');
-        document.getElementById('metric-total-orders').textContent = localOrders.length + ' Total Orders';
-        renderRecentOrders(localOrders.slice(-10).reverse());
-      }
+      let totalRev = orders.reduce((sum, o) => sum + (Number(o.price) || 0), 0);
+      let todayStr = new Date().toISOString().slice(0, 10);
+      let todayOrders = orders.filter(o => (o.created_at || '').includes(todayStr) || (o.created_at || '').includes('Today'));
+      let todayRev = todayOrders.reduce((sum, o) => sum + (Number(o.price) || 0), 0);
+      let pendingCnt = orders.filter(o => o.status === 'New' || o.status === 'Pending').length;
+
+      let abandoned = [];
+      try {
+        abandoned = JSON.parse(localStorage.getItem('br_abandoned_leads') || '[]');
+      } catch(e) {}
+
+      document.getElementById('metric-today-revenue').textContent = '₹' + (data ? data.today_revenue : todayRev).toLocaleString();
+      document.getElementById('metric-today-orders').textContent = `(${(data ? data.today_orders : todayOrders.length)} Orders)`;
+      document.getElementById('metric-total-revenue').textContent = '₹' + (data ? data.total_revenue : totalRev).toLocaleString();
+      document.getElementById('metric-total-orders').textContent = `${(data ? data.total_orders : orders.length)} Total Orders`;
+      document.getElementById('metric-pending-orders').textContent = (data ? data.pending_orders : pendingCnt);
+      document.getElementById('metric-abandoned-leads').textContent = (data ? data.abandoned_leads : abandoned.length);
+
+      renderRecentOrders(orders.slice(0, 5));
     }
 
     function renderRecentOrders(orders) {
@@ -454,65 +636,78 @@
 
       tbody.innerHTML = orders.map(o => `
         <tr class="hover:bg-white/5 transition-colors">
-          <td class="py-3 px-3 font-mono font-bold text-amber-300">${o.order_id}</td>
-          <td class="py-3 px-3"><span class="font-bold text-white block">${o.name}</span><span class="text-gray-400 text-[10px]">${o.phone}</span></td>
-          <td class="py-3 px-3">${o.city || 'India'}</td>
-          <td class="py-3 px-3">${o.product_bundle}</td>
-          <td class="py-3 px-3 font-bold text-white">₹${o.price}</td>
-          <td class="py-3 px-3"><span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${getStatusClass(o.status)}">${o.status}</span></td>
+          <td class="py-3 px-3 font-mono font-bold text-amber-300">${o.order_id || '#BR-1000'}</td>
+          <td class="py-3 px-3 font-bold text-white">${o.name || 'Customer'}</td>
+          <td class="py-3 px-3 text-gray-400">${o.city || 'India'}</td>
+          <td class="py-3 px-3">${o.product_bundle || '1 Bottle'}</td>
+          <td class="py-3 px-3 font-bold text-white">₹${o.price || 499}</td>
+          <td class="py-3 px-3"><span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${getStatusClass(o.status)}">${o.status || 'New'}</span></td>
           <td class="py-3 px-3 text-right">
-            <a href="https://wa.me/91${o.phone}?text=${encodeURIComponent('Namaste ' + o.name + ' ji! Aapka BlackRoots Herbal Shampoo order (' + o.order_id + ') receive ho gaya hai. Kya hum ise dispatch karein?')}" target="_blank" class="inline-flex items-center gap-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold">
-              💬 WhatsApp
-            </a>
+            <button onclick="switchTab('orders')" class="text-xs text-[#d4af37] font-bold hover:underline">Manage &rarr;</button>
           </td>
         </tr>
       `).join('');
     }
 
+    // 5. Orders Tab
     async function loadOrders() {
-      const search = document.getElementById('order-search-input').value;
-      const status = document.getElementById('order-status-filter').value;
+      let orders = [];
+      try {
+        orders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
+      } catch(e) {}
 
-      let data = await apiFetch('get_orders&search=' + encodeURIComponent(search) + '&status=' + encodeURIComponent(status));
-      if (data && data.success) {
-        renderAllOrders(data.orders || []);
-      } else {
-        const localOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
-        renderAllOrders(localOrders);
-      }
+      const search = (document.getElementById('order-search-input').value || '').toLowerCase();
+      const statusFilter = document.getElementById('order-status-filter').value;
+
+      let filtered = orders.filter(o => {
+        let match = true;
+        if (search) {
+          match = (o.name || '').toLowerCase().includes(search) || 
+                  (o.phone || '').includes(search) || 
+                  (o.city || '').toLowerCase().includes(search) || 
+                  (o.order_id || '').toLowerCase().includes(search);
+        }
+        if (match && statusFilter) {
+          match = (o.status === statusFilter);
+        }
+        return match;
+      });
+
+      renderAllOrders(filtered);
     }
 
     function debounceOrderSearch() {
-      clearTimeout(searchTimer);
-      searchTimer = setTimeout(loadOrders, 300);
+      clearTimeout(ordersSearchTimeout);
+      ordersSearchTimeout = setTimeout(loadOrders, 300);
     }
 
     function renderAllOrders(orders) {
       const tbody = document.getElementById('all-orders-table');
       if (!orders.length) {
-        tbody.innerHTML = '<tr><td colspan="7" class="py-8 text-center text-gray-500">No matching orders found.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="py-8 text-center text-gray-500">No orders found matching criteria.</td></tr>';
         return;
       }
 
       tbody.innerHTML = orders.map(o => `
         <tr class="hover:bg-white/5 transition-colors">
           <td class="py-3 px-3 font-mono font-bold text-amber-300">
-            ${o.order_id}
-            <span class="block text-[10px] text-gray-500 font-normal font-sans">${o.created_at || 'Recently'}</span>
+            <div>${o.order_id || '#BR-1000'}</div>
+            <div class="text-[10px] text-gray-400 font-normal">${o.created_at || 'Recent'}</div>
           </td>
           <td class="py-3 px-3">
-            <span class="font-bold text-white block">${o.name}</span>
-            <span class="text-gray-300 font-mono text-[11px]">${o.phone}</span>
+            <div class="font-bold text-white">${o.name || 'Customer'}</div>
+            <div class="text-[11px] text-amber-400/80 font-mono">${o.phone || ''}</div>
           </td>
-          <td class="py-3 px-3 text-[11px] text-gray-400 max-w-xs">
-            ${o.address}, ${o.city}, ${o.state} &bull; <strong class="text-white font-mono">${o.pincode}</strong>
-          </td>
-          <td class="py-3 px-3">
-            <span class="block font-bold text-white">₹${o.price}</span>
-            <span class="text-[10px] text-gray-400">${o.product_bundle}</span>
+          <td class="py-3 px-3 text-gray-400 max-w-[200px] truncate">
+            <div>${o.address || ''}</div>
+            <div class="text-[10px] text-gray-400 font-bold">${o.city || ''} &bull; ${o.pincode || ''}</div>
           </td>
           <td class="py-3 px-3">
-            <select onchange="updateOrderStatus('${o.order_id}', this.value, '${o.tracking_awb || ''}')" class="bg-black border border-white/20 rounded-lg px-2 py-1 text-[10px] text-white focus:outline-none focus:border-[#d4af37]">
+            <div class="text-white">${o.product_bundle || '1 Bottle'}</div>
+            <div class="font-bold text-emerald-400">₹${o.price || 499} (${o.payment_method || 'COD'})</div>
+          </td>
+          <td class="py-3 px-3">
+            <select onchange="updateOrderStatus('${o.order_id}', this.value)" class="px-2 py-1 rounded bg-black border border-white/20 text-[10px] font-bold text-white focus:outline-none focus:border-[#d4af37]">
               <option value="New" ${o.status === 'New' ? 'selected' : ''}>New</option>
               <option value="Confirmed" ${o.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
               <option value="Dispatched" ${o.status === 'Dispatched' ? 'selected' : ''}>Dispatched</option>
@@ -520,41 +715,299 @@
               <option value="Cancelled" ${o.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
             </select>
           </td>
-          <td class="py-3 px-3 font-mono text-[11px]">
-            <input type="text" value="${o.tracking_awb || ''}" placeholder="Enter AWB" onblur="updateOrderStatus('${o.order_id}', '${o.status}', this.value)" class="bg-black/50 border border-white/10 px-2 py-1 rounded text-white text-xs w-28 focus:border-[#d4af37] focus:outline-none">
+          <td class="py-3 px-3 font-mono text-gray-400 text-[11px]">
+            ${o.tracking_awb || 'Auto-assigning...'}
           </td>
-          <td class="py-3 px-3 text-right space-y-1">
-            <a href="https://wa.me/91${o.phone}?text=${encodeURIComponent('Namaste ' + o.name + ' ji! Aapka BlackRoots order (' + o.order_id + ') receive ho gaya hai. Total: ₹' + o.price + ' (' + (o.payment_method || 'COD') + '). Address: ' + o.address + ', ' + o.city + ' - ' + o.pincode + '. Kya hum ise dispatch karein?')}" target="_blank" class="inline-flex items-center gap-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold">
-              💬 Confirm on WhatsApp
+          <td class="py-3 px-3 text-right">
+            <a href="https://wa.me/91${o.phone}?text=${encodeURIComponent('Namaste ' + (o.name || '') + ' ji! Aapka BlackRoots Herbal Shampoo ka order ' + (o.order_id || '') + ' confirm ho chuka hai. Hum Shuklaganj warehouse se express dispatch kar rahe hain.')}" target="_blank" class="inline-flex items-center gap-1 bg-emerald-500 text-black px-2.5 py-1 rounded-lg text-[10px] font-bold hover:brightness-110">
+              💬 WhatsApp
             </a>
-            <button onclick="pushToShiprocket('${o.order_id}')" class="inline-flex items-center gap-1 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded text-[9px] font-bold block ml-auto">
-              🚀 Push Shiprocket
-            </button>
           </td>
         </tr>
       `).join('');
     }
 
-    async function updateOrderStatus(orderId, status, awb) {
-      await apiFetch('update_order', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: orderId, status: status, tracking_awb: awb })
-      });
-    }
-
-    function pushToShiprocket(orderId) {
-      alert('Shiprocket push signal sent for Order: ' + orderId);
-    }
-
-    async function loadAbandoned() {
-      let data = await apiFetch('get_abandoned');
-      if (data && data.success) {
-        renderAbandoned(data.leads || []);
-      } else {
-        const localLeads = JSON.parse(localStorage.getItem('br_abandoned_leads') || '[]');
-        renderAbandoned(localLeads);
+    function updateOrderStatus(orderId, newStatus) {
+      let orders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
+      let ord = orders.find(o => o.order_id === orderId);
+      if (ord) {
+        ord.status = newStatus;
+        localStorage.setItem('br_local_orders', JSON.stringify(orders));
       }
+    }
+
+    // 6. INFLUENCERS & AFFILIATES ENGINE
+    const DEFAULT_INFLUENCERS_ADMIN = [
+      {
+        id: 'inf-101',
+        name: 'Priya Sharma',
+        username: 'PRIYA10',
+        phone: '9876543210',
+        handle: '@priya_haircare',
+        code: 'PRIYA10',
+        password: 'blackroots',
+        comm_rate: 10,
+        clicks: 342,
+        total_orders: 18,
+        total_sales: 14382,
+        total_earned: 1438,
+        unpaid_balance: 1438,
+        upi_id: 'priya@okaxis',
+        status: 'Active'
+      },
+      {
+        id: 'inf-102',
+        name: 'Rohit Verma',
+        username: 'ROHIT15',
+        phone: '9811223344',
+        handle: '@rohit_grooming',
+        code: 'ROHIT15',
+        password: 'blackroots',
+        comm_rate: 15,
+        clicks: 189,
+        total_orders: 9,
+        total_sales: 7191,
+        total_earned: 1078,
+        unpaid_balance: 1078,
+        upi_id: 'rohit@paytm',
+        status: 'Active'
+      }
+    ];
+
+    function getInfluencersAdminDb() {
+      try {
+        let stored = localStorage.getItem('br_influencers_db');
+        if (!stored) {
+          localStorage.setItem('br_influencers_db', JSON.stringify(DEFAULT_INFLUENCERS_ADMIN));
+          return DEFAULT_INFLUENCERS_ADMIN;
+        }
+        return JSON.parse(stored);
+      } catch(e) {
+        return DEFAULT_INFLUENCERS_ADMIN;
+      }
+    }
+
+    function saveInfluencersAdminDb(db) {
+      try {
+        localStorage.setItem('br_influencers_db', JSON.stringify(db));
+      } catch(e) {}
+    }
+
+    function loadInfluencers() {
+      const db = getInfluencersAdminDb();
+      
+      let totalInfOrders = db.reduce((sum, u) => sum + (Number(u.total_orders) || 0), 0);
+      let totalInfSales = db.reduce((sum, u) => sum + (Number(u.total_sales) || 0), 0);
+      let totalPendingPayout = db.reduce((sum, u) => sum + (Number(u.unpaid_balance) || 0), 0);
+
+      document.getElementById('metric-inf-count').textContent = db.length;
+      document.getElementById('metric-inf-orders').textContent = totalInfOrders;
+      document.getElementById('metric-inf-revenue').textContent = '₹' + totalInfSales.toLocaleString();
+      document.getElementById('metric-inf-pending-payout').textContent = '₹' + totalPendingPayout.toLocaleString();
+
+      renderInfluencersTable(db);
+      loadAdminPayouts();
+    }
+
+    function renderInfluencersTable(influencers) {
+      const tbody = document.getElementById('all-influencers-table');
+      if (!influencers.length) {
+        tbody.innerHTML = '<tr><td colspan="9" class="py-8 text-center text-gray-500">No influencers created yet. Click "+ Add New Influencer" to create your first creator account.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = influencers.map(u => `
+        <tr class="hover:bg-white/5 transition-colors">
+          <td class="py-3 px-3">
+            <div class="font-bold text-white">${u.name}</div>
+            <div class="text-[10px] text-gray-400">${u.handle || '@handle'} &bull; ${u.phone}</div>
+          </td>
+          <td class="py-3 px-3">
+            <span class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-300 font-mono font-black border border-amber-500/30">
+              ${u.code}
+            </span>
+          </td>
+          <td class="py-3 px-3 font-bold text-white">
+            ${u.comm_rate || 10}% Flat
+          </td>
+          <td class="py-3 px-3 font-bold text-amber-300 font-mono">
+            ${u.total_orders || 0}
+          </td>
+          <td class="py-3 px-3 font-bold text-white">
+            ₹${Number(u.total_sales || 0).toLocaleString()}
+          </td>
+          <td class="py-3 px-3 font-bold text-emerald-400">
+            ₹${Number(u.total_earned || 0).toLocaleString()}
+          </td>
+          <td class="py-3 px-3 font-bold text-amber-400 font-mono">
+            ₹${Number(u.unpaid_balance || 0).toLocaleString()}
+          </td>
+          <td class="py-3 px-3">
+            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${u.status === 'Active' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">
+              ${u.status || 'Active'}
+            </span>
+          </td>
+          <td class="py-3 px-3 text-right space-x-1">
+            <button onclick="toggleInfStatus('${u.id}')" class="px-2 py-1 rounded bg-white/5 hover:bg-white/10 text-[10px] text-gray-300 font-bold">Toggle</button>
+            <button onclick="deleteInfluencer('${u.id}')" class="px-2 py-1 rounded bg-red-500/10 hover:bg-red-500/20 text-[10px] text-red-400 font-bold">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openAddInfluencerModal() {
+      document.getElementById('AddInfluencerModal').classList.remove('hidden');
+      document.getElementById('AddInfluencerModal').classList.add('flex');
+    }
+
+    function closeAddInfluencerModal() {
+      document.getElementById('AddInfluencerModal').classList.add('hidden');
+      document.getElementById('AddInfluencerModal').classList.remove('flex');
+    }
+
+    function handleSaveNewInfluencer(e) {
+      e.preventDefault();
+      const name = document.getElementById('inf-name-input').value.trim();
+      const phone = document.getElementById('inf-phone-input').value.trim();
+      const handle = document.getElementById('inf-handle-input').value.trim();
+      const code = document.getElementById('inf-code-input').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+      const comm = Number(document.getElementById('inf-comm-input').value) || 10;
+      const pass = document.getElementById('inf-pass-input').value.trim();
+
+      const db = getInfluencersAdminDb();
+      if (db.some(u => u.code === code)) {
+        alert('This promo code is already in use by another creator.');
+        return;
+      }
+
+      const newCreator = {
+        id: 'inf-' + Date.now(),
+        name: name,
+        username: code,
+        phone: phone,
+        handle: handle,
+        code: code,
+        password: pass,
+        comm_rate: comm,
+        clicks: 0,
+        total_orders: 0,
+        total_sales: 0,
+        total_earned: 0,
+        unpaid_balance: 0,
+        upi_id: '',
+        status: 'Active',
+        created_at: new Date().toISOString().slice(0, 10)
+      };
+
+      db.push(newCreator);
+      saveInfluencersAdminDb(db);
+      closeAddInfluencerModal();
+      loadInfluencers();
+      alert(`Influencer "${name}" with Code "${code}" (${comm}%) created successfully!`);
+    }
+
+    function toggleInfStatus(id) {
+      const db = getInfluencersAdminDb();
+      const u = db.find(x => x.id === id);
+      if (u) {
+        u.status = (u.status === 'Active') ? 'Paused' : 'Active';
+        saveInfluencersAdminDb(db);
+        loadInfluencers();
+      }
+    }
+
+    function deleteInfluencer(id) {
+      if (!confirm('Are you sure you want to delete this influencer?')) return;
+      let db = getInfluencersAdminDb();
+      db = db.filter(x => x.id !== id);
+      saveInfluencersAdminDb(db);
+      loadInfluencers();
+    }
+
+    // Payout Requests Manager in Admin
+    function loadAdminPayouts() {
+      const tbody = document.getElementById('admin-payouts-table');
+      let allPayouts = [];
+      try {
+        allPayouts = JSON.parse(localStorage.getItem('br_influencer_payouts') || '[]');
+      } catch (e) {}
+
+      if (!allPayouts.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="py-8 text-center text-gray-500">No payout requests logged yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = allPayouts.map(p => `
+        <tr class="hover:bg-white/5 transition-colors">
+          <td class="py-3 px-3 font-mono font-bold text-amber-300">
+            <div>${p.id}</div>
+            <div class="text-[10px] text-gray-400 font-normal">${p.date}</div>
+          </td>
+          <td class="py-3 px-3 font-bold text-white">${p.influencer_name}</td>
+          <td class="py-3 px-3 font-mono font-bold text-emerald-400 text-sm">₹${p.amount}</td>
+          <td class="py-3 px-3 font-mono text-white">${p.upi_id}</td>
+          <td class="py-3 px-3">
+            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${p.status === 'Paid' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-amber-500/20 text-amber-400'}">
+              ${p.status}
+            </span>
+          </td>
+          <td class="py-3 px-3 font-mono text-gray-400 text-[11px]">${p.utr || 'Pending'}</td>
+          <td class="py-3 px-3 text-right">
+            ${p.status === 'Pending' ? `
+              <button onclick="openProcessPayoutModal('${p.id}', '${p.influencer_name}', '${p.amount}', '${p.upi_id}')" class="px-3 py-1.5 rounded-xl bg-emerald-500 text-black font-black text-xs hover:brightness-110 shadow-lg cursor-pointer">
+                💸 Mark as Paid
+              </button>
+            ` : `<span class="text-xs text-emerald-400 font-bold">✓ Settled</span>`}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openProcessPayoutModal(id, creator, amount, upi) {
+      document.getElementById('modal-pay-id').value = id;
+      document.getElementById('modal-pay-creator').textContent = creator;
+      document.getElementById('modal-pay-amount').textContent = '₹' + amount;
+      document.getElementById('modal-pay-upi').textContent = upi;
+      document.getElementById('modal-pay-utr').value = 'UPI' + Math.floor(1000000000 + Math.random() * 9000000000);
+
+      document.getElementById('ProcessPayoutModal').classList.remove('hidden');
+      document.getElementById('ProcessPayoutModal').classList.add('flex');
+    }
+
+    function closeProcessPayoutModal() {
+      document.getElementById('ProcessPayoutModal').classList.add('hidden');
+      document.getElementById('ProcessPayoutModal').classList.remove('flex');
+    }
+
+    function handleConfirmPayout(e) {
+      e.preventDefault();
+      const payId = document.getElementById('modal-pay-id').value;
+      const utr = document.getElementById('modal-pay-utr').value.trim();
+
+      let allPayouts = [];
+      try {
+        allPayouts = JSON.parse(localStorage.getItem('br_influencer_payouts') || '[]');
+      } catch (e) {}
+
+      const p = allPayouts.find(x => x.id === payId);
+      if (p) {
+        p.status = 'Paid';
+        p.utr = utr;
+        localStorage.setItem('br_influencer_payouts', JSON.stringify(allPayouts));
+      }
+
+      closeProcessPayoutModal();
+      loadInfluencers();
+      alert('Payout marked as Paid successfully!');
+    }
+
+    // 7. Abandoned Leads Tab
+    async function loadAbandoned() {
+      let leads = [];
+      try {
+        leads = JSON.parse(localStorage.getItem('br_abandoned_leads') || '[]');
+      } catch(e) {}
+      renderAbandoned(leads);
     }
 
     function renderAbandoned(leads) {
@@ -568,7 +1021,7 @@
         <tr class="hover:bg-white/5 transition-colors">
           <td class="py-3 px-3 font-bold text-white">${l.name || 'Visitor'}</td>
           <td class="py-3 px-3 font-mono font-bold text-amber-300">${l.phone}</td>
-          <td class="py-3 px-3">${l.product_bundle || '1 Bottle'}</td>
+          <td class="py-3 px-3">${l.bundle || '1 Bottle'}</td>
           <td class="py-3 px-3 text-gray-400">${l.created_at || 'Recently'}</td>
           <td class="py-3 px-3">
             <span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${l.recovered ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">
@@ -584,6 +1037,7 @@
       `).join('');
     }
 
+    // 8. Settings Tab
     async function loadSettings() {
       let data = await apiFetch('get_settings');
       const s = (data && data.settings) ? data.settings : JSON.parse(localStorage.getItem('br_saved_settings') || '{}');
@@ -635,9 +1089,9 @@
 
     function exportCSVDirect() {
       const orders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
-      let csv = 'Order ID,Name,Phone,Address,City,Pincode,Bundle,Price,Status\n';
+      let csv = 'Order ID,Name,Phone,Address,City,Pincode,Bundle,Price,Status,Coupon,Influencer\n';
       orders.forEach(o => {
-        csv += `${o.order_id},"${o.name}",${o.phone},"${o.address}","${o.city}",${o.pincode},"${o.product_bundle}",${o.price},${o.status}\n`;
+        csv += `${o.order_id},"${o.name}",${o.phone},"${o.address}","${o.city}",${o.pincode},"${o.product_bundle || o.bundle}",${o.price},${o.status},"${o.coupon || ''}","${o.influencer || ''}"\n`;
       });
       const blob = new Blob([csv], { type: 'text/csv' });
       const a = document.createElement('a');

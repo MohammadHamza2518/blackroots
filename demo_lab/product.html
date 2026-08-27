@@ -30,8 +30,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="./assets/theme.css?v=1786809224">
-  <script src="./assets/theme.js?v=1786809224" defer></script>
+  <link rel="stylesheet" href="./assets/theme.css?v=1787832399">
+  <script src="./assets/theme.js?v=1787832399" defer></script>
+  <script src="./assets/analytics.js" defer></script>
   <script src="./assets/instant-butter.js" defer></script>
 
   
@@ -99,6 +100,26 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
     }
   </style>
+  <!-- Instant Inline Mobile Nav Drawer Engine (Zero-Lag Touch Ready) -->
+  <script>
+    function openMobileNavDrawer() {
+      var d = document.getElementById('MobileNavDrawer');
+      var b = document.getElementById('MobileNavBackdrop');
+      if (d) { d.style.transform = 'translateX(0%)'; d.classList.remove('translate-x-full'); d.classList.add('translate-x-0'); }
+      if (b) { b.style.opacity = '1'; b.style.pointerEvents = 'auto'; b.classList.remove('opacity-0', 'pointer-events-none'); b.classList.add('opacity-100', 'pointer-events-auto'); }
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMobileNavDrawer() {
+      var d = document.getElementById('MobileNavDrawer');
+      var b = document.getElementById('MobileNavBackdrop');
+      if (d) { d.style.transform = 'translateX(100%)'; d.classList.remove('translate-x-0'); d.classList.add('translate-x-full'); }
+      if (b) { b.style.opacity = '0'; b.style.pointerEvents = 'none'; b.classList.remove('opacity-100', 'pointer-events-auto'); b.classList.add('opacity-0', 'pointer-events-none'); }
+      document.body.style.overflow = '';
+    }
+    window.openMobileNavDrawer = openMobileNavDrawer;
+    window.closeMobileNavDrawer = closeMobileNavDrawer;
+  </script>
+
 </head>
 <body class="bg-[#0a0b0e] text-white font-sans antialiased selection:bg-[#d4af37] selection:text-black">
 
@@ -149,8 +170,8 @@
         </a>
 
         <!-- Mobile Drawer Hamburger Toggle Button -->
-        <button type="button" onclick="openMobileNavDrawer()" class="lg:hidden p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-[#1b1e27] to-[#0c0e14] border border-[#d4af37]/60 text-amber-300 hover:border-[#d4af37] hover:text-white focus:outline-none flex items-center justify-center shadow-[0_5px_15px_rgba(0,0,0,0.6)] active:scale-90 transition-all cursor-pointer" aria-label="Open Navigation Menu">
-          <svg class="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <button id="HamburgerMenuBtn" type="button" onclick="openMobileNavDrawer(); return false;" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" class="lg:hidden p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-[#1b1e27] to-[#0c0e14] border border-[#d4af37]/60 text-amber-300 hover:border-[#d4af37] hover:text-white focus:outline-none flex items-center justify-center shadow-[0_5px_15px_rgba(0,0,0,0.6)] active:scale-90 transition-all cursor-pointer cursor-pointer" aria-label="Open Navigation Menu">
+          <svg class="w-5 h-5 text-amber-300 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
             <line x1="4" y1="6" x2="20" y2="6"></line>
             <line x1="4" y1="12" x2="20" y2="12"></line>
             <line x1="4" y1="18" x2="20" y2="18"></line>
@@ -979,6 +1000,21 @@
           <textarea rows="2" placeholder="House/Flat No, Building Name, Street" required class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white"></textarea>
         </div>
 
+        
+        <!-- VIP Influencer / Promo Code Input Row -->
+        <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="text-[11px] font-bold text-gray-300 uppercase tracking-wider">Have a Creator / Promo Code?</label>
+            <span id="CouponDiscountNote" class="hidden text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20"></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="text" id="OrderCouponInput" placeholder="e.g. PRIYA10" class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white uppercase font-bold focus:outline-none focus:border-[#d4af37]">
+            <button type="button" onclick="applyCheckoutCoupon()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#d4af37] to-amber-500 text-black text-xs font-black uppercase hover:brightness-110 shadow shrink-0 cursor-pointer">
+              Apply
+            </button>
+          </div>
+        </div>
+
         <button type="submit" class="btn-gold-luxury btn-shimmer w-full py-4 text-xs font-bold uppercase tracking-wider">
           Confirm Order &rarr;&rarr;
         </button>
@@ -1060,9 +1096,9 @@
 
 
 <!-- 📱 Ultra-Luxury Mobile Navigation Drawer Overlay & Backdrop -->
-  <div id="MobileNavBackdrop" onclick="closeMobileNavDrawer()" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 opacity-0 pointer-events-none transition-opacity duration-300 ease-out"></div>
+  <div id="MobileNavBackdrop" onclick="closeMobileNavDrawer()" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[99998] opacity-0 pointer-events-none transition-opacity duration-300 ease-out"></div>
 
-  <div id="MobileNavDrawer" class="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-gradient-to-b from-[#0e1017] via-[#090a0e] to-black border-l border-[#d4af37]/30 z-50 shadow-[-15px_0_40px_rgba(0,0,0,0.9)] transform translate-x-full transition-transform duration-300 ease-out flex flex-col justify-between overflow-y-auto">
+  <div id="MobileNavDrawer" class="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-gradient-to-b from-[#0e1017] via-[#090a0e] to-black border-l border-[#d4af37]/30 z-[99999] shadow-[-15px_0_40px_rgba(0,0,0,0.9)] transform translate-x-full transition-transform duration-300 ease-out flex flex-col justify-between overflow-y-auto">
     
     <!-- Drawer Header -->
     <div class="p-5 border-b border-white/10 flex items-center justify-between">

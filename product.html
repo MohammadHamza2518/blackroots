@@ -1000,6 +1000,21 @@
           <textarea rows="2" placeholder="House/Flat No, Building Name, Street" required class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white"></textarea>
         </div>
 
+        
+        <!-- VIP Influencer / Promo Code Input Row -->
+        <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="text-[11px] font-bold text-gray-300 uppercase tracking-wider">Have a Creator / Promo Code?</label>
+            <span id="CouponDiscountNote" class="hidden text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20"></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="text" id="OrderCouponInput" placeholder="e.g. PRIYA10" class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white uppercase font-bold focus:outline-none focus:border-[#d4af37]">
+            <button type="button" onclick="applyCheckoutCoupon()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#d4af37] to-amber-500 text-black text-xs font-black uppercase hover:brightness-110 shadow shrink-0 cursor-pointer">
+              Apply
+            </button>
+          </div>
+        </div>
+
         <button type="submit" class="btn-gold-luxury btn-shimmer w-full py-4 text-xs font-bold uppercase tracking-wider">
           Confirm Order &rarr;&rarr;
         </button>

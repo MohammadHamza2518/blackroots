@@ -2,15 +2,20 @@
    BlackRoots Official Theme JavaScript Engine
    ========================================================================== */
 
-/* 📱 Mobile Navigation Drawer Controls */
+/* 📱 Mobile Navigation Drawer Controls (Bulletproof Direct Touch Engine) */
 function openMobileNavDrawer() {
   const drawer = document.getElementById('MobileNavDrawer');
   const backdrop = document.getElementById('MobileNavBackdrop');
   if (drawer) {
+    if (drawer.style) drawer.style.transform = 'translateX(0%)';
     drawer.classList.remove('translate-x-full');
     drawer.classList.add('translate-x-0');
   }
   if (backdrop) {
+    if (backdrop.style) {
+      backdrop.style.opacity = '1';
+      backdrop.style.pointerEvents = 'auto';
+    }
     backdrop.classList.remove('opacity-0', 'pointer-events-none');
     backdrop.classList.add('opacity-100', 'pointer-events-auto');
   }
@@ -21,10 +26,15 @@ function closeMobileNavDrawer() {
   const drawer = document.getElementById('MobileNavDrawer');
   const backdrop = document.getElementById('MobileNavBackdrop');
   if (drawer) {
+    if (drawer.style) drawer.style.transform = 'translateX(100%)';
     drawer.classList.remove('translate-x-0');
     drawer.classList.add('translate-x-full');
   }
   if (backdrop) {
+    if (backdrop.style) {
+      backdrop.style.opacity = '0';
+      backdrop.style.pointerEvents = 'none';
+    }
     backdrop.classList.remove('opacity-100', 'pointer-events-auto');
     backdrop.classList.add('opacity-0', 'pointer-events-none');
   }
@@ -33,6 +43,21 @@ function closeMobileNavDrawer() {
 
 window.openMobileNavDrawer = openMobileNavDrawer;
 window.closeMobileNavDrawer = closeMobileNavDrawer;
+
+// Auto-bind click & touchstart handlers
+document.addEventListener('DOMContentLoaded', function() {
+  const btns = document.querySelectorAll('[onclick*="openMobileNavDrawer"], #HamburgerMenuBtn, .js-hamburger-trigger');
+  btns.forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      openMobileNavDrawer();
+    });
+    btn.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      openMobileNavDrawer();
+    });
+  });
+});
 
 /* 🚚 Live India Pincode Delivery Estimator Engine */
 window.executePincodeCheck = function(isExplicitClick) {
@@ -199,27 +224,6 @@ function initCountdownTimer() {
   }, 1000);
 }
 
-/* 👥 Live Shopper Counter Simulation */
-function initLiveShopperCounter() {
-  const counterEls = document.querySelectorAll('.js-live-counter, .js-live-visitors');
-  if (!counterEls.length) return;
-
-  let count = 872;
-  setInterval(() => {
-    // Realistic visitor fluctuation (+1, -1, +2, -2)
-    const delta = (Math.random() > 0.48 ? 1 : -1) * (Math.floor(Math.random() * 3) + 1);
-    count += delta;
-    count = Math.max(846, Math.min(896, count));
-    
-    counterEls.forEach(el => {
-      el.textContent = count;
-      el.classList.add('text-emerald-300', 'scale-105');
-      setTimeout(() => {
-        el.classList.remove('scale-105');
-      }, 400);
-    });
-  }, 3000);
-}
 
 /* 🔄 Before / After Interactive Split Slider */
 function initBeforeAfterSlider() {
@@ -688,31 +692,172 @@ window.switchToSimPage = switchToSimPage;
     }
   };
 
-  // Form submission handler
+  // Form submission handler & Abandoned Checkout Capture
   function initOrderForm() {
     const form = document.getElementById('QuickOrderForm');
     if (form) {
-      form.onsubmit = function(e) {
-        e.preventDefault();
-        const inputs = form.querySelectorAll('input, textarea');
-        let orderData = {};
-        inputs.forEach(function(inp) {
-          if (inp.placeholder) orderData[inp.placeholder] = inp.value;
-        });
+      // 1. Abandoned Checkout Lead Capture on Phone Input
+      const phoneInput = form.querySelector('input[type="tel"]') || form.querySelectorAll('input')[1];
+      const nameInput = form.querySelector('input[type="text"]') || form.querySelectorAll('input')[0];
 
-        const orderId = 'BR-' + Math.floor(1000 + Math.random() * 9000);
-        
-        // Hide form, show success
-        form.classList.add('hidden');
-        const success = document.getElementById('QuickOrderSuccess');
-        if (success) {
-          success.classList.remove('hidden');
-          const idDisplay = success.querySelector('strong');
-          if (idDisplay) idDisplay.textContent = '#' + orderId;
+      if (phoneInput) {
+        let lastCapturedPhone = '';
+        function checkAndCaptureLead() {
+          const rawPhone = phoneInput.value.replace(/[^0-9]/g, '');
+          if (rawPhone.length >= 10 && rawPhone !== lastCapturedPhone) {
+            lastCapturedPhone = rawPhone;
+            const price = window.selectedPack ? window.selectedPack.price : 499;
+            const bundleName = window.selectedPack ? window.selectedPack.name : '1 Bottle (250ml)';
+            
+            const abPayload = {
+              name: nameInput ? nameInput.value.trim() : 'Visitor',
+              phone: rawPhone,
+              bundle: bundleName,
+              price: price
+            };
+            // Try Vercel Serverless then Hostinger
+            fetch('api/abandoned', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(abPayload)
+            }).catch(function() {
+              fetch('api/abandoned.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(abPayload)
+              }).catch(function() {});
+            });
+
+            // Local cache for immediate admin view
+            try {
+              let cur = JSON.parse(localStorage.getItem('br_abandoned_leads') || '[]');
+              cur.unshift(abPayload);
+              localStorage.setItem('br_abandoned_leads', JSON.stringify(cur.slice(0, 50)));
+            } catch(e) {}
+          }
         }
 
-        // Play subtle sound or trigger vibration
-        if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        phoneInput.addEventListener('blur', checkAndCaptureLead);
+        phoneInput.addEventListener('input', function() {
+          if (phoneInput.value.replace(/[^0-9]/g, '').length === 10) {
+            checkAndCaptureLead();
+          }
+        });
+      }
+
+      // 2. Full Order Submission Handler
+      form.onsubmit = async function(e) {
+        e.preventDefault();
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Confirm Order';
+
+        const allInputs = form.querySelectorAll('input, textarea');
+        let basePrice = window.selectedPack ? window.selectedPack.price : 499;
+        let appliedCoupon = window.appliedCouponData ? window.appliedCouponData.code : (localStorage.getItem('br_active_coupon') || '');
+        let finalPrice = window.appliedCouponData ? window.appliedCouponData.finalPrice : basePrice;
+
+        let orderPayload = {
+          name: allInputs[0] ? allInputs[0].value.trim() : '',
+          phone: allInputs[1] ? allInputs[1].value.trim() : '',
+          pincode: allInputs[2] ? allInputs[2].value.trim() : '',
+          city: allInputs[3] ? allInputs[3].value.trim() : '',
+          address: allInputs[4] ? allInputs[4].value.trim() : '',
+          bundle: window.selectedPack ? window.selectedPack.name : '1 Bottle (250ml)',
+          price: finalPrice,
+          payment_method: 'COD',
+          coupon: appliedCoupon,
+          discount: basePrice - finalPrice
+        };
+
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<span>⏳ Confirming Logistics Order...</span>';
+        }
+
+        try {
+          let orderData = null;
+          const endpoints = ['api/order', 'api/order.js', 'api/order.php'];
+          for (let ep of endpoints) {
+            try {
+              let res = await fetch(ep, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderPayload)
+              });
+              if (res.ok) {
+                orderData = await res.json();
+                if (orderData && orderData.success) break;
+              }
+            } catch(err) {}
+          }
+
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+          }
+
+          const orderId = (orderData && orderData.order_id) ? orderData.order_id : ('#BR-' + Math.floor(1000 + Math.random() * 9000));
+          orderPayload.order_id = orderId;
+          orderPayload.status = 'New';
+          orderPayload.created_at = new Date().toLocaleString();
+
+          // Local cache for immediate admin view & Influencer Credit
+          try {
+            let curOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
+            curOrders.unshift(orderPayload);
+            localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 100)));
+
+            // Credit Commission to Influencer
+            if (orderPayload.coupon) {
+              let db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
+              let inf = db.find(u => u.code && u.code.toUpperCase() === orderPayload.coupon.toUpperCase());
+              if (inf) {
+                let commRate = inf.comm_rate || 10;
+                let commAmt = Math.round(orderPayload.price * (commRate / 100));
+                inf.total_orders = (Number(inf.total_orders) || 0) + 1;
+                inf.total_sales = (Number(inf.total_sales) || 0) + Number(orderPayload.price);
+                inf.total_earned = (Number(inf.total_earned) || 0) + commAmt;
+                inf.unpaid_balance = (Number(inf.unpaid_balance) || 0) + commAmt;
+                orderPayload.influencer = inf.name;
+                localStorage.setItem('br_influencers_db', JSON.stringify(db));
+              }
+            }
+          } catch(e) {}
+
+          // Hide form, show success screen
+          form.classList.add('hidden');
+          const success = document.getElementById('QuickOrderSuccess');
+          if (success) {
+            success.classList.remove('hidden');
+            const idDisplay = success.querySelector('strong');
+            if (idDisplay) idDisplay.textContent = orderId;
+
+            // Track Meta Pixel & GA4 Purchase Event
+            if (window.trackD2CEvent) {
+              window.trackD2CEvent('Purchase', {
+                value: orderPayload.price,
+                currency: 'INR',
+                order_id: orderId,
+                items: [{ item_name: 'BlackRoots Herbal Hair Dye Shampoo', price: orderPayload.price, quantity: 1 }]
+              });
+            }
+
+            // Update Track Order link in success box if present
+            const trackBtn = success.querySelector('a.js-track-live') || success.querySelector('button');
+            if (trackBtn) {
+              trackBtn.onclick = function() {
+                window.location.href = 'track-order.html?id=' + encodeURIComponent(orderId);
+              };
+            }
+          }
+
+          if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        } catch(err) {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+          }
+        }
       };
     }
   }
@@ -815,3 +960,314 @@ function closeIngredientModal() {
 window.initIngredientFilters = initIngredientFilters;
 window.openIngredientDetail = openIngredientDetail;
 window.closeIngredientModal = closeIngredientModal;
+
+/* ==========================================================================
+   🔬 ULTRA-LUXURY INTERACTIVE HAIR RESULT TIMELINE CALCULATOR ENGINE
+   ========================================================================== */
+(function() {
+  let currentAge = 'mid';
+  let currentGrey = 'moderate';
+
+  const ageLabels = {
+    young: '18 – 35 Years',
+    mid: '36 – 50 Years',
+    senior: '50+ Years'
+  };
+
+  const greyLabels = {
+    light: '10% – 35% Greys',
+    moderate: '35% – 65% Greys',
+    heavy: '65%+ Full Greys'
+  };
+
+  const timelineData = {
+    'young_light': {
+      days: '5 – 7 Days',
+      heading: 'Superfast Natural Melanin Activation in 5–7 Days!',
+      desc: 'Younger hair follicles with initial roots react rapidly to Japanese Indigo & Amla. First 2-3 regular washes me hi grey roots completely naturally dark ho jayengi.'
+    },
+    'young_moderate': {
+      days: '7 – 10 Days',
+      heading: 'Visible Deep Dark Blackening in 7–10 Days!',
+      desc: 'Aapki age aur moderate grey intensity ke liye BlackRoots ka botanical melanin stimulator 1 week ke regular shower washes me roots ko natural deep black shade provide karega.'
+    },
+    'young_heavy': {
+      days: '10 – 14 Days',
+      heading: 'Root Rejuvenation in 10–14 Days!',
+      desc: 'Japanese Indigo aur Bhringraj extract pure hair shaft ko nourish karke heavy grey strands ko 10-14 days me rich black color me restore karenge.'
+    },
+    'mid_light': {
+      days: '7 – 10 Days',
+      heading: 'First Visible Dark Shade in 7–10 Days!',
+      desc: 'Mid-stage roots ke liye Japanese Indigo Leaf aur Amla natural melanin production boost karte hain. Hafte me 2-3 washes ke sath roots natural black ho jati hain.'
+    },
+    'mid_moderate': {
+      days: '10 – 14 Days',
+      heading: 'Natural Deep Dark Transformation in 10–14 Days!',
+      desc: 'Moderate scattered greys ke liye BlackRoots 250ml Bottle perfect hai. Regular shower washes ke sath 10-14 days me grey hair naturally black shine me convert honge.'
+    },
+    'mid_heavy': {
+      days: '14 – 18 Days',
+      heading: 'Complete Melanin Restoration in 14–18 Days!',
+      desc: 'Deeper greys ke liye Japanese Indigo aur Brahmi deep cortex tak penetrate karte hain. 2 weeks ke regular use se natural uniform dark black shade achieve hota hai.'
+    },
+    'senior_light': {
+      days: '10 – 14 Days',
+      heading: 'Healthy Dark Roots in 10–14 Days!',
+      desc: 'Mature hair roots ko Amla aur Camellia Oil se deep moisture aur Indigo se natural dark pigment milta hai. 10-14 days me noticeable blackening milti hai.'
+    },
+    'senior_moderate': {
+      days: '14 – 18 Days',
+      heading: 'Natural Rejuvenation in 14–18 Days!',
+      desc: '50+ age me mature grey hair ko without ammonia safe blackening milti hai. 2-3 weeks me grey hair completely soft, shiny aur dark black ho jate hain.'
+    },
+    'senior_heavy': {
+      days: '18 – 24 Days',
+      heading: 'Full Ayurvedic Dark Transformation in 18–24 Days!',
+      desc: 'Senior stage me full coverage ke liye 100% botanical nourishment zaroori hoti hai. Consistent 3-4 weeks regular shower washes se deep natural black color establish hota hai.'
+    }
+  };
+
+  function updateCalculatorDisplay() {
+    const key = `${currentAge}_${currentGrey}`;
+    const data = timelineData[key] || timelineData['mid_moderate'];
+
+    // 1. Update Home Page Age Pills (AgePill_young, AgePill_mid, AgePill_senior)
+    ['young', 'mid', 'senior'].forEach(function(k) {
+      const btn = document.getElementById('AgePill_' + k);
+      if (btn) {
+        if (k === currentAge) {
+          btn.className = 'js-age-pill py-2.5 px-2 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black border border-[#fff3b0] text-center text-xs font-black shadow-lg transition-all cursor-pointer transform scale-[1.02]';
+        } else {
+          btn.className = 'js-age-pill py-2.5 px-2 rounded-xl bg-white/5 border border-white/15 text-center text-xs font-bold text-white hover:border-[#d4af37]/60 transition-all cursor-pointer';
+        }
+      }
+    });
+
+    // 2. Update Home Page Grey Pills (GreyPill_light, GreyPill_moderate, GreyPill_heavy)
+    ['light', 'moderate', 'heavy'].forEach(function(k) {
+      const btn = document.getElementById('GreyPill_' + k);
+      if (btn) {
+        if (k === currentGrey) {
+          btn.className = 'js-grey-pill py-2.5 px-2 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black border border-[#fff3b0] text-center text-xs font-black shadow-lg transition-all cursor-pointer transform scale-[1.02]';
+        } else {
+          btn.className = 'js-grey-pill py-2.5 px-2 rounded-xl bg-white/5 border border-white/15 text-center text-xs font-bold text-white hover:border-[#d4af37]/60 transition-all cursor-pointer';
+        }
+      }
+    });
+
+    // 3. Update Result Text & Badges
+    const daysBadge = document.getElementById('CalcResultDaysBadge');
+    const heading = document.getElementById('CalcResultHeading');
+    const desc = document.getElementById('CalcResultDesc');
+    const ageLabel = document.getElementById('SelectedAgeLabel');
+    const greyLabel = document.getElementById('SelectedGreyLabel');
+    const outputBox = document.getElementById('CalcResultOutput');
+    const simpleBadge = document.getElementById('SimpleDaysBadge');
+    const simpleText = document.getElementById('SimpleResultText');
+
+    if (daysBadge) daysBadge.textContent = data.days;
+    if (heading) heading.textContent = data.heading;
+    if (desc) desc.textContent = data.desc;
+    if (ageLabel) ageLabel.textContent = ageLabels[currentAge] || '';
+    if (greyLabel) greyLabel.textContent = greyLabels[currentGrey] || '';
+    if (simpleBadge) simpleBadge.textContent = data.days;
+    if (simpleText) simpleText.innerHTML = data.desc;
+
+    if (outputBox) {
+      if (outputBox.classList && outputBox.classList.remove) outputBox.classList.remove('hidden');
+      outputBox.style.display = 'block';
+    }
+  }
+
+  window.selectAgeGroup = function(age) {
+    currentAge = age;
+    updateCalculatorDisplay();
+  };
+
+  window.selectGreyPercentage = function(grey) {
+    currentGrey = grey;
+    updateCalculatorDisplay();
+  };
+
+  window.pickAge = window.selectAgeGroup;
+  window.pickGrey = window.selectGreyPercentage;
+
+  window.calculateHairResultTimeline = function(isExplicit) {
+    updateCalculatorDisplay();
+    const outputBox = document.getElementById('CalcResultOutput');
+    if (outputBox && outputBox.scrollIntoView && isExplicit) {
+      outputBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  };
+
+  function setupCalculatorEventListeners() {
+    // Age button clicks
+    document.querySelectorAll('.js-calc-age-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.js-calc-age-btn').forEach(b => {
+          b.className = 'js-calc-age-btn p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 text-center hover:border-[#d4af37]/60 transition-all cursor-pointer';
+          const title = b.querySelector('.text-xs');
+          const sub = b.querySelector('.text-\\[9px\\]');
+          if (title) title.className = 'text-xs font-bold text-white block';
+          if (sub) sub.className = 'text-[9px] text-gray-400 uppercase tracking-tight block mt-0.5';
+        });
+
+        btn.className = 'js-calc-age-btn active-calc-btn p-3 sm:p-4 rounded-2xl bg-gradient-to-r from-[#d4af37]/20 to-[#aa7c11]/10 border-2 border-[#d4af37] text-center shadow-lg transition-all cursor-pointer';
+        const title = btn.querySelector('.text-xs');
+        const sub = btn.querySelector('.text-\\[9px\\]');
+        if (title) title.className = 'text-xs font-bold text-amber-300 block';
+        if (sub) sub.className = 'text-[9px] text-amber-200 uppercase tracking-tight block mt-0.5';
+
+        currentAge = btn.getAttribute('data-age') || 'mid';
+        updateCalculatorDisplay();
+      });
+    });
+
+    // Grey intensity button clicks
+    document.querySelectorAll('.js-calc-grey-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.js-calc-grey-btn').forEach(b => {
+          b.className = 'js-calc-grey-btn p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 text-center hover:border-[#d4af37]/60 transition-all cursor-pointer';
+          const title = b.querySelector('.text-xs');
+          const sub = b.querySelector('.text-\\[9px\\]');
+          if (title) title.className = 'text-xs font-black text-white block mb-0.5';
+          if (sub) sub.className = 'text-[9px] text-gray-400 uppercase tracking-tight block';
+        });
+
+        btn.className = 'js-calc-grey-btn active-calc-btn p-3 sm:p-4 rounded-2xl bg-gradient-to-r from-[#d4af37]/20 to-[#aa7c11]/10 border-2 border-[#d4af37] text-center shadow-lg transition-all cursor-pointer';
+        const title = btn.querySelector('.text-xs');
+        const sub = btn.querySelector('.text-\\[9px\\]');
+        if (title) title.className = 'text-xs font-black text-amber-300 block mb-0.5';
+        if (sub) sub.className = 'text-[9px] text-amber-200 uppercase tracking-tight block';
+
+        currentGrey = btn.getAttribute('data-grey') || 'moderate';
+        updateCalculatorDisplay();
+      });
+    });
+
+    // Calculate CTA button click
+    const calcBtn = document.getElementById('BtnRunHairCalculator');
+    if (calcBtn) {
+      calcBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.calculateHairResultTimeline(true);
+      });
+    }
+  }
+
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupCalculatorEventListeners);
+    } else {
+      setupCalculatorEventListeners();
+    }
+  }
+})();
+
+
+
+
+/* ==========================================================================
+   🤝 BLACKROOTS VIP INFLUENCER & COUPON TRACKING ENGINE
+   ========================================================================== */
+(function() {
+  'use strict';
+
+  // 1. Detect and persist URL referral codes (?ref=CODE or ?coupon=CODE)
+  function initInfluencerReferral() {
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const refCode = (urlParams.get('ref') || urlParams.get('coupon') || '').trim().toUpperCase();
+      
+      if (refCode) {
+        localStorage.setItem('br_active_coupon', refCode);
+        localStorage.setItem('br_influencer_ref', refCode);
+
+        // Track click count for this influencer
+        let db = [];
+        try {
+          db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
+        } catch(e) {}
+        
+        let creator = db.find(u => u.code && u.code.toUpperCase() === refCode);
+        if (creator) {
+          creator.clicks = (Number(creator.clicks) || 0) + 1;
+          localStorage.setItem('br_influencers_db', JSON.stringify(db));
+        }
+
+        // Show subtle notification banner
+        showAffiliateBanner(refCode);
+      }
+    } catch(e) {}
+  }
+
+  function showAffiliateBanner(code) {
+    if (document.getElementById('AffiliatePromoBanner')) return;
+    const banner = document.createElement('div');
+    banner.id = 'AffiliatePromoBanner';
+    banner.className = 'fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 z-40 bg-[#11141b]/95 backdrop-blur-xl border border-[#d4af37] text-white p-3.5 rounded-2xl shadow-2xl flex items-center justify-between gap-3 text-xs max-w-md';
+    banner.innerHTML = `
+      <div class="flex items-center gap-2.5">
+        <span class="text-base">🎉</span>
+        <div>
+          <span class="font-bold text-amber-300">Creator Promo: <code class="bg-black/60 px-1.5 py-0.5 rounded text-white">${code}</code></span>
+          <p class="text-[11px] text-gray-300">10% OFF will automatically apply at checkout!</p>
+        </div>
+      </div>
+      <button onclick="this.parentElement.remove()" class="text-gray-400 hover:text-white font-bold text-sm px-1.5 cursor-pointer">&times;</button>
+    `;
+    document.body.appendChild(banner);
+  }
+
+  // 2. Global Coupon Validator & Applicator
+  window.applyCheckoutCoupon = function() {
+    const input = document.getElementById('OrderCouponInput');
+    const note = document.getElementById('CouponDiscountNote');
+    const priceDisplay = document.getElementById('OrderModalPriceDisplay');
+    if (!input) return;
+
+    const rawCode = input.value.trim().toUpperCase();
+    if (!rawCode) {
+      alert('Please enter a coupon code.');
+      return;
+    }
+
+    let db = [];
+    try {
+      db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
+    } catch(e) {}
+
+    let creator = db.find(u => u.code && u.code.toUpperCase() === rawCode);
+    let commRate = creator ? (creator.comm_rate || 10) : 10;
+    let basePrice = window.selectedPack ? window.selectedPack.price : 499;
+
+    // Calculate 10% discount
+    let discount = Math.round(basePrice * 0.10);
+    let finalPrice = basePrice - discount;
+
+    window.appliedCouponData = {
+      code: rawCode,
+      discount: discount,
+      finalPrice: finalPrice,
+      influencer_id: creator ? creator.id : null,
+      comm_rate: commRate
+    };
+
+    if (note) {
+      note.textContent = `✓ Code ${rawCode} Applied (-₹${discount})`;
+      note.classList.remove('hidden');
+    }
+
+    if (priceDisplay) {
+      priceDisplay.innerHTML = `<span class="line-through text-gray-400 text-sm font-normal">₹${basePrice}</span> <span class="text-emerald-400 font-black">₹${finalPrice}</span>`;
+    }
+  };
+
+  // Run on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initInfluencerReferral);
+  } else {
+    initInfluencerReferral();
+  }
+})();

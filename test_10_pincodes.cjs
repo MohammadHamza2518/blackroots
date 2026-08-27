@@ -1,12 +1,5 @@
 const fs = require('fs');
 
-// Create minimal DOM mock
-const elements = {
-  HomePincodeInput: { value: '' },
-  HomePincodeResult: { className: 'hidden', style: {}, classList: { remove(c) { this[c] = false; }, add(c) { this[c] = true; } } },
-  ResultPincodeNum: { textContent: '' },
-  ResultExpectedDate: { textContent: '' }
-};
 
 global.document = {
   getElementById(id) {

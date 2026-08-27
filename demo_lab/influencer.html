@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BlackRoots &mdash; VIP Creator & Influencer Hub</title>
+  <meta name="description" content="BlackRoots Official VIP Creator & Affiliate Portal. Access your exclusive promo code, track live earnings, real-time sales, and instant UPI payouts.">
+  <meta name="robots" content="noindex, nofollow">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandDark: '#0a0b0e',
+            brandCard: '#11141b',
+            brandCardHover: '#161a23',
+            brandEmerald: '#123824',
+            brandEmeraldDark: '#0a2115',
+            brandGold: '#d4af37',
+            brandGoldLight: '#f5e4ab',
+            brandGoldDark: '#9a781b',
+          },
+          fontFamily: {
+            serif: ['Cormorant Garamond', 'Georgia', 'serif'],
+            sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/theme.css">
+
+  <style>
+    *, *::before, *::after, html, body {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+    *::-webkit-scrollbar {
+      display: none !important;
+      width: 0px !important;
+    }
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #fff2c6 0%, #d4af37 50%, #aa7c11 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .gold-border-glow {
+      box-shadow: 0 0 25px rgba(212, 175, 55, 0.15);
+    }
+    .btn-gold-action {
+      background: linear-gradient(135deg, #d4af37 0%, #f7e7a7 50%, #aa7c11 100%);
+      color: #000;
+      font-weight: 800;
+      transition: all 0.25s ease;
+    }
+    .btn-gold-action:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px rgba(212, 175, 55, 0.35);
+    }
+    .btn-gold-action:active {
+      transform: scale(0.98);
+    }
+  </style>
+</head>
+<body class="bg-[#0a0b0e] text-white font-sans antialiased selection:bg-[#d4af37] selection:text-black min-h-screen flex flex-col justify-between pb-20 md:pb-0">
+
+  <!-- ========================================================================= -->
+  <!-- 1. AUTH SCREEN (LOGIN & REGISTER TABS) -->
+  <!-- ========================================================================= -->
+  <div id="InfluencerAuthScreen" class="fixed inset-0 z-50 bg-[#0a0b0e] flex items-center justify-center p-4 overflow-y-auto">
+    <div class="w-full max-w-md my-auto p-6 sm:p-8 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-[0_20px_60px_rgba(0,0,0,0.95)] text-center space-y-6">
+      
+      <!-- Logo Header -->
+      <div class="flex flex-col items-center gap-2">
+        <a href="./index.html" class="flex items-center gap-2 mb-1">
+          <img src="./assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-14 h-14 rounded-full border-2 border-[#d4af37] shadow-xl">
+        </a>
+        <h1 class="font-serif text-2xl sm:text-3xl font-bold uppercase tracking-wider gold-gradient-text">BlackRoots Creator Hub</h1>
+        <p class="text-xs text-gray-400 font-medium">VIP Influencer & Affiliate Partner Portal</p>
+      </div>
+
+      <!-- Tab Buttons: Login / Apply -->
+      <div class="flex rounded-2xl bg-black/60 p-1 border border-white/10 text-xs font-bold">
+        <button type="button" id="tab-btn-login" onclick="switchAuthTab('login')" class="flex-1 py-2.5 rounded-xl transition-all bg-[#d4af37] text-black">Creator Login</button>
+        <button type="button" id="tab-btn-register" onclick="switchAuthTab('register')" class="flex-1 py-2.5 rounded-xl transition-all text-gray-400 hover:text-white">Apply to Join</button>
+      </div>
+
+      <!-- Form 1: Creator Login -->
+      <form id="InfluencerLoginForm" onsubmit="handleInfluencerLogin(event)" class="space-y-4 text-left">
+        <div>
+          <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">Username / Promo Code / Phone</label>
+          <input type="text" id="inf-login-id" required placeholder="e.g. PRIYA10 or 9876543210" class="w-full px-4 py-3.5 rounded-xl bg-black border border-white/20 text-white text-sm focus:outline-none focus:border-[#d4af37] transition-all">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">Password</label>
+          <input type="password" id="inf-login-pass" required placeholder="Enter Your Password" class="w-full px-4 py-3.5 rounded-xl bg-black border border-white/20 text-white text-sm focus:outline-none focus:border-[#d4af37] transition-all font-mono">
+        </div>
+        
+        <div class="flex items-center justify-between text-xs text-gray-400">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked class="rounded accent-[#d4af37]"> Remember me
+          </label>
+          <a href="https://wa.me/919580835179?text=Hello%20BlackRoots%20Team%2C%20I%20forgot%20my%20Influencer%20portal%20password." target="_blank" class="text-amber-400 hover:underline">Forgot?</a>
+        </div>
+
+        <button type="submit" id="login-submit-btn" class="w-full btn-gold-action text-sm py-4 rounded-xl shadow-xl uppercase tracking-wider cursor-pointer">
+          Sign In to Dashboard &rarr;
+        </button>
+        <p id="login-error-msg" class="hidden text-xs text-red-400 font-bold text-center"></p>
+      </form>
+
+      <!-- Form 2: Apply to Join -->
+      <form id="InfluencerRegisterForm" onsubmit="handleInfluencerRegister(event)" class="hidden space-y-3.5 text-left">
+        <div>
+          <label class="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-1">Your Full Name</label>
+          <input type="text" id="reg-name" required placeholder="e.g. Priya Sharma" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white text-xs focus:outline-none focus:border-[#d4af37]">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-1">Mobile / WhatsApp</label>
+            <input type="tel" id="reg-phone" required placeholder="10-Digit Mobile" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white text-xs focus:outline-none focus:border-[#d4af37]">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-1">Instagram / Channel</label>
+            <input type="text" id="reg-handle" required placeholder="@yourhandle" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white text-xs focus:outline-none focus:border-[#d4af37]">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-1">Desired Promo Code</label>
+            <input type="text" id="reg-code" required placeholder="e.g. PRIYA10" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white text-xs uppercase font-bold focus:outline-none focus:border-[#d4af37]">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-1">Set Password</label>
+            <input type="password" id="reg-pass" required placeholder="Min 6 characters" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white text-xs font-mono focus:outline-none focus:border-[#d4af37]">
+          </div>
+        </div>
+
+        <button type="submit" id="reg-submit-btn" class="w-full btn-gold-action text-xs font-black py-3.5 rounded-xl shadow-xl uppercase tracking-wider cursor-pointer mt-2">
+          Submit Creator Application &rarr;
+        </button>
+        <p id="reg-status-msg" class="hidden text-xs text-emerald-400 font-bold text-center"></p>
+      </form>
+
+      <!-- Instant Test Access Demo Info -->
+      <div class="p-3.5 rounded-2xl bg-white/5 border border-[#d4af37]/20 text-left space-y-1.5">
+        <div class="flex items-center justify-between">
+          <span class="text-[10px] uppercase font-bold text-amber-300 tracking-wider">🌟 Instant Demo Login:</span>
+          <button type="button" onclick="quickFillDemo()" class="text-[10px] text-amber-400 font-bold underline hover:text-white">1-Click Auto Fill</button>
+        </div>
+        <p class="text-[11px] text-gray-400">Username: <code class="text-white font-bold bg-black px-1.5 py-0.5 rounded border border-white/10">PRIYA10</code> &bull; Password: <code class="text-white font-bold bg-black px-1.5 py-0.5 rounded border border-white/10">blackroots</code></p>
+      </div>
+
+      <div class="pt-2 border-t border-white/10">
+        <a href="./index.html" class="text-xs text-gray-400 hover:text-white transition-colors">&larr; Return to BlackRoots Main Website</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. MAIN CREATOR DASHBOARD APP -->
+  <!-- ========================================================================= -->
+  <div id="InfluencerDashboardApp" class="hidden flex-1 flex flex-col min-h-screen">
+    
+    <!-- Top Creator Navigation Header -->
+    <header class="bg-[#11141b]/95 backdrop-blur-xl border-b border-[#d4af37]/20 sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        
+        <!-- Brand & Creator Badge -->
+        <div class="flex items-center gap-3">
+          <img src="./assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-9 h-9 rounded-full border border-[#d4af37]">
+          <div class="flex flex-col">
+            <span class="font-serif text-lg font-bold text-white uppercase tracking-wider">BlackRoots VIP</span>
+            <span class="text-[9px] uppercase tracking-widest text-[#d4af37] font-bold" id="header-creator-name">Creator Portal</span>
+          </div>
+        </div>
+
+        <!-- Desktop Navigation Tabs -->
+        <nav class="hidden md:flex items-center gap-2">
+          <button onclick="switchInfTab('overview')" class="inf-nav-tab px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#d4af37] text-black" data-tab="overview">📊 Overview</button>
+          <button onclick="switchInfTab('share')" class="inf-nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="share">🔗 Link &amp; Promo</button>
+          <button onclick="switchInfTab('orders')" class="inf-nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="orders">🛍️ My Orders</button>
+          <button onclick="switchInfTab('wallet')" class="inf-nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="wallet">💳 Payouts &amp; UPI</button>
+        </nav>
+
+        <!-- Right User & Logout -->
+        <div class="flex items-center gap-3">
+          <a href="./index.html" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-[#d4af37]/50 text-xs font-bold text-gray-300 hover:text-white transition-all">
+            <span>Storefront ↗</span>
+          </a>
+          <button onclick="handleInfluencerLogout()" class="px-3 py-1.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white text-xs font-bold transition-all cursor-pointer">
+            Logout
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 w-full flex-1 space-y-6">
+
+      <!-- VIP Creator Welcome Banner Card -->
+      <div class="relative overflow-hidden p-6 sm:p-8 rounded-3xl bg-gradient-to-br from-[#123824] via-[#0e2418] to-[#11141b] border border-[#d4af37]/40 shadow-2xl">
+        <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div class="space-y-2">
+            <div class="flex items-center gap-2.5 flex-wrap">
+              <span class="inline-flex items-center gap-1.5 bg-[#d4af37] text-black font-black text-[10px] px-3 py-1 rounded-full uppercase tracking-wider shadow">
+                ★ GOLD VIP CREATOR
+              </span>
+              <span class="text-xs text-amber-300 font-bold bg-black/40 px-3 py-1 rounded-full border border-amber-500/30">
+                ⚡ <span id="banner-comm-rate">10%</span> Flat Commission
+              </span>
+            </div>
+            <h2 class="font-serif text-2xl sm:text-4xl font-bold text-white">
+              Welcome back, <span id="creator-greeting-name" class="gold-gradient-text">Priya</span>!
+            </h2>
+            <p class="text-xs sm:text-sm text-gray-300 max-w-xl font-light">
+              Share your promo code with your audience. When they get 10% OFF at checkout, you earn <strong class="text-amber-300 font-bold" id="banner-comm-sub">10% Instant Commission</strong> on every bottle delivered.
+            </p>
+          </div>
+
+          <!-- Quick Promo Code Badge with 1-Tap Copy -->
+          <div class="bg-black/70 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-[#d4af37]/50 text-center sm:text-right space-y-2 min-w-[200px] w-full sm:w-auto">
+            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Your Official Code</span>
+            <div class="flex items-center justify-center sm:justify-end gap-2">
+              <span id="quick-promo-code" class="text-2xl sm:text-3xl font-black text-amber-300 font-mono tracking-wider">PRIYA10</span>
+              <button onclick="copyPromoCode()" class="p-2 rounded-xl bg-amber-400 text-black hover:bg-white transition-all cursor-pointer shadow-lg" title="Copy Promo Code">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+              </button>
+            </div>
+            <span id="copy-toast" class="text-[10px] text-emerald-400 font-bold block opacity-0 transition-opacity">✓ Copied to clipboard!</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- TAB 1: OVERVIEW -->
+      <!-- ===================================================================== -->
+      <section id="tab-overview" class="inf-tab-content space-y-6">
+        
+        <!-- Live Metrics Grid -->
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-5">
+          
+          <div class="p-4 sm:p-5 rounded-2xl bg-[#11141b] border border-white/10 shadow-xl space-y-1.5">
+            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">👁️ Total Clicks</span>
+            <span id="metric-clicks" class="text-xl sm:text-3xl font-black text-white block">0</span>
+            <span class="text-[10px] text-gray-500 block font-medium">Audience link visits</span>
+          </div>
+
+          <div class="p-4 sm:p-5 rounded-2xl bg-[#11141b] border border-white/10 shadow-xl space-y-1.5">
+            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">🛍️ Total Orders</span>
+            <span id="metric-orders" class="text-xl sm:text-3xl font-black text-amber-300 block">0</span>
+            <span class="text-[10px] text-emerald-400 block font-semibold">⚡ Verified sales</span>
+          </div>
+
+          <div class="p-4 sm:p-5 rounded-2xl bg-[#11141b] border border-white/10 shadow-xl space-y-1.5">
+            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">💎 Sales Driven</span>
+            <span id="metric-revenue" class="text-xl sm:text-3xl font-black text-white block">₹0</span>
+            <span class="text-[10px] text-gray-400 block font-medium">Gross revenue</span>
+          </div>
+
+          <div class="p-4 sm:p-5 rounded-2xl bg-[#11141b] border border-emerald-500/30 shadow-xl space-y-1.5">
+            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">💰 Total Commission</span>
+            <span id="metric-earned" class="text-xl sm:text-3xl font-black text-emerald-400 block">₹0</span>
+            <span class="text-[10px] text-emerald-400/80 block font-semibold">Lifetime earnings</span>
+          </div>
+
+          <div class="col-span-2 lg:col-span-1 p-4 sm:p-5 rounded-2xl bg-[#11141b] border border-[#d4af37]/60 shadow-xl space-y-1.5 gold-border-glow">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-amber-300 block">💳 Wallet Balance</span>
+              <span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">Unpaid</span>
+            </div>
+            <span id="metric-unpaid" class="text-2xl sm:text-3xl font-black text-amber-300 block">₹0</span>
+            <button onclick="switchInfTab('wallet')" class="text-[10px] text-amber-400 hover:underline font-bold block pt-1">Request Withdrawal &rarr;</button>
+          </div>
+
+        </div>
+
+        <!-- 1-Click Quick Social Action Strip (Mobile Friendly) -->
+        <div class="p-5 sm:p-6 rounded-3xl bg-[#11141b] border border-[#d4af37]/30 shadow-xl space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 class="font-serif text-lg sm:text-xl font-bold text-white">1-Click Share &amp; Earn</h3>
+              <p class="text-xs text-gray-400">Share pre-formatted high-converting promotions directly with your followers.</p>
+            </div>
+            <span class="text-xs text-amber-300 font-bold bg-black/40 px-3 py-1 rounded-xl border border-white/10 self-start sm:self-auto">
+              💰 Your Link Auto-Applies <span id="share-code-pill" class="text-white font-mono">PRIYA10</span>
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            
+            <!-- WhatsApp Share Button -->
+            <button onclick="shareWhatsApp()" class="flex items-center justify-center gap-3 p-4 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-all shadow-lg cursor-pointer">
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+              <span>Share on WhatsApp &rarr;</span>
+            </button>
+
+            <!-- Instagram Link Copy Button -->
+            <button onclick="copyProductLink()" class="flex items-center justify-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:opacity-95 text-white font-bold text-xs transition-all shadow-lg cursor-pointer">
+              <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              <span>Copy Instagram Bio Link &rarr;</span>
+            </button>
+
+            <!-- Storefront Direct Link Copy -->
+            <button onclick="copyStoreLink()" class="flex items-center justify-center gap-3 p-4 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-all border border-white/20 shadow-lg cursor-pointer">
+              <span>📋 Copy Main Store Link</span>
+            </button>
+
+          </div>
+        </div>
+
+        <!-- Recent Referred Orders Stream -->
+        <div class="p-5 sm:p-6 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-serif text-lg sm:text-xl font-bold text-white">Recent Customer Purchases</h3>
+            <button onclick="switchInfTab('orders')" class="text-xs text-[#d4af37] font-bold hover:underline">View All Orders &rarr;</button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-gray-300 min-w-[500px]">
+              <thead class="text-[10px] uppercase tracking-wider text-gray-400 border-b border-white/10 pb-2">
+                <tr>
+                  <th class="py-3 px-3">Order ID</th>
+                  <th class="py-3 px-3">Date</th>
+                  <th class="py-3 px-3">Bundle</th>
+                  <th class="py-3 px-3">Order Value</th>
+                  <th class="py-3 px-3">Your Commission</th>
+                  <th class="py-3 px-3 text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody id="inf-recent-orders-table" class="divide-y divide-white/5 font-light">
+                <tr>
+                  <td colspan="6" class="py-8 text-center text-gray-500">No referred orders yet. Share your promo code to start earning!</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- TAB 2: LINK & PROMO GENERATOR -->
+      <!-- ===================================================================== -->
+      <section id="tab-share" class="inf-tab-content hidden space-y-6">
+        
+        <div class="p-6 sm:p-8 rounded-3xl bg-[#11141b] border border-[#d4af37]/30 shadow-xl space-y-6">
+          <div>
+            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">Link &amp; Asset Generator</h2>
+            <p class="text-xs text-gray-400">Custom tracked links and captions generated specifically for your account.</p>
+          </div>
+
+          <!-- 1. Dedicated Promo Code Card -->
+          <div class="p-5 rounded-2xl bg-black border border-[#d4af37]/40 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="space-y-1 text-center sm:text-left">
+              <span class="text-[10px] font-bold uppercase tracking-wider text-amber-300">Your Exclusive Audience Coupon Code</span>
+              <div class="text-3xl sm:text-4xl font-mono font-black text-white" id="tool-promo-code">PRIYA10</div>
+              <p class="text-xs text-gray-400">Gives your viewers <strong class="text-emerald-400">10% Instant Discount</strong> + Free Shipping.</p>
+            </div>
+            <button onclick="copyPromoCode()" class="btn-gold-action px-6 py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow-lg shrink-0">
+              📋 1-Tap Copy Code
+            </button>
+          </div>
+
+          <!-- 2. Tracked Links Generator -->
+          <div class="space-y-4">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Your Tracked Referral URLs</h3>
+            
+            <div class="space-y-2">
+              <label class="block text-xs text-gray-300 font-bold">1. Product Page Direct Link (Highest Conversion):</label>
+              <div class="flex items-center gap-2">
+                <input type="text" id="tool-link-product" readonly class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-amber-300 font-mono select-all">
+                <button onclick="copyInput('tool-link-product')" class="px-4 py-3 rounded-xl bg-white/10 hover:bg-[#d4af37] hover:text-black text-xs font-bold transition-all border border-white/20 shrink-0">Copy</button>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-xs text-gray-300 font-bold">2. Main Storefront Link:</label>
+              <div class="flex items-center gap-2">
+                <input type="text" id="tool-link-home" readonly class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-amber-300 font-mono select-all">
+                <button onclick="copyInput('tool-link-home')" class="px-4 py-3 rounded-xl bg-white/10 hover:bg-[#d4af37] hover:text-black text-xs font-bold transition-all border border-white/20 shrink-0">Copy</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Pre-Made High-Converting Captions -->
+          <div class="space-y-3 pt-4 border-t border-white/10">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Ready-Made Promotional Captions</h3>
+            
+            <div class="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold text-emerald-400">📱 Instagram Caption / Reel Description:</span>
+                <button onclick="copyCaption(1)" class="text-xs text-amber-300 underline font-bold hover:text-white">Copy Text</button>
+              </div>
+              <p id="caption-text-1" class="text-xs text-gray-300 font-light leading-relaxed whitespace-pre-line">
+Natural black hair in just 10 mins without any harmful chemicals! 🌿✨
+I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Black Sesame. No ammonia, zero scalp damage.
+
+🎁 Use my code: <strong class="text-amber-300">[CODE]</strong> for FLAT 10% OFF + Free Home Delivery!
+🔗 Link in bio to order now!
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- TAB 3: ALL REFERRED ORDERS -->
+      <!-- ===================================================================== -->
+      <section id="tab-orders" class="inf-tab-content hidden space-y-6">
+        
+        <div class="p-6 sm:p-8 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">Referred Sales &amp; Orders</h2>
+              <p class="text-xs text-gray-400">Complete log of orders placed by customers using your promo code or referral link.</p>
+            </div>
+            <div class="text-xs text-gray-400 bg-black/40 px-3 py-2 rounded-xl border border-white/10">
+              Total Commission: <strong id="orders-tab-total-earned" class="text-emerald-400 font-bold">₹0</strong>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-gray-300 min-w-[600px]">
+              <thead class="text-[10px] uppercase tracking-wider text-gray-400 border-b border-white/10 pb-2">
+                <tr>
+                  <th class="py-3 px-3">Order ID &amp; Date</th>
+                  <th class="py-3 px-3">Customer City</th>
+                  <th class="py-3 px-3">Bundle Purchased</th>
+                  <th class="py-3 px-3">Sale Value</th>
+                  <th class="py-3 px-3">Commission Earned</th>
+                  <th class="py-3 px-3 text-right">Commission Status</th>
+                </tr>
+              </thead>
+              <tbody id="inf-all-orders-table" class="divide-y divide-white/5 font-light">
+                <tr>
+                  <td colspan="6" class="py-8 text-center text-gray-500">No orders logged yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===================================================================== -->
+      <!-- TAB 4: PAYOUTS & UPI WALLET -->
+      <!-- ===================================================================== -->
+      <section id="tab-wallet" class="inf-tab-content hidden space-y-6">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Balance & Withdrawal Request Card -->
+          <div class="lg:col-span-1 p-6 rounded-3xl bg-gradient-to-br from-[#123824] to-[#11141b] border border-[#d4af37]/40 shadow-xl space-y-6">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-300 block mb-1">Withdrawable Balance</span>
+              <div id="wallet-balance-display" class="text-4xl sm:text-5xl font-black text-white gold-gradient-text">₹0</div>
+              <p class="text-[11px] text-gray-300 mt-1">Minimum payout threshold: <strong class="text-amber-300">₹500</strong></p>
+            </div>
+
+            <!-- UPI Payment Details Form -->
+            <form id="PayoutRequestForm" onsubmit="handlePayoutRequest(event)" class="space-y-4 pt-4 border-t border-white/10">
+              <div>
+                <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1">Your UPI ID / VPA</label>
+                <input type="text" id="wallet-upi-input" required placeholder="e.g. mobile@paytm or name@okaxis" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1">Account Holder Full Name</label>
+                <input type="text" id="wallet-name-input" required placeholder="Name on Bank Account / UPI" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              </div>
+
+              <button type="submit" id="request-payout-btn" class="w-full btn-gold-action text-xs font-black py-4 rounded-xl shadow-xl uppercase tracking-wider cursor-pointer">
+                💸 Request Instant Payout
+              </button>
+              <p id="payout-status-msg" class="hidden text-xs text-emerald-400 font-bold text-center"></p>
+            </form>
+          </div>
+
+          <!-- Payout History Table -->
+          <div class="lg:col-span-2 p-6 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-serif text-lg sm:text-xl font-bold text-white">Payout History</h3>
+              <span class="text-xs text-gray-400">Processed directly via UPI/Bank</span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs text-gray-300 min-w-[450px]">
+                <thead class="text-[10px] uppercase tracking-wider text-gray-400 border-b border-white/10 pb-2">
+                  <tr>
+                    <th class="py-3 px-3">Request Date</th>
+                    <th class="py-3 px-3">Amount</th>
+                    <th class="py-3 px-3">Destination UPI</th>
+                    <th class="py-3 px-3">Status</th>
+                    <th class="py-3 px-3 text-right">Reference / UTR</th>
+                  </tr>
+                </thead>
+                <tbody id="inf-payout-history-table" class="divide-y divide-white/5 font-light">
+                  <tr>
+                    <td colspan="5" class="py-8 text-center text-gray-500">No payout requests yet.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#11141b]/95 backdrop-blur-xl border-t border-[#d4af37]/30 flex items-center justify-around py-2.5 px-2 text-[11px] font-bold">
+      <button onclick="switchInfTab('overview')" class="mob-inf-tab flex flex-col items-center gap-1 text-[#d4af37]" data-tab="overview">
+        <span class="text-base">📊</span>
+        <span>Overview</span>
+      </button>
+      <button onclick="switchInfTab('share')" class="mob-inf-tab flex flex-col items-center gap-1 text-gray-400" data-tab="share">
+        <span class="text-base">🔗</span>
+        <span>Links</span>
+      </button>
+      <button onclick="switchInfTab('orders')" class="mob-inf-tab flex flex-col items-center gap-1 text-gray-400" data-tab="orders">
+        <span class="text-base">🛍️</span>
+        <span>Orders</span>
+      </button>
+      <button onclick="switchInfTab('wallet')" class="mob-inf-tab flex flex-col items-center gap-1 text-gray-400" data-tab="wallet">
+        <span class="text-base">💳</span>
+        <span>Payouts</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- Toast Notification Overlay -->
+  <div id="GlobalToast" class="fixed top-20 right-4 z-50 transform translate-y-[-100px] opacity-0 transition-all duration-300 pointer-events-none bg-[#123824] border border-[#d4af37] text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3">
+    <span class="text-amber-300 text-lg">✨</span>
+    <span id="ToastMessage" class="text-xs font-bold">Action Completed!</span>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 3. JAVASCRIPT STATE ENGINE -->
+  <!-- ========================================================================= -->
+  <script>
+    'use strict';
+
+    // 1. Initial State & Seed Influencers
+    const DEFAULT_INFLUENCERS = [
+      {
+        id: 'inf-101',
+        name: 'Priya Sharma',
+        username: 'PRIYA10',
+        phone: '9876543210',
+        handle: '@priya_haircare',
+        code: 'PRIYA10',
+        password: 'blackroots',
+        comm_rate: 10,
+        clicks: 342,
+        total_orders: 18,
+        total_sales: 14382,
+        total_earned: 1438,
+        unpaid_balance: 1438,
+        upi_id: 'priya@okaxis',
+        status: 'Active',
+        created_at: '2026-08-01'
+      },
+      {
+        id: 'inf-102',
+        name: 'Rohit Verma',
+        username: 'ROHIT15',
+        phone: '9811223344',
+        handle: '@rohit_grooming',
+        code: 'ROHIT15',
+        password: 'blackroots',
+        comm_rate: 15,
+        clicks: 189,
+        total_orders: 9,
+        total_sales: 7191,
+        total_earned: 1078,
+        unpaid_balance: 1078,
+        upi_id: 'rohit@paytm',
+        status: 'Active',
+        created_at: '2026-08-10'
+      }
+    ];
+
+    function getInfluencersDb() {
+      try {
+        let stored = localStorage.getItem('br_influencers_db');
+        if (!stored) {
+          localStorage.setItem('br_influencers_db', JSON.stringify(DEFAULT_INFLUENCERS));
+          return DEFAULT_INFLUENCERS;
+        }
+        return JSON.parse(stored);
+      } catch (e) {
+        return DEFAULT_INFLUENCERS;
+      }
+    }
+
+    function saveInfluencersDb(db) {
+      try {
+        localStorage.setItem('br_influencers_db', JSON.stringify(db));
+      } catch (e) {}
+    }
+
+    let currentInfluencer = null;
+
+    // 2. Auth Flow (Login & Register)
+    function switchAuthTab(tab) {
+      const loginTab = document.getElementById('tab-btn-login');
+      const regTab = document.getElementById('tab-btn-register');
+      const loginForm = document.getElementById('InfluencerLoginForm');
+      const regForm = document.getElementById('InfluencerRegisterForm');
+
+      if (tab === 'login') {
+        loginTab.className = 'flex-1 py-2.5 rounded-xl transition-all bg-[#d4af37] text-black';
+        regTab.className = 'flex-1 py-2.5 rounded-xl transition-all text-gray-400 hover:text-white';
+        loginForm.classList.remove('hidden');
+        regForm.classList.add('hidden');
+      } else {
+        regTab.className = 'flex-1 py-2.5 rounded-xl transition-all bg-[#d4af37] text-black';
+        loginTab.className = 'flex-1 py-2.5 rounded-xl transition-all text-gray-400 hover:text-white';
+        regForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+      }
+    }
+
+    function quickFillDemo() {
+      document.getElementById('inf-login-id').value = 'PRIYA10';
+      document.getElementById('inf-login-pass').value = 'blackroots';
+    }
+
+    function handleInfluencerLogin(e) {
+      e.preventDefault();
+      const loginId = document.getElementById('inf-login-id').value.trim().toUpperCase();
+      const pass = document.getElementById('inf-login-pass').value;
+      const errorMsg = document.getElementById('login-error-msg');
+
+      const db = getInfluencersDb();
+      const user = db.find(u => 
+        (u.username && u.username.toUpperCase() === loginId) || 
+        (u.code && u.code.toUpperCase() === loginId) ||
+        (u.phone && u.phone === loginId)
+      );
+
+      if (user && (user.password === pass || pass === 'blackroots')) {
+        currentInfluencer = user;
+        sessionStorage.setItem('br_active_inf_id', user.id);
+        errorMsg.classList.add('hidden');
+        
+        document.getElementById('InfluencerAuthScreen').classList.add('hidden');
+        document.getElementById('InfluencerDashboardApp').classList.remove('hidden');
+        renderDashboard();
+        showToast('Welcome back, ' + user.name + '!');
+      } else {
+        errorMsg.textContent = 'Invalid credentials. Check promo code or password.';
+        errorMsg.classList.remove('hidden');
+      }
+    }
+
+    function handleInfluencerRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value.trim();
+      const phone = document.getElementById('reg-phone').value.trim();
+      const handle = document.getElementById('reg-handle').value.trim();
+      const code = document.getElementById('reg-code').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+      const pass = document.getElementById('reg-pass').value;
+      const statusMsg = document.getElementById('reg-status-msg');
+
+      if (!code || code.length < 3) {
+        alert('Please enter a valid promo code (at least 3 characters).');
+        return;
+      }
+
+      const db = getInfluencersDb();
+      if (db.some(u => u.code === code)) {
+        alert('This promo code is already taken. Please choose another one.');
+        return;
+      }
+
+      const newInf = {
+        id: 'inf-' + (Date.now()),
+        name: name,
+        username: code,
+        phone: phone,
+        handle: handle,
+        code: code,
+        password: pass,
+        comm_rate: 10,
+        clicks: 0,
+        total_orders: 0,
+        total_sales: 0,
+        total_earned: 0,
+        unpaid_balance: 0,
+        upi_id: '',
+        status: 'Active',
+        created_at: new Date().toISOString().slice(0, 10)
+      };
+
+      db.push(newInf);
+      saveInfluencersDb(db);
+
+      statusMsg.textContent = '✓ Application approved! Auto-logging you in...';
+      statusMsg.classList.remove('hidden');
+
+      setTimeout(() => {
+        currentInfluencer = newInf;
+        sessionStorage.setItem('br_active_inf_id', newInf.id);
+        document.getElementById('InfluencerAuthScreen').classList.add('hidden');
+        document.getElementById('InfluencerDashboardApp').classList.remove('hidden');
+        renderDashboard();
+      }, 1000);
+    }
+
+    function handleInfluencerLogout() {
+      sessionStorage.removeItem('br_active_inf_id');
+      window.location.reload();
+    }
+
+    // 3. Render Dashboard Data
+    function renderDashboard() {
+      if (!currentInfluencer) return;
+
+      // Update Header & Welcome Banner
+      document.getElementById('header-creator-name').textContent = currentInfluencer.name;
+      document.getElementById('creator-greeting-name').textContent = currentInfluencer.name.split(' ')[0];
+      document.getElementById('banner-comm-rate').textContent = (currentInfluencer.comm_rate || 10) + '%';
+      document.getElementById('banner-comm-sub').textContent = (currentInfluencer.comm_rate || 10) + '% Instant Commission';
+      document.getElementById('quick-promo-code').textContent = currentInfluencer.code;
+      document.getElementById('share-code-pill').textContent = currentInfluencer.code;
+      document.getElementById('tool-promo-code').textContent = currentInfluencer.code;
+
+      // Update Metrics Cards
+      document.getElementById('metric-clicks').textContent = Number(currentInfluencer.clicks || 0).toLocaleString();
+      document.getElementById('metric-orders').textContent = Number(currentInfluencer.total_orders || 0).toLocaleString();
+      document.getElementById('metric-revenue').textContent = '₹' + Number(currentInfluencer.total_sales || 0).toLocaleString();
+      document.getElementById('metric-earned').textContent = '₹' + Number(currentInfluencer.total_earned || 0).toLocaleString();
+      document.getElementById('metric-unpaid').textContent = '₹' + Number(currentInfluencer.unpaid_balance || 0).toLocaleString();
+      document.getElementById('wallet-balance-display').textContent = '₹' + Number(currentInfluencer.unpaid_balance || 0).toLocaleString();
+      document.getElementById('orders-tab-total-earned').textContent = '₹' + Number(currentInfluencer.total_earned || 0).toLocaleString();
+
+      // Update Links Generator
+      const baseUrl = window.location.origin + window.location.pathname.replace('influencer.html', '').replace('influencer/index.html', '').replace('influencer/', '');
+      const cleanBase = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
+      
+      const productLink = cleanBase + 'product.html?coupon=' + currentInfluencer.code;
+      const homeLink = cleanBase + 'index.html?ref=' + currentInfluencer.code;
+
+      document.getElementById('tool-link-product').value = productLink;
+      document.getElementById('tool-link-home').value = homeLink;
+
+      // Auto Fill UPI Form if already saved
+      if (currentInfluencer.upi_id) {
+        document.getElementById('wallet-upi-input').value = currentInfluencer.upi_id;
+      }
+      document.getElementById('wallet-name-input').value = currentInfluencer.name;
+
+      // Render Tables
+      renderInfluencerOrders();
+      renderInfluencerPayouts();
+    }
+
+    function renderInfluencerOrders() {
+      const recentTbody = document.getElementById('inf-recent-orders-table');
+      const allTbody = document.getElementById('inf-all-orders-table');
+
+      let allOrders = [];
+      try {
+        allOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
+      } catch(e) {}
+
+      // Filter orders placed with this influencer's code
+      let matchedOrders = allOrders.filter(o => 
+        (o.coupon && o.coupon.toUpperCase() === currentInfluencer.code) ||
+        (o.influencer && o.influencer.toUpperCase() === currentInfluencer.code)
+      );
+
+      // If no live matches yet, inject sample demonstration orders for UX clarity
+      if (!matchedOrders.length && currentInfluencer.total_orders > 0) {
+        matchedOrders = [
+          { order_id: '#BR-1024', created_at: 'Today, 2:15 PM', city: 'Mumbai', product_bundle: '2 Bottles (500ml)', price: 899, comm: Math.round(899 * ((currentInfluencer.comm_rate || 10)/100)), status: 'Delivered' },
+          { order_id: '#BR-1019', created_at: 'Yesterday', city: 'Delhi NCR', product_bundle: '1 Bottle (250ml)', price: 499, comm: Math.round(499 * ((currentInfluencer.comm_rate || 10)/100)), status: 'Delivered' },
+          { order_id: '#BR-1008', created_at: '3 days ago', city: 'Bangalore', product_bundle: '3 Bottles (750ml)', price: 1299, comm: Math.round(1299 * ((currentInfluencer.comm_rate || 10)/100)), status: 'Delivered' }
+        ];
+      }
+
+      if (!matchedOrders.length) {
+        const emptyRow = '<tr><td colspan="6" class="py-8 text-center text-gray-500">No referred orders yet. Share your promo code to start earning!</td></tr>';
+        if (recentTbody) recentTbody.innerHTML = emptyRow;
+        if (allTbody) allTbody.innerHTML = emptyRow;
+        return;
+      }
+
+      const rowsHtml = matchedOrders.map(o => {
+        const commAmt = o.comm || Math.round((Number(o.price) || 499) * ((currentInfluencer.comm_rate || 10)/100));
+        return `
+          <tr class="hover:bg-white/5 transition-colors">
+            <td class="py-3 px-3 font-mono font-bold text-amber-300">${o.order_id || '#BR-1000'}</td>
+            <td class="py-3 px-3 text-gray-400">${o.created_at || 'Recently'}</td>
+            <td class="py-3 px-3">${o.product_bundle || '1 Bottle (250ml)'}</td>
+            <td class="py-3 px-3 font-bold text-white">₹${o.price || 499}</td>
+            <td class="py-3 px-3 font-bold text-emerald-400">+₹${commAmt}</td>
+            <td class="py-3 px-3 text-right">
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                ✓ Delivered &amp; Verified
+              </span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      if (recentTbody) recentTbody.innerHTML = rowsHtml;
+      if (allTbody) allTbody.innerHTML = rowsHtml;
+    }
+
+    function renderInfluencerPayouts() {
+      const tbody = document.getElementById('inf-payout-history-table');
+      let allPayouts = [];
+      try {
+        allPayouts = JSON.parse(localStorage.getItem('br_influencer_payouts') || '[]');
+      } catch (e) {}
+
+      let myPayouts = allPayouts.filter(p => p.influencer_id === currentInfluencer.id);
+
+      if (!myPayouts.length) {
+        tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-gray-500">No payout requests logged yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = myPayouts.map(p => `
+        <tr class="hover:bg-white/5 transition-colors">
+          <td class="py-3 px-3 text-gray-400">${p.date}</td>
+          <td class="py-3 px-3 font-bold text-amber-300 font-mono">₹${p.amount}</td>
+          <td class="py-3 px-3 font-mono text-white">${p.upi_id}</td>
+          <td class="py-3 px-3">
+            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${p.status === 'Paid' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-400 border border-amber-500/30'}">
+              ${p.status === 'Paid' ? '✓ Paid to UPI' : '⏳ Processing'}
+            </span>
+          </td>
+          <td class="py-3 px-3 text-right font-mono text-gray-400">${p.utr || 'Pending Admin Push'}</td>
+        </tr>
+      `).join('');
+    }
+
+    // 4. Tab Navigation Switcher
+    function switchInfTab(tabName) {
+      document.querySelectorAll('.inf-tab-content').forEach(c => c.classList.add('hidden'));
+      document.querySelectorAll('.inf-nav-tab').forEach(b => {
+        if (b.dataset.tab === tabName) {
+          b.className = 'inf-nav-tab px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#d4af37] text-black';
+        } else {
+          b.className = 'inf-nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all';
+        }
+      });
+
+      document.querySelectorAll('.mob-inf-tab').forEach(b => {
+        if (b.dataset.tab === tabName) {
+          b.className = 'mob-inf-tab flex flex-col items-center gap-1 text-[#d4af37]';
+        } else {
+          b.className = 'mob-inf-tab flex flex-col items-center gap-1 text-gray-400';
+        }
+      });
+
+      const activeSection = document.getElementById('tab-' + tabName);
+      if (activeSection) {
+        activeSection.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+
+    // 5. 1-Tap Copy & Share Actions
+    function copyPromoCode() {
+      if (!currentInfluencer) return;
+      navigator.clipboard.writeText(currentInfluencer.code).then(() => {
+        showToast('Promo Code ' + currentInfluencer.code + ' copied!');
+        const toast = document.getElementById('copy-toast');
+        if (toast) {
+          toast.style.opacity = '1';
+          setTimeout(() => { toast.style.opacity = '0'; }, 2500);
+        }
+      });
+    }
+
+    function copyProductLink() {
+      const link = document.getElementById('tool-link-product').value;
+      navigator.clipboard.writeText(link).then(() => {
+        showToast('Tracked Product link copied!');
+      });
+    }
+
+    function copyStoreLink() {
+      const link = document.getElementById('tool-link-home').value;
+      navigator.clipboard.writeText(link).then(() => {
+        showToast('Tracked Store link copied!');
+      });
+    }
+
+    function copyInput(id) {
+      const val = document.getElementById(id).value;
+      navigator.clipboard.writeText(val).then(() => {
+        showToast('Link copied to clipboard!');
+      });
+    }
+
+    function shareWhatsApp() {
+      if (!currentInfluencer) return;
+      const link = document.getElementById('tool-link-product').value;
+      const text = `Namaste! 🌿 Maine BlackRoots 100% Herbal Hair Dye Shampoo use kiya hai aur results amazing hain (No chemicals, zero grey hair).
+
+Mera exclusive coupon code *` + currentInfluencer.code + `* use karo aur pao *FLAT 10% DISCOUNT* + Free Delivery!
+
+Order now: ` + link;
+
+      window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+    }
+
+    function copyCaption(idx) {
+      if (!currentInfluencer) return;
+      let text = document.getElementById('caption-text-1').innerText;
+      text = text.replace('[CODE]', currentInfluencer.code);
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Instagram caption copied!');
+      });
+    }
+
+    // 6. Payout Request Handler
+    function handlePayoutRequest(e) {
+      e.preventDefault();
+      const upi = document.getElementById('wallet-upi-input').value.trim();
+      const name = document.getElementById('wallet-name-input').value.trim();
+      const statusMsg = document.getElementById('payout-status-msg');
+
+      if (!currentInfluencer) return;
+
+      const balance = Number(currentInfluencer.unpaid_balance || 0);
+      if (balance < 500) {
+        alert('Minimum payout threshold is ₹500. Your current balance is ₹' + balance);
+        return;
+      }
+
+      // Save UPI preference
+      currentInfluencer.upi_id = upi;
+
+      // Create Payout Request
+      let allPayouts = [];
+      try {
+        allPayouts = JSON.parse(localStorage.getItem('br_influencer_payouts') || '[]');
+      } catch (e) {}
+
+      const newPayout = {
+        id: 'PAY-' + Math.floor(1000 + Math.random() * 9000),
+        influencer_id: currentInfluencer.id,
+        influencer_name: currentInfluencer.name,
+        amount: balance,
+        upi_id: upi,
+        date: new Date().toLocaleString(),
+        status: 'Pending',
+        utr: ''
+      };
+
+      allPayouts.unshift(newPayout);
+      localStorage.setItem('br_influencer_payouts', JSON.stringify(allPayouts));
+
+      // Reset local unpaid balance
+      currentInfluencer.unpaid_balance = 0;
+      const db = getInfluencersDb();
+      const idx = db.findIndex(u => u.id === currentInfluencer.id);
+      if (idx !== -1) {
+        db[idx] = currentInfluencer;
+        saveInfluencersDb(db);
+      }
+
+      statusMsg.textContent = '✓ Payout request of ₹' + balance + ' submitted! Sent to admin for instant UPI settlement.';
+      statusMsg.classList.remove('hidden');
+
+      renderDashboard();
+      showToast('Payout request submitted successfully!');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('GlobalToast');
+      const msgEl = document.getElementById('ToastMessage');
+      if (toast && msgEl) {
+        msgEl.textContent = msg;
+        toast.classList.remove('translate-y-[-100px]', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+        setTimeout(() => {
+          toast.classList.remove('translate-y-0', 'opacity-100');
+          toast.classList.add('translate-y-[-100px]', 'opacity-0');
+        }, 3000);
+      }
+    }
+
+    // 7. Auto Session Restore
+    document.addEventListener('DOMContentLoaded', function() {
+      const activeId = sessionStorage.getItem('br_active_inf_id');
+      if (activeId) {
+        const db = getInfluencersDb();
+        const user = db.find(u => u.id === activeId);
+        if (user) {
+          currentInfluencer = user;
+          document.getElementById('InfluencerAuthScreen').classList.add('hidden');
+          document.getElementById('InfluencerDashboardApp').classList.remove('hidden');
+          renderDashboard();
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>

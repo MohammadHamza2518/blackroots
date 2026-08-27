@@ -149,5 +149,22 @@ module.exports = async (req, res) => {
     return res.status(200).json({ success: true, settings: memoryStore.settings });
   }
 
+    // 9. Influencer API actions
+  if (action === 'get_influencers') {
+    return res.status(200).json({ success: true, influencers: memoryStore.influencers || [] });
+  }
+  if (action === 'save_influencer') {
+    if (!memoryStore.influencers) memoryStore.influencers = [];
+    const inf = req.body || {};
+    const existingIdx = memoryStore.influencers.findIndex(u => u.id === inf.id || u.code === inf.code);
+    if (existingIdx !== -1) {
+      memoryStore.influencers[existingIdx] = Object.assign(memoryStore.influencers[existingIdx], inf);
+    } else {
+      memoryStore.influencers.push(inf);
+    }
+    saveDb();
+    return res.status(200).json({ success: true, message: 'Influencer saved!' });
+  }
+
   return res.status(200).json({ success: true, message: 'BlackRoots API ready' });
 };
