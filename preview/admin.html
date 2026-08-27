@@ -461,38 +461,44 @@
         <p class="text-xs text-gray-400">Create creator account and assign custom promo code.</p>
       </div>
 
-      <form id="AddInfluencerForm" onsubmit="handleSaveNewInfluencer(event)" class="space-y-4 text-xs">
+      <form id="AddInfluencerForm" onsubmit="handleSaveNewInfluencer(event)" class="space-y-3.5 text-xs">
         <div>
           <label class="block font-bold text-gray-300 uppercase mb-1">Creator Full Name</label>
-          <input type="text" id="inf-name-input" required placeholder="e.g. Pooja Hegde" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white focus:outline-none focus:border-[#d4af37]">
+          <input type="text" id="inf-name-input" required placeholder="e.g. Pooja Hegde" class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-white focus:outline-none focus:border-[#d4af37]">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-gray-300 uppercase mb-1">User ID / Username</label>
+            <input type="text" id="inf-username-input" required placeholder="e.g. POOJA10" class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-white font-mono uppercase font-bold focus:outline-none focus:border-[#d4af37]">
+          </div>
+          <div>
+            <label class="block font-bold text-gray-300 uppercase mb-1">Login Password</label>
+            <input type="text" id="inf-pass-input" required value="pass123" placeholder="Set Password" class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-white font-mono focus:outline-none focus:border-[#d4af37]">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-gray-300 uppercase mb-1">Promo Coupon Code</label>
+            <input type="text" id="inf-code-input" required placeholder="e.g. POOJA10" class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-white uppercase font-bold focus:outline-none focus:border-[#d4af37]">
+          </div>
+          <div>
+            <label class="block font-bold text-gray-300 uppercase mb-1">Commission Rate %</label>
+            <input type="number" id="inf-comm-input" required value="10" min="1" max="50" class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-white font-bold focus:outline-none focus:border-[#d4af37]">
+          </div>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block font-bold text-gray-300 uppercase mb-1">Mobile / WhatsApp</label>
-            <input type="tel" id="inf-phone-input" required placeholder="10-Digit Phone" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white focus:outline-none focus:border-[#d4af37]">
+            <input type="tel" id="inf-phone-input" required placeholder="10-Digit Mobile" class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-white focus:outline-none focus:border-[#d4af37]">
           </div>
           <div>
             <label class="block font-bold text-gray-300 uppercase mb-1">Instagram Handle</label>
-            <input type="text" id="inf-handle-input" required placeholder="@handle" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white focus:outline-none focus:border-[#d4af37]">
+            <input type="text" id="inf-handle-input" placeholder="@handle (optional)" class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-white focus:outline-none focus:border-[#d4af37]">
           </div>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block font-bold text-gray-300 uppercase mb-1">Custom Promo Code</label>
-            <input type="text" id="inf-code-input" required placeholder="e.g. POOJA10" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white uppercase font-bold focus:outline-none focus:border-[#d4af37]">
-          </div>
-          <div>
-            <label class="block font-bold text-gray-300 uppercase mb-1">Commission Rate %</label>
-            <input type="number" id="inf-comm-input" required value="10" min="1" max="50" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white font-bold focus:outline-none focus:border-[#d4af37]">
-          </div>
-        </div>
-        <div>
-          <label class="block font-bold text-gray-300 uppercase mb-1">Login Password</label>
-          <input type="text" id="inf-pass-input" required value="blackroots" class="w-full px-3.5 py-3 rounded-xl bg-black border border-white/20 text-white font-mono focus:outline-none focus:border-[#d4af37]">
         </div>
 
-        <button type="submit" class="w-full bg-gradient-to-r from-[#d4af37] to-amber-500 text-black font-black py-3.5 rounded-xl uppercase tracking-wider shadow-xl hover:brightness-110 cursor-pointer">
-          Create &amp; Activate Creator
+        <button type="submit" class="w-full bg-gradient-to-r from-[#d4af37] to-amber-500 text-black font-black py-3.5 rounded-xl uppercase tracking-wider shadow-xl hover:brightness-110 cursor-pointer mt-2">
+          Create Influencer Account &rarr;
         </button>
       </form>
     </div>
@@ -868,11 +874,14 @@
     function handleSaveNewInfluencer(e) {
       e.preventDefault();
       const name = document.getElementById('inf-name-input').value.trim();
+      const usernameInput = document.getElementById('inf-username-input');
+      const username = usernameInput ? usernameInput.value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '') : '';
       const phone = document.getElementById('inf-phone-input').value.trim();
       const handle = document.getElementById('inf-handle-input').value.trim();
       const code = document.getElementById('inf-code-input').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
       const comm = Number(document.getElementById('inf-comm-input').value) || 10;
       const pass = document.getElementById('inf-pass-input').value.trim();
+      const finalUsername = username || code;
 
       const db = getInfluencersAdminDb();
       if (db.some(u => u.code === code)) {
@@ -883,7 +892,7 @@
       const newCreator = {
         id: 'inf-' + Date.now(),
         name: name,
-        username: code,
+        username: finalUsername,
         phone: phone,
         handle: handle,
         code: code,
