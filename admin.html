@@ -98,18 +98,15 @@
 
         <!-- Navigation Tabs -->
         <nav class="hidden md:flex items-center gap-2">
-          <button onclick="switchTab('overview')" class="nav-tab px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#d4af37] text-black" data-tab="overview">📊 Overview</button>
-          <button onclick="switchTab('orders')" class="nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="orders">🛍️ Orders</button>
-          <button onclick="switchTab('influencers')" class="nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="influencers">🤝 Creators &amp; Affiliates</button>
-          <button onclick="switchTab('abandoned')" class="nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="abandoned">🛒 Abandoned Leads</button>
-          <button onclick="switchTab('settings')" class="nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="settings">⚙️ Marketing &amp; APIs</button>
+          <button onclick="switchTab('overview')" class="nav-tab whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold transition-all bg-[#d4af37] text-black" data-tab="overview">📊 Overview</button>
+          <button onclick="switchTab('orders')" class="nav-tab whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="orders">🛍️ Orders</button>
+          <button onclick="switchTab('influencers')" class="nav-tab whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="influencers">🤝 Creators &amp; Affiliates</button>
+          <button onclick="switchTab('abandoned')" class="nav-tab whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="abandoned">🛒 Abandoned Leads</button>
+          <button onclick="switchTab('settings')" class="nav-tab whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="settings">⚙️ Marketing &amp; APIs</button>
         </nav>
 
         <!-- Right Quick Actions -->
         <div class="flex items-center gap-3">
-          <a href="./influencer.html" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 text-xs font-bold text-amber-300 transition-all cursor-pointer">
-            <span>✨ Creator Portal ↗</span>
-          </a>
           <button onclick="exportCSVDirect()" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-[#d4af37]/50 text-xs font-bold text-amber-300 transition-all cursor-pointer">
             <span>📥 Export CSV</span>
           </button>
@@ -122,11 +119,11 @@
 
       <!-- Mobile Tab Bar -->
       <div class="md:hidden flex items-center justify-around border-t border-white/10 p-2 text-[11px] overflow-x-auto">
-        <button onclick="switchTab('overview')" class="mob-tab font-bold text-[#d4af37] px-2 py-1" data-tab="overview">📊 Overview</button>
-        <button onclick="switchTab('orders')" class="mob-tab font-bold text-gray-400 px-2 py-1" data-tab="orders">🛍️ Orders</button>
-        <button onclick="switchTab('influencers')" class="mob-tab font-bold text-gray-400 px-2 py-1" data-tab="influencers">🤝 Creators</button>
-        <button onclick="switchTab('abandoned')" class="mob-tab font-bold text-gray-400 px-2 py-1" data-tab="abandoned">🛒 Leads</button>
-        <button onclick="switchTab('settings')" class="mob-tab font-bold text-gray-400 px-2 py-1" data-tab="settings">⚙️ Settings</button>
+        <button onclick="switchTab('overview')" class="mob-tab whitespace-nowrap font-bold text-[#d4af37] px-2 py-1" data-tab="overview">📊 Overview</button>
+        <button onclick="switchTab('orders')" class="mob-tab whitespace-nowrap font-bold text-gray-400 px-2 py-1" data-tab="orders">🛍️ Orders</button>
+        <button onclick="switchTab('influencers')" class="mob-tab whitespace-nowrap font-bold text-gray-400 px-2 py-1" data-tab="influencers">🤝 Creators</button>
+        <button onclick="switchTab('abandoned')" class="mob-tab whitespace-nowrap font-bold text-gray-400 px-2 py-1" data-tab="abandoned">🛒 Leads</button>
+        <button onclick="switchTab('settings')" class="mob-tab whitespace-nowrap font-bold text-gray-400 px-2 py-1" data-tab="settings">⚙️ Settings</button>
       </div>
     </header>
 

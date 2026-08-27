@@ -2,11 +2,29 @@ import os
 import re
 import shutil
 
-# ==============================================================================
-# 1. UPDATE INFLUENCER.HTML
-# ==============================================================================
-with open('influencer.html', 'r', encoding='utf-8') as f:
-    inf_html = f.read()
+for filepath in ['admin.html', os.path.join('admin', 'index.html')]:
+    if os.path.exists(filepath):
+        with open(filepath, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        btn_pattern = r'<a href="\./influencer\.html" target="_blank" class="hidden sm:inline-flex.*?</a>\s*'
+        content = re.sub(btn_pattern, '', content, flags=re.DOTALL)
+
+        content = content.replace('class="nav-tab px-4 py-2', 'class="nav-tab whitespace-nowrap px-3.5 py-2')
+        content = content.replace('class="mob-tab font-bold', 'class="mob-tab whitespace-nowrap font-bold')
+
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(content)
+        print('Fixed header in', filepath)
+
+for folder in ['demo_lab', 'preview']:
+    if os.path.exists(folder):
+        shutil.copy2('admin.html', os.path.join(folder, 'admin.html'))
+        os.makedirs(os.path.join(folder, 'admin'), exist_ok=True)
+        shutil.copy2('admin.html', os.path.join(folder, 'admin', 'index.html'))
+        print('Synced fixed admin to', folder)
+
+print("ALL ADMIN HEADERS FIXED CLEANLY")
 
 # Replace auth screen with pristine Login Form + Eye Icon toggle + Zero demo boxes
 auth_screen_pattern = r'<!-- ========================================================================= -->\s*<!-- 1\. AUTH SCREEN.*?<!-- ========================================================================= -->\s*<!-- 2\. MAIN CREATOR DASHBOARD APP -->'
