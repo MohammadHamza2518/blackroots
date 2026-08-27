@@ -1010,6 +1010,31 @@ window.closeIngredientModal = closeIngredientModal;
     const key = `${currentAge}_${currentGrey}`;
     const data = timelineData[key] || timelineData['mid_moderate'];
 
+    // 1. Update Home Page Age Pills (AgePill_young, AgePill_mid, AgePill_senior)
+    ['young', 'mid', 'senior'].forEach(function(k) {
+      const btn = document.getElementById('AgePill_' + k);
+      if (btn) {
+        if (k === currentAge) {
+          btn.className = 'js-age-pill py-2.5 px-2 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black border border-[#fff3b0] text-center text-xs font-black shadow-lg transition-all cursor-pointer transform scale-[1.02]';
+        } else {
+          btn.className = 'js-age-pill py-2.5 px-2 rounded-xl bg-white/5 border border-white/15 text-center text-xs font-bold text-white hover:border-[#d4af37]/60 transition-all cursor-pointer';
+        }
+      }
+    });
+
+    // 2. Update Home Page Grey Pills (GreyPill_light, GreyPill_moderate, GreyPill_heavy)
+    ['light', 'moderate', 'heavy'].forEach(function(k) {
+      const btn = document.getElementById('GreyPill_' + k);
+      if (btn) {
+        if (k === currentGrey) {
+          btn.className = 'js-grey-pill py-2.5 px-2 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black border border-[#fff3b0] text-center text-xs font-black shadow-lg transition-all cursor-pointer transform scale-[1.02]';
+        } else {
+          btn.className = 'js-grey-pill py-2.5 px-2 rounded-xl bg-white/5 border border-white/15 text-center text-xs font-bold text-white hover:border-[#d4af37]/60 transition-all cursor-pointer';
+        }
+      }
+    });
+
+    // 3. Update Result Text & Badges
     const daysBadge = document.getElementById('CalcResultDaysBadge');
     const heading = document.getElementById('CalcResultHeading');
     const desc = document.getElementById('CalcResultDesc');
@@ -1025,7 +1050,7 @@ window.closeIngredientModal = closeIngredientModal;
     if (ageLabel) ageLabel.textContent = ageLabels[currentAge] || '';
     if (greyLabel) greyLabel.textContent = greyLabels[currentGrey] || '';
     if (simpleBadge) simpleBadge.textContent = data.days;
-    if (simpleText) simpleText.textContent = data.heading;
+    if (simpleText) simpleText.innerHTML = data.desc;
 
     if (outputBox) {
       if (outputBox.classList && outputBox.classList.remove) outputBox.classList.remove('hidden');
