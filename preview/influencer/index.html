@@ -72,7 +72,7 @@
 <body class="bg-[#0a0b0e] text-white font-sans antialiased selection:bg-[#d4af37] selection:text-black min-h-screen flex flex-col justify-between pb-20 md:pb-0">
 
   <!-- ========================================================================= -->
-  <!-- 1. AUTH SCREEN (STRICT CREATOR LOGIN ONLY - ADMIN CONTROLLED) -->
+  <!-- 1. AUTH SCREEN (STRICT CREATOR LOGIN ONLY - USER ID & PASSWORD) -->
   <!-- ========================================================================= -->
   <div id="InfluencerAuthScreen" class="fixed inset-0 z-50 bg-[#0a0b0e] flex items-center justify-center p-4 overflow-y-auto">
     <div class="w-full max-w-md my-auto p-6 sm:p-8 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-[0_20px_60px_rgba(0,0,0,0.95)] text-center space-y-6">
@@ -88,41 +88,41 @@
 
       <div class="p-3.5 rounded-2xl bg-black/50 border border-white/10 text-left space-y-1">
         <span class="text-[10px] text-amber-300 block font-bold uppercase tracking-wider">🔒 Private Creator Access</span>
-        <p class="text-[11px] text-gray-300">Creator accounts are provisioned exclusively by BlackRoots Admin. Please enter your assigned User ID and Password below.</p>
+        <p class="text-[11px] text-gray-300">Creator accounts are provisioned exclusively by BlackRoots Admin. Please sign in with your assigned User ID and Password.</p>
       </div>
 
       <!-- Pure Creator Login Form -->
       <form id="InfluencerLoginForm" onsubmit="handleInfluencerLogin(event)" class="space-y-4 text-left">
         <div>
-          <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">User ID / Promo Code / Phone</label>
-          <input type="text" id="inf-login-id" required placeholder="Enter User ID (e.g. PRIYA10)" class="w-full px-4 py-3.5 rounded-xl bg-black border border-white/20 text-white text-sm focus:outline-none focus:border-[#d4af37] transition-all font-mono">
+          <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">Assigned User ID</label>
+          <input type="text" id="inf-login-id" required placeholder="Enter Your User ID (e.g. PRIYA10)" class="w-full px-4 py-3.5 rounded-xl bg-black border border-white/20 text-white text-sm focus:outline-none focus:border-[#d4af37] transition-all font-mono">
         </div>
+        
         <div>
           <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">Password</label>
-          <input type="password" id="inf-login-pass" required placeholder="Enter Your Password" class="w-full px-4 py-3.5 rounded-xl bg-black border border-white/20 text-white text-sm focus:outline-none focus:border-[#d4af37] transition-all font-mono">
+          <div class="relative">
+            <input type="password" id="inf-login-pass" required placeholder="Enter Your Password" class="w-full pl-4 pr-11 py-3.5 rounded-xl bg-black border border-white/20 text-white text-sm focus:outline-none focus:border-[#d4af37] transition-all font-mono">
+            <button type="button" onclick="togglePass('inf-login-pass', 'inf-eye-svg')" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white p-1 cursor-pointer transition-colors" title="Show / Hide Password">
+              <svg id="inf-eye-svg" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </button>
+          </div>
         </div>
         
         <div class="flex items-center justify-between text-xs text-gray-400">
           <label class="flex items-center gap-2 cursor-pointer">
             <input type="checkbox" checked class="rounded accent-[#d4af37]"> Remember me
           </label>
-          <a href="https://wa.me/919580835179?text=Hello%20BlackRoots%20Team%2C%20I%20need%20help%20with%20my%20VIP%20Creator%20login%20credentials." target="_blank" class="text-amber-400 hover:underline">Need Help?</a>
+          <a href="https://wa.me/919580835179?text=Hello%20BlackRoots%20Team%2C%20I%20need%20assistance%20with%20my%20VIP%20Creator%20login%20credentials." target="_blank" class="text-amber-400 hover:underline">Need Help?</a>
         </div>
 
         <button type="submit" id="login-submit-btn" class="w-full btn-gold-action text-sm py-4 rounded-xl shadow-xl uppercase tracking-wider cursor-pointer font-black">
-          Access Creator Portal &rarr;
+          Sign In to Creator Portal &rarr;
         </button>
         <p id="login-error-msg" class="hidden text-xs text-red-400 font-bold text-center"></p>
       </form>
-
-      <!-- Instant Test Access Demo Info -->
-      <div class="p-3.5 rounded-2xl bg-white/5 border border-[#d4af37]/20 text-left space-y-1.5">
-        <div class="flex items-center justify-between">
-          <span class="text-[10px] uppercase font-bold text-amber-300 tracking-wider">🌟 Demo Login (Created by Admin):</span>
-          <button type="button" onclick="quickFillDemo()" class="text-[10px] text-amber-400 font-bold underline hover:text-white">1-Click Auto Fill</button>
-        </div>
-        <p class="text-[11px] text-gray-400">User ID: <code class="text-white font-bold bg-black px-1.5 py-0.5 rounded border border-white/10">PRIYA10</code> &bull; Password: <code class="text-white font-bold bg-black px-1.5 py-0.5 rounded border border-white/10">blackroots</code></p>
-      </div>
 
       <div class="pt-2 border-t border-white/10">
         <a href="./index.html" class="text-xs text-gray-400 hover:text-white transition-colors">&larr; Return to Main Website</a>
@@ -520,6 +520,25 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
   <script>
     'use strict';
 
+    // Eye Icon Password Toggle
+    function togglePass(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (!input) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        if (icon) {
+          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />';
+        }
+      } else {
+        input.type = 'password';
+        if (icon) {
+          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
+        }
+      }
+    }
+
+
     // 1. Initial State & Seed Influencers
     const DEFAULT_INFLUENCERS = [
       {
@@ -609,17 +628,16 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
     function handleInfluencerLogin(e) {
       e.preventDefault();
       const loginId = document.getElementById('inf-login-id').value.trim().toUpperCase();
-      const pass = document.getElementById('inf-login-pass').value;
+      const pass = document.getElementById('inf-login-pass').value.trim();
       const errorMsg = document.getElementById('login-error-msg');
 
       const db = getInfluencersDb();
       const user = db.find(u => 
         (u.username && u.username.toUpperCase() === loginId) || 
-        (u.code && u.code.toUpperCase() === loginId) ||
-        (u.phone && u.phone === loginId)
+        (u.code && u.code.toUpperCase() === loginId)
       );
 
-      if (user && (user.password === pass || pass === 'blackroots')) {
+      if (user && user.password === pass) {
         currentInfluencer = user;
         sessionStorage.setItem('br_active_inf_id', user.id);
         errorMsg.classList.add('hidden');
@@ -629,7 +647,7 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
         renderDashboard();
         showToast('Welcome back, ' + user.name + '!');
       } else {
-        errorMsg.textContent = 'Invalid credentials. Check promo code or password.';
+        errorMsg.textContent = 'Incorrect User ID or Password. Please check with BlackRoots Admin.';
         errorMsg.classList.remove('hidden');
       }
     }
