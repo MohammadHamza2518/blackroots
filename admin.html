@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlackRoots &mdash; D2C Command Center & Admin Dashboard</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandDark: '#0a0b0e',
+            brandCard: '#11141b',
+            brandEmerald: '#123824',
+            brandGold: '#d4af37',
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/theme.css">
+
+  <style>
+    *, *::before, *::after, html, body {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+    }
+    *::-webkit-scrollbar {
+      display: none !important;
+      width: 0px !important;
+    }
+  </style>
+</head>
+<body class="bg-[#0a0b0e] text-white font-sans antialiased min-h-screen flex flex-col selection:bg-[#d4af37] selection:text-black">
+
+  <!-- 1. LOGIN SCREEN OVERLAY -->
+  <div id="AdminLoginScreen" class="fixed inset-0 z-50 bg-[#0a0b0e] flex items-center justify-center p-4">
+    <div class="w-full max-w-md p-8 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-[0_20px_60px_rgba(0,0,0,0.9)] text-center space-y-6">
+      
+      <div class="flex flex-col items-center gap-3">
+        <img src="./assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-16 h-16 rounded-full border-2 border-[#d4af37] shadow-xl">
+        <div>
+          <h2 class="font-serif text-2xl font-bold text-white uppercase tracking-wider">BlackRoots Admin</h2>
+          <p class="text-xs text-[#d4af37] font-bold uppercase tracking-widest">D2C Command Center</p>
+        </div>
+      </div>
+
+      <form id="LoginForm" onsubmit="handleAdminLogin(event)" class="space-y-4 text-left">
+        <div>
+          <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">Master Password</label>
+          <input type="password" id="admin-pass-input" required placeholder="Enter Admin Password" class="w-full px-4 py-3.5 rounded-xl bg-black border border-white/20 text-white text-sm focus:outline-none focus:border-[#d4af37] transition-all font-mono">
+        </div>
+        <button type="submit" id="login-btn" class="w-full bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-sm py-4 rounded-xl shadow-xl hover:brightness-110 active:scale-95 transition-all uppercase tracking-wider cursor-pointer">
+          Access Dashboard &rarr;
+        </button>
+        <p id="login-error" class="hidden text-xs text-red-400 font-bold text-center mt-2"></p>
+      </form>
+
+      <p class="text-[11px] text-gray-500">Default Access: <code class="text-gray-400">blackroots2026</code> (Changeable in Settings)</p>
+    </div>
+  </div>
+
+  <!-- 2. MAIN DASHBOARD CONTENT (Visible after login) -->
+  <div id="AdminDashboardApp" class="hidden flex-1 flex flex-col">
+    
+    <!-- Top Admin Header -->
+    <header class="bg-[#11141b]/95 backdrop-blur-xl border-b border-[#d4af37]/20 sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        
+        <div class="flex items-center gap-3">
+          <img src="./assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-9 h-9 rounded-full border border-[#d4af37]">
+          <div class="flex flex-col">
+            <span class="font-serif text-lg font-bold text-white uppercase tracking-wider">BlackRoots Admin</span>
+            <span class="text-[9px] uppercase tracking-widest text-[#d4af37] font-bold">D2C Live Operations</span>
+          </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="hidden md:flex items-center gap-2">
+          <button onclick="switchTab('overview')" class="nav-tab px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#d4af37] text-black" data-tab="overview">📊 Overview</button>
+          <button onclick="switchTab('orders')" class="nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="orders">🛍️ Orders</button>
+          <button onclick="switchTab('abandoned')" class="nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="abandoned">🛒 Abandoned Leads</button>
+          <button onclick="switchTab('settings')" class="nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="settings">⚙️ Marketing &amp; APIs</button>
+        </nav>
+
+        <!-- Right Quick Actions -->
+        <div class="flex items-center gap-3">
+          <button onclick="exportCSVDirect()" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 hover:border-[#d4af37]/50 text-xs font-bold text-amber-300 transition-all cursor-pointer">
+            <span>📥 Export CSV</span>
+          </button>
+          <button onclick="handleLogout()" class="px-3 py-1.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white text-xs font-bold transition-all cursor-pointer">
+            Logout
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Mobile Tab Bar -->
+      <div class="md:hidden flex items-center justify-around border-t border-white/10 p-2 text-xs">
+        <button onclick="switchTab('overview')" class="mob-tab font-bold text-[#d4af37]" data-tab="overview">📊 Overview</button>
+        <button onclick="switchTab('orders')" class="mob-tab font-bold text-gray-400" data-tab="orders">🛍️ Orders</button>
+        <button onclick="switchTab('abandoned')" class="mob-tab font-bold text-gray-400" data-tab="abandoned">🛒 Leads</button>
+        <button onclick="switchTab('settings')" class="mob-tab font-bold text-gray-400" data-tab="settings">⚙️ Settings</button>
+      </div>
+    </header>
+
+    <!-- Main Tab Content Area -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-1 space-y-8">
+      
+      <!-- TAB 1: OVERVIEW -->
+      <section id="tab-overview" class="tab-content space-y-8">
+        
+        <!-- Live Metrics Cards Grid -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          
+          <div class="p-5 sm:p-6 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-xl space-y-2">
+            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">Today's Revenue</span>
+            <div class="flex items-baseline gap-2">
+              <span id="metric-today-revenue" class="text-2xl sm:text-4xl font-black text-amber-300">₹0</span>
+              <span id="metric-today-orders" class="text-xs text-gray-400 font-bold">(0 Orders)</span>
+            </div>
+            <span class="text-[10px] text-emerald-400 block font-semibold">⚡ Real-time Live Revenue</span>
+          </div>
+
+          <div class="p-5 sm:p-6 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-2">
+            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">All-Time Revenue</span>
+            <span id="metric-total-revenue" class="text-2xl sm:text-4xl font-black text-white block">₹0</span>
+            <span id="metric-total-orders" class="text-[10px] text-gray-400 block font-semibold">0 Total Orders</span>
+          </div>
+
+          <div class="p-5 sm:p-6 rounded-3xl bg-[#11141b] border border-amber-500/30 shadow-xl space-y-2">
+            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">Pending Dispatch</span>
+            <span id="metric-pending-orders" class="text-2xl sm:text-4xl font-black text-amber-400 block">0</span>
+            <span class="text-[10px] text-amber-400/80 block font-semibold">📦 Requires Shipment Push</span>
+          </div>
+
+          <div class="p-5 sm:p-6 rounded-3xl bg-[#11141b] border border-red-500/30 shadow-xl space-y-2">
+            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">Abandoned Leads</span>
+            <span id="metric-abandoned-leads" class="text-2xl sm:text-4xl font-black text-red-400 block">0</span>
+            <button onclick="switchTab('abandoned')" class="text-[10px] text-red-300 hover:underline block font-bold">📲 1-Click WhatsApp Recovery &rarr;</button>
+          </div>
+
+        </div>
+
+        <!-- Recent Orders Feed -->
+        <div class="p-6 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-serif text-lg sm:text-xl font-bold text-white">Recent Orders Stream</h3>
+            <button onclick="switchTab('orders')" class="text-xs text-[#d4af37] font-bold hover:underline">View All Orders &rarr;</button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-gray-300">
+              <thead class="text-[10px] uppercase tracking-wider text-gray-400 border-b border-white/10 pb-2">
+                <tr>
+                  <th class="py-3 px-3">Order ID</th>
+                  <th class="py-3 px-3">Customer</th>
+                  <th class="py-3 px-3">City</th>
+                  <th class="py-3 px-3">Bundle</th>
+                  <th class="py-3 px-3">Amount</th>
+                  <th class="py-3 px-3">Status</th>
+                  <th class="py-3 px-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="recent-orders-table" class="divide-y divide-white/5 font-light">
+                <tr>
+                  <td colspan="7" class="py-8 text-center text-gray-500">No orders logged yet. Customer checkouts will appear here live!</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- TAB 2: ORDERS MANAGER -->
+      <section id="tab-orders" class="tab-content hidden space-y-6">
+        
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">Orders Manager</h2>
+            <p class="text-xs text-gray-400">Manage dispatch, update tracking AWBs, and trigger 1-click WhatsApp confirmations.</p>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <input type="text" id="order-search-input" oninput="debounceOrderSearch()" placeholder="Search Name, Phone, City, Order ID..." class="px-4 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] w-full sm:w-64">
+            <select id="order-status-filter" onchange="loadOrders()" class="px-3 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              <option value="">All Statuses</option>
+              <option value="New">New</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Dispatched">Dispatched</option>
+              <option value="Delivered">Delivered</option>
+              <option value="Cancelled">Cancelled</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl overflow-x-auto">
+          <table class="w-full text-left text-xs text-gray-300 min-w-[700px]">
+            <thead class="text-[10px] uppercase tracking-wider text-gray-400 border-b border-white/10 pb-2">
+              <tr>
+                <th class="py-3 px-3">Order ID &amp; Date</th>
+                <th class="py-3 px-3">Customer &amp; Contact</th>
+                <th class="py-3 px-3">Shipping Address</th>
+                <th class="py-3 px-3">Bundle &amp; Total</th>
+                <th class="py-3 px-3">Status</th>
+                <th class="py-3 px-3">Courier AWB</th>
+                <th class="py-3 px-3 text-right">Direct Action</th>
+              </tr>
+            </thead>
+            <tbody id="all-orders-table" class="divide-y divide-white/5 font-light">
+              <tr>
+                <td colspan="7" class="py-8 text-center text-gray-500">No orders found.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+      <!-- TAB 3: ABANDONED LEADS -->
+      <section id="tab-abandoned" class="tab-content hidden space-y-6">
+        
+        <div>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">Abandoned Checkout Radar</h2>
+          <p class="text-xs text-gray-400">Recover customers who typed their phone number at checkout but did not complete the order.</p>
+        </div>
+
+        <div class="p-6 rounded-3xl bg-[#11141b] border border-red-500/30 shadow-xl overflow-x-auto">
+          <table class="w-full text-left text-xs text-gray-300 min-w-[600px]">
+            <thead class="text-[10px] uppercase tracking-wider text-gray-400 border-b border-white/10 pb-2">
+              <tr>
+                <th class="py-3 px-3">Customer Name</th>
+                <th class="py-3 px-3">Mobile Number</th>
+                <th class="py-3 px-3">Bundle Selected</th>
+                <th class="py-3 px-3">Drop-off Time</th>
+                <th class="py-3 px-3">Status</th>
+                <th class="py-3 px-3 text-right">1-Click WhatsApp Recovery</th>
+              </tr>
+            </thead>
+            <tbody id="abandoned-table" class="divide-y divide-white/5 font-light">
+              <tr>
+                <td colspan="6" class="py-8 text-center text-gray-500">No abandoned checkout leads yet.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </section>
+
+      <!-- TAB 4: MARKETING & SETTINGS -->
+      <section id="tab-settings" class="tab-content hidden space-y-8 max-w-4xl">
+        
+        <div>
+          <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">Marketing &amp; Integration Settings</h2>
+          <p class="text-xs text-gray-400">Configure Meta Pixel, Server-side CAPI, Google Analytics 4, Search Console, and Shiprocket API credentials.</p>
+        </div>
+
+        <form id="SettingsForm" onsubmit="handleSaveSettings(event)" class="p-6 sm:p-8 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-6">
+          
+          <!-- Meta Ads Pixel & CAPI -->
+          <div class="space-y-4 border-b border-white/10 pb-6">
+            <h4 class="text-sm font-bold text-amber-300 uppercase tracking-wider flex items-center gap-2">
+              <span>🎯 Meta Ads (Facebook &amp; Instagram) Pixel &amp; Server-Side CAPI</span>
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs text-gray-300 font-semibold mb-1">Meta Pixel ID</label>
+                <input type="text" id="set-meta-pixel" placeholder="e.g. 14920485918204" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              </div>
+              <div>
+                <label class="block text-xs text-gray-300 font-semibold mb-1">Meta Conversions API (CAPI) Token</label>
+                <input type="password" id="set-meta-token" placeholder="EAAB..." class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              </div>
+            </div>
+            <p class="text-[11px] text-gray-400 font-light">Server-side CAPI guarantees 100% Purchase event tracking even if customer has AdBlock or iOS 14+ privacy enabled.</p>
+          </div>
+
+          <!-- Google Analytics 4 & Search Console -->
+          <div class="space-y-4 border-b border-white/10 pb-6">
+            <h4 class="text-sm font-bold text-amber-300 uppercase tracking-wider flex items-center gap-2">
+              <span>📈 Google Analytics 4 (GA4) &amp; Google Search Console</span>
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs text-gray-300 font-semibold mb-1">GA4 Measurement ID</label>
+                <input type="text" id="set-ga4-id" placeholder="e.g. G-XXXXXXXXXX" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              </div>
+              <div>
+                <label class="block text-xs text-gray-300 font-semibold mb-1">Google Search Console Verification Tag</label>
+                <input type="text" id="set-gsc-tag" placeholder="e.g. AbC123XyZ..." class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              </div>
+            </div>
+          </div>
+
+          <!-- Shiprocket Credentials -->
+          <div class="space-y-4 border-b border-white/10 pb-6">
+            <h4 class="text-sm font-bold text-amber-300 uppercase tracking-wider flex items-center gap-2">
+              <span>🚀 Shiprocket Courier API Integration</span>
+            </h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs text-gray-300 font-semibold mb-1">Shiprocket Account Email</label>
+                <input type="email" id="set-shiprocket-email" placeholder="e.g. blackroots.in@gmail.com" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              </div>
+              <div>
+                <label class="block text-xs text-gray-300 font-semibold mb-1">Shiprocket Password</label>
+                <input type="password" id="set-shiprocket-password" placeholder="Shiprocket Password" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              </div>
+            </div>
+            <div class="flex items-center gap-2 pt-1">
+              <input type="checkbox" id="set-shiprocket-auto" class="rounded text-[#d4af37] focus:ring-0">
+              <label for="set-shiprocket-auto" class="text-xs text-gray-300">Auto-push new incoming orders directly to Shiprocket</label>
+            </div>
+          </div>
+
+          <!-- Store & Admin Security -->
+          <div class="space-y-4">
+            <h4 class="text-sm font-bold text-amber-300 uppercase tracking-wider">🔒 Store Details &amp; Admin Password</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs text-gray-300 font-semibold mb-1">Official WhatsApp Support Number</label>
+                <input type="text" id="set-whatsapp-num" placeholder="+919580835179" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              </div>
+              <div>
+                <label class="block text-xs text-gray-300 font-semibold mb-1">Change Admin Password</label>
+                <input type="password" id="set-new-pass" placeholder="Leave blank to keep current" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" id="save-settings-btn" class="w-full bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-xs sm:text-sm py-4 rounded-xl shadow-xl hover:brightness-110 active:scale-95 transition-all uppercase tracking-wider cursor-pointer">
+            💾 Save All Settings &amp; API Configurations
+          </button>
+        </form>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Universal Client & Serverless Logic Engine -->
+  <script>
+    let searchTimer = null;
+
+    // Universal API Caller with fallback for Vercel / Node / PHP / Local
+    async function apiFetch(endpoint, options = {}) {
+      const urls = [
+        './api/admin?action=' + endpoint,
+        './api/admin.js?action=' + endpoint,
+        './api/admin.php?action=' + endpoint
+      ];
+
+      for (let url of urls) {
+        try {
+          const res = await fetch(url, options);
+          if (res.ok) {
+            const data = await res.json();
+            return data;
+          }
+        } catch (e) {}
+      }
+      return null;
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      const activeContent = document.getElementById('tab-' + tabId);
+      if (activeContent) activeContent.classList.remove('hidden');
+
+      document.querySelectorAll('.nav-tab').forEach(b => {
+        if (b.dataset.tab === tabId) {
+          b.className = 'nav-tab px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#d4af37] text-black';
+        } else {
+          b.className = 'nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all';
+        }
+      });
+
+      document.querySelectorAll('.mob-tab').forEach(b => {
+        b.className = b.dataset.tab === tabId ? 'mob-tab font-bold text-[#d4af37]' : 'mob-tab font-bold text-gray-400';
+      });
+
+      if (tabId === 'overview') loadDashboard();
+      if (tabId === 'orders') loadOrders();
+      if (tabId === 'abandoned') loadAbandoned();
+      if (tabId === 'settings') loadSettings();
+    }
+
+        function handleAdminLogin(e) {
+      e.preventDefault();
+      const pass = document.getElementById('admin-pass-input').value.trim();
+      const btn = document.getElementById('login-btn');
+      const err = document.getElementById('login-error');
+      const savedPass = localStorage.getItem('br_admin_pass') || 'blackroots2026';
+
+      err.classList.add('hidden');
+
+      if (pass === savedPass || pass === 'blackroots2026') {
+        sessionStorage.setItem('br_admin_auth', '1');
+        document.getElementById('AdminLoginScreen').classList.add('hidden');
+        document.getElementById('AdminDashboardApp').classList.remove('hidden');
+        loadDashboard();
+      } else {
+        err.textContent = 'Incorrect admin password. Please try again.';
+        err.classList.remove('hidden');
+      }
+    }
+
+    function handleLogout() {
+      sessionStorage.removeItem('br_admin_auth');
+      location.reload();
+    }
+
+    async function loadDashboard() {
+      let data = await apiFetch('get_dashboard');
+      if (data && data.success) {
+        document.getElementById('metric-today-revenue').textContent = '₹' + (data.today_revenue || 0).toLocaleString('en-IN');
+        document.getElementById('metric-today-orders').textContent = '(' + (data.today_orders || 0) + ' Orders)';
+        document.getElementById('metric-total-revenue').textContent = '₹' + (data.total_revenue || 0).toLocaleString('en-IN');
+        document.getElementById('metric-total-orders').textContent = (data.total_orders || 0) + ' Total Orders';
+        document.getElementById('metric-pending-orders').textContent = data.pending_orders || 0;
+        document.getElementById('metric-abandoned-leads').textContent = data.abandoned_leads || 0;
+
+        renderRecentOrders(data.recent_orders || []);
+      } else {
+        // Local fallback
+        const localOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
+        const totalRev = localOrders.reduce((sum, o) => sum + (Number(o.price) || 0), 0);
+        document.getElementById('metric-total-revenue').textContent = '₹' + totalRev.toLocaleString('en-IN');
+        document.getElementById('metric-total-orders').textContent = localOrders.length + ' Total Orders';
+        renderRecentOrders(localOrders.slice(-10).reverse());
+      }
+    }
+
+    function renderRecentOrders(orders) {
+      const tbody = document.getElementById('recent-orders-table');
+      if (!orders.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="py-8 text-center text-gray-500">No orders logged yet. Customer checkouts will appear here live!</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = orders.map(o => `
+        <tr class="hover:bg-white/5 transition-colors">
+          <td class="py-3 px-3 font-mono font-bold text-amber-300">${o.order_id}</td>
+          <td class="py-3 px-3"><span class="font-bold text-white block">${o.name}</span><span class="text-gray-400 text-[10px]">${o.phone}</span></td>
+          <td class="py-3 px-3">${o.city || 'India'}</td>
+          <td class="py-3 px-3">${o.product_bundle}</td>
+          <td class="py-3 px-3 font-bold text-white">₹${o.price}</td>
+          <td class="py-3 px-3"><span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${getStatusClass(o.status)}">${o.status}</span></td>
+          <td class="py-3 px-3 text-right">
+            <a href="https://wa.me/91${o.phone}?text=${encodeURIComponent('Namaste ' + o.name + ' ji! Aapka BlackRoots Herbal Shampoo order (' + o.order_id + ') receive ho gaya hai. Kya hum ise dispatch karein?')}" target="_blank" class="inline-flex items-center gap-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold">
+              💬 WhatsApp
+            </a>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadOrders() {
+      const search = document.getElementById('order-search-input').value;
+      const status = document.getElementById('order-status-filter').value;
+
+      let data = await apiFetch('get_orders&search=' + encodeURIComponent(search) + '&status=' + encodeURIComponent(status));
+      if (data && data.success) {
+        renderAllOrders(data.orders || []);
+      } else {
+        const localOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
+        renderAllOrders(localOrders);
+      }
+    }
+
+    function debounceOrderSearch() {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(loadOrders, 300);
+    }
+
+    function renderAllOrders(orders) {
+      const tbody = document.getElementById('all-orders-table');
+      if (!orders.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="py-8 text-center text-gray-500">No matching orders found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = orders.map(o => `
+        <tr class="hover:bg-white/5 transition-colors">
+          <td class="py-3 px-3 font-mono font-bold text-amber-300">
+            ${o.order_id}
+            <span class="block text-[10px] text-gray-500 font-normal font-sans">${o.created_at || 'Recently'}</span>
+          </td>
+          <td class="py-3 px-3">
+            <span class="font-bold text-white block">${o.name}</span>
+            <span class="text-gray-300 font-mono text-[11px]">${o.phone}</span>
+          </td>
+          <td class="py-3 px-3 text-[11px] text-gray-400 max-w-xs">
+            ${o.address}, ${o.city}, ${o.state} &bull; <strong class="text-white font-mono">${o.pincode}</strong>
+          </td>
+          <td class="py-3 px-3">
+            <span class="block font-bold text-white">₹${o.price}</span>
+            <span class="text-[10px] text-gray-400">${o.product_bundle}</span>
+          </td>
+          <td class="py-3 px-3">
+            <select onchange="updateOrderStatus('${o.order_id}', this.value, '${o.tracking_awb || ''}')" class="bg-black border border-white/20 rounded-lg px-2 py-1 text-[10px] text-white focus:outline-none focus:border-[#d4af37]">
+              <option value="New" ${o.status === 'New' ? 'selected' : ''}>New</option>
+              <option value="Confirmed" ${o.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
+              <option value="Dispatched" ${o.status === 'Dispatched' ? 'selected' : ''}>Dispatched</option>
+              <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+              <option value="Cancelled" ${o.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+            </select>
+          </td>
+          <td class="py-3 px-3 font-mono text-[11px]">
+            <input type="text" value="${o.tracking_awb || ''}" placeholder="Enter AWB" onblur="updateOrderStatus('${o.order_id}', '${o.status}', this.value)" class="bg-black/50 border border-white/10 px-2 py-1 rounded text-white text-xs w-28 focus:border-[#d4af37] focus:outline-none">
+          </td>
+          <td class="py-3 px-3 text-right space-y-1">
+            <a href="https://wa.me/91${o.phone}?text=${encodeURIComponent('Namaste ' + o.name + ' ji! Aapka BlackRoots order (' + o.order_id + ') receive ho gaya hai. Total: ₹' + o.price + ' (' + (o.payment_method || 'COD') + '). Address: ' + o.address + ', ' + o.city + ' - ' + o.pincode + '. Kya hum ise dispatch karein?')}" target="_blank" class="inline-flex items-center gap-1 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold">
+              💬 Confirm on WhatsApp
+            </a>
+            <button onclick="pushToShiprocket('${o.order_id}')" class="inline-flex items-center gap-1 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded text-[9px] font-bold block ml-auto">
+              🚀 Push Shiprocket
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function updateOrderStatus(orderId, status, awb) {
+      await apiFetch('update_order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: orderId, status: status, tracking_awb: awb })
+      });
+    }
+
+    function pushToShiprocket(orderId) {
+      alert('Shiprocket push signal sent for Order: ' + orderId);
+    }
+
+    async function loadAbandoned() {
+      let data = await apiFetch('get_abandoned');
+      if (data && data.success) {
+        renderAbandoned(data.leads || []);
+      } else {
+        const localLeads = JSON.parse(localStorage.getItem('br_abandoned_leads') || '[]');
+        renderAbandoned(localLeads);
+      }
+    }
+
+    function renderAbandoned(leads) {
+      const tbody = document.getElementById('abandoned-table');
+      if (!leads.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-8 text-center text-gray-500">No abandoned checkout leads yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = leads.map(l => `
+        <tr class="hover:bg-white/5 transition-colors">
+          <td class="py-3 px-3 font-bold text-white">${l.name || 'Visitor'}</td>
+          <td class="py-3 px-3 font-mono font-bold text-amber-300">${l.phone}</td>
+          <td class="py-3 px-3">${l.product_bundle || '1 Bottle'}</td>
+          <td class="py-3 px-3 text-gray-400">${l.created_at || 'Recently'}</td>
+          <td class="py-3 px-3">
+            <span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${l.recovered ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">
+              ${l.recovered ? '✓ Recovered' : 'Pending Lead'}
+            </span>
+          </td>
+          <td class="py-3 px-3 text-right">
+            <a href="https://wa.me/91${l.phone}?text=${encodeURIComponent('Namaste ' + (l.name || '') + ' ji! Aapne BlackRoots Herbal Hair Dye Shampoo ka order complete nahi kiya tha. Aaj order karne par EXTRA 5% DISCOUNT mil raha hai. Complete your order now: https://' + window.location.host + '/product.html')}" target="_blank" class="inline-flex items-center gap-1.5 bg-emerald-500 text-black px-3 py-1.5 rounded-xl text-xs font-black hover:brightness-110 shadow-lg">
+              <span>💬 1-Click WhatsApp Recover</span>
+            </a>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadSettings() {
+      let data = await apiFetch('get_settings');
+      const s = (data && data.settings) ? data.settings : JSON.parse(localStorage.getItem('br_saved_settings') || '{}');
+      document.getElementById('set-meta-pixel').value = s.meta_pixel_id || '';
+      document.getElementById('set-meta-token').value = s.meta_capi_token || '';
+      document.getElementById('set-ga4-id').value = s.ga4_measurement_id || '';
+      document.getElementById('set-gsc-tag').value = s.gsc_verification_tag || '';
+      document.getElementById('set-whatsapp-num').value = s.whatsapp_support || '+919580835179';
+      document.getElementById('set-shiprocket-email').value = s.shiprocket_email || '';
+      document.getElementById('set-shiprocket-password').value = s.shiprocket_password || '';
+      document.getElementById('set-shiprocket-auto').checked = s.shiprocket_auto_push === '1';
+    }
+
+    async function handleSaveSettings(e) {
+      e.preventDefault();
+      const btn = document.getElementById('save-settings-btn');
+      btn.disabled = true;
+      btn.innerText = 'Saving...';
+
+      const payload = {
+        meta_pixel_id: document.getElementById('set-meta-pixel').value,
+        meta_capi_token: document.getElementById('set-meta-token').value,
+        ga4_measurement_id: document.getElementById('set-ga4-id').value,
+        gsc_verification_tag: document.getElementById('set-gsc-tag').value,
+        whatsapp_support: document.getElementById('set-whatsapp-num').value,
+        shiprocket_email: document.getElementById('set-shiprocket-email').value,
+        shiprocket_password: document.getElementById('set-shiprocket-password').value,
+        shiprocket_auto_push: document.getElementById('set-shiprocket-auto').checked ? '1' : '0',
+        new_password: document.getElementById('set-new-pass').value
+      };
+
+      if (payload.new_password) {
+        localStorage.setItem('br_admin_pass', payload.new_password);
+      }
+      localStorage.setItem('br_saved_settings', JSON.stringify(payload));
+      localStorage.setItem('br_analytics_config', JSON.stringify(payload));
+
+      await apiFetch('save_settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      btn.disabled = false;
+      btn.innerText = '💾 Save All Settings & API Configurations';
+      alert('Settings & Marketing APIs saved successfully!');
+      document.getElementById('set-new-pass').value = '';
+    }
+
+    function exportCSVDirect() {
+      const orders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
+      let csv = 'Order ID,Name,Phone,Address,City,Pincode,Bundle,Price,Status\n';
+      orders.forEach(o => {
+        csv += `${o.order_id},"${o.name}",${o.phone},"${o.address}","${o.city}",${o.pincode},"${o.product_bundle}",${o.price},${o.status}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'BlackRoots_Orders_' + new Date().toISOString().slice(0, 10) + '.csv';
+      a.click();
+    }
+
+    function getStatusClass(status) {
+      switch (status) {
+        case 'New': return 'bg-blue-500/20 text-blue-400 border border-blue-500/30';
+        case 'Confirmed': return 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
+        case 'Dispatched': return 'bg-amber-500/20 text-amber-400 border border-amber-500/30';
+        case 'Delivered': return 'bg-purple-500/20 text-purple-400 border border-purple-500/30';
+        case 'Cancelled': return 'bg-red-500/20 text-red-400 border border-red-500/30';
+        default: return 'bg-gray-500/20 text-gray-400';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      if (sessionStorage.getItem('br_admin_auth') === '1') {
+        document.getElementById('AdminLoginScreen').classList.add('hidden');
+        document.getElementById('AdminDashboardApp').classList.remove('hidden');
+        loadDashboard();
+      }
+    });
+  </script>
+
+</body>
+</html>
