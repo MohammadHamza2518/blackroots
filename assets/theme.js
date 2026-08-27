@@ -2,15 +2,20 @@
    BlackRoots Official Theme JavaScript Engine
    ========================================================================== */
 
-/* 📱 Mobile Navigation Drawer Controls */
+/* 📱 Mobile Navigation Drawer Controls (Bulletproof Direct Touch Engine) */
 function openMobileNavDrawer() {
   const drawer = document.getElementById('MobileNavDrawer');
   const backdrop = document.getElementById('MobileNavBackdrop');
   if (drawer) {
+    if (drawer.style) drawer.style.transform = 'translateX(0%)';
     drawer.classList.remove('translate-x-full');
     drawer.classList.add('translate-x-0');
   }
   if (backdrop) {
+    if (backdrop.style) {
+      backdrop.style.opacity = '1';
+      backdrop.style.pointerEvents = 'auto';
+    }
     backdrop.classList.remove('opacity-0', 'pointer-events-none');
     backdrop.classList.add('opacity-100', 'pointer-events-auto');
   }
@@ -21,10 +26,15 @@ function closeMobileNavDrawer() {
   const drawer = document.getElementById('MobileNavDrawer');
   const backdrop = document.getElementById('MobileNavBackdrop');
   if (drawer) {
+    if (drawer.style) drawer.style.transform = 'translateX(100%)';
     drawer.classList.remove('translate-x-0');
     drawer.classList.add('translate-x-full');
   }
   if (backdrop) {
+    if (backdrop.style) {
+      backdrop.style.opacity = '0';
+      backdrop.style.pointerEvents = 'none';
+    }
     backdrop.classList.remove('opacity-100', 'pointer-events-auto');
     backdrop.classList.add('opacity-0', 'pointer-events-none');
   }
@@ -33,6 +43,21 @@ function closeMobileNavDrawer() {
 
 window.openMobileNavDrawer = openMobileNavDrawer;
 window.closeMobileNavDrawer = closeMobileNavDrawer;
+
+// Auto-bind click & touchstart handlers
+document.addEventListener('DOMContentLoaded', function() {
+  const btns = document.querySelectorAll('[onclick*="openMobileNavDrawer"], #HamburgerMenuBtn, .js-hamburger-trigger');
+  btns.forEach(function(btn) {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      openMobileNavDrawer();
+    });
+    btn.addEventListener('touchend', function(e) {
+      e.preventDefault();
+      openMobileNavDrawer();
+    });
+  });
+});
 
 /* 🚚 Live India Pincode Delivery Estimator Engine */
 window.executePincodeCheck = function(isExplicitClick) {
@@ -743,38 +768,39 @@ window.switchToSimPage = switchToSimPage;
           submitBtn.innerHTML = '<span>⏳ Confirming Logistics Order...</span>';
         }
 
-        let orderData = null;
-        const endpoints = ['api/order', 'api/order.js', 'api/order.php'];
-        for (let ep of endpoints) {
-          try {
-            let res = await fetch(ep, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(orderPayload)
-            });
-            if (res.ok) {
-              orderData = await res.json();
-              if (orderData && orderData.success) break;
-            }
-          } catch(err) {}
-        }
-
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalBtnText;
-        }
-
-        const orderId = (orderData && orderData.order_id) ? orderData.order_id : ('#BR-' + Math.floor(1000 + Math.random() * 9000));
-        orderPayload.order_id = orderId;
-        orderPayload.status = 'New';
-        orderPayload.created_at = new Date().toLocaleString();
-
-        // Local cache for immediate admin view
         try {
-          let curOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
-          curOrders.unshift(orderPayload);
-          localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 100)));
-        } catch(e) {}
+          let orderData = null;
+          const endpoints = ['api/order', 'api/order.js', 'api/order.php'];
+          for (let ep of endpoints) {
+            try {
+              let res = await fetch(ep, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderPayload)
+              });
+              if (res.ok) {
+                orderData = await res.json();
+                if (orderData && orderData.success) break;
+              }
+            } catch(err) {}
+          }
+
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+          }
+
+          const orderId = (orderData && orderData.order_id) ? orderData.order_id : ('#BR-' + Math.floor(1000 + Math.random() * 9000));
+          orderPayload.order_id = orderId;
+          orderPayload.status = 'New';
+          orderPayload.created_at = new Date().toLocaleString();
+
+          // Local cache for immediate admin view
+          try {
+            let curOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
+            curOrders.unshift(orderPayload);
+            localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 100)));
+          } catch(e) {}
 
           // Hide form, show success screen
           form.classList.add('hidden');
@@ -804,22 +830,12 @@ window.switchToSimPage = switchToSimPage;
           }
 
           if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-        })
-        .catch(function() {
+        } catch(err) {
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalBtnText;
           }
-
-          const orderId = '#BR-' + Math.floor(1000 + Math.random() * 9000);
-          form.classList.add('hidden');
-          const success = document.getElementById('QuickOrderSuccess');
-          if (success) {
-            success.classList.remove('hidden');
-            const idDisplay = success.querySelector('strong');
-            if (idDisplay) idDisplay.textContent = orderId;
-          }
-        });
+        }
       };
     }
   }
