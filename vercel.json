@@ -1,17 +1,9 @@
 {
-  "version": 2,
-  "cleanUrls": true,
-  "routes": [
-    {
-      "src": "/admin",
-      "dest": "/admin/index.html",
-      "headers": {
-        "cache-control": "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0"
-      }
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
+  "rewrites": [
+    { "source": "/admin", "destination": "/admin/index.html" },
+    { "source": "/api/admin", "destination": "/api/admin.js" },
+    { "source": "/api/order", "destination": "/api/order.js" },
+    { "source": "/api/track", "destination": "/api/track.js" },
+    { "source": "/api/abandoned", "destination": "/api/abandoned.js" }
   ]
 }
