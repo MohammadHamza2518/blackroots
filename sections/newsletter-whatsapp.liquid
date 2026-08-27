@@ -1,0 +1,50 @@
+<section class="py-16 bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 border-t border-b border-amber-500/20">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+      
+      <!-- Newsletter Left -->
+      <div class="p-8 rounded-2xl bg-black border border-white/10 space-y-4">
+        <h3 class="font-serif text-2xl font-bold text-white">Join the BlackRoots Circle</h3>
+        <p class="text-xs text-gray-300">
+          Subscribe to receive herbal hair care tips, exclusive discounts, and refill notifications.
+        </p>
+        <form onsubmit="event.preventDefault(); alert('Thank you for subscribing to BlackRoots updates!');" class="flex gap-2">
+          <input type="email" placeholder="Enter your email address" required class="w-full px-4 py-3 rounded-xl bg-zinc-900 border border-white/20 text-white text-xs placeholder-gray-500 focus:outline-none focus:border-amber-400">
+          <button type="submit" class="btn-primary py-3 px-5 text-xs whitespace-nowrap">
+            Subscribe
+          </button>
+        </form>
+      </div>
+
+      <!-- WhatsApp Direct Right -->
+      <div class="p-8 rounded-2xl bg-gradient-to-br from-emerald-950/80 to-black border border-emerald-500/30 space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="p-2.5 rounded-full bg-emerald-500 text-black">
+            {% render 'icon-whatsapp' %}
+          </div>
+          <div>
+            <h3 class="font-serif text-2xl font-bold text-white">Need Help or Order Status?</h3>
+            <span class="text-xs text-emerald-400 font-semibold">Direct WhatsApp Support: +91 9580835179</span>
+          </div>
+        </div>
+        <p class="text-xs text-gray-300">
+          Have questions about your hair type or placing a Cash on Delivery order? Chat directly with our hair care specialists.
+        </p>
+        <div>
+          <a href="https://wa.me/919580835179?text=Hi%20BlackRoots%20Team!%20I%20have%20a%20question%20about%20the%20Herbal%20Hair%20Dye%20Shampoo." target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold text-xs uppercase tracking-wider transition-all shadow-lg">
+            {% render 'icon-whatsapp' %}
+            <span>Chat on WhatsApp Now</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter & WhatsApp",
+  "settings": []
+}
+{% endschema %}

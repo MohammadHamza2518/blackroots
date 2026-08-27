@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {}
+    },
+    "ingredients": {
+      "type": "ingredients-grid",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "ingredients"
+  ]
+}

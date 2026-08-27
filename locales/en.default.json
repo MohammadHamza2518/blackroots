@@ -1,0 +1,20 @@
+{
+  "general": {
+    "brand": "BlackRoots",
+    "tagline": "Revive Your Roots",
+    "free_shipping": "FREE DELIVERY on all orders",
+    "cod_available": "Cash on Delivery Available",
+    "buy_now": "Buy Now — ₹499",
+    "add_to_cart": "Add To Cart",
+    "cart_title": "Your Cart"
+  },
+  "products": {
+    "product": {
+      "title": "BlackRoots Herbal Hair Dye Shampoo",
+      "price": "₹499",
+      "volume": "250 ml",
+      "add_to_cart": "Add to Cart",
+      "buy_now_cod": "Buy Now (Cash on Delivery)"
+    }
+  }
+}

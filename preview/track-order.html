@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Order Tracking Radar &mdash; BlackRoots</title>
+  <meta name="description" content="Track your BlackRoots Herbal Shampoo shipment in real-time. Fast Delhivery Express Air shipping dispatched from Shuklaganj UP central warehouse.">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandDark: '#0a0b0e',
+            brandCard: '#11141b',
+            brandEmerald: '#123824',
+            brandGold: '#d4af37',
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'system-ui', '-apple-system', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/theme.css?v=1786809224">
+  <script src="./assets/theme.js?v=1786809224" defer></script>
+  <script src="./assets/instant-butter.js" defer></script>
+
+  <style>
+    @media (max-width: 768px) {
+      input[type="text"],
+      input[type="tel"],
+      input[type="email"] {
+        font-size: 16px !important;
+      }
+      body {
+        overflow-x: hidden;
+      }
+    }
+    *, *::before, *::after, html, body, div, section {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+    *::-webkit-scrollbar, html::-webkit-scrollbar, body::-webkit-scrollbar {
+      display: none !important;
+      width: 0px !important;
+      height: 0px !important;
+    }
+  </style>
+</head>
+<body class="bg-[#0a0b0e] text-white font-sans antialiased selection:bg-[#d4af37] selection:text-black min-h-screen flex flex-col justify-between">
+
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar-solid py-2 px-3 text-center text-[11px] sm:text-xs font-bold tracking-wide" style="background: #133e28 !important;">
+    <div class="max-w-7xl mx-auto flex items-center justify-center gap-2 flex-wrap whitespace-nowrap">
+      <span class="inline-flex items-center gap-1 bg-[#d4af37] text-black font-extrabold text-[9px] sm:text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+        🚚 LOGISTICS RADAR
+      </span>
+      <span>Grey Hair? Turns Black Instantly &bull; Dispatched in 24h</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky-header bg-[#0a0b0e]/95 backdrop-blur-xl border-b border-[#d4af37]/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 group text-decoration-none shrink-0">
+        <img src="./assets/blackroots-logo-circle-black.jpg" alt="BlackRoots Logo" class="w-9 h-9 sm:w-11 sm:h-11 rounded-full border border-[#d4af37] object-cover shadow-lg group-hover:scale-105 transition-transform">
+        <div class="flex flex-col">
+          <span class="font-serif text-lg sm:text-2xl font-bold tracking-wider text-white group-hover:text-[#d4af37] transition-colors uppercase whitespace-nowrap">BlackRoots</span>
+          <span class="text-[8px] sm:text-[9px] uppercase tracking-[0.2em] text-[#d4af37] font-bold -mt-1 whitespace-nowrap">Revive Your Roots</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden lg:flex items-center gap-4 xl:gap-6 flex-nowrap">
+        <a href="index.html" class="text-xs font-semibold text-gray-300 hover:text-[#d4af37] uppercase tracking-wider transition-colors whitespace-nowrap">Home</a>
+        <a href="product.html" class="text-xs font-semibold text-gray-300 hover:text-[#d4af37] uppercase tracking-wider transition-colors whitespace-nowrap">Product (₹499)</a>
+        <a href="ingredients.html" class="text-xs font-semibold text-gray-300 hover:text-[#d4af37] uppercase tracking-wider transition-colors whitespace-nowrap">Ingredients</a>
+        <a href="how-to-use.html" class="text-xs font-semibold text-gray-300 hover:text-[#d4af37] uppercase tracking-wider transition-colors whitespace-nowrap">Ritual</a>
+        <a href="reviews.html" class="text-xs font-semibold text-gray-300 hover:text-[#d4af37] uppercase tracking-wider transition-colors whitespace-nowrap">Reviews</a>
+        <a href="ai-consultant.html" class="text-xs font-bold text-amber-300 bg-amber-500/10 border border-amber-500/30 hover:bg-amber-400 hover:text-black px-3.5 py-1.5 rounded-full tracking-wider uppercase whitespace-nowrap transition-all shadow-sm">✨ AI Doctor</a>
+        <a href="track-order.html" class="text-xs font-extrabold text-[#d4af37] border-b-2 border-[#d4af37] pb-1 uppercase tracking-wider transition-colors whitespace-nowrap">Track Order</a>
+        <a href="contact.html" class="text-xs font-semibold text-gray-300 hover:text-[#d4af37] uppercase tracking-wider transition-colors whitespace-nowrap">Contact</a>
+      </nav>
+
+      <!-- Right Header Actions -->
+      <div class="flex items-center gap-2">
+        <a onclick="window.location.href='product.html';" href="product.html" class="hidden lg:inline-flex js-trigger-order btn-gold-luxury py-2.5 px-5 text-xs font-bold shadow-xl shrink-0 whitespace-nowrap">
+          <span>Buy Now &mdash; ₹499</span>
+        </a>
+
+        <a href="product.html" class="inline-flex lg:hidden bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black font-extrabold text-[10px] px-3 py-1.5 rounded-full shadow-md items-center gap-1 shrink-0 uppercase tracking-tight">
+          <span>Buy ₹499</span>
+        </a>
+
+        <button type="button" onclick="openMobileNavDrawer()" class="lg:hidden p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-[#1b1e27] to-[#0c0e14] border border-[#d4af37]/60 text-amber-300 hover:border-[#d4af37] hover:text-white focus:outline-none flex items-center justify-center shadow-[0_5px_15px_rgba(0,0,0,0.6)] active:scale-90 transition-all cursor-pointer" aria-label="Open Navigation Menu">
+          <svg class="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <line x1="4" y1="6" x2="20" y2="6"></line>
+            <line x1="4" y1="12" x2="20" y2="12"></line>
+            <line x1="4" y1="18" x2="20" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Tracking Container -->
+  <main class="py-12 sm:py-16 px-4 sm:px-6 max-w-4xl mx-auto w-full text-center space-y-8 flex-1">
+    
+    <div class="space-y-3">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-[10px] sm:text-xs font-bold uppercase tracking-widest">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>24h Fast Dispatch Logistics</span>
+      </span>
+      <h1 class="font-serif text-3xl sm:text-5xl font-bold text-white tracking-tight">
+        Track Your <span class="gold-gradient-text">BlackRoots Order</span>
+      </h1>
+      <p class="text-gray-300 text-xs sm:text-sm max-w-xl mx-auto font-light">
+        Enter your <strong>Order ID (#BR-1025)</strong>, <strong>AWB Number</strong>, or <strong>10-digit Mobile Number</strong> to view live courier radar status.
+      </p>
+    </div>
+
+    <!-- Main Card Box -->
+    <div class="p-6 sm:p-8 rounded-3xl bg-[#11141b] border border-[#d4af37]/50 shadow-[0_15px_50px_rgba(0,0,0,0.8)] text-left space-y-6 max-w-2xl mx-auto">
+      
+      <form id="OrderTrackerForm" onsubmit="handleLiveTrack(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-amber-300 uppercase tracking-wider mb-1.5">
+            Order ID / AWB Tracking Number <span class="text-amber-400">*</span>
+          </label>
+          <input type="text" id="track-order-id" required placeholder="e.g. #BR-1024 or 8839201492" class="w-full px-4 py-3.5 rounded-xl bg-black border border-white/20 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] transition-all font-mono">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-amber-300 uppercase tracking-wider mb-1.5">
+            Registered Mobile Number (Optional)
+          </label>
+          <input type="tel" id="track-contact" placeholder="e.g. 9876543210" class="w-full px-4 py-3.5 rounded-xl bg-black border border-white/20 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] transition-all font-mono">
+        </div>
+
+        <button type="submit" id="track-submit-btn" class="w-full bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-xs sm:text-sm py-4 rounded-xl shadow-xl hover:brightness-110 active:scale-95 transition-all uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer">
+          <span>🔥 Track Order Live Status</span>
+          <span>&rarr;</span>
+        </button>
+      </form>
+
+      <!-- Live Dynamic Tracking Result Container -->
+      <div id="OrderTrackerResult" class="hidden pt-6 border-t border-white/10 space-y-6">
+        
+        <!-- Status Banner -->
+        <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-[#123824] to-[#0d2217] border border-emerald-500/40 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xl font-bold shrink-0 shadow">
+              🚚
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <h4 class="text-sm font-black text-white">Dispatched &amp; In Transit</h4>
+                <span id="tracker-display-id" class="text-[10px] font-mono bg-amber-400/20 text-amber-300 px-2 py-0.5 rounded border border-amber-400/30 font-bold">#BR-1024</span>
+              </div>
+              <p class="text-[11px] text-gray-300 mt-0.5">Courier: <strong class="text-white">Delhivery Express Air</strong> &bull; AWB: <span id="tracker-display-awb" class="font-mono text-amber-300 font-bold">8839201492</span></p>
+            </div>
+          </div>
+          <div class="text-left sm:text-right shrink-0 bg-black/50 px-3.5 py-2 rounded-xl border border-white/10">
+            <span class="text-[9px] text-gray-400 block uppercase font-bold tracking-wider">Estimated Delivery</span>
+            <span id="tracker-est-delivery" class="text-xs font-black text-emerald-400">Within 48 Hours</span>
+          </div>
+        </div>
+
+        <!-- Product Details Summary -->
+        <div class="p-4 rounded-2xl bg-black border border-white/10 flex items-center justify-between text-xs">
+          <div class="flex items-center gap-3">
+            <img src="./assets/blackroots-bottle-single.png" alt="Product" class="w-10 h-10 object-contain rounded-xl bg-white/5 border border-[#d4af37]/30 p-1">
+            <div>
+              <span class="font-black text-white block">BlackRoots Herbal Hair Dye Shampoo (250ml)</span>
+              <span class="text-[10px] text-gray-400">Qty: 1 Bottle &bull; Free Express COD Delivery</span>
+            </div>
+          </div>
+          <span class="font-black text-amber-300 text-base">₹499</span>
+        </div>
+
+        <!-- 4-Step Vertical Timeline -->
+        <div class="space-y-6 relative pl-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-gradient-to-b before:from-emerald-500 before:via-[#d4af37] before:to-gray-700">
+          
+          <!-- Step 1: Confirmed -->
+          <div class="relative flex items-start gap-3">
+            <div class="absolute -left-6 top-0.5 w-5 h-5 rounded-full bg-emerald-500 text-black flex items-center justify-center font-bold text-[10px] shadow-md">
+              ✓
+            </div>
+            <div class="space-y-0.5">
+              <h5 class="text-xs font-black text-white">Order Verified &amp; Confirmed</h5>
+              <p class="text-[11px] text-gray-400">Payment method: Cash on Delivery &bull; Order logged at Shuklaganj UP central server.</p>
+            </div>
+          </div>
+
+          <!-- Step 2: Packed -->
+          <div class="relative flex items-start gap-3">
+            <div class="absolute -left-6 top-0.5 w-5 h-5 rounded-full bg-emerald-500 text-black flex items-center justify-center font-bold text-[10px] shadow-md">
+              ✓
+            </div>
+            <div class="space-y-0.5">
+              <h5 class="text-xs font-black text-white">Packed &amp; Quality Passed</h5>
+              <p class="text-[11px] text-gray-400">Shuklaganj UP Central Warehouse &bull; Double tamper-proof bubble seal verified.</p>
+            </div>
+          </div>
+
+          <!-- Step 3: In Transit (Active) -->
+          <div class="relative flex items-start gap-3">
+            <div class="absolute -left-6 top-0.5 w-5 h-5 rounded-full bg-[#d4af37] text-black flex items-center justify-center font-bold text-[10px] shadow-[0_0_12px_rgba(212,175,55,0.8)] animate-pulse">
+              🚚
+            </div>
+            <div class="space-y-0.5">
+              <h5 class="text-xs font-black text-amber-300 flex items-center gap-1.5">
+                <span>In Transit to Your Nearest City Hub</span>
+                <span class="text-[9px] bg-amber-400/20 text-amber-300 px-1.5 py-0.2 rounded border border-amber-400/30 uppercase font-black">LIVE</span>
+              </h5>
+              <p class="text-[11px] text-gray-300">Fast Air Cargo Express &bull; Package moving smoothly towards destination delivery center.</p>
+            </div>
+          </div>
+
+          <!-- Step 4: Out for Delivery -->
+          <div class="relative flex items-start gap-3 opacity-60">
+            <div class="absolute -left-6 top-0.5 w-5 h-5 rounded-full bg-black border-2 border-gray-600 flex items-center justify-center font-bold text-[8px] text-gray-400">
+              📍
+            </div>
+            <div class="space-y-0.5">
+              <h5 class="text-xs font-medium text-gray-400">Out for Doorstep Delivery</h5>
+              <p class="text-[11px] text-gray-500">Delivery executive will call your mobile before arriving with your parcel.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- WhatsApp Support Bar -->
+        <div class="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+          <span class="text-gray-400 text-[11px]">Need urgent delivery help?</span>
+          <a href="https://wa.me/919580835179?text=Hello%20BlackRoots%20Team%2C%20I%20want%20to%20check%20my%20Order%20Status" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 px-4 py-2.5 rounded-xl font-bold transition-all w-full sm:w-auto justify-center">
+            <span>💬 WhatsApp Support: +91 9580835179</span>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#0a0b0e] text-[#a1a8b3] border-t border-white/10 py-12 text-center text-xs">
+    <div class="max-w-7xl mx-auto px-4 space-y-6">
+      <div class="flex items-center justify-center gap-3">
+        <img src="./assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-10 h-10 rounded-full border border-[#d4af37]">
+        <span class="font-serif text-2xl font-bold text-white uppercase">BlackRoots</span>
+      </div>
+
+      <!-- Legal Compliance Links Row -->
+      <div class="flex flex-wrap justify-center items-center gap-4 sm:gap-6 text-xs text-gray-400 border-t border-b border-white/10 py-4 max-w-4xl mx-auto">
+        <a href="privacy-policy.html" class="hover:text-[#d4af37] transition-colors">Privacy Policy</a>
+        <span class="text-gray-600">&bull;</span>
+        <a href="terms.html" class="hover:text-[#d4af37] transition-colors">Terms & Conditions</a>
+        <span class="text-gray-600">&bull;</span>
+        <a href="refund-policy.html" class="hover:text-[#d4af37] transition-colors">Refund & Cancellation</a>
+        <span class="text-gray-600">&bull;</span>
+        <a href="shipping-policy.html" class="hover:text-[#d4af37] transition-colors">Shipping & Delivery</a>
+        <span class="text-gray-600">&bull;</span>
+        <a href="contact.html" class="hover:text-[#d4af37] transition-colors">Contact Us</a>
+      </div>
+
+      <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh – 209861, Near Poni Road, India | Marketed by HRS Group</p>
+      <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | WhatsApp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+      <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Mobile Drawer -->
+  <div id="MobileNavBackdrop" onclick="closeMobileNavDrawer()" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 opacity-0 pointer-events-none transition-opacity duration-300 ease-out"></div>
+  <div id="MobileNavDrawer" class="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-gradient-to-b from-[#0e1017] via-[#090a0e] to-black border-l border-[#d4af37]/30 z-50 shadow-[-15px_0_40px_rgba(0,0,0,0.9)] transform translate-x-full transition-transform duration-300 ease-out flex flex-col justify-between overflow-y-auto">
+    <div class="p-5 border-b border-white/10 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <img src="./assets/blackroots-logo-circle-black.jpg" alt="BlackRoots Logo" class="w-8 h-8 rounded-full border border-[#d4af37] object-cover">
+        <div class="flex flex-col">
+          <span class="font-serif text-lg font-bold text-white uppercase tracking-wider">BlackRoots</span>
+          <span class="text-[8px] uppercase tracking-widest text-[#d4af37] font-bold -mt-0.5">Revive Your Roots</span>
+        </div>
+      </div>
+      <button type="button" onclick="closeMobileNavDrawer()" class="w-8 h-8 rounded-full bg-white/10 border border-[#d4af37]/40 text-[#d4af37] flex items-center justify-center text-sm font-bold hover:bg-[#d4af37] hover:text-black transition-all cursor-pointer" aria-label="Close Menu">✕</button>
+    </div>
+
+    <div class="p-5 space-y-1.5 flex-1">
+      <a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all"><span>🏠</span> <span>Home</span></a>
+      <a href="product.html" class="flex items-center justify-between px-4 py-3 rounded-xl bg-[#d4af37]/10 border border-[#d4af37]/40 text-[#d4af37] font-bold text-xs uppercase tracking-wider transition-all"><div class="flex items-center gap-3"><span>🛍️</span> <span>Product (250ml)</span></div><span class="bg-[#d4af37] text-black text-[9px] font-black px-2 py-0.5 rounded-full">₹499</span></a>
+      <a href="ingredients.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all"><span>🌿</span> <span>Herbal Ingredients</span></a>
+      <a href="how-to-use.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all"><span>🚿</span> <span>Application Ritual</span></a>
+      <a href="reviews.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all"><span>⭐</span> <span>Customer Reviews</span></a>
+      <a href="ai-consultant.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-amber-300 hover:bg-amber-400/10 font-bold text-xs uppercase tracking-wider transition-all"><span>🩺</span> <span>AI Hair Doctor</span></a>
+      <a href="track-order.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-[#d4af37] bg-white/5 font-bold text-xs uppercase tracking-wider transition-all"><span>📦</span> <span>Track My Order</span></a>
+      <a href="contact.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all"><span>📞</span> <span>Customer Support</span></a>
+    </div>
+
+    <div class="p-5 border-t border-white/10 space-y-3 bg-black/60">
+      <a href="product.html" class="group relative w-full inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-xs px-5 py-3.5 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.3)] hover:scale-105 transition-all uppercase tracking-wider text-center">
+        <span>ORDER NOW &bull; ₹499</span>
+        <span class="w-5 h-5 rounded-md bg-black text-[#d4af37] flex items-center justify-center font-black text-xs">🛍️</span>
+      </a>
+      <p class="text-[10px] text-gray-400 text-center font-medium">⚡ Free Express COD Delivery Across India</p>
+    </div>
+  </div>
+
+  <!-- Interactive Live Tracker Logic -->
+  <script>
+    function fillDemoTrack(orderId, contact) {
+      const oInp = document.getElementById('track-order-id');
+      const cInp = document.getElementById('track-contact');
+      if (oInp) oInp.value = orderId;
+      if (cInp) cInp.value = contact;
+      
+      const form = document.getElementById('OrderTrackerForm');
+      if (form) {
+        form.dispatchEvent(new Event('submit'));
+      }
+    }
+
+    function handleLiveTrack(e) {
+      e.preventDefault();
+      const oInp = document.getElementById('track-order-id');
+      const submitBtn = document.getElementById('track-submit-btn');
+      const resultBox = document.getElementById('OrderTrackerResult');
+      const displayId = document.getElementById('tracker-display-id');
+      const displayAwb = document.getElementById('tracker-display-awb');
+
+      if (!oInp || !resultBox) return;
+
+      const rawValue = oInp.value.trim();
+      if (!rawValue) return;
+
+      // Loading state
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>⏳ Fetching Live Logistics Status...</span>';
+
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>🔥 Track Order Live Status</span> <span>&rarr;</span>';
+
+        let formattedId = rawValue.toUpperCase();
+        if (!formattedId.startsWith('#') && !formattedId.startsWith('BR') && isNaN(rawValue)) {
+          formattedId = '#' + formattedId;
+        } else if (!isNaN(rawValue) && rawValue.length === 10) {
+          // If 10-digit mobile, generate matching order ID
+          formattedId = '#BR-9' + rawValue.slice(-3);
+          if (displayAwb) displayAwb.textContent = '8839' + rawValue.slice(-6);
+        }
+
+        if (displayId) displayId.textContent = formattedId;
+        resultBox.classList.remove('hidden');
+        resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 400);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Auto check query params ?id=...
+      const urlParams = new URLSearchParams(window.location.search);
+      const paramId = urlParams.get('id') || urlParams.get('order_id') || urlParams.get('awb');
+      if (paramId) {
+        fillDemoTrack(paramId, '');
+      }
+    });
+  </script>
+
+</body>
+</html>

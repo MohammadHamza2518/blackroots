@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {}
+    },
+    "ritual": {
+      "type": "how-to-use",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "ritual"
+  ]
+}

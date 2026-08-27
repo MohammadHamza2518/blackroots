@@ -1,0 +1,19 @@
+{%- liquid
+  assign target = product | default: settings
+  assign price = target.price | default: 49900
+  assign compare_at_price = target.compare_at_price | default: 49900
+-%}
+
+<div class="price-wrapper inline-flex items-baseline gap-3">
+  <span class="price-current text-2xl md:text-3xl font-bold text-amber-400">
+    ₹{{ price | money_without_currency | default: '499' }}
+  </span>
+  {%- if compare_at_price > price -%}
+    <span class="price-compare text-base text-gray-500 line-through">
+      ₹{{ compare_at_price | money_without_currency | default: '499' }}
+    </span>
+    <span class="badge-save text-xs font-semibold px-2 py-0.5 rounded bg-amber-950/80 text-amber-300 border border-amber-500/30">
+      SAVE 33%
+    </span>
+  {%- endif -%}
+</div>

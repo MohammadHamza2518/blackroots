@@ -1,0 +1,86 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "BlackRoots Premium OS 2.0 Theme",
+    "theme_version": "1.0.0",
+    "theme_author": "Antigravity E-Commerce Team",
+    "theme_documentation_url": "https://blackroots.in",
+    "theme_support_url": "mailto:blackroots.in@gmail.com"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "color",
+        "id": "color_bg",
+        "label": "Background Color",
+        "default": "#0A0A0A"
+      },
+      {
+        "type": "color",
+        "id": "color_gold_accent",
+        "label": "Gold / Amber Accent",
+        "default": "#C9962C"
+      },
+      {
+        "type": "color",
+        "id": "color_text",
+        "label": "Text Color",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_leaf_green",
+        "label": "Leaf Accent Green",
+        "default": "#4A7C3A"
+      }
+    ]
+  },
+  {
+    "name": "Brand Details",
+    "settings": [
+      {
+        "type": "text",
+        "id": "brand_name",
+        "label": "Brand Name",
+        "default": "BlackRoots"
+      },
+      {
+        "type": "text",
+        "id": "tagline",
+        "label": "Tagline",
+        "default": "Revive Your Roots"
+      },
+      {
+        "type": "text",
+        "id": "support_email",
+        "label": "Support Email",
+        "default": "blackroots.in@gmail.com"
+      },
+      {
+        "type": "text",
+        "id": "support_phone",
+        "label": "WhatsApp / Support Phone",
+        "default": "+91 9580835179"
+      },
+      {
+        "type": "text",
+        "id": "instagram_handle",
+        "label": "Instagram Handle",
+        "default": "@blackroots.in"
+      },
+      {
+        "type": "textarea",
+        "id": "manufacturer_address",
+        "label": "Manufacturing Address",
+        "default": "Shuklaganj, Uttar Pradesh – 209861, Near Poni Road, India"
+      },
+      {
+        "type": "text",
+        "id": "marketer_name",
+        "label": "Marketed By",
+        "default": "HRS Group"
+      }
+    ]
+  }
+]

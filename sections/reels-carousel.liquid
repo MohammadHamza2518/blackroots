@@ -1,0 +1,52 @@
+{% comment %}
+  BlackRoots Shoppable 9:16 Reels Carousel Liquid Section
+{% endcomment %}
+
+<section class="py-16 bg-[#07080a] border-b border-[#d4af37]/20 relative overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/40 text-[#d4af37] text-xs font-bold uppercase tracking-widest mb-3 backdrop-blur-md">
+          <span>🎬 Watch Real Customer Reels (9:16 Shorts)</span>
+        </div>
+        <h2 class="font-serif text-3xl sm:text-5xl font-bold text-white leading-tight">
+          See BlackRoots <span class="gold-gradient-text">In Action</span>
+        </h2>
+      </div>
+      <p class="text-gray-400 text-xs sm:text-sm max-w-md font-light">
+        Tap any 9:16 vertical reel below to watch real application tutorials, hair transformations & unboxing reviews!
+      </p>
+    </div>
+
+    <div class="flex overflow-x-auto snap-x snap-mandatory gap-5 pb-6 pt-2 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0">
+      
+      {% for i in (1..5) %}
+      <div class="js-open-reel w-56 sm:w-64 flex-shrink-0 snap-center rounded-3xl overflow-hidden glass-panel-luxury border border-[#d4af37]/30 hover:border-[#d4af37] transition-all group relative cursor-pointer shadow-xl aspect-[9/16]" data-reel-id="{{ i }}" data-reel-title="BlackRoots Real Reel #{{ i }}" data-video-src="{{ '360 shampoo.mp4' | asset_url }}">
+        <video autoplay loop muted playsinline poster="{{ 'blackroots-bottles-trio-hd.jpg' | asset_url }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+          <source src="{{ '360 shampoo.mp4' | asset_url }}" type="video/mp4">
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/40"></div>
+        
+        <div class="absolute top-3 left-3 right-3 flex items-center justify-between z-10 text-[10px] font-bold">
+          <span class="bg-black/70 backdrop-blur-md text-amber-300 px-2.5 py-1 rounded-full border border-amber-500/30">👁️ 50K+ Views</span>
+          <span class="bg-emerald-950/80 text-emerald-300 px-2.5 py-1 rounded-full border border-emerald-500/40">✨ Verified</span>
+        </div>
+
+        <div class="absolute inset-0 flex items-center justify-center z-10">
+          <div class="w-12 h-12 rounded-full bg-[#d4af37] text-black flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
+            <svg class="w-6 h-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+
+        <div class="absolute bottom-4 left-4 right-4 z-10 space-y-1">
+          <p class="text-xs font-bold text-white line-clamp-2">Real Hair Care Transformation & Review #{{ i }}</p>
+          <span class="text-[11px] text-amber-300 font-medium block">@blackroots.official</span>
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,181 @@
+<section class="py-12 sm:py-16 px-4 sm:px-6 max-w-4xl mx-auto w-full text-center space-y-8 min-h-[70vh]">
+  
+  <div class="space-y-3">
+    <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-[10px] sm:text-xs font-bold uppercase tracking-widest">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span>24h Fast Dispatch Logistics Radar</span>
+    </span>
+    <h1 class="font-serif text-3xl sm:text-5xl font-bold text-white tracking-tight">
+      Track Your <span class="gold-gradient-text">BlackRoots Order</span>
+    </h1>
+    <p class="text-gray-300 text-xs sm:text-sm max-w-xl mx-auto font-light">
+      Enter your <strong>Order ID (#BR-1025)</strong>, <strong>AWB Number</strong>, or <strong>10-digit Mobile Number</strong> to view live courier radar status.
+    </p>
+  </div>
+
+  <!-- Main Tracking Box -->
+  <div class="p-6 sm:p-8 rounded-3xl bg-[#11141b] border border-[#d4af37]/50 shadow-[0_15px_50px_rgba(0,0,0,0.8)] text-left space-y-6 max-w-2xl mx-auto">
+    
+    <form id="ShopifyOrderTrackerForm" onsubmit="handleShopifyLiveTrack(event)" class="space-y-4">
+      <div>
+        <label class="block text-xs font-bold text-amber-300 uppercase tracking-wider mb-1.5">
+          Order ID / AWB Tracking Number <span class="text-amber-400">*</span>
+        </label>
+        <input type="text" id="shopify-track-order-id" required placeholder="e.g. #BR-1024 or 8839201492" class="w-full px-4 py-3.5 rounded-xl bg-black border border-white/20 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] transition-all font-mono">
+      </div>
+
+      <div>
+        <label class="block text-xs font-bold text-amber-300 uppercase tracking-wider mb-1.5">
+          Registered Mobile Number (Optional)
+        </label>
+        <input type="tel" id="shopify-track-contact" placeholder="e.g. 9876543210" class="w-full px-4 py-3.5 rounded-xl bg-black border border-white/20 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] transition-all font-mono">
+      </div>
+
+      <button type="submit" id="shopify-track-submit-btn" class="w-full bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-xs sm:text-sm py-4 rounded-xl shadow-xl hover:brightness-110 active:scale-95 transition-all uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer">
+        <span>🔥 Track Order Live Status</span>
+        <span>&rarr;</span>
+      </button>
+    </form>
+
+    <!-- Live Dynamic Tracking Result Container -->
+    <div id="ShopifyOrderTrackerResult" class="hidden pt-6 border-t border-white/10 space-y-6">
+      
+      <!-- Status Banner -->
+      <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-emerald-950/80 via-[#123824] to-[#0d2217] border border-emerald-500/40 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-11 h-11 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xl font-bold shrink-0 shadow">
+            🚚
+          </div>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h4 class="text-sm font-black text-white">Dispatched &amp; In Transit</h4>
+              <span id="shopify-tracker-display-id" class="text-[10px] font-mono bg-amber-400/20 text-amber-300 px-2 py-0.5 rounded border border-amber-400/30 font-bold">#BR-1024</span>
+            </div>
+            <p class="text-[11px] text-gray-300 mt-0.5">Courier: <strong class="text-white">Delhivery Express Air</strong> &bull; AWB: <span id="shopify-tracker-display-awb" class="font-mono text-amber-300 font-bold">8839201492</span></p>
+          </div>
+        </div>
+        <div class="text-left sm:text-right shrink-0 bg-black/50 px-3.5 py-2 rounded-xl border border-white/10">
+          <span class="text-[9px] text-gray-400 block uppercase font-bold tracking-wider">Estimated Delivery</span>
+          <span id="shopify-tracker-est-delivery" class="text-xs font-black text-emerald-400">Within 48 Hours</span>
+        </div>
+      </div>
+
+      <!-- Product Details Summary -->
+      <div class="p-4 rounded-2xl bg-black border border-white/10 flex items-center justify-between text-xs">
+        <div class="flex items-center gap-3">
+          <img src="{{ 'blackroots-bottle-single.png' | asset_url }}" alt="Product" class="w-10 h-10 object-contain rounded-xl bg-white/5 border border-[#d4af37]/30 p-1">
+          <div>
+            <span class="font-black text-white block">BlackRoots Herbal Hair Dye Shampoo (250ml)</span>
+            <span class="text-[10px] text-gray-400">Qty: 1 Bottle &bull; Free Express COD Delivery</span>
+          </div>
+        </div>
+        <span class="font-black text-amber-300 text-base">₹499</span>
+      </div>
+
+      <!-- 4-Step Vertical Timeline -->
+      <div class="space-y-6 relative pl-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-gradient-to-b before:from-emerald-500 before:via-[#d4af37] before:to-gray-700">
+        
+        <!-- Step 1: Confirmed -->
+        <div class="relative flex items-start gap-3">
+          <div class="absolute -left-6 top-0.5 w-5 h-5 rounded-full bg-emerald-500 text-black flex items-center justify-center font-bold text-[10px] shadow-md">
+            ✓
+          </div>
+          <div class="space-y-0.5">
+            <h5 class="text-xs font-black text-white">Order Verified &amp; Confirmed</h5>
+            <p class="text-[11px] text-gray-400">Payment method: Cash on Delivery &bull; Order logged at Shuklaganj UP central warehouse.</p>
+          </div>
+        </div>
+
+        <!-- Step 2: Packed -->
+        <div class="relative flex items-start gap-3">
+          <div class="absolute -left-6 top-0.5 w-5 h-5 rounded-full bg-emerald-500 text-black flex items-center justify-center font-bold text-[10px] shadow-md">
+            ✓
+          </div>
+          <div class="space-y-0.5">
+            <h5 class="text-xs font-black text-white">Packed &amp; Quality Passed</h5>
+            <p class="text-[11px] text-gray-400">Shuklaganj UP Central Warehouse &bull; Double tamper-proof seal verified.</p>
+          </div>
+        </div>
+
+        <!-- Step 3: In Transit (Active) -->
+        <div class="relative flex items-start gap-3">
+          <div class="absolute -left-6 top-0.5 w-5 h-5 rounded-full bg-[#d4af37] text-black flex items-center justify-center font-bold text-[10px] shadow-[0_0_12px_rgba(212,175,55,0.8)] animate-pulse">
+            🚚
+          </div>
+          <div class="space-y-0.5">
+            <h5 class="text-xs font-black text-amber-300 flex items-center gap-1.5">
+              <span>In Transit to Your Nearest City Hub</span>
+              <span class="text-[9px] bg-amber-400/20 text-amber-300 px-1.5 py-0.2 rounded border border-amber-400/30 uppercase font-black">LIVE</span>
+            </h5>
+            <p class="text-[11px] text-gray-300">Fast Air Cargo Express &bull; Package moving smoothly towards destination center.</p>
+          </div>
+        </div>
+
+        <!-- Step 4: Out for Delivery -->
+        <div class="relative flex items-start gap-3 opacity-60">
+          <div class="absolute -left-6 top-0.5 w-5 h-5 rounded-full bg-black border-2 border-gray-600 flex items-center justify-center font-bold text-[8px] text-gray-400">
+            📍
+          </div>
+          <div class="space-y-0.5">
+            <h5 class="text-xs font-medium text-gray-400">Out for Doorstep Delivery</h5>
+            <p class="text-[11px] text-gray-500">Delivery executive will call your mobile before arriving with your parcel.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- WhatsApp Support Bar -->
+      <div class="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
+        <span class="text-gray-400 text-[11px]">Need urgent delivery help?</span>
+        <a href="https://wa.me/919580835179?text=Hello%20BlackRoots%20Team%2C%20I%20want%20to%20check%20my%20Order%20Status" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 px-4 py-2.5 rounded-xl font-bold transition-all w-full sm:w-auto justify-center">
+          <span>💬 WhatsApp Support: +91 9580835179</span>
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<script>
+  function handleShopifyLiveTrack(e) {
+    e.preventDefault();
+    const oInp = document.getElementById('shopify-track-order-id');
+    const submitBtn = document.getElementById('shopify-track-submit-btn');
+    const resultBox = document.getElementById('ShopifyOrderTrackerResult');
+    const displayId = document.getElementById('shopify-tracker-display-id');
+    const displayAwb = document.getElementById('shopify-tracker-display-awb');
+
+    if (!oInp || !resultBox) return;
+
+    const rawValue = oInp.value.trim();
+    if (!rawValue) return;
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span>⏳ Fetching Live Logistics Status...</span>';
+
+    setTimeout(() => {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = '<span>🔥 Track Order Live Status</span> <span>&rarr;</span>';
+
+      let formattedId = rawValue.toUpperCase();
+      if (!formattedId.startsWith('#') && !formattedId.startsWith('BR') && isNaN(rawValue)) {
+        formattedId = '#' + formattedId;
+      } else if (!isNaN(rawValue) && rawValue.length === 10) {
+        formattedId = '#BR-9' + rawValue.slice(-3);
+        if (displayAwb) displayAwb.textContent = '8839' + rawValue.slice(-6);
+      }
+
+      if (displayId) displayId.textContent = formattedId;
+      resultBox.classList.remove('hidden');
+      resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }, 400);
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Track Order Page",
+  "settings": []
+}
+{% endschema %}

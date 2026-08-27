@@ -1,0 +1,378 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* BlackRoots Next-Level Ultra-Luxury E-Commerce Theme Stylesheet */
+
+:root {
+  --color-bg-dark: #0a0b0e;
+  --color-card-dark: #12151c;
+  --color-[#123824]: #123824;
+  --color-[#D4AF37]: #d4af37;
+  --color-gold-liquid: #e6c265;
+  --color-text-white: #ffffff;
+  --color-text-gray: #a1a8b3;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-white);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+/* 100% Solid Uniform Luxury Emerald Announcement Bar (No Gradients, No Dark Corners) */
+.announcement-bar-solid {
+  background: #133e28 !important;
+  background-color: #133e28 !important;
+  background-image: none !important;
+  color: #fef3c7 !important;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.35) !important;
+}
+
+/* Universal Complete Scrollbar Elimination across all viewports & elements */
+*::-webkit-scrollbar,
+::-webkit-scrollbar,
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+iframe::-webkit-scrollbar {
+  display: none !important;
+  width: 0px !important;
+  height: 0px !important;
+  background: transparent !important;
+}
+
+*, html, body, iframe {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+h1, h2, h3, h4, h5, .font-serif-heading {
+  font-family: var(--font-serif);
+}
+
+/* Shimmer Liquid Gold Text */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #f5e4ab 0%, #d4af37 50%, #9e7b26 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Futuristic 3D Hologram 360° Product Stage */
+.hologram-stage-3d {
+  perspective: 1200px;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 70%, rgba(212, 175, 55, 0.15) 0%, rgba(10, 11, 14, 0.95) 70%);
+}
+
+.hologram-pedestal {
+  position: absolute;
+  bottom: 12%;
+  left: 50%;
+  transform: translateX(-50%) rotateX(75deg);
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 2px solid rgba(212, 175, 55, 0.6);
+  box-shadow: 0 0 35px rgba(212, 175, 55, 0.5), inset 0 0 25px rgba(212, 175, 55, 0.4);
+  animation: pedestalPulse 3s infinite alternate ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes pedestalPulse {
+  0% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3), inset 0 0 15px rgba(212, 175, 55, 0.2); }
+  100% { box-shadow: 0 0 45px rgba(212, 175, 55, 0.7), inset 0 0 35px rgba(212, 175, 55, 0.5); }
+}
+
+.hologram-laser-ring {
+  position: absolute;
+  left: 15%;
+  right: 15%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 235, 150, 0.9) 50%, transparent 100%);
+  box-shadow: 0 0 15px #d4af37, 0 0 30px #f5e4ab;
+  animation: laserScan 2.8s infinite ease-in-out alternate;
+  pointer-events: none;
+  z-index: 25;
+}
+
+@keyframes laserScan {
+  0% { top: 15%; opacity: 0.2; }
+  50% { opacity: 0.9; }
+  100% { top: 82%; opacity: 0.2; }
+}
+
+.bottle-3d-card {
+  transform-style: preserve-3d;
+  transition: transform 0.08s ease-out;
+  cursor: grab;
+  user-select: none;
+}
+
+.bottle-3d-card:active {
+  cursor: grabbing;
+}
+
+/* Shimmer Light Sweep animation for Primary CTA Buttons */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.35) 50%,
+    transparent 70%
+  );
+  transform: rotate(30deg);
+  animation: shimmerSweep 4s infinite;
+}
+
+@keyframes shimmerSweep {
+  0% { transform: translateX(-100%) rotate(30deg); }
+  30% { transform: translateX(100%) rotate(30deg); }
+  100% { transform: translateX(100%) rotate(30deg); }
+}
+
+/* Liquid Gold Primary Button */
+.btn-gold-luxury {
+  background: linear-gradient(135deg, #f5e4ab 0%, #d4af37 50%, #b88e28 100%) !important;
+  color: #0a0b0e !important;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  border-radius: 4999px;
+  box-shadow: 0 4px 25px rgba(212, 175, 55, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-gold-luxury:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 35px rgba(212, 175, 55, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  background: linear-gradient(135deg, #fceec2 0%, #e6c265 50%, #c4992e 100%);
+}
+
+.btn-emerald-luxury {
+  background: linear-gradient(135deg, #18472f 0%, #123824 100%);
+  color: #ffffff;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 1rem 2.25rem;
+  border-radius: 4999px;
+  box-shadow: 0 4px 25px rgba(18, 56, 36, 0.5);
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.btn-emerald-luxury:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 35px rgba(18, 56, 36, 0.7);
+  background: linear-gradient(135deg, #225e3f 0%, #18472f 100%);
+}
+
+/* Glassmorphic Panel */
+.glass-panel-luxury {
+  background: #11141b !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.65) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+.glass-panel-white {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* Sticky Header */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background-color: rgba(10, 11, 14, 0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* Cart Drawer */
+.cart-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(6px);
+  z-index: 50;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.cart-drawer-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 450px;
+  background: #0f1117;
+  border-left: 1px solid rgba(212, 175, 55, 0.3);
+  z-index: 51;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-drawer.active {
+  transform: translateX(0);
+}
+
+/* Mobile Sticky Bar */
+.mobile-sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(15, 17, 23, 0.96);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 0.75rem 1rem;
+  z-index: 35;
+  box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Live Purchase Toast Popup */
+.purchase-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 45;
+  background: #141720;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border-radius: 1rem;
+  padding: 0.875rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 75px;
+  }
+  .purchase-toast {
+    bottom: 80px;
+    left: 12px;
+    right: 12px;
+  }
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+
+/* Hide scrollbar on mobile devices to prevent gutter clipping */
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+  html, body {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+}
+
+/* Custom Luxury Dark Gold Scrollbar for Desktop */
+@media (min-width: 769px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(10, 11, 14, 0.95);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #d4af37, #9e7b26);
+    border-radius: 9999px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #f5e4ab;
+  }
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #d4af37, #9e7b26);
+  border-radius: 9999px;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #f5e4ab;
+}
+
+#modal-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+#modal-card::-webkit-scrollbar-track {
+  background: rgba(18, 21, 28, 0.95);
+  border-radius: 9999px;
+}
+
+#modal-card::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #d4af37, #b38f28);
+  border-radius: 9999px;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+}
+
+#modal-card::-webkit-scrollbar-thumb:hover {
+  background: #f5e4ab;
+}
+
+#modal-card {
+  scrollbar-width: thin;
+  scrollbar-color: #d4af37 rgba(18, 21, 28, 0.95);
+}

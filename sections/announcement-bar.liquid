@@ -1,0 +1,22 @@
+<div class="announcement-bar bg-[#143623] text-[#F3E6C8] border-b border-[#C5A059]/30 py-2.5 px-4 text-center text-xs md:text-sm font-medium tracking-wide shadow-sm">
+  <div class="max-w-7xl mx-auto flex items-center justify-center gap-2">
+    <span class="inline-block w-2 h-2 rounded-full bg-[#C5A059] animate-pulse"></span>
+    <p class="m-0 font-sans tracking-wider uppercase text-[11px] md:text-xs">
+      {{ section.settings.text | default: 'FREE DELIVERY across India | Cash on Delivery Available | 100% Natural — No Chemicals' }}
+    </p>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Announcement Bar",
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "Announcement Text",
+      "default": "FREE DELIVERY across India | Cash on Delivery Available | 100% Natural — No Chemicals"
+    }
+  ]
+}
+{% endschema %}

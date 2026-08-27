@@ -1,0 +1,74 @@
+{
+  "sections": {
+    "hero_video": {
+      "type": "hero-video",
+      "settings": {
+        "headline": "Say Goodbye to Grey Hair — Naturally.",
+        "subheadline": "Japanese-Inspired Herbal Hair Dye Shampoo — Turns Grey Hair Black, Stops Hair Fall, Ends Dandruff."
+      }
+    },
+    "hero_feature": {
+      "type": "hero-feature",
+      "settings": {}
+    },
+    "benefits": {
+      "type": "benefits",
+      "settings": {}
+    },
+    "why_blackroots": {
+      "type": "why-blackroots",
+      "settings": {}
+    },
+    "ingredients_grid": {
+      "type": "ingredients-grid",
+      "settings": {}
+    },
+    "how_to_use": {
+      "type": "how-to-use",
+      "settings": {}
+    },
+    "product_main": {
+      "type": "product-main",
+      "settings": {}
+    },
+    "reels_carousel": {
+      "type": "reels-carousel",
+      "settings": {}
+    },
+    "results_timeline": {
+      "type": "results-timeline",
+      "settings": {}
+    },
+    "reviews_carousel": {
+      "type": "reviews-carousel",
+      "settings": {}
+    },
+    "faq_accordion": {
+      "type": "faq-accordion",
+      "settings": {}
+    },
+    "social_strip": {
+      "type": "social-strip",
+      "settings": {}
+    },
+    "newsletter_whatsapp": {
+      "type": "newsletter-whatsapp",
+      "settings": {}
+    }
+  },
+  "order": [
+    "hero_video",
+    "hero_feature",
+    "benefits",
+    "why_blackroots",
+    "ingredients_grid",
+    "how_to_use",
+    "product_main",
+    "reels_carousel",
+    "results_timeline",
+    "reviews_carousel",
+    "faq_accordion",
+    "social_strip",
+    "newsletter_whatsapp"
+  ]
+}

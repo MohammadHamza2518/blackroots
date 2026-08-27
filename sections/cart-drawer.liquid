@@ -1,0 +1,90 @@
+<div id="CartDrawerBackdrop" class="cart-drawer-backdrop"></div>
+
+<aside id="CartDrawer" class="cart-drawer text-white">
+  <!-- Drawer Header -->
+  <div class="p-6 border-b border-white/10 flex items-center justify-between bg-zinc-950">
+    <div class="flex items-center gap-2">
+      {% render 'icon-cart' %}
+      <h3 class="font-serif text-xl font-bold m-0">Your Shopping Cart</h3>
+      <span class="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 text-xs font-bold">
+        (<span id="CartDrawerCount">1</span>)
+      </span>
+    </div>
+    <button type="button" class="js-close-cart text-gray-400 hover:text-white p-2 rounded-lg text-lg focus:outline-none" aria-label="Close Cart">
+      ✕
+    </button>
+  </div>
+
+  <!-- Free Shipping Progress Bar -->
+  <div class="p-4 bg-emerald-950/80 border-b border-emerald-500/30 text-xs text-center text-emerald-300 font-medium">
+    🎉 <strong>FREE EXPRESS DELIVERY</strong> Unlocked For This Order!
+  </div>
+
+  <!-- Drawer Body Items -->
+  <div class="flex-1 overflow-y-auto p-6 space-y-6">
+    
+    <div class="flex gap-4 p-4 rounded-xl bg-zinc-900 border border-amber-500/20">
+      <div class="w-20 h-20 rounded-lg bg-black border border-white/10 p-2 flex items-center justify-center shrink-0">
+        <img src="{{ 'blackroots-bottle-front-label.png' | asset_url }}" alt="BlackRoots Shampoo" class="max-h-full max-w-full object-contain">
+      </div>
+      <div class="flex-1 flex flex-col justify-between">
+        <div>
+          <h4 class="font-serif text-base font-bold text-white m-0">BlackRoots Herbal Hair Dye Shampoo</h4>
+          <span class="text-[11px] text-amber-400">Net Volume: 250 ml &bull; Japanese Herbal Formula</span>
+        </div>
+        <div class="flex items-center justify-between mt-2">
+          <span class="text-xs text-gray-400">Qty: 1</span>
+          <span class="text-sm font-bold text-amber-400">₹499</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upsell / Free Gift Note -->
+    <div class="p-4 rounded-xl bg-amber-950/40 border border-amber-500/30 text-xs text-amber-200">
+      <strong>✨ Buy 2 Bottles Deal:</strong> Get an extra ₹100 OFF + Free Scalp Massager Comb when you order 2 or more bottles!
+    </div>
+
+  </div>
+
+  <!-- Drawer Footer Checkout -->
+  <div class="p-6 border-t border-white/10 bg-zinc-950 space-y-4">
+    
+    <div class="space-y-2 text-xs text-gray-300">
+      <div class="flex justify-between">
+        <span>Subtotal</span>
+        <span class="text-white font-bold">₹499</span>
+      </div>
+      <div class="flex justify-between text-emerald-400">
+        <span>Shipping & Delivery</span>
+        <span>FREE (₹0)</span>
+      </div>
+      <div class="flex justify-between">
+        <span>Taxes</span>
+        <span>Included (₹0)</span>
+      </div>
+      <div class="gold-divider my-2"></div>
+      <div class="flex justify-between text-base font-bold text-white">
+        <span>Total Amount</span>
+        <span class="text-amber-400 font-serif text-xl">₹499</span>
+      </div>
+    </div>
+
+    <!-- Checkout Action Buttons -->
+    <div class="space-y-2">
+      <a href="/checkout" class="btn-primary w-full py-4 text-sm uppercase tracking-wider text-center">
+        Proceed to Checkout (COD / Prepaid)
+      </a>
+      <p class="text-[10px] text-center text-gray-400 m-0">
+        🔒 256-Bit Encrypted Secure Checkout &bull; Cash on Delivery Available
+      </p>
+    </div>
+
+  </div>
+</aside>
+
+{% schema %}
+{
+  "name": "Cart Drawer",
+  "settings": []
+}
+{% endschema %}

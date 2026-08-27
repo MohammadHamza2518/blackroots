@@ -1,0 +1,36 @@
+{
+  "sections": {
+    "main_product": {
+      "type": "product-main",
+      "settings": {}
+    },
+    "ingredients": {
+      "type": "ingredients-grid",
+      "settings": {}
+    },
+    "how_to_use": {
+      "type": "how-to-use",
+      "settings": {}
+    },
+    "results_timeline": {
+      "type": "results-timeline",
+      "settings": {}
+    },
+    "reviews": {
+      "type": "reviews-carousel",
+      "settings": {}
+    },
+    "faq": {
+      "type": "faq-accordion",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main_product",
+    "ingredients",
+    "how_to_use",
+    "results_timeline",
+    "reviews",
+    "faq"
+  ]
+}

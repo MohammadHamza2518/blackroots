@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "settings": {}
+    },
+    "reviews": {
+      "type": "reviews-carousel",
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "reviews"
+  ]
+}

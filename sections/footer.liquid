@@ -1,0 +1,92 @@
+<footer class="bg-[#143623] text-[#F3E6C8] pt-16 pb-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-16">
+      
+      <!-- Col 1: Brand & Bio -->
+      <div class="lg:col-span-2 space-y-4">
+        <div class="flex items-center gap-3">
+          <img src="{{ 'blackroots-logo-circle-black.jpg' | asset_url }}" alt="BlackRoots Logo Emblem" class="w-11 h-11 rounded-full border border-[#C5A059] object-cover shadow-sm">
+          <div class="flex flex-col">
+            <span class="font-serif text-2xl font-bold tracking-wider text-white uppercase">BlackRoots</span>
+            <span class="text-[9px] uppercase tracking-[0.25em] text-[#C5A059] font-bold -mt-1">Revive Your Roots</span>
+          </div>
+        </div>
+        <p class="text-xs text-[#D1E0D7] leading-relaxed max-w-sm">
+          BlackRoots is a premium Japanese-inspired herbal hair care brand dedicated to natural grey coverage, scalp nourishment, and hair loss prevention. 100% natural, chemical-free, and dermatologically tested.
+        </p>
+        <div class="pt-2 text-xs text-[#D1E0D7] space-y-1 border-t border-white/10">
+          <p class="m-0"><strong class="text-white">Manufactured at:</strong> Shuklaganj, Uttar Pradesh – 209861, Near Poni Road, India</p>
+          <p class="m-0"><strong class="text-white">Marketed by:</strong> HRS Group</p>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div>
+        <h4 class="font-serif text-white font-bold text-base mb-4 tracking-wide uppercase">Quick Links</h4>
+        <ul class="space-y-2.5 text-xs text-[#D1E0D7]">
+          <li><a href="/" class="hover:text-[#C5A059] transition-colors">Home</a></li>
+          <li><a href="/products/blackroots-herbal-hair-dye-shampoo" class="hover:text-[#C5A059] transition-colors">Product Page (₹499)</a></li>
+          <li><a href="#ingredients" class="hover:text-[#C5A059] transition-colors">Botanical Ingredients</a></li>
+          <li><a href="#how-to-use" class="hover:text-[#C5A059] transition-colors">How To Use (5 Steps)</a></li>
+          <li><a href="/pages/track-order" class="hover:text-[#C5A059] transition-colors">Track Your Order</a></li>
+        </ul>
+      </div>
+
+      <!-- Legal Policies -->
+      <div>
+        <h4 class="font-serif text-white font-bold text-base mb-4 tracking-wide uppercase">Policies</h4>
+        <ul class="space-y-2.5 text-xs text-[#D1E0D7]">
+          <li><a href="/pages/shipping-policy" class="hover:text-[#C5A059] transition-colors">Shipping & Delivery Policy</a></li>
+          <li><a href="/pages/refund-policy" class="hover:text-[#C5A059] transition-colors">Refund & Return Policy</a></li>
+          <li><a href="/pages/privacy-policy" class="hover:text-[#C5A059] transition-colors">Privacy Policy</a></li>
+          <li><a href="/pages/terms-of-service" class="hover:text-[#C5A059] transition-colors">Terms of Service</a></li>
+          <li><a href="/pages/faq" class="hover:text-[#C5A059] transition-colors">Full FAQs</a></li>
+          <li><a href="/pages/contact" class="hover:text-[#C5A059] transition-colors">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Us -->
+      <div>
+        <h4 class="font-serif text-white font-bold text-base mb-4 tracking-wide uppercase">Customer Care</h4>
+        <ul class="space-y-3 text-xs text-[#D1E0D7]">
+          <li class="flex items-start gap-2">
+            <span>📧</span>
+            <a href="mailto:blackroots.in@gmail.com" class="hover:text-[#C5A059] break-all">blackroots.in@gmail.com</a>
+          </li>
+          <li class="flex items-start gap-2">
+            <span>📞</span>
+            <a href="https://wa.me/919580835179" target="_blank" rel="noopener" class="hover:text-[#C5A059]">+91 9580835179</a>
+          </li>
+          <li class="flex items-start gap-2">
+            <span>📸</span>
+            <a href="https://instagram.com/blackroots.in" target="_blank" rel="noopener" class="hover:text-[#C5A059]">@blackroots.in</a>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+      <p class="m-0 text-[#A3B8AC]">
+        &copy; {{ 'now' | date: '%Y' }} <strong>BlackRoots India</strong>. All Rights Reserved. Marketed by HRS Group.
+      </p>
+      
+      <div class="flex items-center gap-3 text-[10px] text-[#A3B8AC] uppercase tracking-widest">
+        <span>💵 Cash on Delivery</span>
+        <span>&bull;</span>
+        <span>💳 UPI / NetBanking</span>
+        <span>&bull;</span>
+        <span>🔒 256-Bit SSL Encrypted</span>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": []
+}
+{% endschema %}

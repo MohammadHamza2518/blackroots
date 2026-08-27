@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>BlackRoots Professional Dual Mobile Simulator (Android & iPhone)</title>
+  <script src="https://cdn.tailwindcss.com">
+    // Auto-bust cache on every initial load to always display latest live edits
+    window.addEventListener('DOMContentLoaded', () => {
+      const iframe = document.getElementById('SimulatedIframe');
+      const pageSelector = document.getElementById('PageSelector');
+      if (iframe && pageSelector) {
+        const target = pageSelector.value || 'product.html';
+        iframe.src = target + '?v=' + Date.now();
+      }
+    });
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: radial-gradient(circle at top, #141722 0%, #060709 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    select option {
+      background-color: #0f1118 !important;
+      color: #ffffff !important;
+      padding: 10px;
+    }
+    
+    /* iPhone 16 Pro Chassis */
+    .iphone-chassis {
+      position: relative;
+      background: #090a0f;
+      border-radius: 54px;
+      padding: 12px;
+      box-shadow: 
+        0 0 0 2px #3a3f50,
+        0 0 0 8px #181b24,
+        0 0 0 10px #090a0f,
+        0 30px 90px rgba(0, 0, 0, 0.95),
+        0 0 50px rgba(212, 175, 55, 0.12);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .iphone-chassis::before {
+      content: '';
+      position: absolute;
+      left: -13px;
+      top: 115px;
+      width: 4px;
+      height: 26px;
+      background: #2a2e3d;
+      border-radius: 3px 0 0 3px;
+      box-shadow: 0 45px 0 #2a2e3d, 0 85px 0 #2a2e3d;
+    }
+    .iphone-chassis::after {
+      content: '';
+      position: absolute;
+      right: -13px;
+      top: 140px;
+      width: 4px;
+      height: 45px;
+      background: #2a2e3d;
+      border-radius: 0 3px 3px 0;
+    }
+
+    /* Samsung Galaxy S24 Ultra Android Chassis */
+    .android-chassis {
+      position: relative;
+      background: #0d0f14;
+      border-radius: 28px;
+      padding: 10px;
+      box-shadow: 
+        0 0 0 2px #4a4e63,
+        0 0 0 7px #1c1f2b,
+        0 0 0 9px #090a0f,
+        0 30px 90px rgba(0, 0, 0, 0.95),
+        0 0 50px rgba(52, 211, 153, 0.15);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .android-chassis::after {
+      content: '';
+      position: absolute;
+      right: -11px;
+      top: 150px;
+      width: 3px;
+      height: 70px;
+      background: #2f3445;
+      border-radius: 0 3px 3px 0;
+    }
+
+    /* Inner Screen Frame */
+    .screen-area {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000000;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Status Bar Overlays */
+    .ios-status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 38px;
+      z-index: 55;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+      pointer-events: none;
+      background: #000000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .android-status-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 34px;
+      z-index: 55;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #ffffff;
+      pointer-events: none;
+      background: #000000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* iPhone Dynamic Island */
+    .dynamic-island {
+      position: absolute;
+      top: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 110px;
+      height: 26px;
+      background-color: #000000;
+      border-radius: 20px;
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 10px;
+      box-shadow: 0 1px 8px rgba(0, 0, 0, 0.9);
+      pointer-events: none;
+      border: 1px solid #1a1a24;
+    }
+
+    /* Android Punch Hole Camera */
+    .android-punch-hole {
+      position: absolute;
+      top: 7px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 13px;
+      height: 13px;
+      background-color: #000000;
+      border-radius: 50%;
+      z-index: 60;
+      border: 1px solid #202432;
+      pointer-events: none;
+    }
+
+    /* Android Bottom Navigation Bar */
+    .android-nav-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 24px;
+      background-color: #000000;
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 40px;
+      pointer-events: none;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* iOS Bottom Home Indicator */
+    .ios-home-indicator {
+      position: absolute;
+      bottom: 6px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 130px;
+      height: 4px;
+      background-color: rgba(255, 255, 255, 0.4);
+      border-radius: 10px;
+      z-index: 60;
+      pointer-events: none;
+    }
+
+    iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
+      background: #0a0b0e;
+    }
+  </style>
+  <!-- Strict Zero-Scrollbar & Solid High-Definition Card Borders -->
+  <style>
+    /* Universal Mobile Scrollbar Complete Kill */
+    *, *::before, *::after, html, body, div, section, iframe {
+      scrollbar-width: none !important;
+      -ms-overflow-style: none !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+    *::-webkit-scrollbar, html::-webkit-scrollbar, body::-webkit-scrollbar {
+      display: none !important;
+      width: 0px !important;
+      height: 0px !important;
+      background: transparent !important;
+      opacity: 0 !important;
+    }
+    
+    /* 100% Solid Crisp Luxury Card Border (Zero Faint / Invisible Light Effect) */
+    .glass-panel-luxury {
+      background: #11141b !important;
+      border: 1px solid rgba(212, 175, 55, 0.65) !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+    }
+    .review-card-solid {
+      background: #11141b !important;
+      border: 1px solid rgba(212, 175, 55, 0.65) !important;
+      border-radius: 1.25rem !important;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+    }
+  </style>
+  <script src="./assets/instant-butter.js" defer></script>
+</head>
+<body class="flex flex-col items-center justify-between p-3 sm:p-6">
+
+  <!-- Top Toolbar Header -->
+  <header class="w-full max-w-5xl bg-[#0d0f17]/95 backdrop-blur-xl border border-[#d4af37]/40 rounded-2xl p-4 mb-6 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-4 z-30">
+    
+    <!-- Brand Title -->
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#d4af37] via-[#f3e5ab] to-[#aa7c11] flex items-center justify-center text-black font-extrabold text-xl shadow-lg">
+        📱
+      </div>
+      <div>
+        <h1 class="text-base font-extrabold text-white tracking-tight flex items-center gap-2">
+          <span>BlackRoots Mobile Simulator</span>
+          <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-black px-2.5 py-0.5 rounded-full border border-emerald-500/40 uppercase tracking-wider flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            PRO LIVE
+          </span>
+        </h1>
+        <p class="text-xs text-gray-400 font-light">Real Android & iPhone Device Tester</p>
+      </div>
+    </div>
+
+    <!-- Controls Toolbar -->
+    <div class="flex flex-wrap items-center justify-center gap-3">
+      
+            <!-- Quick Page Tabs (Instant 1-Click Switch) -->
+      <div class="flex items-center gap-1 bg-[#141722] p-1 border border-[#d4af37]/40 rounded-xl shadow-inner">
+        <button id="TabHome" type="button" onclick="switchToSimPage('index.html')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-gray-300 hover:text-white">
+          🏠 Home (Reels)
+        </button>
+        <button id="TabProduct" type="button" onclick="switchToSimPage('product.html')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-[#d4af37] text-black shadow">
+          🛍️ Product
+        </button>
+      </div>
+
+      <!-- Page Selector -->
+      <div class="flex items-center gap-2 bg-[#141722] border border-[#d4af37]/30 rounded-xl px-3 py-1.5 shadow-inner">
+        <span class="text-xs text-amber-300 font-bold uppercase tracking-wider">Page:</span>
+        <select id="PageSelector" class="bg-transparent text-xs text-white font-bold focus:outline-none cursor-pointer" onchange="changeSimulatedPage(this.value)">
+          <option value="index.html">🏠 Home Page (index.html)</option>
+          <option value="product.html" selected>🛍️ Product Page (product.html)</option>
+          <option value="reviews.html">⭐ Reviews (~1,300+ Engine)</option>
+          <option value="ai-consultant.html">🤖 AI Doctor (Dr. Kuroki)</option>
+          <option value="ingredients.html">🌿 Botanical Ingredients</option>
+          <option value="how-to-use.html">📖 How To Use & Timer</option>
+          
+          
+          <option value="track-order.html">🚚 Order Tracking</option>
+          <option value="contact.html">📞 Contact Support</option>
+        </select>
+      </div>
+
+      <!-- Device Switcher Buttons (Android vs iPhone) -->
+      <div class="flex items-center gap-1 bg-[#141722] p-1 border border-[#d4af37]/30 rounded-xl shadow-inner">
+        <button id="BtnAndroid" type="button" onclick="setDevicePreset('android')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-emerald-500 text-black shadow">
+          🤖 Android (S24)
+        </button>
+        <button id="BtnIphone" type="button" onclick="setDevicePreset('iphone16')" class="px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-gray-300 hover:text-white">
+          🍎 iPhone 16 Pro
+        </button>
+      </div>
+
+      <!-- Refresh Button -->
+      <button type="button" onclick="refreshSimulatedIframe()" class="p-2 rounded-xl bg-white/10 hover:bg-[#d4af37] hover:text-black text-amber-300 transition-all focus:outline-none shadow" title="Refresh Live Screen">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+        </svg>
+      </button>
+
+      <!-- External Tab Button -->
+      <a id="ExternalLinkBtn" href="index.html" target="_blank" class="p-2 rounded-xl bg-amber-400/20 border border-amber-400/40 hover:bg-amber-400 hover:text-black text-amber-300 transition-all shadow" title="Open Full Window">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+        </svg>
+      </a>
+
+    </div>
+  </header>
+
+  <!-- Central Real Device Frame Stage -->
+  <main class="flex-1 flex items-center justify-center w-full py-4">
+    
+    <!-- Device Frame Wrapper -->
+    <div id="DeviceChassis" class="android-chassis" style="width: 432px; height: 890px;">
+      
+      <!-- Inner Phone Display Viewport -->
+      <div id="ScreenArea" class="screen-area rounded-[20px]">
+        
+        <!-- Status Bar (Android / iOS) -->
+        <div id="StatusBar" class="android-status-bar">
+          <span>10:00 AM</span>
+          <div class="flex items-center gap-1.5 text-[10px]">
+            <span>5G</span>
+            <span>📶</span>
+            <span>🔋 100%</span>
+          </div>
+        </div>
+
+        <!-- Camera Notch (Punch hole for Android, Dynamic Island for iPhone) -->
+        <div id="CameraNotch" class="android-punch-hole"></div>
+
+        <!-- Live Content Iframe Wrapper -->
+        <div id="IframeWrapper" class="w-full h-full pt-[34px] pb-[24px] overflow-hidden">
+          <iframe id="SimulatedIframe" src="product.html" title="Live Mobile Website Preview" allow="autoplay; encrypted-media; fullscreen"></iframe>
+        </div>
+
+        <!-- Bottom Navigation Bar (Android Buttons / iOS Home Line) -->
+        <div id="BottomNav" class="android-nav-bar">
+          <span class="text-xs text-gray-400 font-bold cursor-default">|||</span>
+          <span class="text-xs text-gray-400 font-bold cursor-default">◯</span>
+          <span class="text-xs text-gray-400 font-bold cursor-default">＜</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer Info -->
+  <footer class="w-full max-w-xl text-center py-3">
+    <p class="text-xs text-gray-400 font-light flex items-center justify-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span>Antigravity Live Mobile Simulator Active • Server: <strong class="text-amber-300">http://localhost:8000</strong></span>
+    </p>
+  </footer>
+
+  <script>
+    function changeSimulatedPage(pageUrl) {
+      const iframe = document.getElementById('SimulatedIframe');
+      const extBtn = document.getElementById('ExternalLinkBtn');
+      const cacheBustUrl = pageUrl + '?v=' + Date.now();
+      if (iframe) iframe.src = cacheBustUrl;
+      if (extBtn) extBtn.href = pageUrl;
+    }
+
+    function refreshSimulatedIframe() {
+      const iframe = document.getElementById('SimulatedIframe');
+      if (iframe) {
+        const currentSrc = iframe.src.split('?')[0];
+        iframe.src = currentSrc + '?v=' + Date.now();
+      }
+    }
+
+    function setDevicePreset(preset) {
+      const chassis = document.getElementById('DeviceChassis');
+      const screenArea = document.getElementById('ScreenArea');
+      const statusBar = document.getElementById('StatusBar');
+      const cameraNotch = document.getElementById('CameraNotch');
+      const iframeWrapper = document.getElementById('IframeWrapper');
+      const bottomNav = document.getElementById('BottomNav');
+      const btnAndroid = document.getElementById('BtnAndroid');
+      const btnIphone = document.getElementById('BtnIphone');
+
+      if (!chassis) return;
+
+      if (preset === 'android') {
+        chassis.className = 'android-chassis';
+        chassis.style.width = '432px';
+        chassis.style.height = '890px';
+        screenArea.className = 'screen-area rounded-[20px]';
+        statusBar.className = 'android-status-bar';
+        statusBar.innerHTML = `<span>10:00 AM</span><div class="flex items-center gap-1.5 text-[10px]"><span>5G</span><span>📶</span><span>🔋 100%</span></div>`;
+        cameraNotch.className = 'android-punch-hole';
+        cameraNotch.innerHTML = '';
+        iframeWrapper.className = 'w-full h-full pt-[34px] pb-[24px] overflow-hidden';
+        bottomNav.className = 'android-nav-bar';
+        bottomNav.innerHTML = `<span class="text-xs text-gray-400 font-bold cursor-default">|||</span><span class="text-xs text-gray-400 font-bold cursor-default">◯</span><span class="text-xs text-gray-400 font-bold cursor-default">＜</span>`;
+        btnAndroid.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-emerald-500 text-black shadow';
+        btnIphone.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-gray-300 hover:text-white';
+      } else {
+        chassis.className = 'iphone-chassis';
+        chassis.style.width = '417px';
+        chassis.style.height = '868px';
+        screenArea.className = 'screen-area rounded-[44px]';
+        statusBar.className = 'ios-status-bar';
+        statusBar.innerHTML = `<span>9:41</span><div class="flex items-center gap-1.5 text-[10px]"><span>5G</span><span>📶</span><span>🔋 100%</span></div>`;
+        cameraNotch.className = 'dynamic-island';
+        cameraNotch.innerHTML = `<div class="camera-lens"></div><div class="sensor-dot"></div>`;
+        iframeWrapper.className = 'w-full h-full pt-[38px] pb-[16px] overflow-hidden';
+        bottomNav.className = 'ios-home-indicator';
+        bottomNav.innerHTML = '';
+        btnIphone.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-amber-400 text-black shadow';
+        btnAndroid.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-gray-300 hover:text-white';
+      }
+    }
+  
+    // Auto-bust cache on every initial load to always display latest live edits
+    window.addEventListener('DOMContentLoaded', () => {
+      const iframe = document.getElementById('SimulatedIframe');
+      const pageSelector = document.getElementById('PageSelector');
+      if (iframe && pageSelector) {
+        const target = pageSelector.value || 'product.html';
+        iframe.src = target + '?v=' + Date.now();
+      }
+    });
+  </script>
+<!-- 📱 Ultra-Luxury Mobile Navigation Drawer Overlay & Backdrop -->
+  <div id="MobileNavBackdrop" onclick="closeMobileNavDrawer()" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 opacity-0 pointer-events-none transition-opacity duration-300 ease-out"></div>
+
+  <div id="MobileNavDrawer" class="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-gradient-to-b from-[#0e1017] via-[#090a0e] to-black border-l border-[#d4af37]/30 z-50 shadow-[-15px_0_40px_rgba(0,0,0,0.9)] transform translate-x-full transition-transform duration-300 ease-out flex flex-col justify-between overflow-y-auto">
+    
+    <!-- Drawer Header -->
+    <div class="p-5 border-b border-white/10 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <img src="./assets/blackroots-logo-circle-black.jpg" alt="BlackRoots Logo" class="w-8 h-8 rounded-full border border-[#d4af37] object-cover">
+        <div class="flex flex-col">
+          <span class="font-serif text-lg font-bold text-white uppercase tracking-wider">BlackRoots</span>
+          <span class="text-[8px] uppercase tracking-widest text-[#d4af37] font-bold -mt-0.5">Revive Your Roots</span>
+        </div>
+      </div>
+      <button type="button" onclick="closeMobileNavDrawer()" class="w-8 h-8 rounded-full bg-white/10 border border-[#d4af37]/40 text-[#d4af37] flex items-center justify-center text-sm font-bold hover:bg-[#d4af37] hover:text-black transition-all cursor-pointer" aria-label="Close Menu">
+        ✕
+      </button>
+    </div>
+
+    <!-- Special Drawer Promo Banner -->
+    <div class="mx-5 mt-4 p-3 rounded-2xl bg-gradient-to-r from-emerald-950/60 to-black border border-emerald-500/30 flex items-center justify-between text-xs">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-emerald-300 font-bold text-[11px]">Free Express Delivery</span>
+      </div>
+      <span class="text-[#d4af37] font-black text-xs">&#8377;499 Only</span>
+    </div>
+
+    <!-- Navigation Links List -->
+    <div class="p-5 space-y-1.5 flex-1">
+      <a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all">
+        <span>🏠</span> <span>Home</span>
+      </a>
+      <a href="product.html" class="flex items-center justify-between px-4 py-3 rounded-xl bg-[#d4af37]/10 border border-[#d4af37]/40 text-[#d4af37] font-bold text-xs uppercase tracking-wider transition-all">
+        <div class="flex items-center gap-3">
+          <span>🛍️</span> <span>Product (250ml)</span>
+        </div>
+        <span class="bg-[#d4af37] text-black text-[9px] font-black px-2 py-0.5 rounded-full">&#8377;499</span>
+      </a>
+      <a href="ingredients.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all">
+        <span>🌿</span> <span>Herbal Ingredients</span>
+      </a>
+      <a href="how-to-use.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all">
+        <span>🚿</span> <span>Application Ritual</span>
+      </a>
+      <a href="reviews.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all">
+        <span>⭐</span> <span>Customer Reviews</span>
+      </a>
+      <a href="ai-consultant.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-amber-300 hover:bg-amber-400/10 font-bold text-xs uppercase tracking-wider transition-all">
+        <span>🩺</span> <span>AI Hair Doctor</span>
+      </a>
+      <a href="track-order.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all">
+        <span>📦</span> <span>Track My Order</span>
+      </a>
+      <a href="contact.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all">
+        <span>📞</span> <span>Customer Support</span>
+      </a>
+    </div>
+
+    <!-- Drawer Footer CTA -->
+    <div class="p-5 border-t border-white/10 space-y-3 bg-black/60">
+      <a href="product.html" class="group relative w-full inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-xs px-5 py-3.5 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.3)] hover:scale-105 transition-all uppercase tracking-wider text-center">
+        <span>ORDER NOW &bull; &#8377;499</span>
+        <span class="w-5 h-5 rounded-md bg-black text-[#d4af37] flex items-center justify-center font-black text-xs">
+          🛍️
+        </span>
+      </a>
+      <p class="text-[10px] text-gray-400 text-center font-medium">
+        ⚡ Free Express COD Delivery Across India
+      </p>
+    </div>
+
+  </div>
+
+</body>
+</html>

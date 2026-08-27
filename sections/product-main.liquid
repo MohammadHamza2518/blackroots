@@ -1,0 +1,253 @@
+{% comment %}
+  BlackRoots High-Converting Dedicated PDP Liquid Section
+{% endcomment %}
+
+<section class="py-12 md:py-20 bg-[#0a0b0e] text-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+      
+      <!-- Left Media Gallery -->
+      <div class="lg:col-span-7 space-y-4">
+        
+        <div class="relative aspect-square rounded-3xl overflow-hidden glass-panel-luxury p-2 flex items-center justify-center group bg-[#0a0c10] border border-[#d4af37]/30 shadow-2xl">
+          <div id="ProductSlidesTrack" class="flex w-full h-full overflow-x-auto snap-x snap-mandatory scrollbar-none transition-all duration-300">
+            
+            <!-- Slide 1: Botanical Stone Pedestal 1:1 -->
+            <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#0a0c10]">
+              <img id="ProductMainImage" src="{{ 'blackroots-botanical-pedestal-1x1.jpg' | asset_url }}" alt="Botanical 1:1 Showcase" class="w-full h-full object-contain block select-none" draggable="false">
+            </div>
+
+            <!-- Slide 2: Real Indian Couple Showcase 1:1 -->
+            <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#0a0c10]">
+              <img src="{{ 'blackroots-lifestyle-couple-1x1.jpg' | asset_url }}" alt="Real Indian Couple with BlackRoots Shampoo 1:1" class="w-full h-full object-contain block select-none" draggable="false">
+            </div>
+
+            <!-- Slide 3: Key Ingredients Infographic 1:1 -->
+            <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#0a0c10]">
+              <img src="{{ 'blackroots-key-ingredients-1x1.jpg' | asset_url }}" alt="Key Ingredients Infographic 1:1" class="w-full h-full object-contain block select-none" draggable="false">
+            </div>
+
+            <!-- Slide 4: How To Use 5 Steps 1:1 -->
+            <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#0a0c10]">
+              <img src="{{ 'blackroots-how-to-use-1x1.jpg' | asset_url }}" alt="How To Use 1:1" class="w-full h-full object-contain block select-none" draggable="false">
+            </div>
+
+            <!-- Slide 5: Before vs After Comparison 1:1 -->
+            <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-[#0a0c10]">
+              <img src="{{ 'blackroots-before-after-1x1.jpg' | asset_url }}" alt="Before vs After Comparison 1:1" class="w-full h-full object-contain block select-none" draggable="false">
+            </div>
+
+            <!-- Slide 6: Luxury Video Reel Player -->
+            <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-black">
+              <video id="ProductSlideVideo" src="{{ 'reel-6.mp4' | asset_url }}" controls loop playsinline webkit-playsinline class="w-full h-full object-contain rounded-2xl block bg-black" poster="{{ 'reel-thumb-6.jpg' | asset_url }}"></video>
+            </div>
+
+          </div>
+
+          <!-- Bestseller Badge -->
+          <div class="absolute top-3.5 left-3.5 bg-black/85 backdrop-blur-md text-amber-300 text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full border border-[#d4af37]/50 shadow-xl flex items-center gap-1.5 z-20 pointer-events-none">
+            <svg class="w-3.5 h-3.5 text-[#d4af37]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+            <span>BESTSELLER</span>
+          </div>
+        </div>
+
+        <!-- Thumbnails Row -->
+        <div class="grid grid-cols-6 gap-2 sm:gap-3 mt-4">
+          <button type="button" id="ProductThumb_0" class="js-thumb-btn aspect-square rounded-xl bg-[#12151c] border-2 border-[#d4af37] p-1 overflow-hidden focus:outline-none shadow-lg transition-all cursor-pointer" onclick="window.goToProductSlide(0)">
+            <img src="{{ 'blackroots-botanical-pedestal-1x1.jpg' | asset_url }}" alt="Botanical 1:1 Showcase" class="w-full h-full object-cover rounded-lg">
+          </button>
+          <button type="button" id="ProductThumb_1" class="js-thumb-btn aspect-square rounded-xl bg-[#12151c] border border-white/10 hover:border-[#d4af37] p-1 overflow-hidden focus:outline-none transition-all cursor-pointer" onclick="window.goToProductSlide(1)">
+            <img src="{{ 'blackroots-lifestyle-couple-1x1.jpg' | asset_url }}" alt="Couple Showcase" class="w-full h-full object-cover rounded-lg">
+          </button>
+          <button type="button" id="ProductThumb_2" class="js-thumb-btn aspect-square rounded-xl bg-[#12151c] border border-white/10 hover:border-[#d4af37] p-1 overflow-hidden focus:outline-none transition-all cursor-pointer" onclick="window.goToProductSlide(2)">
+            <img src="{{ 'blackroots-key-ingredients-1x1.jpg' | asset_url }}" alt="Ingredients Infographic" class="w-full h-full object-cover rounded-lg">
+          </button>
+          <button type="button" id="ProductThumb_3" class="js-thumb-btn aspect-square rounded-xl bg-[#12151c] border border-white/10 hover:border-[#d4af37] p-1 overflow-hidden focus:outline-none transition-all cursor-pointer" onclick="window.goToProductSlide(3)">
+            <img src="{{ 'blackroots-how-to-use-1x1.jpg' | asset_url }}" alt="How To Use" class="w-full h-full object-cover rounded-lg">
+          </button>
+          <button type="button" id="ProductThumb_4" class="js-thumb-btn aspect-square rounded-xl bg-[#12151c] border border-white/10 hover:border-[#d4af37] p-1 overflow-hidden focus:outline-none transition-all cursor-pointer" onclick="window.goToProductSlide(4)">
+            <img src="{{ 'blackroots-before-after-1x1.jpg' | asset_url }}" alt="Before vs After" class="w-full h-full object-cover rounded-lg">
+          </button>
+          <button type="button" id="ProductThumb_5" class="js-thumb-btn aspect-square rounded-xl bg-[#12151c] border border-white/10 hover:border-[#d4af37] p-1 overflow-hidden focus:outline-none transition-all cursor-pointer relative flex items-center justify-center shadow-lg" onclick="window.goToProductSlide(5)">
+            <img src="{{ 'reel-thumb-6.jpg' | asset_url }}" alt="Product Video" class="w-full h-full object-cover rounded-lg">
+            <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+              <div class="w-6 h-6 rounded-full bg-[#d4af37] text-black flex items-center justify-center">
+                <svg class="w-3 h-3 fill-current ml-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Right Purchasing PDP Details -->
+      <div class="lg:col-span-5 flex flex-col justify-between space-y-6">
+        
+        <div>
+          <!-- Live Visitors Pulse -->
+          <div class="p-3 sm:p-4 rounded-2xl glass-panel-luxury border border-[#d4af37]/35 mb-4 flex items-center justify-between gap-2.5 shadow-xl">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span class="relative flex h-2.5 w-2.5 shrink-0">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+              </span>
+              <div class="text-xs min-w-0">
+                <span class="text-white font-bold block truncate">
+                  <strong class="js-live-visitors text-emerald-400 font-extrabold transition-all duration-300">872</strong> People Viewing Right Now
+                </span>
+                <span class="text-gray-400 text-[10px] sm:text-[11px] block truncate">⚡ High Demand &bull; Ready To Dispatch in 24h</span>
+              </div>
+            </div>
+            <span class="shrink-0 whitespace-nowrap text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-amber-300 bg-amber-400/15 border border-amber-400/30 px-2.5 py-1 rounded-full shadow-sm">
+              LIVE PULSE
+            </span>
+          </div>
+
+          <!-- Reviews Rating Bar -->
+          <a href="/pages/reviews" class="inline-flex items-center gap-2 mb-3 cursor-pointer group hover:opacity-90 transition-all">
+            <div class="flex items-center text-amber-400 text-xs sm:text-sm tracking-tighter">★★★★★</div>
+            <span class="text-xs sm:text-sm font-black text-white group-hover:text-amber-300 transition-colors">4.9/5.0</span>
+            <span class="text-[11px] sm:text-xs text-gray-400 group-hover:text-amber-400 transition-colors">(1,280+ Verified Reviews &rarr;)</span>
+          </a>
+
+          <!-- Title -->
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight mb-3">
+            {{ product.title | default: "BlackRoots Herbal Hair Dye Shampoo" }}
+          </h1>
+
+          <!-- Badges -->
+          <div class="flex flex-wrap items-center gap-2 mb-5">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#d4af37]/15 border border-[#d4af37]/40 text-[#d4af37] text-[11px] font-bold uppercase tracking-wide">
+              <span>🌿</span> <span>100% Japanese Botanical</span>
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-[11px] font-bold uppercase tracking-wide">
+              <span>👫</span> <span>100% Unisex</span>
+            </span>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-gray-300 text-[11px] font-bold uppercase tracking-wide">
+              <span>🛡️</span> <span>Zero Ammonia</span>
+            </span>
+          </div>
+
+          <!-- Special Price Offer Box -->
+          <div class="p-5 rounded-2xl glass-panel-luxury mb-6 flex items-center justify-between">
+            <div>
+              <div class="text-xs text-gray-400 mb-1">Special Brand Offer (Incl. all taxes)</div>
+              <div class="flex items-baseline gap-3">
+                <span id="PDPPriceDisplay" class="text-3xl font-bold text-amber-400">₹499</span>
+                <span id="PDPMRPDisplay" class="text-base text-gray-500 line-through">₹999</span>
+              </div>
+            </div>
+            <span id="PDPBadgeDisplay" class="px-3 py-1.5 rounded-full bg-amber-500/20 text-amber-300 text-[11px] sm:text-xs font-extrabold border border-amber-500/40 shadow-sm shrink-0 whitespace-nowrap text-center">
+              🔥 50% OFF &bull; Save ₹500
+            </span>
+          </div>
+
+          <!-- Bundle Options -->
+          <div class="space-y-3 mb-6">
+            <label class="block text-xs font-bold uppercase tracking-wider text-amber-300">Select Package Option:</label>
+            
+            <!-- Option 1: Single Bottle -->
+            <div class="js-bundle-option p-4 rounded-2xl border-2 border-[#d4af37] bg-[#d4af37]/10 cursor-pointer flex items-center justify-between transition-all" data-price="₹499" data-mrp="₹999" data-badge="🔥 50% OFF &bull; Save ₹500">
+              <div class="flex items-center gap-3">
+                <span class="w-4 h-4 rounded-full border-2 border-amber-400 flex items-center justify-center shrink-0">
+                  <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                </span>
+                <div>
+                  <strong class="text-white text-sm font-bold block">1 Bottle (250ml)</strong>
+                  <span class="text-xs text-gray-300">₹499 &bull; Free Express Delivery</span>
+                </div>
+              </div>
+              <span class="text-[11px] font-extrabold text-amber-300 uppercase tracking-wider shrink-0">STANDARD</span>
+            </div>
+
+            <!-- Option 2: 2 Bottles Pack -->
+            <div class="js-bundle-option p-4 rounded-2xl border border-white/10 bg-white/5 hover:border-amber-400 cursor-pointer flex items-center justify-between transition-all" data-price="₹799" data-mrp="₹1,998" data-badge="🔥 60% OFF &bull; Save ₹1,199">
+              <div class="flex items-center gap-3">
+                <span class="w-4 h-4 rounded-full border-2 border-gray-400 flex items-center justify-center shrink-0"></span>
+                <div>
+                  <strong class="text-white text-sm font-bold block">2 Bottles Pack (500ml)</strong>
+                  <span class="text-xs text-gray-300">₹799 &bull; <span class="text-amber-300 font-medium">₹399/bottle</span> &bull; <span class="text-emerald-400 font-bold">Save ₹200</span></span>
+                </div>
+              </div>
+              <span class="text-[11px] font-extrabold text-amber-300 uppercase bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/30 shrink-0">BEST SELLER</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Buy Now Button & Payment Trust -->
+        <div id="MainBuyButton" class="pt-3 pb-2 space-y-3">
+          <button type="button" class="js-trigger-order btn-gold-luxury btn-shimmer w-full text-base sm:text-lg font-black py-4 px-6 rounded-2xl shadow-[0_10px_30px_rgba(212,175,55,0.4)] flex items-center justify-center gap-3 transform transition-all hover:scale-[1.02] active:scale-95 cursor-pointer uppercase tracking-widest text-black">
+            <svg class="w-6 h-6 text-black shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+            </svg>
+            <span>BUY NOW &mdash; <span id="BuyButtonPriceDisplay">₹499</span></span>
+          </button>
+
+          <!-- Free Delivery Trust Badge -->
+          <div class="flex items-center justify-center gap-2 text-center text-xs font-extrabold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 rounded-xl py-2.5 px-4 shadow-md">
+            <span class="text-sm">🚚</span>
+            <span>FREE Express Delivery Across India &bull; Cash On Delivery Available</span>
+          </div>
+
+          <!-- Indian Payment Pills -->
+          <div class="p-3 rounded-2xl bg-[#12151c]/90 border border-[#d4af37]/40 shadow-xl space-y-2">
+            <div class="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider px-1 gap-2">
+              <span class="flex items-center gap-1.5 text-gray-300 truncate">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-pulse"></span>
+                <span>100% Secure Checkout</span>
+              </span>
+              <span class="text-amber-300/90 font-semibold flex items-center gap-1 shrink-0 bg-white/5 px-2 py-0.5 rounded-md border border-white/10">
+                🔒 256-Bit SSL
+              </span>
+            </div>
+
+            <div class="grid grid-cols-5 gap-1.5 items-center text-center">
+              <div class="bg-white border border-gray-200 rounded-lg py-1.5 px-1 shadow-sm flex items-center justify-center">
+                <span class="font-extrabold text-[11px] tracking-tight bg-gradient-to-r from-blue-600 via-red-500 to-amber-500 bg-clip-text text-transparent">GPay</span>
+              </div>
+              <div class="bg-[#5f259f] rounded-lg py-1.5 px-1 shadow-sm flex items-center justify-center">
+                <span class="font-extrabold text-[11px] text-white tracking-tight">PhonePe</span>
+              </div>
+              <div class="bg-[#00baf2] rounded-lg py-1.5 px-1 shadow-sm flex items-center justify-center">
+                <span class="font-extrabold text-[11px] text-white tracking-tight">Paytm</span>
+              </div>
+              <div class="bg-white border border-gray-300 rounded-lg py-1.5 px-1 shadow-sm flex items-center justify-center gap-1">
+                <span class="font-black text-[11px] text-gray-800 tracking-tighter">UPI</span>
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              </div>
+              <div class="bg-gradient-to-r from-amber-500 to-amber-600 rounded-lg py-1.5 px-1 shadow-sm flex items-center justify-center">
+                <span class="font-black text-[11px] text-black tracking-wider uppercase">🚚 COD</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Brand Guarantee Strip -->
+          <div class="p-3.5 rounded-2xl bg-[#12151c] border border-[#d4af37]/40 flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 text-center text-xs shadow-lg">
+            <div class="inline-flex items-center gap-1.5 text-amber-300 font-bold">
+              <span>🛡️</span> <span>100% Herbal Guaranteed</span>
+            </div>
+            <span class="text-white/20 hidden sm:inline">&bull;</span>
+            <div class="inline-flex items-center gap-1.5 text-emerald-400 font-bold">
+              <span>⚡</span> <span>Dispatched in 24h</span>
+            </div>
+            <span class="text-white/20 hidden sm:inline">&bull;</span>
+            <div class="inline-flex items-center gap-1.5 text-gray-300 font-medium">
+              <span>🌿</span> <span>Dermatologically Tested</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Main",
+  "settings": []
+}
+{% endschema %}

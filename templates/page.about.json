@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "why_blackroots": {
+      "type": "why-blackroots",
+      "settings": {}
+    },
+    "ingredients": {
+      "type": "ingredients-grid",
+      "settings": {}
+    }
+  },
+  "order": [
+    "why_blackroots",
+    "ingredients"
+  ]
+}

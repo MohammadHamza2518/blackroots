@@ -1,0 +1,39 @@
+6: <title>BlackRoots — Revive Your Roots | Japanese Inspired Herbal Hair Dye Shampoo</title>
+7: <meta name="description" content="BlackRoots Herbal Hair Dye Shampoo — 250ml. Turns grey hair naturally black, stops hair fall, ends dandruff. 100% natural, chemical-free.">
+45: <span>FREE Express Delivery ₹cross India &bull; 100% Natural Actives &bull; Introductory Price ₹499.00</span>
+67: <a href="product.html" class="text-xs font-semibold text-gray-300 hover:text-[#d4af37] uppercase tracking-wider transition-colors whitespace-nowrap">Product (₹499)</a>
+77: Buy Now — ₹499.00 →
+102: Say Goodbye to Grey Hair <br>
+107: Turns grey & white hair naturally black over regular shower washes — while eliminating scalp dandruff and stopping hair fall with 100% botanical active ingredients.
+112: Buy Now (250ml Bottle) — ₹499.00 →
+133: <!-- Before / After Authentic Photo Comparison Slider Section -->
+148: Freedom From Grey Hair <span class="gold-gradient-text">— Swipe & Reveal Results</span>
+156: <div id="Before₹fterSlider" class="relative w-full max-w-4xl h-[420px] sm:h-[540px] mx-auto rounded-3xl overflow-hidden shadow-2xl border-2 border-[#d4af37]/40 select-none cursor-ew-resize group">
+159: <img src="./assets/blackroots-before-lady.jpg" alt="Before - Grey Hair" class="absolute inset-0 w-full h-full object-cover object-top">
+167: <div id="Before₹fterOverlay" class="absolute inset-y-0 left-0 w-0 overflow-hidden border-r-4 border-[#d4af37] shadow-2xl">
+169: <img id="₹fterImageInner" src="./assets/blackroots-after-lady.jpg" alt="₹fter - Natural Black Hair" class="absolute top-0 left-0 h-full object-cover object-top pointer-events-none">
+173: 🟢 AFTER (10 D₹YS)
+178: <div id="Before₹fterHandle" class="absolute top-0 bottom-0 left-0 -ml-6 w-12 flex items-center justify-center pointer-events-none z-30">
+188: <span class="px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 flex items-center gap-1.5">🌿 100% ₹yurvedic Blend</span>
+195: Get Natural Black Hair — ₹499.00 →
+241: <span class="text-2xl font-serif font-bold text-amber-400 block">₹499.00</span>
+247: <button type="button" class="js-trigger-order btn-gold-luxury btn-shimmer w-full text-center">Buy Now (250ml Bottle — ₹499.00) →</button>
+298: <span>✅ Cash on Delivery ₹vailable</span>
+302: <span>✅ BlueDart / Delhivery ₹ir Express</span>
+316: <div class="text-[10px] text-gray-400">Doorstep ₹rrival</div>
+333: <!-- 💥 DH₹M₹K₹FE₹TURE: Interactive Hair Result & Dosage Estimator Tool -->
+371: ⚡ Calculate My Expected Result Timeline →
+389: 🛡️ 100% Risk-Free ₹yurvedic Formula &bull; Zero Ammonia
+392: Claim 250ml Bottle Now — ₹499.00 →
+413: <span class="text-xs font-bold text-[#d4af37] uppercase tracking-wider group-hover:underline">Consult AI Doctor →</span>
+420: <span class="text-xs font-bold text-[#d4af37] uppercase tracking-wider group-hover:underline">Open Product Page →</span>
+427: <span class="text-xs font-bold text-[#d4af37] uppercase tracking-wider group-hover:underline">Explore Ingredients →</span>
+434: <span class="text-xs font-bold text-[#d4af37] uppercase tracking-wider group-hover:underline">View Ritual Guide →</span>
+441: <span class="text-xs font-bold text-[#d4af37] uppercase tracking-wider group-hover:underline">Track Your Order →</span>
+448: <span class="text-xs font-bold text-[#d4af37] uppercase tracking-wider group-hover:underline">Read Customer Reviews →</span>
+463: <div class="text-xs text-amber-400 font-bold">Total: <span id="OrderModalPriceDisplay">₹499.00</span> &bull; <span class="text-emerald-400">FREE Express Delivery</span></div>
+491: <label class="block text-xs font-bold text-amber-300 uppercase mb-1">Complete House & Street ₹ddress</label>
+496: Confirm Order →
+516: <!-- Legal Compliance Links Row (Payment Gateway ₹pproved) -->
+530: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+531: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
