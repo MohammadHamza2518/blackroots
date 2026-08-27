@@ -102,6 +102,56 @@
       border-radius: 1.25rem !important;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
     }
+
+    /* 👑 Ultra-Luxury 60FPS Hardware-Accelerated Hero Animations */
+    @keyframes goldLiquidSweep {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+    .gold-gradient-animated {
+      background: linear-gradient(135deg, #d4af37 0%, #fff6cc 25%, #d4af37 50%, #aa7c11 75%, #f3e5ab 100%);
+      background-size: 250% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: goldLiquidSweep 6s ease infinite;
+      will-change: background-position;
+      display: inline-block;
+    }
+    @keyframes heroOrbPulse {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.08;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.18);
+        opacity: 0.16;
+      }
+    }
+    .hero-ambient-glow {
+      animation: heroOrbPulse 6s ease-in-out infinite;
+      will-change: transform, opacity;
+    }
+    @keyframes heroFadeUp {
+      from {
+        opacity: 0;
+        transform: translate3d(0, 16px, 0);
+      }
+      to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+    .anim-hero-1 { animation: heroFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; will-change: transform, opacity; }
+    .anim-hero-2 { animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; will-change: transform, opacity; }
+    .anim-hero-3 { animation: heroFadeUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both; will-change: transform, opacity; }
+    .anim-hero-4 { animation: heroFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both; will-change: transform, opacity; }
   </style>
   <!-- Instant Inline Mobile Nav Drawer Engine (Zero-Lag Touch Ready) -->
   <script>
@@ -189,31 +239,29 @@
   <section class="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-[#090a0d] py-12 sm:py-16 select-none border-b border-[#d4af37]/20">
     
     <!-- Single Soft Ambient Gold Glow (Ultra-Lightweight & Clean) -->
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-80 bg-[#d4af37]/10 rounded-full  pointer-events-none" style="background: radial-gradient(circle, rgba(212,175,55,0.06) 0%, transparent 70%);"></div>
+    <div class="hero-ambient-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-80 bg-[#d4af37]/10 rounded-full pointer-events-none" style="background: radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 70%);"></div>
 
     <div class="relative z-20 max-w-5xl mx-auto px-4 text-center space-y-6">
       
       <!-- Top Tagline Pill (Ultra-Luxury D2C Single-Line Responsive Badge) -->
-      <!-- Top Tagline Pill (Ultra-Luxury D2C Single-Line Responsive Badge with Unisex Icon) -->
-      <!-- Top Tagline Pill (Compact 1-Line Responsive D2C Luxury Badge) -->
-      <div class="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/50 text-[#d4af37] text-[10px] sm:text-xs font-extrabold uppercase tracking-wide backdrop-blur-xl shadow-[0_10px_25px_rgba(212,175,55,0.15)] mx-auto text-center max-w-full">
+      <div class="anim-hero-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/50 text-[#d4af37] text-[10px] sm:text-xs font-extrabold uppercase tracking-wide backdrop-blur-xl shadow-[0_10px_25px_rgba(212,175,55,0.15)] mx-auto text-center max-w-full">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
         <span class="whitespace-nowrap">👫 100% UNISEX &bull; JAPANESE BOTANICAL FORMULA</span>
       </div>
 
-      <!-- Main Headline -->
-      <h1 class="font-serif text-3xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight">
+      <!-- Main Headline with 60FPS Liquid Gold Shimmer Sweep -->
+      <h1 class="anim-hero-2 font-serif text-3xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight">
         Say Goodbye to Grey Hair <br>
-        <span class="gold-gradient-text italic">Naturally & Gently.</span>
+        <span class="gold-gradient-animated italic">Naturally & Gently.</span>
       </h1>
 
       <!-- Subtitle -->
-      <p class="text-sm sm:text-lg text-gray-300 max-w-3xl mx-auto font-light leading-relaxed">
+      <p class="anim-hero-3 text-sm sm:text-lg text-gray-300 max-w-3xl mx-auto font-light leading-relaxed">
         Turns grey & white hair naturally black for both <strong class="text-amber-300 font-semibold">Men & Women</strong> over regular shower washes &mdash; while eliminating scalp dandruff and stopping hair fall with 100% botanical active ingredients.
       </p>
 
       <!-- CTA Action Buttons -->
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+      <div class="anim-hero-4 flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
         <button onclick="window.location.href='product.html';" type="button" class="js-trigger-order group relative inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-extrabold text-xs sm:text-sm px-6 py-3 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.25)] hover:shadow-[0_15px_35px_rgba(212,175,55,0.4)] transition-all transform hover:-translate-y-0.5 cursor-pointer uppercase tracking-wider overflow-hidden">
           <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none"></span>
           <span class="flex items-center gap-2 relative z-10">
