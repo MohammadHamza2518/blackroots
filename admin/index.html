@@ -400,10 +400,9 @@
       if (tabId === 'settings') loadSettings();
     }
 
-        function handleAdminLogin(e) {
+            function handleAdminLogin(e) {
       e.preventDefault();
       const pass = document.getElementById('admin-pass-input').value.trim();
-      const btn = document.getElementById('login-btn');
       const err = document.getElementById('login-error');
       const savedPass = localStorage.getItem('br_admin_pass') || 'blackroots2026';
 
@@ -413,7 +412,7 @@
         sessionStorage.setItem('br_admin_auth', '1');
         document.getElementById('AdminLoginScreen').classList.add('hidden');
         document.getElementById('AdminDashboardApp').classList.remove('hidden');
-        loadDashboard();
+        if (typeof loadDashboard === 'function') loadDashboard();
       } else {
         err.textContent = 'Incorrect admin password. Please try again.';
         err.classList.remove('hidden');
