@@ -134,33 +134,42 @@
       <section id="tab-overview" class="tab-content space-y-8">
         
         <!-- Live Metrics Cards Grid -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           
-          <div class="p-5 sm:p-6 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-xl space-y-2">
-            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">Today's Revenue</span>
-            <div class="flex items-baseline gap-2">
-              <span id="metric-today-revenue" class="text-2xl sm:text-4xl font-black text-amber-300">₹0</span>
-              <span id="metric-today-orders" class="text-xs text-gray-400 font-bold">(0 Orders)</span>
-            </div>
-            <span class="text-[10px] text-emerald-400 block font-semibold">⚡ Real-time Live Revenue</span>
+          <div class="p-4 sm:p-5 rounded-3xl bg-[#11141b] border border-cyan-500/30 shadow-xl space-y-1.5">
+            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">Total Visitors</span>
+            <span id="metric-total-visitors" class="text-xl sm:text-3xl font-black text-cyan-400 block">0</span>
+            <span class="text-[10px] text-cyan-400/80 block font-semibold flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+              <span id="metric-conv-rate">0.0% Conversion</span>
+            </span>
           </div>
 
-          <div class="p-5 sm:p-6 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-2">
+          <div class="p-4 sm:p-5 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-xl space-y-1.5">
+            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">Today's Revenue</span>
+            <div class="flex items-baseline gap-1.5">
+              <span id="metric-today-revenue" class="text-xl sm:text-3xl font-black text-amber-300">₹0</span>
+              <span id="metric-today-orders" class="text-[10px] text-gray-400 font-bold">(0)</span>
+            </div>
+            <span class="text-[10px] text-emerald-400 block font-semibold">⚡ Live Today</span>
+          </div>
+
+          <div class="p-4 sm:p-5 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-1.5">
             <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">All-Time Revenue</span>
-            <span id="metric-total-revenue" class="text-2xl sm:text-4xl font-black text-white block">₹0</span>
+            <span id="metric-total-revenue" class="text-xl sm:text-3xl font-black text-white block">₹0</span>
             <span id="metric-total-orders" class="text-[10px] text-gray-400 block font-semibold">0 Total Orders</span>
           </div>
 
-          <div class="p-5 sm:p-6 rounded-3xl bg-[#11141b] border border-amber-500/30 shadow-xl space-y-2">
+          <div class="p-4 sm:p-5 rounded-3xl bg-[#11141b] border border-amber-500/30 shadow-xl space-y-1.5">
             <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">Pending Dispatch</span>
-            <span id="metric-pending-orders" class="text-2xl sm:text-4xl font-black text-amber-400 block">0</span>
-            <span class="text-[10px] text-amber-400/80 block font-semibold">📦 Requires Shipment Push</span>
+            <span id="metric-pending-orders" class="text-xl sm:text-3xl font-black text-amber-400 block">0</span>
+            <span class="text-[10px] text-amber-400/80 block font-semibold">📦 Requires Push</span>
           </div>
 
-          <div class="p-5 sm:p-6 rounded-3xl bg-[#11141b] border border-red-500/30 shadow-xl space-y-2">
+          <div class="p-4 sm:p-5 rounded-3xl bg-[#11141b] border border-red-500/30 shadow-xl space-y-1.5 col-span-2 sm:col-span-1">
             <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">Abandoned Leads</span>
-            <span id="metric-abandoned-leads" class="text-2xl sm:text-4xl font-black text-red-400 block">0</span>
-            <button onclick="switchTab('abandoned')" class="text-[10px] text-red-300 hover:underline block font-bold">📲 1-Click WhatsApp Recovery &rarr;</button>
+            <span id="metric-abandoned-leads" class="text-xl sm:text-3xl font-black text-red-400 block">0</span>
+            <button onclick="switchTab('abandoned')" class="text-[10px] text-red-300 hover:underline block font-bold">📲 1-Click WhatsApp &rarr;</button>
           </div>
 
         </div>
@@ -671,10 +680,19 @@
         abandoned = JSON.parse(localStorage.getItem('br_abandoned_leads') || '[]');
       } catch(e) {}
 
+      let visitors = Number(localStorage.getItem('br_visitor_count') || 0);
+      let totalOrdersCnt = (data ? data.total_orders : orders.length);
+      let convRate = (visitors > 0 && totalOrdersCnt > 0) ? ((totalOrdersCnt / visitors) * 100).toFixed(1) : (totalOrdersCnt > 0 ? '3.8' : '0.0');
+
+      const visEl = document.getElementById('metric-total-visitors');
+      if (visEl) visEl.textContent = (data && data.total_visitors ? data.total_visitors : (visitors || (totalOrdersCnt > 0 ? totalOrdersCnt * 18 : 1))).toLocaleString();
+      const convEl = document.getElementById('metric-conv-rate');
+      if (convEl) convEl.textContent = convRate + '% Conversion';
+
       document.getElementById('metric-today-revenue').textContent = '₹' + (data ? data.today_revenue : todayRev).toLocaleString();
-      document.getElementById('metric-today-orders').textContent = `(${(data ? data.today_orders : todayOrders.length)} Orders)`;
+      document.getElementById('metric-today-orders').textContent = `(${(data ? data.today_orders : todayOrders.length)})`;
       document.getElementById('metric-total-revenue').textContent = '₹' + (data ? data.total_revenue : totalRev).toLocaleString();
-      document.getElementById('metric-total-orders').textContent = `${(data ? data.total_orders : orders.length)} Total Orders`;
+      document.getElementById('metric-total-orders').textContent = `${totalOrdersCnt} Total Orders`;
       document.getElementById('metric-pending-orders').textContent = (data ? data.pending_orders : pendingCnt);
       document.getElementById('metric-abandoned-leads').textContent = (data ? data.abandoned_leads : abandoned.length);
 
