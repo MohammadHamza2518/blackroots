@@ -787,7 +787,34 @@
       if (ord) {
         ord.status = newStatus;
         localStorage.setItem('br_local_orders', JSON.stringify(orders));
+
+        // Reconcile Influencer Commission (Only Delivered/Paid orders are payable!)
+        recalculateInfluencerCommissions();
       }
+    }
+
+    function recalculateInfluencerCommissions() {
+      try {
+        let orders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
+        let db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
+        let payouts = JSON.parse(localStorage.getItem('br_influencer_payouts') || '[]');
+
+        db.forEach(inf => {
+          let myOrders = orders.filter(o => o.coupon && o.coupon.toUpperCase() === inf.code.toUpperCase());
+          let deliveredOrPaidOrders = myOrders.filter(o => (o.status === 'Delivered' || (o.payment_method && o.payment_method.includes('Online')) || o.status === 'Paid'));
+          
+          let totalDeliveredSales = deliveredOrPaidOrders.reduce((sum, o) => sum + (Number(o.price) || 0), 0);
+          let rate = inf.comm_rate || 10;
+          let earned = Math.round(totalDeliveredSales * (rate / 100));
+          
+          let totalPaidOut = payouts.filter(p => p.influencer_id === inf.id && p.status === 'Paid').reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+          
+          inf.total_earned = earned;
+          inf.unpaid_balance = Math.max(0, earned - totalPaidOut);
+        });
+
+        localStorage.setItem('br_influencers_db', JSON.stringify(db));
+      } catch(e) {}
     }
 
     // 6. INFLUENCERS & AFFILIATES ENGINE

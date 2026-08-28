@@ -838,7 +838,7 @@ window.switchToSimPage = switchToSimPage;
               curOrders.unshift(payload);
               localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 100)));
 
-              // Credit Commission to Influencer
+              // Credit Commission to Influencer (Anti-Fraud: COD credited ONLY on Delivery)
               if (payload.coupon) {
                 let db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
                 let inf = db.find(u => u.code && u.code.toUpperCase() === payload.coupon.toUpperCase());
@@ -847,8 +847,12 @@ window.switchToSimPage = switchToSimPage;
                   let commAmt = Math.round(payload.price * (commRate / 100));
                   inf.total_orders = (Number(inf.total_orders) || 0) + 1;
                   inf.total_sales = (Number(inf.total_sales) || 0) + Number(payload.price);
-                  inf.total_earned = (Number(inf.total_earned) || 0) + commAmt;
-                  inf.unpaid_balance = (Number(inf.unpaid_balance) || 0) + commAmt;
+                  
+                  // If Paid Online (Razorpay), credit instantly. If COD, held in pending until Delivered!
+                  if (payload.payment_method && (payload.payment_method.includes('Online') || payload.status === 'Paid')) {
+                    inf.total_earned = (Number(inf.total_earned) || 0) + commAmt;
+                    inf.unpaid_balance = (Number(inf.unpaid_balance) || 0) + commAmt;
+                  }
                   payload.influencer = inf.name;
                   localStorage.setItem('br_influencers_db', JSON.stringify(db));
                 }

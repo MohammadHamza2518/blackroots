@@ -787,17 +787,26 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
 
       const rowsHtml = matchedOrders.map(o => {
         const commAmt = o.comm || Math.round((Number(o.price) || 499) * ((currentInfluencer.comm_rate || 10)/100));
+        let isDeliveredOrPaid = (o.status === 'Delivered' || (o.payment_method && o.payment_method.includes('Online')) || o.status === 'Paid');
+        let statusBadge = '';
+
+        if (o.status === 'Cancelled' || o.status === 'RTO') {
+          statusBadge = '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-red-500/20 text-red-400 border border-red-500/30">❌ Cancelled / RTO (₹0)</span>';
+        } else if (isDeliveredOrPaid) {
+          statusBadge = '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">✓ Delivered &amp; Approved</span>';
+        } else {
+          statusBadge = '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">⏳ COD In Transit (Pending Delivery)</span>';
+        }
+
         return `
           <tr class="hover:bg-white/5 transition-colors">
             <td class="py-3 px-3 font-mono font-bold text-amber-300">${o.order_id || '#BR-1000'}</td>
             <td class="py-3 px-3 text-gray-400">${o.created_at || 'Recently'}</td>
             <td class="py-3 px-3">${o.product_bundle || '1 Bottle (250ml)'}</td>
             <td class="py-3 px-3 font-bold text-white">₹${o.price || 499}</td>
-            <td class="py-3 px-3 font-bold text-emerald-400">+₹${commAmt}</td>
+            <td class="py-3 px-3 font-bold ${isDeliveredOrPaid ? 'text-emerald-400' : 'text-amber-400'}">${isDeliveredOrPaid ? '+₹' + commAmt : '₹' + commAmt + ' (Pending)'}</td>
             <td class="py-3 px-3 text-right">
-              <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                ✓ Delivered &amp; Verified
-              </span>
+              ${statusBadge}
             </td>
           </tr>
         `;
