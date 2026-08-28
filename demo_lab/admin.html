@@ -1032,17 +1032,34 @@
 
       db.push(newCreator);
       saveInfluencersAdminDb(db);
+      
+      // Sync with cloud backend API
+      try {
+        fetch('api/admin?action=save_influencer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newCreator)
+        }).catch(function() {});
+      } catch(err) {}
+
       closeAddInfluencerModal();
       loadInfluencers();
       alert(`Influencer "${name}" with Code "${code}" (${comm}%) created successfully!`);
     }
 
     function toggleInfStatus(id) {
-      const db = getInfluencersAdminDb();
-      const u = db.find(x => x.id === id);
-      if (u) {
-        u.status = (u.status === 'Active') ? 'Paused' : 'Active';
+      let db = getInfluencersAdminDb();
+      let inf = db.find(u => u.id === id);
+      if (inf) {
+        inf.status = inf.status === 'Active' ? 'Suspended' : 'Active';
         saveInfluencersAdminDb(db);
+        try {
+          fetch('api/admin?action=save_influencer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(inf)
+          }).catch(function() {});
+        } catch(err) {}
         loadInfluencers();
       }
     }
@@ -1050,8 +1067,15 @@
     function deleteInfluencer(id) {
       if (!confirm('Are you sure you want to delete this influencer?')) return;
       let db = getInfluencersAdminDb();
-      db = db.filter(x => x.id !== id);
+      db = db.filter(u => u.id !== id && u.code !== id);
       saveInfluencersAdminDb(db);
+      try {
+        fetch('api/admin?action=delete_influencer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: id })
+        }).catch(function() {});
+      } catch(err) {}
       loadInfluencers();
     }
 

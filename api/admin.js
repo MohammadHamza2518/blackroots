@@ -149,7 +149,7 @@ module.exports = async (req, res) => {
     return res.status(200).json({ success: true, settings: memoryStore.settings });
   }
 
-    // 9. Influencer API actions
+  // 9. Influencer API actions
   if (action === 'get_influencers') {
     return res.status(200).json({ success: true, influencers: memoryStore.influencers || [] });
   }
@@ -164,6 +164,13 @@ module.exports = async (req, res) => {
     }
     saveDb();
     return res.status(200).json({ success: true, message: 'Influencer saved!' });
+  }
+  if (action === 'delete_influencer') {
+    if (!memoryStore.influencers) memoryStore.influencers = [];
+    const infId = (req.body && req.body.id) || req.query.id;
+    memoryStore.influencers = memoryStore.influencers.filter(u => u.id !== infId && u.code !== infId);
+    saveDb();
+    return res.status(200).json({ success: true, message: 'Influencer deleted!' });
   }
 
   return res.status(200).json({ success: true, message: 'BlackRoots API ready' });

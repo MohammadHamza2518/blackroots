@@ -615,7 +615,27 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
       } catch (e) {
         return DEFAULT_INFLUENCERS;
       }
+    async function syncInfluencersFromServer() {
+      try {
+        const res = await fetch('api/admin?action=get_influencers');
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.influencers && Array.isArray(data.influencers) && data.influencers.length > 0) {
+            let db = getInfluencersDb();
+            data.influencers.forEach(inf => {
+              const idx = db.findIndex(u => u.id === inf.id || u.code === inf.code);
+              if (idx !== -1) {
+                db[idx] = Object.assign(db[idx], inf);
+              } else {
+                db.push(inf);
+              }
+            });
+            localStorage.setItem('br_influencers_db', JSON.stringify(db));
+          }
+        }
+      } catch(e) {}
     }
+    syncInfluencersFromServer();
 
     let currentInfluencer = null;
 
