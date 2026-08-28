@@ -88,14 +88,14 @@
 
       <div class="p-3.5 rounded-2xl bg-black/50 border border-white/10 text-left space-y-1">
         <span class="text-[10px] text-amber-300 block font-bold uppercase tracking-wider">🔒 Private Creator Access</span>
-        <p class="text-[11px] text-gray-300">Creator accounts are provisioned exclusively by BlackRoots Admin. Please sign in with your assigned User ID and Password.</p>
+        <p class="text-[11px] text-gray-300">Creator accounts are provisioned exclusively by BlackRoots Admin. Please sign in with your User ID, Promo Code, Phone, or Handle.</p>
       </div>
 
       <!-- Pure Creator Login Form -->
       <form id="InfluencerLoginForm" onsubmit="handleInfluencerLogin(event)" class="space-y-4 text-left">
         <div>
-          <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">Assigned User ID</label>
-          <input type="text" id="inf-login-id" required placeholder="Enter Your User ID (e.g. PRIYA10)" class="w-full px-4 py-3.5 rounded-xl bg-black border border-white/20 text-white text-sm focus:outline-none focus:border-[#d4af37] transition-all font-mono">
+          <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">User ID / Promo Code / Phone</label>
+          <input type="text" id="inf-login-id" required placeholder="e.g. LEDUBHAIYA or 9580835179" class="w-full px-4 py-3.5 rounded-xl bg-black border border-white/20 text-white text-sm focus:outline-none focus:border-[#d4af37] transition-all font-mono">
         </div>
         
         <div>
@@ -179,17 +179,17 @@
           <div class="space-y-2">
             <div class="flex items-center gap-2.5 flex-wrap">
               <span class="inline-flex items-center gap-1.5 bg-[#d4af37] text-black font-black text-[10px] px-3 py-1 rounded-full uppercase tracking-wider shadow">
-                ★ GOLD VIP CREATOR
+                ★ VIP CREATOR
               </span>
               <span class="text-xs text-amber-300 font-bold bg-black/40 px-3 py-1 rounded-full border border-amber-500/30">
                 ⚡ <span id="banner-comm-rate">10%</span> Flat Commission
               </span>
             </div>
             <h2 class="font-serif text-2xl sm:text-4xl font-bold text-white">
-              Welcome back, <span id="creator-greeting-name" class="gold-gradient-text">Priya</span>!
+              Welcome back, <span id="creator-greeting-name" class="gold-gradient-text">Creator</span>!
             </h2>
             <p class="text-xs sm:text-sm text-gray-300 max-w-xl font-light">
-              Share your promo code with your audience. When they get 10% OFF at checkout, you earn <strong class="text-amber-300 font-bold" id="banner-comm-sub">10% Instant Commission</strong> on every bottle delivered.
+              Share your promo code with your audience. When they get ₹50 OFF at checkout, you earn <strong class="text-amber-300 font-bold" id="banner-comm-sub">10% Instant Commission</strong> on every order delivered.
             </p>
           </div>
 
@@ -197,7 +197,7 @@
           <div class="bg-black/70 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-[#d4af37]/50 text-center sm:text-right space-y-2 min-w-[200px] w-full sm:w-auto">
             <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Your Official Code</span>
             <div class="flex items-center justify-center sm:justify-end gap-2">
-              <span id="quick-promo-code" class="text-2xl sm:text-3xl font-black text-amber-300 font-mono tracking-wider">PRIYA10</span>
+              <span id="quick-promo-code" class="text-2xl sm:text-3xl font-black text-amber-300 font-mono tracking-wider">LEDUBHAI</span>
               <button onclick="copyPromoCode()" class="p-2 rounded-xl bg-amber-400 text-black hover:bg-white transition-all cursor-pointer shadow-lg" title="Copy Promo Code">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
               </button>
@@ -216,8 +216,8 @@
         <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-5">
           
           <div class="p-4 sm:p-5 rounded-2xl bg-[#11141b] border border-white/10 shadow-xl space-y-1.5">
-            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">👁️ Total Clicks</span>
-            <span id="metric-clicks" class="text-xl sm:text-3xl font-black text-white block">0</span>
+            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">👁️ Link Clicks</span>
+            <span id="metric-clicks" class="text-xl sm:text-3xl font-black text-cyan-400 block">0</span>
             <span class="text-[10px] text-gray-500 block font-medium">Audience link visits</span>
           </div>
 
@@ -242,10 +242,10 @@
           <div class="col-span-2 lg:col-span-1 p-4 sm:p-5 rounded-2xl bg-[#11141b] border border-[#d4af37]/60 shadow-xl space-y-1.5 gold-border-glow">
             <div class="flex items-center justify-between">
               <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-amber-300 block">💳 Wallet Balance</span>
-              <span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">Unpaid</span>
+              <span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">Withdrawable</span>
             </div>
             <span id="metric-unpaid" class="text-2xl sm:text-3xl font-black text-amber-300 block">₹0</span>
-            <button onclick="switchInfTab('wallet')" class="text-[10px] text-amber-400 hover:underline font-bold block pt-1">Request Withdrawal &rarr;</button>
+            <button onclick="switchInfTab('wallet')" class="text-[10px] text-amber-400 hover:underline font-bold block pt-1">Request UPI Payout &rarr;</button>
           </div>
 
         </div>
@@ -258,7 +258,7 @@
               <p class="text-xs text-gray-400">Share pre-formatted high-converting promotions directly with your followers.</p>
             </div>
             <span class="text-xs text-amber-300 font-bold bg-black/40 px-3 py-1 rounded-xl border border-white/10 self-start sm:self-auto">
-              💰 Your Link Auto-Applies <span id="share-code-pill" class="text-white font-mono">PRIYA10</span>
+              💰 Your Link Auto-Applies <span id="share-code-pill" class="text-white font-mono">LEDUBHAI</span>
             </span>
           </div>
 
@@ -298,14 +298,14 @@
                   <th class="py-3 px-3">Order ID</th>
                   <th class="py-3 px-3">Date</th>
                   <th class="py-3 px-3">Bundle</th>
-                  <th class="py-3 px-3">Order Value</th>
+                  <th class="py-3 px-3">Amount</th>
                   <th class="py-3 px-3">Your Commission</th>
                   <th class="py-3 px-3 text-right">Status</th>
                 </tr>
               </thead>
               <tbody id="inf-recent-orders-table" class="divide-y divide-white/5 font-light">
                 <tr>
-                  <td colspan="6" class="py-8 text-center text-gray-500">No referred orders yet. Share your promo code to start earning!</td>
+                  <td colspan="6" class="py-8 text-center text-gray-500">No referred orders logged yet.</td>
                 </tr>
               </tbody>
             </table>
@@ -315,85 +315,68 @@
       </section>
 
       <!-- ===================================================================== -->
-      <!-- TAB 2: LINK & PROMO GENERATOR -->
+      <!-- TAB 2: LINK & PROMO TOOLS -->
       <!-- ===================================================================== -->
       <section id="tab-share" class="inf-tab-content hidden space-y-6">
         
-        <div class="p-6 sm:p-8 rounded-3xl bg-[#11141b] border border-[#d4af37]/30 shadow-xl space-y-6">
+        <div class="p-6 sm:p-8 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-6">
           <div>
-            <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">Link &amp; Asset Generator</h2>
-            <p class="text-xs text-gray-400">Custom tracked links and captions generated specifically for your account.</p>
+            <h3 class="font-serif text-xl sm:text-2xl font-bold text-white">Your Affiliate Links &amp; Promo Code</h3>
+            <p class="text-xs text-gray-400">Share these links across Instagram Stories, Reels, YouTube descriptions, or WhatsApp broadcasts.</p>
           </div>
 
-          <!-- 1. Dedicated Promo Code Card -->
-          <div class="p-5 rounded-2xl bg-black border border-[#d4af37]/40 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="space-y-1 text-center sm:text-left">
-              <span class="text-[10px] font-bold uppercase tracking-wider text-amber-300">Your Exclusive Audience Coupon Code</span>
-              <div class="text-3xl sm:text-4xl font-mono font-black text-white" id="tool-promo-code">PRIYA10</div>
-              <p class="text-xs text-gray-400">Gives your viewers <strong class="text-emerald-400">10% Instant Discount</strong> + Free Shipping.</p>
-            </div>
-            <button onclick="copyPromoCode()" class="btn-gold-action px-6 py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider shadow-lg shrink-0">
-              📋 1-Tap Copy Code
-            </button>
-          </div>
-
-          <!-- 2. Tracked Links Generator -->
           <div class="space-y-4">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Your Tracked Referral URLs</h3>
-            
+            <!-- Promo Code -->
             <div class="space-y-2">
-              <label class="block text-xs text-gray-300 font-bold">1. Product Page Direct Link (Highest Conversion):</label>
-              <div class="flex items-center gap-2">
-                <input type="text" id="tool-link-product" readonly class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-amber-300 font-mono select-all">
-                <button onclick="copyInput('tool-link-product')" class="px-4 py-3 rounded-xl bg-white/10 hover:bg-[#d4af37] hover:text-black text-xs font-bold transition-all border border-white/20 shrink-0">Copy</button>
+              <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider">Your Exclusive Promo Code (Gives ₹50 OFF)</label>
+              <div class="flex items-center gap-3">
+                <span id="tool-promo-code" class="px-5 py-3 rounded-2xl bg-black border border-amber-500/40 text-amber-300 font-mono font-black text-lg tracking-wider">LEDUBHAI</span>
+                <button onclick="copyPromoCode()" class="btn-gold-action px-5 py-3 rounded-2xl text-xs font-black shadow-lg cursor-pointer">
+                  Copy Code
+                </button>
               </div>
             </div>
 
+            <!-- Product Deep Link -->
             <div class="space-y-2">
-              <label class="block text-xs text-gray-300 font-bold">2. Main Storefront Link:</label>
+              <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider">Product Page Link (Auto-Applies Code at Checkout)</label>
               <div class="flex items-center gap-2">
-                <input type="text" id="tool-link-home" readonly class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-amber-300 font-mono select-all">
-                <button onclick="copyInput('tool-link-home')" class="px-4 py-3 rounded-xl bg-white/10 hover:bg-[#d4af37] hover:text-black text-xs font-bold transition-all border border-white/20 shrink-0">Copy</button>
+                <input type="text" id="tool-link-product" readonly class="w-full px-4 py-3 rounded-2xl bg-black border border-white/20 text-xs text-gray-300 font-mono focus:outline-none">
+                <button onclick="copyProductLink()" class="px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/20 whitespace-nowrap cursor-pointer">
+                  Copy Link
+                </button>
+              </div>
+            </div>
+
+            <!-- Homepage Link -->
+            <div class="space-y-2">
+              <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider">Homepage Referral Link</label>
+              <div class="flex items-center gap-2">
+                <input type="text" id="tool-link-home" readonly class="w-full px-4 py-3 rounded-2xl bg-black border border-white/20 text-xs text-gray-300 font-mono focus:outline-none">
+                <button onclick="copyStoreLink()" class="px-5 py-3 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs border border-white/20 whitespace-nowrap cursor-pointer">
+                  Copy Link
+                </button>
               </div>
             </div>
           </div>
-
-          <!-- 3. Pre-Made High-Converting Captions -->
-          <div class="space-y-3 pt-4 border-t border-white/10">
-            <h3 class="text-sm font-bold text-white uppercase tracking-wider">Ready-Made Promotional Captions</h3>
-            
-            <div class="p-4 rounded-2xl bg-black/60 border border-white/10 space-y-3">
-              <div class="flex items-center justify-between">
-                <span class="text-xs font-bold text-emerald-400">📱 Instagram Caption / Reel Description:</span>
-                <button onclick="copyCaption(1)" class="text-xs text-amber-300 underline font-bold hover:text-white">Copy Text</button>
-              </div>
-              <p id="caption-text-1" class="text-xs text-gray-300 font-light leading-relaxed whitespace-pre-line">
-Natural black hair in just 10 mins without any harmful chemicals! 🌿✨
-I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Black Sesame. No ammonia, zero scalp damage.
-
-🎁 Use my code: <strong class="text-amber-300">[CODE]</strong> for FLAT 10% OFF + Free Home Delivery!
-🔗 Link in bio to order now!
-              </p>
-            </div>
-          </div>
-
         </div>
 
       </section>
 
       <!-- ===================================================================== -->
-      <!-- TAB 3: ALL REFERRED ORDERS -->
+      <!-- TAB 3: ALL MY ORDERS -->
       <!-- ===================================================================== -->
       <section id="tab-orders" class="inf-tab-content hidden space-y-6">
         
         <div class="p-6 sm:p-8 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-6">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white">Referred Sales &amp; Orders</h2>
-              <p class="text-xs text-gray-400">Complete log of orders placed by customers using your promo code or referral link.</p>
+              <h3 class="font-serif text-xl sm:text-2xl font-bold text-white">Referred Customer Orders</h3>
+              <p class="text-xs text-gray-400">Complete history of customers who purchased using your affiliate link or promo code.</p>
             </div>
-            <div class="text-xs text-gray-400 bg-black/40 px-3 py-2 rounded-xl border border-white/10">
-              Total Commission: <strong id="orders-tab-total-earned" class="text-emerald-400 font-bold">₹0</strong>
+            <div class="text-right">
+              <span class="text-xs text-gray-400 block">Total Lifetime Earnings</span>
+              <span id="orders-tab-total-earned" class="text-2xl font-black text-emerald-400 font-mono">₹0</span>
             </div>
           </div>
 
@@ -401,17 +384,17 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
             <table class="w-full text-left text-xs text-gray-300 min-w-[600px]">
               <thead class="text-[10px] uppercase tracking-wider text-gray-400 border-b border-white/10 pb-2">
                 <tr>
-                  <th class="py-3 px-3">Order ID &amp; Date</th>
-                  <th class="py-3 px-3">Customer City</th>
-                  <th class="py-3 px-3">Bundle Purchased</th>
-                  <th class="py-3 px-3">Sale Value</th>
-                  <th class="py-3 px-3">Commission Earned</th>
-                  <th class="py-3 px-3 text-right">Commission Status</th>
+                  <th class="py-3 px-3">Order ID</th>
+                  <th class="py-3 px-3">Date</th>
+                  <th class="py-3 px-3">Items / Bundle</th>
+                  <th class="py-3 px-3">Order Amount</th>
+                  <th class="py-3 px-3">Your Commission</th>
+                  <th class="py-3 px-3 text-right">Delivery &amp; Approval Status</th>
                 </tr>
               </thead>
               <tbody id="inf-all-orders-table" class="divide-y divide-white/5 font-light">
                 <tr>
-                  <td colspan="6" class="py-8 text-center text-gray-500">No orders logged yet.</td>
+                  <td colspan="6" class="py-8 text-center text-gray-500">No referred orders found yet.</td>
                 </tr>
               </tbody>
             </table>
@@ -425,55 +408,59 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
       <!-- ===================================================================== -->
       <section id="tab-wallet" class="inf-tab-content hidden space-y-6">
         
+        <!-- Payout Request Form -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          <!-- Balance & Withdrawal Request Card -->
-          <div class="lg:col-span-1 p-6 rounded-3xl bg-gradient-to-br from-[#123824] to-[#11141b] border border-[#d4af37]/40 shadow-xl space-y-6">
+          <div class="lg:col-span-1 p-6 sm:p-8 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-xl space-y-6">
             <div>
-              <span class="text-xs font-bold uppercase tracking-wider text-amber-300 block mb-1">Withdrawable Balance</span>
-              <div id="wallet-balance-display" class="text-4xl sm:text-5xl font-black text-white gold-gradient-text">₹0</div>
-              <p class="text-[11px] text-gray-300 mt-1">Minimum payout threshold: <strong class="text-amber-300">₹500</strong></p>
+              <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Available Balance</span>
+              <span id="wallet-balance-display" class="text-3xl sm:text-4xl font-black text-amber-300 font-mono block">₹0</span>
+              <p class="text-[11px] text-emerald-400 font-semibold mt-1">✓ Instant UPI Transfer to Any Bank / App</p>
             </div>
 
-            <!-- UPI Payment Details Form -->
-            <form id="PayoutRequestForm" onsubmit="handlePayoutRequest(event)" class="space-y-4 pt-4 border-t border-white/10">
+            <form id="WithdrawForm" onsubmit="handleWithdrawRequest(event)" class="space-y-4 text-left">
               <div>
-                <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1">Your UPI ID / VPA</label>
-                <input type="text" id="wallet-upi-input" required placeholder="e.g. mobile@paytm or name@okaxis" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1">Account Holder Full Name</label>
-                <input type="text" id="wallet-name-input" required placeholder="Name on Bank Account / UPI" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+                <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1">Your Full Name</label>
+                <input type="text" id="wallet-name-input" required placeholder="Account Holder Name" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
               </div>
 
-              <button type="submit" id="request-payout-btn" class="w-full btn-gold-action text-xs font-black py-4 rounded-xl shadow-xl uppercase tracking-wider cursor-pointer">
-                💸 Request Instant Payout
+              <div>
+                <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1">UPI ID (GooglePay / PhonePe / Paytm)</label>
+                <input type="text" id="wallet-upi-input" required placeholder="e.g. mobile@upi or name@okaxis" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-amber-300 font-mono focus:outline-none focus:border-[#d4af37]">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1">Withdrawal Amount (₹)</label>
+                <input type="number" id="wallet-amount-input" required min="100" placeholder="Minimum ₹100" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white font-mono focus:outline-none focus:border-[#d4af37]">
+              </div>
+
+              <button type="submit" class="w-full btn-gold-action text-xs py-3.5 rounded-xl shadow-xl uppercase tracking-wider cursor-pointer font-black">
+                Request Instant UPI Transfer &rarr;
               </button>
-              <p id="payout-status-msg" class="hidden text-xs text-emerald-400 font-bold text-center"></p>
             </form>
           </div>
 
-          <!-- Payout History Table -->
-          <div class="lg:col-span-2 p-6 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-4">
-            <div class="flex items-center justify-between">
-              <h3 class="font-serif text-lg sm:text-xl font-bold text-white">Payout History</h3>
-              <span class="text-xs text-gray-400">Processed directly via UPI/Bank</span>
+          <!-- Payout History -->
+          <div class="lg:col-span-2 p-6 sm:p-8 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-6">
+            <div>
+              <h3 class="font-serif text-xl font-bold text-white">UPI Payout History</h3>
+              <p class="text-xs text-gray-400">All past withdrawal requests and bank settlement transaction UTR numbers.</p>
             </div>
 
             <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs text-gray-300 min-w-[450px]">
+              <table class="w-full text-left text-xs text-gray-300 min-w-[500px]">
                 <thead class="text-[10px] uppercase tracking-wider text-gray-400 border-b border-white/10 pb-2">
                   <tr>
                     <th class="py-3 px-3">Request Date</th>
                     <th class="py-3 px-3">Amount</th>
-                    <th class="py-3 px-3">Destination UPI</th>
+                    <th class="py-3 px-3">UPI ID</th>
                     <th class="py-3 px-3">Status</th>
-                    <th class="py-3 px-3 text-right">Reference / UTR</th>
+                    <th class="py-3 px-3 text-right">Bank Reference (UTR)</th>
                   </tr>
                 </thead>
                 <tbody id="inf-payout-history-table" class="divide-y divide-white/5 font-light">
                   <tr>
-                    <td colspan="5" class="py-8 text-center text-gray-500">No payout requests yet.</td>
+                    <td colspan="5" class="py-8 text-center text-gray-500">No payout requests logged yet.</td>
                   </tr>
                 </tbody>
               </table>
@@ -486,8 +473,8 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
 
     </main>
 
-    <!-- Mobile Bottom Navigation Bar -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#11141b]/95 backdrop-blur-xl border-t border-[#d4af37]/30 flex items-center justify-around py-2.5 px-2 text-[11px] font-bold">
+    <!-- Mobile Sticky Navigation Bar -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#11141b]/95 backdrop-blur-xl border-t border-[#d4af37]/30 flex items-center justify-around py-2.5 text-[10px] font-bold">
       <button onclick="switchInfTab('overview')" class="mob-inf-tab flex flex-col items-center gap-1 text-[#d4af37]" data-tab="overview">
         <span class="text-base">📊</span>
         <span>Overview</span>
@@ -527,20 +514,31 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
       if (!input) return;
       if (input.type === 'password') {
         input.type = 'text';
-        if (icon) {
-          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />';
-        }
       } else {
         input.type = 'password';
-        if (icon) {
-          icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
-        }
       }
     }
 
-
-    // 1. Initial State & Seed Influencers
+    // Default Seed Creators
     const DEFAULT_INFLUENCERS = [
+      {
+        id: 'inf-103',
+        name: 'Mohd Faiz',
+        username: 'LEDUBHAIYA',
+        phone: '9580835179',
+        handle: 'faiz_cawnpore78',
+        code: 'LEDUBHAI',
+        password: 'ledubhaiya',
+        comm_rate: 10,
+        clicks: 14,
+        total_orders: 0,
+        total_sales: 0,
+        total_earned: 0,
+        unpaid_balance: 0,
+        upi_id: '',
+        status: 'Active',
+        created_at: '2026-08-28'
+      },
       {
         id: 'inf-101',
         name: 'Priya Sharma',
@@ -576,26 +574,11 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
         upi_id: 'rohit@paytm',
         status: 'Active',
         created_at: '2026-08-10'
-      },
-      {
-        id: 'inf-103',
-        name: 'Mohd Faiz',
-        username: 'LEDUBHAIYA',
-        phone: '9580835179',
-        handle: 'faiz_cawnpore78',
-        code: 'LEDUBHAI',
-        password: 'ledubhaiya',
-        comm_rate: 10,
-        clicks: 0,
-        total_orders: 0,
-        total_sales: 0,
-        total_earned: 0,
-        unpaid_balance: 0,
-        upi_id: '',
-        status: 'Active',
-        created_at: '2026-08-28'
       }
     ];
+
+    let currentInfluencer = null;
+    let liveInfPollingInterval = null;
 
     function getInfluencersDb() {
       try {
@@ -628,39 +611,33 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
               }
             });
             localStorage.setItem('br_influencers_db', JSON.stringify(db));
+            
+            // If active user is logged in, refresh reference
+            if (currentInfluencer) {
+              const refreshed = db.find(u => u.id === currentInfluencer.id || u.code === currentInfluencer.code);
+              if (refreshed) {
+                currentInfluencer = refreshed;
+                renderDashboard();
+              }
+            }
+          }
+        }
+      } catch(e) {}
+
+      // Also sync orders
+      try {
+        const ordRes = await fetch('api/admin?action=get_orders');
+        if (ordRes.ok) {
+          const ordData = await ordRes.json();
+          if (ordData && ordData.orders && Array.isArray(ordData.orders)) {
+            localStorage.setItem('br_local_orders', JSON.stringify(ordData.orders));
+            if (currentInfluencer) renderDashboard();
           }
         }
       } catch(e) {}
     }
-    syncInfluencersFromServer();
 
-    let currentInfluencer = null;
-
-    // 2. Auth Flow (Login & Register)
-    function switchAuthTab(tab) {
-      const loginTab = document.getElementById('tab-btn-login');
-      const regTab = document.getElementById('tab-btn-register');
-      const loginForm = document.getElementById('InfluencerLoginForm');
-      const regForm = document.getElementById('InfluencerRegisterForm');
-
-      if (tab === 'login') {
-        loginTab.className = 'flex-1 py-3 text-xs font-bold uppercase tracking-wider text-amber-300 border-b-2 border-[#d4af37] bg-[#d4af37]/10 transition-all';
-        regTab.className = 'flex-1 py-3 text-xs font-bold uppercase tracking-wider text-gray-400 border-b-2 border-transparent hover:text-white transition-all';
-        loginForm.classList.remove('hidden');
-        regForm.classList.add('hidden');
-      } else {
-        regTab.className = 'flex-1 py-3 text-xs font-bold uppercase tracking-wider text-amber-300 border-b-2 border-[#d4af37] bg-[#d4af37]/10 transition-all';
-        loginTab.className = 'flex-1 py-3 text-xs font-bold uppercase tracking-wider text-gray-400 border-b-2 border-transparent hover:text-white transition-all';
-        regForm.classList.remove('hidden');
-        loginForm.classList.add('hidden');
-      }
-    }
-
-    function quickFillDemo() {
-      document.getElementById('inf-login-id').value = 'LEDUBHAIYA';
-      document.getElementById('inf-login-pass').value = 'ledubhaiya';
-    }
-
+    // 2. Auth Flow (Login)
     function handleInfluencerLogin(e) {
       e.preventDefault();
       const rawInput = document.getElementById('inf-login-id').value.trim();
@@ -694,74 +671,54 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
         document.getElementById('InfluencerDashboardApp').classList.remove('hidden');
         renderDashboard();
         showToast('Welcome back, ' + user.name + '!');
+        
+        // Start Live Polling every 10s
+        if (!liveInfPollingInterval) {
+          liveInfPollingInterval = setInterval(syncInfluencersFromServer, 10000);
+        }
       } else {
         errorMsg.textContent = 'Incorrect User ID or Password. Please check with BlackRoots Admin.';
         errorMsg.classList.remove('hidden');
       }
     }
 
-    function handleInfluencerRegister(e) {
-      e.preventDefault();
-      const name = document.getElementById('reg-name').value.trim();
-      const phone = document.getElementById('reg-phone').value.trim();
-      const handle = document.getElementById('reg-handle').value.trim();
-      const code = document.getElementById('reg-code').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
-      const pass = document.getElementById('reg-pass').value;
-      const statusMsg = document.getElementById('reg-status-msg');
-
-      if (!code || code.length < 3) {
-        alert('Please enter a valid promo code (at least 3 characters).');
-        return;
-      }
-
-      const db = getInfluencersDb();
-      if (db.some(u => u.code === code)) {
-        alert('This promo code is already taken. Please choose another one.');
-        return;
-      }
-
-      const newInf = {
-        id: 'inf-' + (Date.now()),
-        name: name,
-        username: code,
-        phone: phone,
-        handle: handle,
-        code: code,
-        password: pass,
-        comm_rate: 10,
-        clicks: 0,
-        total_orders: 0,
-        total_sales: 0,
-        total_earned: 0,
-        unpaid_balance: 0,
-        upi_id: '',
-        status: 'Active',
-        created_at: new Date().toISOString().slice(0, 10)
-      };
-
-      db.push(newInf);
-      saveInfluencersDb(db);
-
-      statusMsg.textContent = '✓ Application approved! Auto-logging you in...';
-      statusMsg.classList.remove('hidden');
-
-      setTimeout(() => {
-        currentInfluencer = newInf;
-        sessionStorage.setItem('br_active_inf_id', newInf.id);
-        document.getElementById('InfluencerAuthScreen').classList.add('hidden');
-        document.getElementById('InfluencerDashboardApp').classList.remove('hidden');
-        renderDashboard();
-      }, 1000);
-    }
-
     function handleInfluencerLogout() {
       sessionStorage.removeItem('br_active_inf_id');
+      if (liveInfPollingInterval) clearInterval(liveInfPollingInterval);
       window.location.reload();
     }
 
-    // 3. Render Dashboard Data
+    // 3. Render Dashboard Data (Shopify-Grade Calculation)
     function renderDashboard() {
       if (!currentInfluencer) return;
+
+      // Calculate Real-Time Stats from Live Orders
+      let allOrders = [];
+      try {
+        allOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
+      } catch(e) {}
+
+      let matchedOrders = allOrders.filter(o => 
+        (o.coupon && o.coupon.toUpperCase() === currentInfluencer.code.toUpperCase()) ||
+        (o.influencer && o.influencer.toUpperCase() === currentInfluencer.code.toUpperCase())
+      );
+
+      let totalSales = matchedOrders.reduce((sum, o) => {
+        if (o.status === 'Cancelled' || o.status === 'RTO') return sum;
+        return sum + (Number(o.price) || 499);
+      }, 0);
+
+      let totalEarned = matchedOrders.reduce((sum, o) => {
+        if (o.status === 'Cancelled' || o.status === 'RTO') return sum;
+        const commAmt = o.comm || Math.round((Number(o.price) || 499) * ((currentInfluencer.comm_rate || 10) / 100));
+        return sum + commAmt;
+      }, 0);
+
+      // Total orders count
+      let totalOrdersCount = matchedOrders.length || Number(currentInfluencer.total_orders || 0);
+      let grossSalesDriven = totalSales || Number(currentInfluencer.total_sales || 0);
+      let lifetimeEarned = totalEarned || Number(currentInfluencer.total_earned || 0);
+      let withdrawableBal = Number(currentInfluencer.unpaid_balance) !== undefined ? Number(currentInfluencer.unpaid_balance) : lifetimeEarned;
 
       // Update Header & Welcome Banner
       document.getElementById('header-creator-name').textContent = currentInfluencer.name;
@@ -774,59 +731,36 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
 
       // Update Metrics Cards
       document.getElementById('metric-clicks').textContent = Number(currentInfluencer.clicks || 0).toLocaleString();
-      document.getElementById('metric-orders').textContent = Number(currentInfluencer.total_orders || 0).toLocaleString();
-      document.getElementById('metric-revenue').textContent = '₹' + Number(currentInfluencer.total_sales || 0).toLocaleString();
-      document.getElementById('metric-earned').textContent = '₹' + Number(currentInfluencer.total_earned || 0).toLocaleString();
-      document.getElementById('metric-unpaid').textContent = '₹' + Number(currentInfluencer.unpaid_balance || 0).toLocaleString();
-      document.getElementById('wallet-balance-display').textContent = '₹' + Number(currentInfluencer.unpaid_balance || 0).toLocaleString();
-      document.getElementById('orders-tab-total-earned').textContent = '₹' + Number(currentInfluencer.total_earned || 0).toLocaleString();
+      document.getElementById('metric-orders').textContent = totalOrdersCount.toLocaleString();
+      document.getElementById('metric-revenue').textContent = '₹' + grossSalesDriven.toLocaleString();
+      document.getElementById('metric-earned').textContent = '₹' + lifetimeEarned.toLocaleString();
+      document.getElementById('metric-unpaid').textContent = '₹' + withdrawableBal.toLocaleString();
+      document.getElementById('wallet-balance-display').textContent = '₹' + withdrawableBal.toLocaleString();
+      document.getElementById('orders-tab-total-earned').textContent = '₹' + lifetimeEarned.toLocaleString();
 
       // Update Links Generator
-      const baseUrl = window.location.origin + window.location.pathname.replace('influencer.html', '').replace('influencer/index.html', '').replace('influencer/', '');
-      const cleanBase = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
-      
-      const productLink = cleanBase + 'product.html?coupon=' + currentInfluencer.code;
-      const homeLink = cleanBase + 'index.html?ref=' + currentInfluencer.code;
+      const productLink = 'https://blackroots.in/product?coupon=' + currentInfluencer.code;
+      const homeLink = 'https://blackroots.in/?ref=' + currentInfluencer.code;
 
       document.getElementById('tool-link-product').value = productLink;
       document.getElementById('tool-link-home').value = homeLink;
 
-      // Auto Fill UPI Form if already saved
+      // Auto Fill UPI Form
       if (currentInfluencer.upi_id) {
         document.getElementById('wallet-upi-input').value = currentInfluencer.upi_id;
       }
       document.getElementById('wallet-name-input').value = currentInfluencer.name;
 
       // Render Tables
-      renderInfluencerOrders();
+      renderInfluencerOrders(matchedOrders);
       renderInfluencerPayouts();
     }
 
-    function renderInfluencerOrders() {
+    function renderInfluencerOrders(matchedOrders) {
       const recentTbody = document.getElementById('inf-recent-orders-table');
       const allTbody = document.getElementById('inf-all-orders-table');
 
-      let allOrders = [];
-      try {
-        allOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
-      } catch(e) {}
-
-      // Filter orders placed with this influencer's code
-      let matchedOrders = allOrders.filter(o => 
-        (o.coupon && o.coupon.toUpperCase() === currentInfluencer.code) ||
-        (o.influencer && o.influencer.toUpperCase() === currentInfluencer.code)
-      );
-
-      // If no live matches yet, inject sample demonstration orders for UX clarity
-      if (!matchedOrders.length && currentInfluencer.total_orders > 0) {
-        matchedOrders = [
-          { order_id: '#BR-1024', created_at: 'Today, 2:15 PM', city: 'Mumbai', product_bundle: '2 Bottles (500ml)', price: 899, comm: Math.round(899 * ((currentInfluencer.comm_rate || 10)/100)), status: 'Delivered' },
-          { order_id: '#BR-1019', created_at: 'Yesterday', city: 'Delhi NCR', product_bundle: '1 Bottle (250ml)', price: 499, comm: Math.round(499 * ((currentInfluencer.comm_rate || 10)/100)), status: 'Delivered' },
-          { order_id: '#BR-1008', created_at: '3 days ago', city: 'Bangalore', product_bundle: '3 Bottles (750ml)', price: 1299, comm: Math.round(1299 * ((currentInfluencer.comm_rate || 10)/100)), status: 'Delivered' }
-        ];
-      }
-
-      if (!matchedOrders.length) {
+      if (!matchedOrders || !matchedOrders.length) {
         const emptyRow = '<tr><td colspan="6" class="py-8 text-center text-gray-500">No referred orders yet. Share your promo code to start earning!</td></tr>';
         if (recentTbody) recentTbody.innerHTML = emptyRow;
         if (allTbody) allTbody.innerHTML = emptyRow;
@@ -871,7 +805,7 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
         allPayouts = JSON.parse(localStorage.getItem('br_influencer_payouts') || '[]');
       } catch (e) {}
 
-      let myPayouts = allPayouts.filter(p => p.influencer_id === currentInfluencer.id);
+      let myPayouts = allPayouts.filter(p => p.influencer_id === currentInfluencer.id || p.code === currentInfluencer.code);
 
       if (!myPayouts.length) {
         tbody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-gray-500">No payout requests logged yet.</td></tr>';
@@ -898,7 +832,7 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
       document.querySelectorAll('.inf-tab-content').forEach(c => c.classList.add('hidden'));
       document.querySelectorAll('.inf-nav-tab').forEach(b => {
         if (b.dataset.tab === tabName) {
-          b.className = 'inf-nav-tab px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#d4af37] text-black';
+          b.className = 'inf-nav-tab px-4 py-2 rounded-xl text-xs font-bold transition-all bg-[#d4af37] text-black shadow-md';
         } else {
           b.className = 'inf-nav-tab px-4 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all';
         }
@@ -912,151 +846,131 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
         }
       });
 
-      const activeSection = document.getElementById('tab-' + tabName);
-      if (activeSection) {
-        activeSection.classList.remove('hidden');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
+      const activeTab = document.getElementById('tab-' + tabName);
+      if (activeTab) activeTab.classList.remove('hidden');
+      renderDashboard();
     }
 
-    // 5. 1-Tap Copy & Share Actions
+    // 5. 1-Click Copy & Share Tools
     function copyPromoCode() {
       if (!currentInfluencer) return;
       navigator.clipboard.writeText(currentInfluencer.code).then(() => {
-        showToast('Promo Code ' + currentInfluencer.code + ' copied!');
+        showToast('Promo code "' + currentInfluencer.code + '" copied to clipboard!');
         const toast = document.getElementById('copy-toast');
         if (toast) {
           toast.style.opacity = '1';
-          setTimeout(() => { toast.style.opacity = '0'; }, 2500);
+          setTimeout(() => toast.style.opacity = '0', 2500);
         }
       });
     }
 
     function copyProductLink() {
-      const link = document.getElementById('tool-link-product').value;
+      if (!currentInfluencer) return;
+      const link = 'https://blackroots.in/product?coupon=' + currentInfluencer.code;
       navigator.clipboard.writeText(link).then(() => {
-        showToast('Tracked Product link copied!');
+        showToast('Direct Product Link copied with coupon!');
       });
     }
 
     function copyStoreLink() {
-      const link = document.getElementById('tool-link-home').value;
+      if (!currentInfluencer) return;
+      const link = 'https://blackroots.in/?ref=' + currentInfluencer.code;
       navigator.clipboard.writeText(link).then(() => {
-        showToast('Tracked Store link copied!');
-      });
-    }
-
-    function copyInput(id) {
-      const val = document.getElementById(id).value;
-      navigator.clipboard.writeText(val).then(() => {
-        showToast('Link copied to clipboard!');
+        showToast('Main Store Link copied!');
       });
     }
 
     function shareWhatsApp() {
       if (!currentInfluencer) return;
-      const link = document.getElementById('tool-link-product').value;
-      const text = `Namaste! 🌿 Maine BlackRoots 100% Herbal Hair Dye Shampoo use kiya hai aur results amazing hain (No chemicals, zero grey hair).
-
-Mera exclusive coupon code *` + currentInfluencer.code + `* use karo aur pao *FLAT 10% DISCOUNT* + Free Delivery!
-
-Order now: ` + link;
-
-      window.open('https://wa.me/?text=' + encodeURIComponent(text), '_blank');
+      const link = 'https://blackroots.in/product?coupon=' + currentInfluencer.code;
+      const text = `Hey! Check out BlackRoots Herbal Hair Growth Shampoo ✨ Use my special code *${currentInfluencer.code}* to get ₹50 OFF + FREE Express Delivery! 🌿 Order here: ${link}`;
+      window.open('https://api.whatsapp.com/send?text=' + encodeURIComponent(text), '_blank');
     }
 
-    function copyCaption(idx) {
-      if (!currentInfluencer) return;
-      let text = document.getElementById('caption-text-1').innerText;
-      text = text.replace('[CODE]', currentInfluencer.code);
-      navigator.clipboard.writeText(text).then(() => {
-        showToast('Instagram caption copied!');
-      });
-    }
-
-    // 6. Payout Request Handler
-    function handlePayoutRequest(e) {
+    function handleWithdrawRequest(e) {
       e.preventDefault();
-      const upi = document.getElementById('wallet-upi-input').value.trim();
       const name = document.getElementById('wallet-name-input').value.trim();
-      const statusMsg = document.getElementById('payout-status-msg');
+      const upi = document.getElementById('wallet-upi-input').value.trim();
+      const amt = Number(document.getElementById('wallet-amount-input').value);
 
-      if (!currentInfluencer) return;
-
-      const balance = Number(currentInfluencer.unpaid_balance || 0);
-      if (balance < 500) {
-        alert('Minimum payout threshold is ₹500. Your current balance is ₹' + balance);
+      if (!upi || upi.length < 5 || !upi.includes('@')) {
+        alert('Please enter a valid UPI ID (e.g. mobile@upi, name@okaxis).');
+        return;
+      }
+      if (amt < 100) {
+        alert('Minimum withdrawal amount is ₹100.');
+        return;
+      }
+      if (amt > Number(currentInfluencer.unpaid_balance || 0) && Number(currentInfluencer.unpaid_balance || 0) > 0) {
+        alert('Requested amount exceeds your available unpaid balance.');
         return;
       }
 
-      // Save UPI preference
-      currentInfluencer.upi_id = upi;
-
-      // Create Payout Request
       let allPayouts = [];
       try {
         allPayouts = JSON.parse(localStorage.getItem('br_influencer_payouts') || '[]');
-      } catch (e) {}
+      } catch(err) {}
 
-      const newPayout = {
-        id: 'PAY-' + Math.floor(1000 + Math.random() * 9000),
+      const newReq = {
+        id: 'pay-' + Date.now(),
         influencer_id: currentInfluencer.id,
-        influencer_name: currentInfluencer.name,
-        amount: balance,
+        code: currentInfluencer.code,
+        name: name,
         upi_id: upi,
-        date: new Date().toLocaleString(),
-        status: 'Pending',
-        utr: ''
+        amount: amt,
+        status: 'Processing',
+        date: new Date().toISOString().slice(0, 10),
+        utr: 'Pending Admin Transfer'
       };
 
-      allPayouts.unshift(newPayout);
+      allPayouts.unshift(newReq);
       localStorage.setItem('br_influencer_payouts', JSON.stringify(allPayouts));
 
-      // Reset local unpaid balance
-      currentInfluencer.unpaid_balance = 0;
-      const db = getInfluencersDb();
-      const idx = db.findIndex(u => u.id === currentInfluencer.id);
+      // Save UPI in creator profile
+      currentInfluencer.upi_id = upi;
+      let db = getInfluencersDb();
+      let idx = db.findIndex(u => u.id === currentInfluencer.id);
       if (idx !== -1) {
-        db[idx] = currentInfluencer;
-        saveInfluencersDb(db);
+        db[idx].upi_id = upi;
+        localStorage.setItem('br_influencers_db', JSON.stringify(db));
       }
 
-      statusMsg.textContent = '✓ Payout request of ₹' + balance + ' submitted! Sent to admin for instant UPI settlement.';
-      statusMsg.classList.remove('hidden');
-
-      renderDashboard();
-      showToast('Payout request submitted successfully!');
+      showToast('✓ Withdrawal request of ₹' + amt + ' submitted! Admin will transfer to ' + upi + ' via UPI.');
+      document.getElementById('wallet-amount-input').value = '';
+      renderInfluencerPayouts();
     }
 
     function showToast(msg) {
       const toast = document.getElementById('GlobalToast');
-      const msgEl = document.getElementById('ToastMessage');
-      if (toast && msgEl) {
-        msgEl.textContent = msg;
-        toast.classList.remove('translate-y-[-100px]', 'opacity-0');
-        toast.classList.add('translate-y-0', 'opacity-100');
+      const text = document.getElementById('ToastMessage');
+      if (toast && text) {
+        text.textContent = msg;
+        toast.style.transform = 'translateY(0)';
+        toast.style.opacity = '1';
         setTimeout(() => {
-          toast.classList.remove('translate-y-0', 'opacity-100');
-          toast.classList.add('translate-y-[-100px]', 'opacity-0');
+          toast.style.transform = 'translateY(-100px)';
+          toast.style.opacity = '0';
         }, 3000);
       }
     }
 
-    // 7. Auto Session Restore
-    document.addEventListener('DOMContentLoaded', function() {
+    // Auto-login if session exists
+    (function init() {
       const activeId = sessionStorage.getItem('br_active_inf_id');
       if (activeId) {
         const db = getInfluencersDb();
-        const user = db.find(u => u.id === activeId);
+        const user = db.find(u => u.id === activeId || u.code === activeId || u.username === activeId);
         if (user) {
           currentInfluencer = user;
           document.getElementById('InfluencerAuthScreen').classList.add('hidden');
           document.getElementById('InfluencerDashboardApp').classList.remove('hidden');
           renderDashboard();
+          syncInfluencersFromServer();
+          liveInfPollingInterval = setInterval(syncInfluencersFromServer, 10000);
         }
       }
-    });
+      syncInfluencersFromServer();
+    })();
   </script>
-
 </body>
 </html>
