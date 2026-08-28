@@ -585,12 +585,20 @@ function openQuickOrderModal(customPrice, customTitle) {
     
     const form = document.getElementById('QuickOrderForm');
     const success = document.getElementById('QuickOrderSuccess');
-    if (form) form.classList.remove('hidden');
-    if (success) success.classList.add('hidden');
+    if (form) {
+      form.classList.remove('hidden');
+      form.style.setProperty('display', 'block', 'important');
+    }
+    if (success) {
+      success.classList.add('hidden');
+      success.style.setProperty('display', 'none', 'important');
+    }
 
     modal.classList.remove('hidden');
     modal.classList.add('flex');
-    modal.style.display = 'flex';
+    modal.style.setProperty('display', 'flex', 'important');
+    modal.style.setProperty('visibility', 'visible', 'important');
+    modal.style.setProperty('opacity', '1', 'important');
     document.body.style.overflow = 'hidden';
   } else {
     window.location.href = 'product.html';
@@ -602,7 +610,7 @@ function closeQuickOrderModal() {
   if (modal) {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
-    modal.style.display = 'none';
+    modal.style.setProperty('display', 'none', 'important');
     document.body.style.overflow = '';
   }
 }
@@ -674,36 +682,7 @@ window.switchToSimPage = switchToSimPage;
     }
   };
 
-  // Open Quick Order Modal
-  window.openQuickOrderModal = function(customPrice, customTitle) {
-    const modal = document.getElementById('QuickOrderModal');
-    if (modal) {
-      let price = customPrice || (window.selectedPack ? window.selectedPack.price : 499);
-      const priceDisplay = document.getElementById('OrderModalPriceDisplay');
-      if (priceDisplay) priceDisplay.textContent = '₹' + price;
-      
-      const form = document.getElementById('QuickOrderForm');
-      const success = document.getElementById('QuickOrderSuccess');
-      if (form) form.classList.remove('hidden');
-      if (success) success.classList.add('hidden');
-
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-      document.body.style.overflow = 'hidden';
-    } else {
-      window.location.href = 'product.html';
-    }
-  };
-
-  // Close Quick Order Modal
-  window.closeQuickOrderModal = function() {
-    const modal = document.getElementById('QuickOrderModal');
-    if (modal) {
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-      document.body.style.overflow = '';
-    }
-  };
+  // Order Pack Modal Price Sync Helper
 
   // Form submission handler & Abandoned Checkout Capture
   function initOrderForm() {
