@@ -34,41 +34,16 @@
   <link rel="dns-prefetch" href="https://checkout.razorpay.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="./assets/theme.css?v=20260828174000">
+  <link rel="stylesheet" href="./assets/theme.css?v=1787929459">
   <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
-  <script src="./assets/theme.js?v=20260828174000" defer></script>
+  <script src="./assets/theme.js?v=1787929459" defer></script>
   <script src="./assets/analytics.js" defer></script>
   <script src="./assets/instant-butter.js" defer></script>
 
   <script>
     // Self-contained instant modal opener
     window.openQuickOrderModal = function(customPrice, customTitle) {
-      var modal = document.getElementById('QuickOrderModal');
-      if (modal) {
-        var price = customPrice || (window.selectedPack ? window.selectedPack.price : 499);
-        var priceDisplay = document.getElementById('OrderModalPriceDisplay');
-        if (priceDisplay) priceDisplay.textContent = '₹' + price;
-        
-        var form = document.getElementById('QuickOrderForm');
-        var success = document.getElementById('QuickOrderSuccess');
-        if (form) {
-          form.classList.remove('hidden');
-          form.style.setProperty('display', 'block', 'important');
-        }
-        if (success) {
-          success.classList.add('hidden');
-          success.style.setProperty('display', 'none', 'important');
-        }
-
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        modal.style.setProperty('display', 'flex', 'important');
-        modal.style.setProperty('visibility', 'visible', 'important');
-        modal.style.setProperty('opacity', '1', 'important');
-        document.body.style.overflow = 'hidden';
-      } else {
-        window.location.href = 'product.html';
-      }
+      window.location.href = 'product.html';
     };
 
     window.closeQuickOrderModal = function() {
@@ -294,12 +269,12 @@
       <!-- Right Header Actions (Desktop CTA + Mobile Pill & Hamburger) -->
       <div class="flex items-center gap-2">
         <!-- Desktop Buy Button -->
-        <button type="button" onclick="openQuickOrderModal();" class="hidden lg:inline-flex js-trigger-order btn-gold-luxury py-2.5 px-5 text-xs font-bold shadow-xl shrink-0 whitespace-nowrap cursor-pointer">
+        <button type="button" onclick="window.location.href='product.html';" class="hidden lg:inline-flex js-trigger-order btn-gold-luxury py-2.5 px-5 text-xs font-bold shadow-xl shrink-0 whitespace-nowrap cursor-pointer">
           <span>Buy Now &mdash; &#8377; 499</span>
         </button>
 
         <!-- Mobile Quick Buy Pill -->
-        <button type="button" onclick="openQuickOrderModal();" class="inline-flex lg:hidden bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black font-extrabold text-[10px] px-3 py-1.5 rounded-full shadow-md items-center gap-1 shrink-0 uppercase tracking-tight cursor-pointer">
+        <button type="button" onclick="window.location.href='product.html';" class="inline-flex lg:hidden bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black font-extrabold text-[10px] px-3 py-1.5 rounded-full shadow-md items-center gap-1 shrink-0 uppercase tracking-tight cursor-pointer">
           <span>Buy &#8377;499</span>
         </button>
 
@@ -1456,7 +1431,7 @@
 
     <!-- 3. Drawer Footer CTA (Pinned & Classy) -->
     <div class="p-4 border-t border-white/10 bg-[#08090d] space-y-2 shrink-0 shadow-[0_-10px_25px_rgba(0,0,0,0.8)]">
-      <button type="button" onclick="closeMobileNavDrawer(); openQuickOrderModal();" class="group relative w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-xs py-3.5 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.3)] hover:brightness-110 active:scale-95 transition-all uppercase tracking-wider text-center cursor-pointer">
+      <button type="button" onclick="window.location.href='product.html';" class="group relative w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-xs py-3.5 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.3)] hover:brightness-110 active:scale-95 transition-all uppercase tracking-wider text-center cursor-pointer">
         <span>ORDER NOW &bull; ₹499</span>
         <span class="w-5 h-5 rounded-md bg-black text-[#d4af37] flex items-center justify-center font-black text-xs">
           🛍️
