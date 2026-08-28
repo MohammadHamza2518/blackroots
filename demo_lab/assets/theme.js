@@ -35,7 +35,9 @@ function openMobileNavDrawer(e) {
     backdrop.classList.remove('opacity-0', 'pointer-events-none');
     backdrop.classList.add('opacity-100', 'pointer-events-auto');
   }
+  document.documentElement.style.overflow = 'hidden';
   document.body.style.overflow = 'hidden';
+  document.body.style.touchAction = 'none';
   return false;
 }
 
@@ -55,7 +57,9 @@ function closeMobileNavDrawer(e) {
     backdrop.classList.remove('opacity-100', 'pointer-events-auto');
     backdrop.classList.add('opacity-0', 'pointer-events-none');
   }
+  document.documentElement.style.overflow = '';
   document.body.style.overflow = '';
+  document.body.style.touchAction = '';
   return false;
 }
 

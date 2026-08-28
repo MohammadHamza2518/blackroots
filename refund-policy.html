@@ -86,7 +86,7 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
     }
   </style>
-  <!-- Instant Inline Mobile Nav Drawer Engine (Zero-Lag Touch Ready) -->
+    <!-- Instant Inline Mobile Nav Drawer Engine (Zero-Lag Touch Ready & Body Scroll-Locked) -->
   <script>
     function openMobileNavDrawer(e) {
       if (e && e.preventDefault) e.preventDefault();
@@ -111,7 +111,9 @@
         b.classList.remove('opacity-0', 'pointer-events-none');
         b.classList.add('opacity-100', 'pointer-events-auto');
       }
+      document.documentElement.style.overflow = 'hidden';
       document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none';
       return false;
     }
     function closeMobileNavDrawer(e) {
@@ -130,7 +132,9 @@
         b.classList.remove('opacity-100', 'pointer-events-auto');
         b.classList.add('opacity-0', 'pointer-events-none');
       }
+      document.documentElement.style.overflow = '';
       document.body.style.overflow = '';
+      document.body.style.touchAction = '';
       return false;
     }
     window.openMobileNavDrawer = openMobileNavDrawer;
@@ -351,10 +355,10 @@
 
 
 
-<!-- 📱 Ultra-Luxury VIP Mobile Navigation Drawer -->
-  <div id="MobileNavBackdrop" onclick="closeMobileNavDrawer()" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[99998] opacity-0 pointer-events-none transition-opacity duration-300 ease-out" style="z-index: 999998 !important;"></div>
+<!-- 📱 Ultra-Luxury VIP Mobile Navigation Drawer (Full Viewport & Scroll-Locked) -->
+  <div id="MobileNavBackdrop" onclick="closeMobileNavDrawer()" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[99998] opacity-0 pointer-events-none transition-opacity duration-300 ease-out" style="z-index: 999998 !important; touch-action: none !important;"></div>
 
-  <div id="MobileNavDrawer" class="fixed top-0 right-0 bottom-0 w-[88%] max-w-[360px] bg-gradient-to-b from-[#0e1017] via-[#090a0e] to-black border-l border-[#d4af37]/40 z-[99999] shadow-[-20px_0_50px_rgba(0,0,0,0.98)] transform translate-x-full transition-transform duration-300 ease-out flex flex-col justify-between" style="background: linear-gradient(180deg, #0e1017 0%, #090a0e 50%, #000000 100%) !important; z-index: 999999 !important; height: 100% !important; max-height: 100vh !important;">
+  <div id="MobileNavDrawer" class="fixed top-0 right-0 bottom-0 w-[88%] max-w-[360px] bg-gradient-to-b from-[#0e1017] via-[#090a0e] to-black border-l border-[#d4af37]/40 z-[99999] shadow-[-20px_0_50px_rgba(0,0,0,0.98)] transform translate-x-full transition-transform duration-300 ease-out flex flex-col" style="background: linear-gradient(180deg, #0e1017 0%, #090a0e 50%, #000000 100%) !important; z-index: 999999 !important; height: 100vh !important; height: 100dvh !important; max-height: 100dvh !important; overflow: hidden !important; overscroll-behavior: contain !important;">
     
     <!-- 1. VIP Drawer Header (Pinned at Top) -->
     <div class="px-5 py-4 border-b border-[#d4af37]/20 flex items-center justify-between shrink-0 bg-[#07080a]/95 backdrop-blur-md">
@@ -376,8 +380,8 @@
       </button>
     </div>
 
-    <!-- 2. Scrollable Middle Body (Rich Luxury Links & Trust Elements - 100% Preserved) -->
-    <div class="flex-1 overflow-y-auto px-4 py-3.5 space-y-2" style="-webkit-overflow-scrolling: touch; scrollbar-width: none;">
+    <!-- 2. Scrollable Middle Body (Rich Luxury Links & Trust Elements) -->
+    <div class="flex-1 overflow-y-auto px-4 py-3.5 space-y-2" style="-webkit-overflow-scrolling: touch; scrollbar-width: none; overscroll-behavior: contain;">
       
       <!-- Luxury VIP Flash Deal Banner -->
       <div class="p-3 rounded-2xl bg-gradient-to-r from-emerald-950 via-[#0a2318] to-black border border-emerald-500/50 shadow-[0_4px_15px_rgba(16,185,129,0.15)] flex flex-col gap-1.5 mb-3">
@@ -540,8 +544,8 @@
 
     </div>
 
-    <!-- 3. Drawer Footer CTA (Pinned at Bottom - 100% High Converting) -->
-    <div class="p-4 border-t border-[#d4af37]/20 bg-[#07080a]/95 backdrop-blur-md space-y-2 shrink-0">
+    <!-- 3. Drawer Footer CTA (Pinned at Bottom - 100% Locked & Solid) -->
+    <div class="p-4 border-t border-[#d4af37]/20 bg-[#07080a] space-y-2 shrink-0 shadow-[0_-10px_25px_rgba(0,0,0,0.8)]" style="background-color: #07080a !important;">
       <button type="button" onclick="closeMobileNavDrawer(); openQuickOrderModal();" class="group relative w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-xs py-3.5 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.35)] hover:brightness-110 active:scale-95 transition-all uppercase tracking-wider text-center cursor-pointer">
         <span>ORDER NOW &bull; ₹499</span>
         <span class="w-5 h-5 rounded-md bg-black text-[#d4af37] flex items-center justify-center font-black text-xs">
