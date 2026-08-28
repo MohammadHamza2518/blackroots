@@ -2323,77 +2323,74 @@
   <script src="./assets/instant-butter.js" defer></script>
 
 
-<!-- 📱 Ultra-Luxury Mobile Navigation Drawer (100% Scroll-Free App Experience) -->
+<!-- 📱 Ultra-Luxury Mobile Navigation Drawer Overlay & Backdrop -->
   <div id="MobileNavBackdrop" onclick="closeMobileNavDrawer()" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[99998] opacity-0 pointer-events-none transition-opacity duration-300 ease-out"></div>
 
-  <div id="MobileNavDrawer" style="overflow: hidden !important; overscroll-behavior: none !important; scrollbar-width: none !important; -ms-overflow-style: none !important;" class="fixed top-0 right-0 bottom-0 w-[82%] max-w-[320px] bg-gradient-to-b from-[#0e1017] via-[#090a0e] to-black border-l border-[#d4af37]/30 z-[99999] shadow-[-15px_0_40px_rgba(0,0,0,0.95)] transform translate-x-full transition-transform duration-300 ease-out flex flex-col justify-between overflow-hidden select-none">
+  <div id="MobileNavDrawer" class="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-[#0a0b0e] border-l border-[#d4af37]/30 z-[99999] shadow-[-15px_0_40px_rgba(0,0,0,0.95)] transform translate-x-full transition-transform duration-300 ease-out flex flex-col justify-between overflow-y-auto">
     
-    <!-- Top Section -->
-    <div class="flex flex-col shrink-0">
-      <!-- Drawer Header -->
-      <div class="px-4 py-3 border-b border-white/10 flex items-center justify-between bg-[#0e1017]">
-        <div class="flex items-center gap-2">
-          <img src="./assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-7 h-7 rounded-full border border-[#d4af37] object-cover shadow">
-          <div class="flex flex-col">
-            <span class="font-serif text-base font-bold text-white uppercase tracking-wider">BlackRoots</span>
-            <span class="text-[7px] uppercase tracking-widest text-[#d4af37] font-bold -mt-0.5">Revive Your Roots</span>
-          </div>
+    <!-- Drawer Header -->
+    <div class="p-5 border-b border-white/10 flex items-center justify-between shrink-0 bg-[#0e1017]">
+      <div class="flex items-center gap-2.5">
+        <img src="./assets/blackroots-logo-circle-black.jpg" alt="BlackRoots Logo" class="w-8 h-8 rounded-full border border-[#d4af37] object-cover">
+        <div class="flex flex-col">
+          <span class="font-serif text-lg font-bold text-white uppercase tracking-wider">BlackRoots</span>
+          <span class="text-[8px] uppercase tracking-widest text-[#d4af37] font-bold -mt-0.5">Revive Your Roots</span>
         </div>
-        <button type="button" onclick="closeMobileNavDrawer()" class="w-7 h-7 rounded-full bg-white/10 border border-[#d4af37]/40 text-[#d4af37] flex items-center justify-center text-xs font-bold hover:bg-[#d4af37] hover:text-black transition-all cursor-pointer" aria-label="Close Menu">
-          ✕
-        </button>
       </div>
-
-      <!-- Special Drawer Promo Banner -->
-      <div class="mx-3 mt-2.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-950/90 to-black border border-emerald-500/40 flex items-center justify-between text-[11px] shadow-sm">
-        <div class="flex items-center gap-1.5">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span class="text-emerald-300 font-bold text-[10px]">50% OFF TODAY &bull; Free Delivery</span>
-        </div>
-        <span class="text-[#d4af37] font-black text-xs">₹499</span>
-      </div>
+      <button type="button" onclick="closeMobileNavDrawer()" class="w-8 h-8 rounded-full bg-white/10 border border-[#d4af37]/40 text-[#d4af37] flex items-center justify-center text-sm font-bold hover:bg-[#d4af37] hover:text-black transition-all cursor-pointer" aria-label="Close Menu">
+        ✕
+      </button>
     </div>
 
-    <!-- Navigation Links List (Compact & Clean - ZERO Scroll) -->
-    <div class="px-3 py-2 space-y-1 flex-1 flex flex-col justify-center">
-      <a href="index.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all">
+    <!-- Special Drawer Promo Banner -->
+    <div class="mx-5 mt-4 p-3 rounded-2xl bg-gradient-to-r from-emerald-950/80 to-black border border-emerald-500/30 flex items-center justify-between text-xs shrink-0">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-emerald-300 font-bold text-[11px]">Free Express Delivery</span>
+      </div>
+      <span class="text-[#d4af37] font-black text-xs">₹499 Only</span>
+    </div>
+
+    <!-- Navigation Links List (All Original Functional Links Preserved) -->
+    <div class="p-5 space-y-1.5 flex-1">
+      <a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all">
         <span>🏠</span> <span>Home</span>
       </a>
-      <a href="product.html" class="flex items-center justify-between px-3 py-2 rounded-xl bg-[#d4af37]/15 border border-[#d4af37]/50 text-[#d4af37] font-bold text-xs uppercase tracking-wider transition-all shadow-sm">
-        <div class="flex items-center gap-2.5">
+      <a href="product.html" class="flex items-center justify-between px-4 py-3 rounded-xl bg-[#d4af37]/10 border border-[#d4af37]/40 text-[#d4af37] font-bold text-xs uppercase tracking-wider transition-all">
+        <div class="flex items-center gap-3">
           <span>🛍️</span> <span>Product (250ml)</span>
         </div>
         <span class="bg-[#d4af37] text-black text-[9px] font-black px-2 py-0.5 rounded-full">₹499</span>
       </a>
-      <a href="ingredients.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all">
+      <a href="ingredients.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all">
         <span>🌿</span> <span>Herbal Ingredients</span>
       </a>
-      <a href="how-to-use.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all">
+      <a href="how-to-use.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all">
         <span>🚿</span> <span>Application Ritual</span>
       </a>
-      <a href="reviews.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all">
-        <span>⭐</span> <span>Customer Reviews (4.9★)</span>
+      <a href="reviews.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all">
+        <span>⭐</span> <span>Customer Reviews</span>
       </a>
-      <a href="ai-consultant.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-amber-300 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-400 hover:text-black font-bold text-xs uppercase tracking-wider transition-all">
+      <a href="ai-consultant.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-amber-300 hover:bg-amber-400/10 font-bold text-xs uppercase tracking-wider transition-all">
         <span>🩺</span> <span>AI Hair Doctor</span>
       </a>
-      <a href="track-order.html" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all">
+      <a href="track-order.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all">
         <span>📦</span> <span>Track My Order</span>
       </a>
-      <a href="https://wa.me/919580835179?text=Namaste%20BlackRoots%20Team!%20I%20have%20a%20question%20about%20the%20shampoo." target="_blank" class="flex items-center gap-2.5 px-3 py-2 rounded-xl text-emerald-400 hover:bg-emerald-500/10 font-bold text-xs uppercase tracking-wider transition-all">
-        <span>💬</span> <span>WhatsApp Support</span>
+      <a href="contact.html" class="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-200 hover:text-[#d4af37] hover:bg-white/5 font-semibold text-xs uppercase tracking-wider transition-all">
+        <span>📞</span> <span>Customer Support</span>
       </a>
     </div>
 
-    <!-- Drawer Footer CTA (Snug & Fixed at bottom) -->
-    <div class="p-3.5 border-t border-white/10 space-y-1.5 bg-[#0c0e14]/95 shrink-0">
-      <button type="button" onclick="closeMobileNavDrawer(); openQuickOrderModal();" class="group relative w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-xs py-3 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.3)] hover:brightness-110 active:scale-95 transition-all uppercase tracking-wider text-center cursor-pointer">
+    <!-- Drawer Footer CTA -->
+    <div class="p-5 border-t border-white/10 space-y-3 bg-black/80 shrink-0">
+      <button type="button" onclick="closeMobileNavDrawer(); openQuickOrderModal();" class="group relative w-full inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-xs px-5 py-3.5 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.3)] hover:scale-105 transition-all uppercase tracking-wider text-center cursor-pointer">
         <span>ORDER NOW &bull; ₹499</span>
-        <span class="w-4 h-4 rounded-md bg-black text-[#d4af37] flex items-center justify-center font-black text-[10px]">
+        <span class="w-5 h-5 rounded-md bg-black text-[#d4af37] flex items-center justify-center font-black text-xs">
           🛍️
         </span>
       </button>
-      <p class="text-[9px] text-gray-400 text-center font-medium">
+      <p class="text-[10px] text-gray-400 text-center font-medium">
         ⚡ Free Express COD Delivery Across India
       </p>
     </div>
