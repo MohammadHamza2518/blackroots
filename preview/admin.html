@@ -421,25 +421,48 @@
           </div>
 
           <div class="p-6 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-4">
-            <h3 class="font-serif text-lg font-bold text-amber-300">4. Shiprocket Logistics Integration</h3>
+            <h3 class="font-serif text-lg font-bold text-amber-300">4. Razorpay Online Payment Gateway</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Shiprocket Email</label>
-                <input type="email" id="set-shiprocket-email" placeholder="logistics@blackroots.in" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+                <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Razorpay Key ID</label>
+                <input type="text" id="set-razorpay-key" placeholder="rzp_live_..." class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
               </div>
               <div>
-                <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Shiprocket Password</label>
+                <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Razorpay Key Secret</label>
+                <input type="password" id="set-razorpay-secret" placeholder="••••••••" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              </div>
+            </div>
+            <label class="flex items-center gap-2 text-xs text-emerald-400 font-bold cursor-pointer pt-1">
+              <input type="checkbox" id="set-razorpay-enabled" checked class="rounded accent-[#d4af37]">
+              <span>Enable Instant Online Payments (UPI, GPay, Cards) at Checkout</span>
+            </label>
+          </div>
+
+          <div class="p-6 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-4">
+            <h3 class="font-serif text-lg font-bold text-amber-300">5. Shiprocket Logistics Integration</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Shiprocket API Email</label>
+                <input type="email" id="set-shiprocket-email" placeholder="api@blackroots.in" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Shiprocket API Password</label>
                 <input type="password" id="set-shiprocket-password" placeholder="••••••••" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
               </div>
             </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Pickup Location Name</label>
+              <input type="text" id="set-shiprocket-pickup" placeholder="Home" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              <span class="text-[10px] text-gray-400 mt-1 block">Default: <strong>Home</strong> (Shuklaganj Ahmad Nagar Warehouse, Unnao 209861)</span>
+            </div>
             <label class="flex items-center gap-2 text-xs text-gray-300 cursor-pointer pt-2">
-              <input type="checkbox" id="set-shiprocket-auto" class="rounded accent-[#d4af37]">
+              <input type="checkbox" id="set-shiprocket-auto" checked class="rounded accent-[#d4af37]">
               <span>Auto-Push New Orders directly to Shiprocket for Express Label Generation</span>
             </label>
           </div>
 
           <div class="p-6 rounded-3xl bg-[#11141b] border border-red-500/30 shadow-xl space-y-4">
-            <h3 class="font-serif text-lg font-bold text-red-400">5. Admin Master Security Password</h3>
+            <h3 class="font-serif text-lg font-bold text-red-400">6. Admin Master Security Password</h3>
             <div>
               <label class="block text-xs font-bold text-gray-300 uppercase mb-1">Change Admin Password</label>
               <input type="password" id="set-new-pass" placeholder="Enter new password (leave blank to keep current)" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
@@ -1085,9 +1108,13 @@
       document.getElementById('set-ga4-id').value = s.ga4_measurement_id || '';
       document.getElementById('set-gsc-tag').value = s.gsc_verification_tag || '';
       document.getElementById('set-whatsapp-num').value = s.whatsapp_support || '+919580835179';
-      document.getElementById('set-shiprocket-email').value = s.shiprocket_email || '';
-      document.getElementById('set-shiprocket-password').value = s.shiprocket_password || '';
-      document.getElementById('set-shiprocket-auto').checked = s.shiprocket_auto_push === '1';
+      document.getElementById('set-razorpay-key').value = s.razorpay_key_id || 'rzp_live_TV9VNPhiYYbB07';
+      document.getElementById('set-razorpay-secret').value = s.razorpay_key_secret || 'ianPeeSx3gMvq2OZk8TUW0sz';
+      document.getElementById('set-razorpay-enabled').checked = s.razorpay_enabled !== '0';
+      document.getElementById('set-shiprocket-email').value = s.shiprocket_email || 'api@blackroots.in';
+      document.getElementById('set-shiprocket-password').value = s.shiprocket_password || 'S1bSO*3&H1fHiBC@!b7lqEsTI#Nwm8mt';
+      document.getElementById('set-shiprocket-pickup').value = s.shiprocket_pickup_location || 'Home';
+      document.getElementById('set-shiprocket-auto').checked = s.shiprocket_auto_push !== '0';
     }
 
     async function handleSaveSettings(e) {
@@ -1102,8 +1129,12 @@
         ga4_measurement_id: document.getElementById('set-ga4-id').value,
         gsc_verification_tag: document.getElementById('set-gsc-tag').value,
         whatsapp_support: document.getElementById('set-whatsapp-num').value,
+        razorpay_key_id: document.getElementById('set-razorpay-key').value,
+        razorpay_key_secret: document.getElementById('set-razorpay-secret').value,
+        razorpay_enabled: document.getElementById('set-razorpay-enabled').checked ? '1' : '0',
         shiprocket_email: document.getElementById('set-shiprocket-email').value,
         shiprocket_password: document.getElementById('set-shiprocket-password').value,
+        shiprocket_pickup_location: document.getElementById('set-shiprocket-pickup').value,
         shiprocket_auto_push: document.getElementById('set-shiprocket-auto').checked ? '1' : '0',
         new_password: document.getElementById('set-new-pass').value
       };

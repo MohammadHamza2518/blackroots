@@ -31,8 +31,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="./assets/theme.css?v=1786809224">
-  <script src="./assets/theme.js?v=1786809224" defer></script>
+  <link rel="stylesheet" href="./assets/theme.css?v=1787832399">
+  <script src="./assets/theme.js?v=1787832399" defer></script>
+  <script src="./assets/analytics.js" defer></script>
   <script src="./assets/instant-butter.js" defer></script>
   
   
@@ -101,7 +102,77 @@
       border-radius: 1.25rem !important;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
     }
+
+    /* 👑 Ultra-Luxury 60FPS Hardware-Accelerated Hero Animations */
+    @keyframes goldLiquidSweep {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+    .gold-gradient-animated {
+      background: linear-gradient(135deg, #d4af37 0%, #fff6cc 25%, #d4af37 50%, #aa7c11 75%, #f3e5ab 100%);
+      background-size: 250% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: goldLiquidSweep 6s ease infinite;
+      will-change: background-position;
+      display: inline-block;
+    }
+    @keyframes heroOrbPulse {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.08;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.18);
+        opacity: 0.16;
+      }
+    }
+    .hero-ambient-glow {
+      animation: heroOrbPulse 6s ease-in-out infinite;
+      will-change: transform, opacity;
+    }
+    @keyframes heroFadeUp {
+      from {
+        opacity: 0;
+        transform: translate3d(0, 16px, 0);
+      }
+      to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+      }
+    }
+    .anim-hero-1 { animation: heroFadeUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; will-change: transform, opacity; }
+    .anim-hero-2 { animation: heroFadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; will-change: transform, opacity; }
+    .anim-hero-3 { animation: heroFadeUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both; will-change: transform, opacity; }
+    .anim-hero-4 { animation: heroFadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both; will-change: transform, opacity; }
   </style>
+  <!-- Instant Inline Mobile Nav Drawer Engine (Zero-Lag Touch Ready) -->
+  <script>
+    function openMobileNavDrawer() {
+      var d = document.getElementById('MobileNavDrawer');
+      var b = document.getElementById('MobileNavBackdrop');
+      if (d) { d.style.transform = 'translateX(0%)'; d.classList.remove('translate-x-full'); d.classList.add('translate-x-0'); }
+      if (b) { b.style.opacity = '1'; b.style.pointerEvents = 'auto'; b.classList.remove('opacity-0', 'pointer-events-none'); b.classList.add('opacity-100', 'pointer-events-auto'); }
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMobileNavDrawer() {
+      var d = document.getElementById('MobileNavDrawer');
+      var b = document.getElementById('MobileNavBackdrop');
+      if (d) { d.style.transform = 'translateX(100%)'; d.classList.remove('translate-x-0'); d.classList.add('translate-x-full'); }
+      if (b) { b.style.opacity = '0'; b.style.pointerEvents = 'none'; b.classList.remove('opacity-100', 'pointer-events-auto'); b.classList.add('opacity-0', 'pointer-events-none'); }
+      document.body.style.overflow = '';
+    }
+    window.openMobileNavDrawer = openMobileNavDrawer;
+    window.closeMobileNavDrawer = closeMobileNavDrawer;
+  </script>
+
 </head>
 <body class="bg-[#0a0b0e] text-white font-sans antialiased selection:bg-[#d4af37] selection:text-black">
 
@@ -152,8 +223,8 @@
         </a>
 
         <!-- Mobile Drawer Hamburger Toggle Button -->
-        <button type="button" onclick="openMobileNavDrawer()" class="lg:hidden p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-[#1b1e27] to-[#0c0e14] border border-[#d4af37]/60 text-amber-300 hover:border-[#d4af37] hover:text-white focus:outline-none flex items-center justify-center shadow-[0_5px_15px_rgba(0,0,0,0.6)] active:scale-90 transition-all cursor-pointer" aria-label="Open Navigation Menu">
-          <svg class="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <button id="HamburgerMenuBtn" type="button" onclick="openMobileNavDrawer(); return false;" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" class="lg:hidden p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-[#1b1e27] to-[#0c0e14] border border-[#d4af37]/60 text-amber-300 hover:border-[#d4af37] hover:text-white focus:outline-none flex items-center justify-center shadow-[0_5px_15px_rgba(0,0,0,0.6)] active:scale-90 transition-all cursor-pointer cursor-pointer" aria-label="Open Navigation Menu">
+          <svg class="w-5 h-5 text-amber-300 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
             <line x1="4" y1="6" x2="20" y2="6"></line>
             <line x1="4" y1="12" x2="20" y2="12"></line>
             <line x1="4" y1="18" x2="20" y2="18"></line>
@@ -168,31 +239,29 @@
   <section class="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-[#090a0d] py-12 sm:py-16 select-none border-b border-[#d4af37]/20">
     
     <!-- Single Soft Ambient Gold Glow (Ultra-Lightweight & Clean) -->
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-80 bg-[#d4af37]/10 rounded-full  pointer-events-none" style="background: radial-gradient(circle, rgba(212,175,55,0.06) 0%, transparent 70%);"></div>
+    <div class="hero-ambient-glow absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-80 bg-[#d4af37]/10 rounded-full pointer-events-none" style="background: radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 70%);"></div>
 
     <div class="relative z-20 max-w-5xl mx-auto px-4 text-center space-y-6">
       
       <!-- Top Tagline Pill (Ultra-Luxury D2C Single-Line Responsive Badge) -->
-      <!-- Top Tagline Pill (Ultra-Luxury D2C Single-Line Responsive Badge with Unisex Icon) -->
-      <!-- Top Tagline Pill (Compact 1-Line Responsive D2C Luxury Badge) -->
-      <div class="inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/50 text-[#d4af37] text-[10px] sm:text-xs font-extrabold uppercase tracking-wide backdrop-blur-xl shadow-[0_10px_25px_rgba(212,175,55,0.15)] mx-auto text-center max-w-full">
+      <div class="anim-hero-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/50 text-[#d4af37] text-[10px] sm:text-xs font-extrabold uppercase tracking-wide backdrop-blur-xl shadow-[0_10px_25px_rgba(212,175,55,0.15)] mx-auto text-center max-w-full">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
         <span class="whitespace-nowrap">👫 100% UNISEX &bull; JAPANESE BOTANICAL FORMULA</span>
       </div>
 
-      <!-- Main Headline -->
-      <h1 class="font-serif text-3xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight">
+      <!-- Main Headline with 60FPS Liquid Gold Shimmer Sweep -->
+      <h1 class="anim-hero-2 font-serif text-3xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-white leading-tight">
         Say Goodbye to Grey Hair <br>
-        <span class="gold-gradient-text italic">Naturally & Gently.</span>
+        <span class="gold-gradient-animated italic">Naturally & Gently.</span>
       </h1>
 
       <!-- Subtitle -->
-      <p class="text-sm sm:text-lg text-gray-300 max-w-3xl mx-auto font-light leading-relaxed">
+      <p class="anim-hero-3 text-sm sm:text-lg text-gray-300 max-w-3xl mx-auto font-light leading-relaxed">
         Turns grey & white hair naturally black for both <strong class="text-amber-300 font-semibold">Men & Women</strong> over regular shower washes &mdash; while eliminating scalp dandruff and stopping hair fall with 100% botanical active ingredients.
       </p>
 
       <!-- CTA Action Buttons -->
-      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+      <div class="anim-hero-4 flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
         <button onclick="window.location.href='product.html';" type="button" class="js-trigger-order group relative inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-extrabold text-xs sm:text-sm px-6 py-3 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.25)] hover:shadow-[0_15px_35px_rgba(212,175,55,0.4)] transition-all transform hover:-translate-y-0.5 cursor-pointer uppercase tracking-wider overflow-hidden">
           <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none"></span>
           <span class="flex items-center gap-2 relative z-10">
@@ -864,6 +933,43 @@
           <textarea rows="2" placeholder="House/Flat No, Building Name, Street" required class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white"></textarea>
         </div>
 
+        <!-- VIP Influencer / Promo Code Input Row -->
+        <div class="p-3.5 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="text-[11px] font-bold text-gray-300 uppercase tracking-wider">Have a Creator / Promo Code?</label>
+            <span id="CouponDiscountNote" class="hidden text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20"></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="text" id="OrderCouponInput" placeholder="e.g. PRIYA10" class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white uppercase font-bold focus:outline-none focus:border-[#d4af37]">
+            <button type="button" onclick="applyCheckoutCoupon()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#d4af37] to-amber-500 text-black text-xs font-black uppercase hover:brightness-110 shadow shrink-0 cursor-pointer">
+              Apply
+            </button>
+          </div>
+        </div>
+
+        <!-- Payment Method Selector (Razorpay Online vs COD) -->
+        <div class="space-y-2">
+          <label class="block text-[11px] font-bold text-gray-300 uppercase tracking-wider">Payment Method</label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="relative flex flex-col p-3 rounded-2xl bg-gradient-to-br from-[#182619] to-[#12161f] border-2 border-[#d4af37] cursor-pointer transition-all hover:border-[#d4af37]">
+              <div class="flex items-center justify-between mb-1">
+                <input type="radio" name="payment_method_choice" value="Online" checked class="accent-[#d4af37]">
+                <span class="text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.5 rounded">FASTEST</span>
+              </div>
+              <span class="text-xs font-bold text-white flex items-center gap-1">⚡ Pay Online</span>
+              <span class="text-[10px] text-gray-400">UPI / GPay / Cards</span>
+            </label>
+            <label class="relative flex flex-col p-3 rounded-2xl bg-white/5 border border-white/15 cursor-pointer transition-all hover:border-white/30">
+              <div class="flex items-center justify-between mb-1">
+                <input type="radio" name="payment_method_choice" value="COD" class="accent-[#d4af37]">
+                <span class="text-[9px] font-semibold text-gray-400 bg-white/10 px-1.5 py-0.5 rounded">COD</span>
+              </div>
+              <span class="text-xs font-bold text-gray-300 flex items-center gap-1">💵 Cash on Delivery</span>
+              <span class="text-[10px] text-gray-400">Pay cash at delivery</span>
+            </label>
+          </div>
+        </div>
+
         <button type="submit" class="btn-gold-luxury btn-shimmer w-full py-4 text-xs font-bold uppercase tracking-wider">
           Confirm Order &rarr;&rarr;
         </button>
@@ -992,9 +1098,9 @@
 
 
 <!-- 📱 Ultra-Luxury Mobile Navigation Drawer Overlay & Backdrop -->
-  <div id="MobileNavBackdrop" onclick="closeMobileNavDrawer()" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 opacity-0 pointer-events-none transition-opacity duration-300 ease-out"></div>
+  <div id="MobileNavBackdrop" onclick="closeMobileNavDrawer()" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[99998] opacity-0 pointer-events-none transition-opacity duration-300 ease-out"></div>
 
-  <div id="MobileNavDrawer" class="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-gradient-to-b from-[#0e1017] via-[#090a0e] to-black border-l border-[#d4af37]/30 z-50 shadow-[-15px_0_40px_rgba(0,0,0,0.9)] transform translate-x-full transition-transform duration-300 ease-out flex flex-col justify-between overflow-y-auto">
+  <div id="MobileNavDrawer" class="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-gradient-to-b from-[#0e1017] via-[#090a0e] to-black border-l border-[#d4af37]/30 z-[99999] shadow-[-15px_0_40px_rgba(0,0,0,0.9)] transform translate-x-full transition-transform duration-300 ease-out flex flex-col justify-between overflow-y-auto">
     
     <!-- Drawer Header -->
     <div class="p-5 border-b border-white/10 flex items-center justify-between">

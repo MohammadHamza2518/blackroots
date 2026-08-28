@@ -48,10 +48,12 @@ function shiprocket_create_order($order) {
     $first_name = explode(' ', $order['name'])[0];
     $last_name = trim(str_replace($first_name, '', $order['name'])) ?: 'Customer';
 
+    $pickup_loc = get_setting('shiprocket_pickup_location', 'Home') ?: 'Home';
+
     $payload = [
         'order_id' => str_replace('#', '', $order['order_id']),
         'order_date' => date('Y-m-d H:i'),
-        'pickup_location' => 'Primary',
+        'pickup_location' => $pickup_loc,
         'channel_id' => '',
         'billing_customer_name' => $first_name,
         'billing_last_name' => $last_name,

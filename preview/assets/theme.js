@@ -2,6 +2,15 @@
    BlackRoots Official Theme JavaScript Engine
    ========================================================================== */
 
+// Auto-load Razorpay Checkout SDK for Instant Prepaid Orders
+if (!window.Razorpay && !document.getElementById('razorpay-checkout-sdk')) {
+  const rzpScript = document.createElement('script');
+  rzpScript.id = 'razorpay-checkout-sdk';
+  rzpScript.src = 'https://checkout.razorpay.com/v1/checkout.js';
+  rzpScript.async = true;
+  document.head.appendChild(rzpScript);
+}
+
 /* 📱 Mobile Navigation Drawer Controls (Bulletproof Direct Touch Engine) */
 function openMobileNavDrawer() {
   const drawer = document.getElementById('MobileNavDrawer');
@@ -745,118 +754,197 @@ window.switchToSimPage = switchToSimPage;
         });
       }
 
-      // 2. Full Order Submission Handler
+      // 2. Full Order Submission Handler (Razorpay + COD Dual Gateway)
       form.onsubmit = async function(e) {
         e.preventDefault();
         const submitBtn = form.querySelector('button[type="submit"]');
         const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Confirm Order';
 
-        const allInputs = form.querySelectorAll('input, textarea');
+        const allInputs = form.querySelectorAll('input:not([type="radio"]), textarea');
         let basePrice = window.selectedPack ? window.selectedPack.price : 499;
         let appliedCoupon = window.appliedCouponData ? window.appliedCouponData.code : (localStorage.getItem('br_active_coupon') || '');
         let finalPrice = window.appliedCouponData ? window.appliedCouponData.finalPrice : basePrice;
 
+        const paymentRadio = form.querySelector('input[name="payment_method_choice"]:checked');
+        const selectedMethod = paymentRadio ? paymentRadio.value : 'Online';
+
+        let custName = allInputs[0] ? allInputs[0].value.trim() : '';
+        let custPhone = allInputs[1] ? allInputs[1].value.trim().replace(/[^0-9]/g, '') : '';
+        let custPincode = allInputs[2] ? allInputs[2].value.trim().replace(/[^0-9]/g, '') : '';
+        let custCity = allInputs[3] ? allInputs[3].value.trim() : '';
+        let custAddress = allInputs[4] ? allInputs[4].value.trim() : '';
+
+        if (custPhone.length > 10 && custPhone.startsWith('91')) custPhone = custPhone.slice(2);
+
+        if (custPhone.length !== 10) {
+          alert('Please enter a valid 10-digit Indian mobile number.');
+          return;
+        }
+        if (custPincode.length !== 6) {
+          alert('Please enter a valid 6-digit delivery pincode.');
+          return;
+        }
+
         let orderPayload = {
-          name: allInputs[0] ? allInputs[0].value.trim() : '',
-          phone: allInputs[1] ? allInputs[1].value.trim() : '',
-          pincode: allInputs[2] ? allInputs[2].value.trim() : '',
-          city: allInputs[3] ? allInputs[3].value.trim() : '',
-          address: allInputs[4] ? allInputs[4].value.trim() : '',
+          name: custName,
+          phone: custPhone,
+          pincode: custPincode,
+          city: custCity,
+          address: custAddress,
           bundle: window.selectedPack ? window.selectedPack.name : '1 Bottle (250ml)',
           price: finalPrice,
-          payment_method: 'COD',
+          payment_method: selectedMethod === 'Online' ? 'Online (Razorpay UPI/Cards)' : 'COD',
+          payment_id: '',
           coupon: appliedCoupon,
           discount: basePrice - finalPrice
         };
 
-        if (submitBtn) {
-          submitBtn.disabled = true;
-          submitBtn.innerHTML = '<span>⏳ Confirming Logistics Order...</span>';
-        }
-
-        try {
-          let orderData = null;
-          const endpoints = ['api/order', 'api/order.js', 'api/order.php'];
-          for (let ep of endpoints) {
-            try {
-              let res = await fetch(ep, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(orderPayload)
-              });
-              if (res.ok) {
-                orderData = await res.json();
-                if (orderData && orderData.success) break;
-              }
-            } catch(err) {}
-          }
-
+        const processOrderExecution = async (payload) => {
           if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>⏳ Confirming Logistics Order...</span>';
           }
 
-          const orderId = (orderData && orderData.order_id) ? orderData.order_id : ('#BR-' + Math.floor(1000 + Math.random() * 9000));
-          orderPayload.order_id = orderId;
-          orderPayload.status = 'New';
-          orderPayload.created_at = new Date().toLocaleString();
-
-          // Local cache for immediate admin view & Influencer Credit
           try {
-            let curOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
-            curOrders.unshift(orderPayload);
-            localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 100)));
+            let orderData = null;
+            const endpoints = ['api/order', 'api/order.js', 'api/order.php'];
+            for (let ep of endpoints) {
+              try {
+                let res = await fetch(ep, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                  orderData = await res.json();
+                  if (orderData && orderData.success) break;
+                }
+              } catch(err) {}
+            }
 
-            // Credit Commission to Influencer
-            if (orderPayload.coupon) {
-              let db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
-              let inf = db.find(u => u.code && u.code.toUpperCase() === orderPayload.coupon.toUpperCase());
-              if (inf) {
-                let commRate = inf.comm_rate || 10;
-                let commAmt = Math.round(orderPayload.price * (commRate / 100));
-                inf.total_orders = (Number(inf.total_orders) || 0) + 1;
-                inf.total_sales = (Number(inf.total_sales) || 0) + Number(orderPayload.price);
-                inf.total_earned = (Number(inf.total_earned) || 0) + commAmt;
-                inf.unpaid_balance = (Number(inf.unpaid_balance) || 0) + commAmt;
-                orderPayload.influencer = inf.name;
-                localStorage.setItem('br_influencers_db', JSON.stringify(db));
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalBtnText;
+            }
+
+            const orderId = (orderData && orderData.order_id) ? orderData.order_id : ('#BR-' + Math.floor(1000 + Math.random() * 9000));
+            payload.order_id = orderId;
+            payload.status = payload.payment_method.includes('Online') ? 'Paid' : 'New';
+            payload.created_at = new Date().toLocaleString();
+
+            // Local cache for immediate admin view & Influencer Credit
+            try {
+              let curOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
+              curOrders.unshift(payload);
+              localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 100)));
+
+              // Credit Commission to Influencer
+              if (payload.coupon) {
+                let db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
+                let inf = db.find(u => u.code && u.code.toUpperCase() === payload.coupon.toUpperCase());
+                if (inf) {
+                  let commRate = inf.comm_rate || 10;
+                  let commAmt = Math.round(payload.price * (commRate / 100));
+                  inf.total_orders = (Number(inf.total_orders) || 0) + 1;
+                  inf.total_sales = (Number(inf.total_sales) || 0) + Number(payload.price);
+                  inf.total_earned = (Number(inf.total_earned) || 0) + commAmt;
+                  inf.unpaid_balance = (Number(inf.unpaid_balance) || 0) + commAmt;
+                  payload.influencer = inf.name;
+                  localStorage.setItem('br_influencers_db', JSON.stringify(db));
+                }
+              }
+            } catch(e) {}
+
+            // Hide form, show success screen
+            form.classList.add('hidden');
+            const success = document.getElementById('QuickOrderSuccess');
+            if (success) {
+              success.classList.remove('hidden');
+              const idDisplay = success.querySelector('strong');
+              if (idDisplay) idDisplay.textContent = orderId;
+
+              // Track Meta Pixel & GA4 Purchase Event
+              if (window.trackD2CEvent) {
+                window.trackD2CEvent('Purchase', {
+                  value: payload.price,
+                  currency: 'INR',
+                  order_id: orderId,
+                  payment_type: payload.payment_method,
+                  items: [{ item_name: 'BlackRoots Herbal Hair Dye Shampoo', price: payload.price, quantity: 1 }]
+                });
+              }
+
+              // Update Track Order link in success box if present
+              const trackBtn = success.querySelector('a.js-track-live') || success.querySelector('button');
+              if (trackBtn) {
+                trackBtn.onclick = function() {
+                  window.location.href = 'track-order.html?id=' + encodeURIComponent(orderId);
+                };
               }
             }
-          } catch(e) {}
 
-          // Hide form, show success screen
-          form.classList.add('hidden');
-          const success = document.getElementById('QuickOrderSuccess');
-          if (success) {
-            success.classList.remove('hidden');
-            const idDisplay = success.querySelector('strong');
-            if (idDisplay) idDisplay.textContent = orderId;
-
-            // Track Meta Pixel & GA4 Purchase Event
-            if (window.trackD2CEvent) {
-              window.trackD2CEvent('Purchase', {
-                value: orderPayload.price,
-                currency: 'INR',
-                order_id: orderId,
-                items: [{ item_name: 'BlackRoots Herbal Hair Dye Shampoo', price: orderPayload.price, quantity: 1 }]
-              });
-            }
-
-            // Update Track Order link in success box if present
-            const trackBtn = success.querySelector('a.js-track-live') || success.querySelector('button');
-            if (trackBtn) {
-              trackBtn.onclick = function() {
-                window.location.href = 'track-order.html?id=' + encodeURIComponent(orderId);
-              };
+            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+          } catch(err) {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalBtnText;
             }
           }
+        };
 
-          if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-        } catch(err) {
+        if (selectedMethod === 'Online') {
+          if (typeof Razorpay === 'undefined') {
+            processOrderExecution(orderPayload);
+            return;
+          }
+
           if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnText;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>⚡ Opening Razorpay Gateway...</span>';
           }
+
+          const rzpOptions = {
+            key: 'rzp_live_TV9VNPhiYYbB07',
+            amount: Math.round(finalPrice * 100),
+            currency: 'INR',
+            name: 'BlackRoots Herbal Care',
+            description: orderPayload.bundle + ' (Prepaid Order)',
+            image: './assets/blackroots-logo-circle-black.jpg',
+            prefill: {
+              name: orderPayload.name,
+              contact: orderPayload.phone,
+              email: ''
+            },
+            theme: {
+              color: '#d4af37'
+            },
+            modal: {
+              ondismiss: function() {
+                if (submitBtn) {
+                  submitBtn.disabled = false;
+                  submitBtn.innerHTML = originalBtnText;
+                }
+              }
+            },
+            handler: function(response) {
+              orderPayload.payment_id = response.razorpay_payment_id || '';
+              orderPayload.payment_method = 'Online (Razorpay UPI/Cards)';
+              orderPayload.status = 'Paid';
+              processOrderExecution(orderPayload);
+            }
+          };
+
+          const rzpInstance = new Razorpay(rzpOptions);
+          rzpInstance.on('payment.failed', function(resp) {
+            alert('Payment Failed: ' + (resp.error ? resp.error.description : 'Transaction cancelled'));
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalBtnText;
+            }
+          });
+          rzpInstance.open();
+        } else {
+          processOrderExecution(orderPayload);
         }
       };
     }

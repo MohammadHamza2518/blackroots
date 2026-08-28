@@ -102,9 +102,13 @@ try {
             'ga4_measurement_id' => '',
             'gsc_verification_tag' => '',
             'whatsapp_support' => '+919580835179',
-            'shiprocket_email' => '',
-            'shiprocket_password' => '',
-            'shiprocket_auto_push' => '0',
+            'razorpay_key_id' => 'rzp_live_TV9VNPhiYYbB07',
+            'razorpay_key_secret' => 'ianPeeSx3gMvq2OZk8TUW0sz',
+            'razorpay_enabled' => '1',
+            'shiprocket_email' => 'api@blackroots.in',
+            'shiprocket_password' => 'S1bSO*3&H1fHiBC@!b7lqEsTI#Nwm8mt',
+            'shiprocket_pickup_location' => 'Home',
+            'shiprocket_auto_push' => '1',
             'store_currency' => 'INR',
         ];
         $ins = $pdo->prepare("INSERT INTO settings (key_name, key_val) VALUES (:k, :v)");

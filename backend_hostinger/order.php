@@ -26,6 +26,8 @@ $pincode = trim($input['pincode'] ?? '');
 $bundle = trim($input['bundle'] ?? '1 Bottle (250ml)');
 $price = floatval($input['price'] ?? 499);
 $payment_method = trim($input['payment_method'] ?? 'COD');
+$payment_id = trim($input['payment_id'] ?? '');
+$status = (stripos($payment_method, 'online') !== false || stripos($payment_method, 'prepaid') !== false || stripos($payment_method, 'razorpay') !== false || stripos($payment_method, 'paid') !== false) ? 'Paid' : 'New';
 
 $clean_phone = preg_replace('/[^0-9]/', '', $phone);
 if (strlen($clean_phone) > 10 && substr($clean_phone, 0, 2) === '91') {
@@ -73,7 +75,7 @@ $default_awb = '8839' . rand(100000, 999999);
 try {
     $ins = $pdo->prepare("
         INSERT INTO orders (order_id, name, phone, email, address, city, state, pincode, product_bundle, price, payment_method, status, tracking_awb, courier)
-        VALUES (:oid, :name, :phone, :email, :addr, :city, :state, :pin, :bundle, :price, :pm, 'New', :awb, 'Delhivery Express Air')
+        VALUES (:oid, :name, :phone, :email, :addr, :city, :state, :pin, :bundle, :price, :pm, :status, :awb, 'Delhivery Express Air')
     ");
     $ins->execute([
         ':oid' => $order_id,
@@ -87,6 +89,7 @@ try {
         ':bundle' => $bundle,
         ':price' => $price,
         ':pm' => $payment_method,
+        ':status' => $status,
         ':awb' => $default_awb
     ]);
 

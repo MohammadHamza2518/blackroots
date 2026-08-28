@@ -71,10 +71,11 @@ module.exports = async (req, res) => {
     product_bundle: bundle,
     price: price,
     payment_method: input.payment_method || 'COD',
+    payment_id: input.payment_id || '',
     coupon: input.coupon || input.coupon_code || '',
     discount: input.discount || 0,
     influencer: input.influencer || '',
-    status: 'New',
+    status: (input.payment_method && (input.payment_method.toLowerCase().includes('online') || input.payment_method.toLowerCase().includes('razorpay') || input.payment_method.toLowerCase().includes('paid'))) ? 'Paid' : 'New',
     tracking_awb: awb,
     courier: 'Delhivery Express Air',
     created_at: new Date().toISOString().replace('T', ' ').slice(0, 19)
