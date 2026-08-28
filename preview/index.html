@@ -893,98 +893,6 @@
     </div>
   </section>
 
-  <!-- 📦 Direct 1-Click Quick Order Form Modal Popup -->
-  <div id="QuickOrderModal" class="hidden fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto" onclick="if(event.target===this)closeQuickOrderModal();">
-    <div class="relative w-full max-w-lg bg-[#11141b] border-2 border-[#d4af37] rounded-3xl p-5 sm:p-7 space-y-5 shadow-[0_20px_60px_rgba(0,0,0,0.9)] text-left my-auto max-h-[92vh] overflow-y-auto">
-      <button type="button" onclick="closeQuickOrderModal();" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl font-black w-8 h-8 rounded-full bg-white/10 flex items-center justify-center cursor-pointer transition-colors z-10">&times;</button>
-      
-      <div class="flex items-center gap-3 border-b border-white/10 pb-3.5 pr-8">
-        <img src="./assets/blackroots-bottle-single.png" alt="Bottle" class="w-12 h-12 sm:w-14 sm:h-14 object-contain bg-black rounded-xl border border-[#d4af37]" loading="lazy" decoding="async">
-        <div>
-          <h3 class="font-serif text-lg sm:text-xl font-bold text-white leading-tight">BlackRoots Shampoo (250ml)</h3>
-          <div class="text-xs text-amber-400 font-bold">Total: <span id="OrderModalPriceDisplay">&#8377;499</span> &bull; <span class="text-emerald-400">FREE Express Delivery</span></div>
-        </div>
-      </div>
-
-      <form id="QuickOrderForm" class="space-y-3.5">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1">Full Name</label>
-            <input type="text" placeholder="Rahul Sharma" required class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37]">
-          </div>
-          <div>
-            <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1">Mobile Number</label>
-            <input type="tel" placeholder="10-Digit Mobile" required class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37]">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1">Pincode</label>
-            <input type="text" placeholder="6-Digit Pincode" required class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37]">
-          </div>
-          <div>
-            <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1">City / Town</label>
-            <input type="text" placeholder="e.g. Mumbai" required class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37]">
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1">Complete House & Street Address</label>
-          <textarea rows="2" placeholder="House/Flat No, Building Name, Street" required class="w-full px-3.5 py-2 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37]"></textarea>
-        </div>
-
-        <!-- VIP Influencer / Promo Code Input Row -->
-        <div class="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1.5">
-          <div class="flex items-center justify-between">
-            <label class="text-[10px] font-bold text-gray-300 uppercase tracking-wider">Have a Creator / Promo Code?</label>
-            <span id="CouponDiscountNote" class="hidden text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20"></span>
-          </div>
-          <div class="flex items-center gap-2">
-            <input type="text" id="OrderCouponInput" placeholder="e.g. PRIYA10" class="w-full px-3 py-2 rounded-xl bg-black border border-white/20 text-xs text-white uppercase font-bold focus:outline-none focus:border-[#d4af37]">
-            <button type="button" onclick="applyCheckoutCoupon()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#d4af37] to-amber-500 text-black text-xs font-black uppercase hover:brightness-110 shadow shrink-0 cursor-pointer">
-              Apply
-            </button>
-          </div>
-        </div>
-
-        <!-- Payment Method Selector (Razorpay Online vs COD) -->
-        <div class="space-y-1.5">
-          <label class="block text-[10px] font-bold text-gray-300 uppercase tracking-wider">Payment Method</label>
-          <div class="grid grid-cols-2 gap-2.5">
-            <label class="relative flex flex-col p-2.5 rounded-2xl bg-gradient-to-br from-[#182619] to-[#12161f] border-2 border-[#d4af37] cursor-pointer transition-all hover:border-[#d4af37]">
-              <div class="flex items-center justify-between mb-1">
-                <input type="radio" name="payment_method_choice" value="Online" checked class="accent-[#d4af37]">
-                <span class="text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.5 rounded">FASTEST</span>
-              </div>
-              <span class="text-xs font-bold text-white flex items-center gap-1">⚡ Pay Online</span>
-              <span class="text-[9px] text-gray-400">UPI / GPay / Cards</span>
-            </label>
-            <label class="relative flex flex-col p-2.5 rounded-2xl bg-white/5 border border-white/15 cursor-pointer transition-all hover:border-white/30">
-              <div class="flex items-center justify-between mb-1">
-                <input type="radio" name="payment_method_choice" value="COD" class="accent-[#d4af37]">
-                <span class="text-[9px] font-semibold text-gray-400 bg-white/10 px-1.5 py-0.5 rounded">COD</span>
-              </div>
-              <span class="text-xs font-bold text-gray-300 flex items-center gap-1">💵 Cash on Delivery</span>
-              <span class="text-[9px] text-gray-400">Pay cash at delivery</span>
-            </label>
-          </div>
-        </div>
-
-        <button type="submit" class="btn-gold-luxury btn-shimmer w-full py-3.5 text-xs font-black uppercase tracking-wider shadow-xl cursor-pointer">
-          Confirm Order &rarr;&rarr;
-        </button>
-      </form>
-
-      <div id="QuickOrderSuccess" class="hidden text-center py-6 space-y-4">
-        <div class="w-14 h-14 rounded-full bg-emerald-500 text-black flex items-center justify-center text-2xl font-bold mx-auto">✓</div>
-        <h3 class="font-serif text-2xl font-bold text-white">Order Confirmed!</h3>
-        <p class="text-xs text-gray-300">Order ID: <strong class="text-amber-400">#BR-1025</strong>. We will dispatch your BlackRoots bottle from our Shuklaganj UP warehouse within 24 hours.</p>
-        <button type="button" onclick="closeQuickOrderModal();" class="btn-gold-luxury py-2.5 px-6 text-xs font-bold uppercase cursor-pointer">Close & Continue</button>
-      </div>
-    </div>
-  </div>
-
   <!-- 📸 Executive Luxury Instagram Banner (Bottom of Homepage) -->
   <section class="py-14 bg-gradient-to-b from-[#0a0b0e] via-[#111319] to-[#0a0b0e] border-t border-[#d4af37]/20 relative overflow-hidden">
     <!-- Ambient Gold Glow -->
@@ -1314,13 +1222,97 @@
         ensureVideosPlay();
       }
 
-      // Resume videos when tab becomes visible or on mobile touch
-      document.addEventListener('visibilitychange', function() {
-        if (!document.hidden) ensureVideosPlay();
-      });
-      window.addEventListener('pageshow', ensureVideosPlay);
-    })();
-  </script>
+  <!-- 📦 Direct 1-Click Quick Order Form Modal Popup (Direct Child of Body) -->
+  <div id="QuickOrderModal" class="hidden fixed inset-0 z-[999999] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto" style="position:fixed;top:0;left:0;right:0;bottom:0;width:100vw;height:100vh;z-index:999999;background-color:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:none;" onclick="if(event.target===this)closeQuickOrderModal();">
+    <div class="relative w-full max-w-lg bg-[#11141b] border-2 border-[#d4af37] rounded-3xl p-5 sm:p-7 space-y-5 shadow-[0_20px_60px_rgba(0,0,0,0.9)] text-left my-auto max-h-[92vh] overflow-y-auto" style="margin:auto;position:relative;z-index:1000000;background-color:#11141b;">
+      <button type="button" onclick="closeQuickOrderModal();" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl font-black w-8 h-8 rounded-full bg-white/10 flex items-center justify-center cursor-pointer transition-colors z-10">&times;</button>
+      
+      <div class="flex items-center gap-3 border-b border-white/10 pb-3.5 pr-8">
+        <img src="./assets/blackroots-bottle-single.png" alt="Bottle" class="w-12 h-12 sm:w-14 sm:h-14 object-contain bg-black rounded-xl border border-[#d4af37]" loading="lazy" decoding="async">
+        <div>
+          <h3 class="font-serif text-lg sm:text-xl font-bold text-white leading-tight">BlackRoots Shampoo (250ml)</h3>
+          <div class="text-xs text-amber-400 font-bold">Total: <span id="OrderModalPriceDisplay">&#8377;499</span> &bull; <span class="text-emerald-400">FREE Express Delivery</span></div>
+        </div>
+      </div>
+
+      <form id="QuickOrderForm" class="space-y-3.5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1">Full Name</label>
+            <input type="text" placeholder="Rahul Sharma" required class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37]">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1">Mobile Number</label>
+            <input type="tel" placeholder="10-Digit Mobile" required class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37]">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1">Pincode</label>
+            <input type="text" placeholder="6-Digit Pincode" required class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37]">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1">City / Town</label>
+            <input type="text" placeholder="e.g. Mumbai" required class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37]">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1">Complete House & Street Address</label>
+          <textarea rows="2" placeholder="House/Flat No, Building Name, Street" required class="w-full px-3.5 py-2 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37]"></textarea>
+        </div>
+
+        <!-- VIP Influencer / Promo Code Input Row -->
+        <div class="p-3 rounded-2xl bg-white/5 border border-white/10 space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="text-[10px] font-bold text-gray-300 uppercase tracking-wider">Have a Creator / Promo Code?</label>
+            <span id="CouponDiscountNote" class="hidden text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20"></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="text" id="OrderCouponInput" placeholder="e.g. PRIYA10" class="w-full px-3 py-2 rounded-xl bg-black border border-white/20 text-xs text-white uppercase font-bold focus:outline-none focus:border-[#d4af37]">
+            <button type="button" onclick="applyCheckoutCoupon()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#d4af37] to-amber-500 text-black text-xs font-black uppercase hover:brightness-110 shadow shrink-0 cursor-pointer">
+              Apply
+            </button>
+          </div>
+        </div>
+
+        <!-- Payment Method Selector (Razorpay Online vs COD) -->
+        <div class="space-y-1.5">
+          <label class="block text-[10px] font-bold text-gray-300 uppercase tracking-wider">Payment Method</label>
+          <div class="grid grid-cols-2 gap-2.5">
+            <label class="relative flex flex-col p-2.5 rounded-2xl bg-gradient-to-br from-[#182619] to-[#12161f] border-2 border-[#d4af37] cursor-pointer transition-all hover:border-[#d4af37]">
+              <div class="flex items-center justify-between mb-1">
+                <input type="radio" name="payment_method_choice" value="Online" checked class="accent-[#d4af37]">
+                <span class="text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-1.5 py-0.5 rounded">FASTEST</span>
+              </div>
+              <span class="text-xs font-bold text-white flex items-center gap-1">⚡ Pay Online</span>
+              <span class="text-[9px] text-gray-400">UPI / GPay / Cards</span>
+            </label>
+            <label class="relative flex flex-col p-2.5 rounded-2xl bg-white/5 border border-white/15 cursor-pointer transition-all hover:border-white/30">
+              <div class="flex items-center justify-between mb-1">
+                <input type="radio" name="payment_method_choice" value="COD" class="accent-[#d4af37]">
+                <span class="text-[9px] font-semibold text-gray-400 bg-white/10 px-1.5 py-0.5 rounded">COD</span>
+              </div>
+              <span class="text-xs font-bold text-gray-300 flex items-center gap-1">💵 Cash on Delivery</span>
+              <span class="text-[9px] text-gray-400">Pay cash at delivery</span>
+            </label>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-gold-luxury btn-shimmer w-full py-3.5 text-xs font-black uppercase tracking-wider shadow-xl cursor-pointer">
+          Confirm Order &rarr;&rarr;
+        </button>
+      </form>
+
+      <div id="QuickOrderSuccess" class="hidden text-center py-6 space-y-4">
+        <div class="w-14 h-14 rounded-full bg-emerald-500 text-black flex items-center justify-center text-2xl font-bold mx-auto">✓</div>
+        <h3 class="font-serif text-2xl font-bold text-white">Order Confirmed!</h3>
+        <p class="text-xs text-gray-300">Order ID: <strong class="text-amber-400">#BR-1025</strong>. We will dispatch your BlackRoots bottle from our Shuklaganj UP warehouse within 24 hours.</p>
+        <button type="button" onclick="closeQuickOrderModal();" class="btn-gold-luxury py-2.5 px-6 text-xs font-bold uppercase cursor-pointer">Close & Continue</button>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>
