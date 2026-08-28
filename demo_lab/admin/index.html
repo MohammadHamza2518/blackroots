@@ -748,10 +748,13 @@
     // 5. Load Overview Dashboard
     async function loadDashboard() {
       let data = await apiFetch('get_dashboard');
-      let orders = [];
-      try {
-        orders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
-      } catch(e) {}
+      let ordRes = await apiFetch('get_orders');
+      let orders = (ordRes && ordRes.orders && ordRes.orders.length) ? ordRes.orders : [];
+      if (orders.length > 0) {
+        try { localStorage.setItem('br_local_orders', JSON.stringify(orders)); } catch(e) {}
+      } else {
+        try { orders = JSON.parse(localStorage.getItem('br_local_orders') || '[]'); } catch(e) {}
+      }
 
       let totalRev = orders.reduce((sum, o) => sum + (Number(o.price) || 0), 0);
       let todayStr = new Date().toISOString().slice(0, 10);
@@ -869,10 +872,13 @@
 
     // 7. Orders Tab
     async function loadOrders() {
-      let orders = [];
-      try {
-        orders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
-      } catch(e) {}
+      let res = await apiFetch('get_orders');
+      let orders = (res && res.orders && res.orders.length) ? res.orders : [];
+      if (orders.length > 0) {
+        try { localStorage.setItem('br_local_orders', JSON.stringify(orders)); } catch(e) {}
+      } else {
+        try { orders = JSON.parse(localStorage.getItem('br_local_orders') || '[]'); } catch(e) {}
+      }
 
       const search = (document.getElementById('order-search-input').value || '').toLowerCase();
       const statusFilter = document.getElementById('order-status-filter').value;
@@ -1006,8 +1012,12 @@
       } catch(e) {}
     }
 
-    function loadInfluencers() {
-      const db = getInfluencersAdminDb();
+    async function loadInfluencers() {
+      let res = await apiFetch('get_influencers');
+      let db = (res && res.influencers && res.influencers.length > 0) ? res.influencers : getInfluencersAdminDb();
+      if (res && res.influencers && res.influencers.length > 0) {
+        saveInfluencersAdminDb(db);
+      }
       let totalInfOrders = db.reduce((sum, u) => sum + (Number(u.total_orders) || 0), 0);
       let totalInfSales = db.reduce((sum, u) => sum + (Number(u.total_sales) || 0), 0);
       let totalPendingPayout = db.reduce((sum, u) => sum + (Number(u.unpaid_balance) || 0), 0);

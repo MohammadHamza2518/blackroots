@@ -2,12 +2,70 @@
 const fs = require('fs');
 const path = require('path');
 
+const defaultInfluencers = [
+  {
+    id: 'inf-103',
+    name: 'Mohd Faiz',
+    username: 'LEDUBHAIYA',
+    phone: '9580835179',
+    handle: 'faiz_cawnpore78',
+    code: 'LEDUBHAI',
+    password: 'ledubhaiya',
+    comm_rate: 10,
+    clicks: 14,
+    total_orders: 0,
+    total_sales: 0,
+    total_earned: 0,
+    unpaid_balance: 0,
+    upi_id: '',
+    status: 'Active',
+    created_at: '2026-08-28'
+  },
+  {
+    id: 'inf-101',
+    name: 'Priya Sharma',
+    username: 'PRIYA10',
+    phone: '9876543210',
+    handle: '@priya_haircare',
+    code: 'PRIYA10',
+    password: 'blackroots',
+    comm_rate: 10,
+    clicks: 342,
+    total_orders: 18,
+    total_sales: 14382,
+    total_earned: 1438,
+    unpaid_balance: 1438,
+    upi_id: 'priya@okaxis',
+    status: 'Active',
+    created_at: '2026-08-01'
+  },
+  {
+    id: 'inf-102',
+    name: 'Rohit Verma',
+    username: 'ROHIT15',
+    phone: '9811223344',
+    handle: '@rohit_grooming',
+    code: 'ROHIT15',
+    password: 'blackroots',
+    comm_rate: 15,
+    clicks: 189,
+    total_orders: 9,
+    total_sales: 7191,
+    total_earned: 1078,
+    unpaid_balance: 1078,
+    upi_id: 'rohit@paytm',
+    status: 'Active',
+    created_at: '2026-08-10'
+  }
+];
+
 const tmpFile = path.join('/tmp', 'blackroots_db.json');
 function getDb() {
-  let db = { orders: [], abandoned: [], settings: {} };
+  let db = { orders: [], abandoned: [], settings: {}, influencers: defaultInfluencers, visitors: [], unique_sessions: {} };
   try {
     if (fs.existsSync(tmpFile)) {
-      db = JSON.parse(fs.readFileSync(tmpFile, 'utf8'));
+      const parsed = JSON.parse(fs.readFileSync(tmpFile, 'utf8'));
+      db = Object.assign(db, parsed);
     }
   } catch (e) {}
   return db;
@@ -82,6 +140,21 @@ module.exports = async (req, res) => {
   };
 
   db.orders.push(newOrder);
+
+  // If coupon was used, attribute to creator on server
+  if (newOrder.coupon && db.influencers) {
+    const inf = db.influencers.find(u => u.code && u.code.toUpperCase() === newOrder.coupon.toUpperCase());
+    if (inf) {
+      inf.total_orders = (Number(inf.total_orders) || 0) + 1;
+      inf.total_sales = (Number(inf.total_sales) || 0) + price;
+      if (newOrder.status === 'Paid') {
+        const commAmt = Math.round(price * ((inf.comm_rate || 10) / 100));
+        inf.total_earned = (Number(inf.total_earned) || 0) + commAmt;
+        inf.unpaid_balance = (Number(inf.unpaid_balance) || 0) + commAmt;
+      }
+    }
+  }
+
   saveDb(db);
 
   return res.status(200).json({

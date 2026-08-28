@@ -597,42 +597,33 @@
 
     async function syncInfluencersFromServer() {
       try {
-        const res = await fetch('api/admin?action=get_influencers');
+        const [res, ordRes] = await Promise.all([
+          fetch('api/admin?action=get_influencers'),
+          fetch('api/admin?action=get_orders')
+        ]);
+        
         if (res.ok) {
           const data = await res.json();
           if (data && data.influencers && Array.isArray(data.influencers) && data.influencers.length > 0) {
-            let db = getInfluencersDb();
-            data.influencers.forEach(inf => {
-              const idx = db.findIndex(u => u.id === inf.id || u.code === inf.code);
-              if (idx !== -1) {
-                db[idx] = Object.assign(db[idx], inf);
-              } else {
-                db.push(inf);
-              }
-            });
-            localStorage.setItem('br_influencers_db', JSON.stringify(db));
-            
-            // If active user is logged in, refresh reference
+            localStorage.setItem('br_influencers_db', JSON.stringify(data.influencers));
             if (currentInfluencer) {
-              const refreshed = db.find(u => u.id === currentInfluencer.id || u.code === currentInfluencer.code);
+              const refreshed = data.influencers.find(u => u.id === currentInfluencer.id || u.code === currentInfluencer.code || (u.username && u.username.toUpperCase() === currentInfluencer.username.toUpperCase()));
               if (refreshed) {
                 currentInfluencer = refreshed;
-                renderDashboard();
               }
             }
           }
         }
-      } catch(e) {}
 
-      // Also sync orders
-      try {
-        const ordRes = await fetch('api/admin?action=get_orders');
         if (ordRes.ok) {
           const ordData = await ordRes.json();
           if (ordData && ordData.orders && Array.isArray(ordData.orders)) {
             localStorage.setItem('br_local_orders', JSON.stringify(ordData.orders));
-            if (currentInfluencer) renderDashboard();
           }
+        }
+
+        if (currentInfluencer) {
+          renderDashboard();
         }
       } catch(e) {}
     }
