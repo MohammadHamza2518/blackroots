@@ -32,10 +32,53 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="./assets/theme.css?v=1787832399">
-  <script src="./assets/theme.js?v=1787832399" defer></script>
+  <link rel="stylesheet" href="./assets/theme.css?v=20260828174000">
+  <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
+  <script src="./assets/theme.js?v=20260828174000" defer></script>
   <script src="./assets/analytics.js" defer></script>
   <script src="./assets/instant-butter.js" defer></script>
+
+  <script>
+    // Self-contained instant modal opener
+    window.openQuickOrderModal = function(customPrice, customTitle) {
+      var modal = document.getElementById('QuickOrderModal');
+      if (modal) {
+        var price = customPrice || (window.selectedPack ? window.selectedPack.price : 499);
+        var priceDisplay = document.getElementById('OrderModalPriceDisplay');
+        if (priceDisplay) priceDisplay.textContent = '₹' + price;
+        
+        var form = document.getElementById('QuickOrderForm');
+        var success = document.getElementById('QuickOrderSuccess');
+        if (form) {
+          form.classList.remove('hidden');
+          form.style.setProperty('display', 'block', 'important');
+        }
+        if (success) {
+          success.classList.add('hidden');
+          success.style.setProperty('display', 'none', 'important');
+        }
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        modal.style.setProperty('display', 'flex', 'important');
+        modal.style.setProperty('visibility', 'visible', 'important');
+        modal.style.setProperty('opacity', '1', 'important');
+        document.body.style.overflow = 'hidden';
+      } else {
+        window.location.href = 'product.html';
+      }
+    };
+
+    window.closeQuickOrderModal = function() {
+      var modal = document.getElementById('QuickOrderModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        modal.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+      }
+    };
+  </script>
   
   
 
@@ -1221,6 +1264,14 @@
       } else {
         ensureVideosPlay();
       }
+
+      // Resume videos when tab becomes visible or on mobile touch
+      document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) ensureVideosPlay();
+      });
+      window.addEventListener('pageshow', ensureVideosPlay);
+    })();
+  </script>
 
   <!-- 📦 Direct 1-Click Quick Order Form Modal Popup (Direct Child of Body) -->
   <div id="QuickOrderModal" class="hidden fixed inset-0 z-[999999] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto" style="position:fixed;top:0;left:0;right:0;bottom:0;width:100vw;height:100vh;z-index:999999;background-color:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:none;" onclick="if(event.target===this)closeQuickOrderModal();">
