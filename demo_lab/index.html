@@ -214,14 +214,14 @@
       <!-- Right Header Actions (Desktop CTA + Mobile Pill & Hamburger) -->
       <div class="flex items-center gap-2">
         <!-- Desktop Buy Button -->
-        <a onclick="window.location.href='product.html';" href="product.html" class="hidden lg:inline-flex js-trigger-order btn-gold-luxury py-2.5 px-5 text-xs font-bold shadow-xl shrink-0 whitespace-nowrap">
+        <button type="button" onclick="openQuickOrderModal();" class="hidden lg:inline-flex js-trigger-order btn-gold-luxury py-2.5 px-5 text-xs font-bold shadow-xl shrink-0 whitespace-nowrap cursor-pointer">
           <span>Buy Now &mdash; &#8377; 499</span>
-        </a>
+        </button>
 
         <!-- Mobile Quick Buy Pill -->
-        <a href="product.html" class="inline-flex lg:hidden bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black font-extrabold text-[10px] px-3 py-1.5 rounded-full shadow-md items-center gap-1 shrink-0 uppercase tracking-tight">
+        <button type="button" onclick="openQuickOrderModal();" class="inline-flex lg:hidden bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black font-extrabold text-[10px] px-3 py-1.5 rounded-full shadow-md items-center gap-1 shrink-0 uppercase tracking-tight cursor-pointer">
           <span>Buy &#8377;499</span>
-        </a>
+        </button>
 
         <!-- Mobile Drawer Hamburger Toggle Button -->
         <button id="HamburgerMenuBtn" type="button" onclick="openMobileNavDrawer(); return false;" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" class="lg:hidden p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-[#1b1e27] to-[#0c0e14] border border-[#d4af37]/60 text-amber-300 hover:border-[#d4af37] hover:text-white focus:outline-none flex items-center justify-center shadow-[0_5px_15px_rgba(0,0,0,0.6)] active:scale-90 transition-all cursor-pointer cursor-pointer" aria-label="Open Navigation Menu">
@@ -1159,12 +1159,12 @@
 
     <!-- Drawer Footer CTA -->
     <div class="p-5 border-t border-white/10 space-y-3 bg-black/60">
-      <a href="product.html" class="group relative w-full inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-xs px-5 py-3.5 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.3)] hover:scale-105 transition-all uppercase tracking-wider text-center">
+      <button type="button" onclick="closeMobileNavDrawer(); openQuickOrderModal();" class="group relative w-full inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-xs px-5 py-3.5 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.3)] hover:scale-105 transition-all uppercase tracking-wider text-center cursor-pointer">
         <span>ORDER NOW &bull; &#8377;499</span>
         <span class="w-5 h-5 rounded-md bg-black text-[#d4af37] flex items-center justify-center font-black text-xs">
           🛍️
         </span>
-      </a>
+      </button>
       <p class="text-[10px] text-gray-400 text-center font-medium">
         ⚡ Free Express COD Delivery Across India
       </p>

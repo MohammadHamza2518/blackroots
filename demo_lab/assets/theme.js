@@ -576,11 +576,21 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /* 📦 Quick Order Modal Global Controls */
-function openQuickOrderModal() {
+function openQuickOrderModal(customPrice, customTitle) {
   const modal = document.getElementById('QuickOrderModal');
   if (modal) {
+    let price = customPrice || (window.selectedPack ? window.selectedPack.price : 499);
+    const priceDisplay = document.getElementById('OrderModalPriceDisplay');
+    if (priceDisplay) priceDisplay.textContent = '₹' + price;
+    
+    const form = document.getElementById('QuickOrderForm');
+    const success = document.getElementById('QuickOrderSuccess');
+    if (form) form.classList.remove('hidden');
+    if (success) success.classList.add('hidden');
+
     modal.classList.remove('hidden');
     modal.classList.add('flex');
+    modal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   } else {
     window.location.href = 'product.html';
@@ -592,6 +602,7 @@ function closeQuickOrderModal() {
   if (modal) {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
+    modal.style.display = 'none';
     document.body.style.overflow = '';
   }
 }
@@ -949,22 +960,19 @@ window.switchToSimPage = switchToSimPage;
 
   // Global Click Delegator for any Order / Buy Now Button across all pages
   document.addEventListener('click', function(e) {
-    const target = e.target.closest('.js-trigger-order, button:not([onclick]):not([type="submit"]), a[href="product.html"]');
+    const target = e.target.closest('.js-trigger-order, a[href="product.html"], a[href="#order"]');
     if (target) {
-      const text = target.textContent.toLowerCase();
+      const text = (target.textContent || '').toLowerCase();
       if (text.includes('buy') || text.includes('order') || text.includes('claim') || target.classList.contains('js-trigger-order')) {
-        // If modal exists on this page, open it directly!
         const modal = document.getElementById('QuickOrderModal');
-        if (modal && !window.location.pathname.endsWith('product.html')) {
+        if (modal) {
           e.preventDefault();
-          window.openQuickOrderModal();
-        } else if (modal && window.location.pathname.endsWith('product.html')) {
-          e.preventDefault();
+          e.stopPropagation();
           window.openQuickOrderModal();
         }
       }
     }
-  });
+  }, true);
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initOrderForm);
