@@ -665,18 +665,9 @@ window.switchToSimPage = switchToSimPage;
 
   // Open Quick Order Modal
   window.openQuickOrderModal = function(customPrice, customTitle) {
-    const isProductPage = window.location.pathname.endsWith('product.html') || window.location.pathname.endsWith('product');
-    
-    // If not on product.html, direct straight to product page!
-    if (!isProductPage) {
-      window.location.href = 'product.html';
-      return;
-    }
-
-    // If on product page, open 1-Click Instant Checkout Modal
-    let price = customPrice || (window.selectedPack ? window.selectedPack.price : 499);
     const modal = document.getElementById('QuickOrderModal');
     if (modal) {
+      let price = customPrice || (window.selectedPack ? window.selectedPack.price : 499);
       const priceDisplay = document.getElementById('OrderModalPriceDisplay');
       if (priceDisplay) priceDisplay.textContent = '₹' + price;
       
@@ -688,6 +679,8 @@ window.switchToSimPage = switchToSimPage;
       modal.classList.remove('hidden');
       modal.classList.add('flex');
       document.body.style.overflow = 'hidden';
+    } else {
+      window.location.href = 'product.html';
     }
   };
 
