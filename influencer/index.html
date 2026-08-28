@@ -576,26 +576,45 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
         upi_id: 'rohit@paytm',
         status: 'Active',
         created_at: '2026-08-10'
+      },
+      {
+        id: 'inf-103',
+        name: 'Mohd Faiz',
+        username: 'LEDUBHAIYA',
+        phone: '9580835179',
+        handle: 'faiz_cawnpore78',
+        code: 'LEDUBHAI',
+        password: 'ledubhaiya',
+        comm_rate: 10,
+        clicks: 0,
+        total_orders: 0,
+        total_sales: 0,
+        total_earned: 0,
+        unpaid_balance: 0,
+        upi_id: '',
+        status: 'Active',
+        created_at: '2026-08-28'
       }
     ];
 
     function getInfluencersDb() {
       try {
         let stored = localStorage.getItem('br_influencers_db');
-        if (!stored) {
-          localStorage.setItem('br_influencers_db', JSON.stringify(DEFAULT_INFLUENCERS));
-          return DEFAULT_INFLUENCERS;
-        }
-        return JSON.parse(stored);
+        let db = stored ? JSON.parse(stored) : [];
+        if (!Array.isArray(db)) db = [];
+        
+        // Merge missing default influencers
+        DEFAULT_INFLUENCERS.forEach(def => {
+          if (!db.some(u => u.code === def.code || u.username === def.username || (u.id && u.id === def.id))) {
+            db.push(def);
+          }
+        });
+
+        localStorage.setItem('br_influencers_db', JSON.stringify(db));
+        return db;
       } catch (e) {
         return DEFAULT_INFLUENCERS;
       }
-    }
-
-    function saveInfluencersDb(db) {
-      try {
-        localStorage.setItem('br_influencers_db', JSON.stringify(db));
-      } catch (e) {}
     }
 
     let currentInfluencer = null;
@@ -608,36 +627,48 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
       const regForm = document.getElementById('InfluencerRegisterForm');
 
       if (tab === 'login') {
-        loginTab.className = 'flex-1 py-2.5 rounded-xl transition-all bg-[#d4af37] text-black';
-        regTab.className = 'flex-1 py-2.5 rounded-xl transition-all text-gray-400 hover:text-white';
+        loginTab.className = 'flex-1 py-3 text-xs font-bold uppercase tracking-wider text-amber-300 border-b-2 border-[#d4af37] bg-[#d4af37]/10 transition-all';
+        regTab.className = 'flex-1 py-3 text-xs font-bold uppercase tracking-wider text-gray-400 border-b-2 border-transparent hover:text-white transition-all';
         loginForm.classList.remove('hidden');
         regForm.classList.add('hidden');
       } else {
-        regTab.className = 'flex-1 py-2.5 rounded-xl transition-all bg-[#d4af37] text-black';
-        loginTab.className = 'flex-1 py-2.5 rounded-xl transition-all text-gray-400 hover:text-white';
+        regTab.className = 'flex-1 py-3 text-xs font-bold uppercase tracking-wider text-amber-300 border-b-2 border-[#d4af37] bg-[#d4af37]/10 transition-all';
+        loginTab.className = 'flex-1 py-3 text-xs font-bold uppercase tracking-wider text-gray-400 border-b-2 border-transparent hover:text-white transition-all';
         regForm.classList.remove('hidden');
         loginForm.classList.add('hidden');
       }
     }
 
     function quickFillDemo() {
-      document.getElementById('inf-login-id').value = 'PRIYA10';
-      document.getElementById('inf-login-pass').value = 'blackroots';
+      document.getElementById('inf-login-id').value = 'LEDUBHAIYA';
+      document.getElementById('inf-login-pass').value = 'ledubhaiya';
     }
 
     function handleInfluencerLogin(e) {
       e.preventDefault();
-      const loginId = document.getElementById('inf-login-id').value.trim().toUpperCase();
+      const rawInput = document.getElementById('inf-login-id').value.trim();
+      const loginId = rawInput.toUpperCase();
       const pass = document.getElementById('inf-login-pass').value.trim();
       const errorMsg = document.getElementById('login-error-msg');
 
       const db = getInfluencersDb();
-      const user = db.find(u => 
-        (u.username && u.username.toUpperCase() === loginId) || 
-        (u.code && u.code.toUpperCase() === loginId)
-      );
+      const user = db.find(u => {
+        const uName = (u.username || '').toUpperCase();
+        const uCode = (u.code || '').toUpperCase();
+        const uPhone = (u.phone || '').replace(/[^0-9]/g, '');
+        const uHandle = (u.handle || '').toUpperCase().replace('@', '');
+        const cleanLogin = loginId.replace('@', '');
+        const cleanPhone = rawInput.replace(/[^0-9]/g, '');
 
-      if (user && user.password === pass) {
+        return (
+          uName === loginId ||
+          uCode === loginId ||
+          (cleanPhone.length >= 10 && uPhone.includes(cleanPhone)) ||
+          (cleanLogin.length > 2 && uHandle === cleanLogin)
+        );
+      });
+
+      if (user && user.password && user.password.trim() === pass) {
         currentInfluencer = user;
         sessionStorage.setItem('br_active_inf_id', user.id);
         errorMsg.classList.add('hidden');

@@ -870,17 +870,41 @@
         unpaid_balance: 1078,
         upi_id: 'rohit@paytm',
         status: 'Active'
+      },
+      {
+        id: 'inf-103',
+        name: 'Mohd Faiz',
+        username: 'LEDUBHAIYA',
+        phone: '9580835179',
+        handle: 'faiz_cawnpore78',
+        code: 'LEDUBHAI',
+        password: 'ledubhaiya',
+        comm_rate: 10,
+        clicks: 0,
+        total_orders: 0,
+        total_sales: 0,
+        total_earned: 0,
+        unpaid_balance: 0,
+        upi_id: '',
+        status: 'Active'
       }
     ];
 
     function getInfluencersAdminDb() {
       try {
         let stored = localStorage.getItem('br_influencers_db');
-        if (!stored) {
-          localStorage.setItem('br_influencers_db', JSON.stringify(DEFAULT_INFLUENCERS_ADMIN));
-          return DEFAULT_INFLUENCERS_ADMIN;
-        }
-        return JSON.parse(stored);
+        let db = stored ? JSON.parse(stored) : [];
+        if (!Array.isArray(db)) db = [];
+
+        // Merge missing default influencers
+        DEFAULT_INFLUENCERS_ADMIN.forEach(def => {
+          if (!db.some(u => u.code === def.code || u.username === def.username || (u.id && u.id === def.id))) {
+            db.push(def);
+          }
+        });
+
+        localStorage.setItem('br_influencers_db', JSON.stringify(db));
+        return db;
       } catch(e) {
         return DEFAULT_INFLUENCERS_ADMIN;
       }
