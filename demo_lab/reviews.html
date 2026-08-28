@@ -117,19 +117,50 @@
   </style>
   <!-- Instant Inline Mobile Nav Drawer Engine (Zero-Lag Touch Ready) -->
   <script>
-    function openMobileNavDrawer() {
+    function openMobileNavDrawer(e) {
+      if (e && e.preventDefault) e.preventDefault();
       var d = document.getElementById('MobileNavDrawer');
       var b = document.getElementById('MobileNavBackdrop');
-      if (d) { d.style.transform = 'translateX(0%)'; d.classList.remove('translate-x-full'); d.classList.add('translate-x-0'); }
-      if (b) { b.style.opacity = '1'; b.style.pointerEvents = 'auto'; b.classList.remove('opacity-0', 'pointer-events-none'); b.classList.add('opacity-100', 'pointer-events-auto'); }
+      if (d) {
+        d.style.setProperty('transform', 'translateX(0%)', 'important');
+        d.style.setProperty('-webkit-transform', 'translateX(0%)', 'important');
+        d.style.setProperty('display', 'flex', 'important');
+        d.style.setProperty('visibility', 'visible', 'important');
+        d.style.setProperty('pointer-events', 'auto', 'important');
+        d.style.setProperty('z-index', '999999', 'important');
+        d.classList.remove('translate-x-full');
+        d.classList.add('translate-x-0');
+      }
+      if (b) {
+        b.style.setProperty('opacity', '1', 'important');
+        b.style.setProperty('pointer-events', 'auto', 'important');
+        b.style.setProperty('display', 'block', 'important');
+        b.style.setProperty('visibility', 'visible', 'important');
+        b.style.setProperty('z-index', '999998', 'important');
+        b.classList.remove('opacity-0', 'pointer-events-none');
+        b.classList.add('opacity-100', 'pointer-events-auto');
+      }
       document.body.style.overflow = 'hidden';
+      return false;
     }
-    function closeMobileNavDrawer() {
+    function closeMobileNavDrawer(e) {
+      if (e && e.preventDefault) e.preventDefault();
       var d = document.getElementById('MobileNavDrawer');
       var b = document.getElementById('MobileNavBackdrop');
-      if (d) { d.style.transform = 'translateX(100%)'; d.classList.remove('translate-x-0'); d.classList.add('translate-x-full'); }
-      if (b) { b.style.opacity = '0'; b.style.pointerEvents = 'none'; b.classList.remove('opacity-100', 'pointer-events-auto'); b.classList.add('opacity-0', 'pointer-events-none'); }
+      if (d) {
+        d.style.setProperty('transform', 'translateX(100%)', 'important');
+        d.style.setProperty('-webkit-transform', 'translateX(100%)', 'important');
+        d.classList.remove('translate-x-0');
+        d.classList.add('translate-x-full');
+      }
+      if (b) {
+        b.style.setProperty('opacity', '0', 'important');
+        b.style.setProperty('pointer-events', 'none', 'important');
+        b.classList.remove('opacity-100', 'pointer-events-auto');
+        b.classList.add('opacity-0', 'pointer-events-none');
+      }
       document.body.style.overflow = '';
+      return false;
     }
     window.openMobileNavDrawer = openMobileNavDrawer;
     window.closeMobileNavDrawer = closeMobileNavDrawer;
@@ -185,7 +216,7 @@
         </a>
 
         <!-- Mobile Drawer Hamburger Toggle Button -->
-        <button id="HamburgerMenuBtn" type="button" onclick="openMobileNavDrawer(); return false;" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" class="lg:hidden p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-[#1b1e27] to-[#0c0e14] border border-[#d4af37]/60 text-amber-300 hover:border-[#d4af37] hover:text-white focus:outline-none flex items-center justify-center shadow-[0_5px_15px_rgba(0,0,0,0.6)] active:scale-90 transition-all cursor-pointer cursor-pointer" aria-label="Open Navigation Menu">
+        <button id="HamburgerMenuBtn" type="button" onclick="openMobileNavDrawer(event); return false;" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" class="lg:hidden p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-[#1b1e27] to-[#0c0e14] border border-[#d4af37]/60 text-amber-300 hover:border-[#d4af37] hover:text-white focus:outline-none flex items-center justify-center shadow-[0_5px_15px_rgba(0,0,0,0.6)] active:scale-90 transition-all cursor-pointer cursor-pointer" aria-label="Open Navigation Menu">
           <svg class="w-5 h-5 text-amber-300 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
             <line x1="4" y1="6" x2="20" y2="6"></line>
             <line x1="4" y1="12" x2="20" y2="12"></line>

@@ -254,6 +254,56 @@
     }
   </style>
   <script src="./assets/instant-butter.js" defer></script>
+  <!-- Instant Inline Mobile Nav Drawer Engine (Zero-Lag Touch Ready) -->
+  <script>
+    function openMobileNavDrawer(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      var d = document.getElementById('MobileNavDrawer');
+      var b = document.getElementById('MobileNavBackdrop');
+      if (d) {
+        d.style.setProperty('transform', 'translateX(0%)', 'important');
+        d.style.setProperty('-webkit-transform', 'translateX(0%)', 'important');
+        d.style.setProperty('display', 'flex', 'important');
+        d.style.setProperty('visibility', 'visible', 'important');
+        d.style.setProperty('pointer-events', 'auto', 'important');
+        d.style.setProperty('z-index', '999999', 'important');
+        d.classList.remove('translate-x-full');
+        d.classList.add('translate-x-0');
+      }
+      if (b) {
+        b.style.setProperty('opacity', '1', 'important');
+        b.style.setProperty('pointer-events', 'auto', 'important');
+        b.style.setProperty('display', 'block', 'important');
+        b.style.setProperty('visibility', 'visible', 'important');
+        b.style.setProperty('z-index', '999998', 'important');
+        b.classList.remove('opacity-0', 'pointer-events-none');
+        b.classList.add('opacity-100', 'pointer-events-auto');
+      }
+      document.body.style.overflow = 'hidden';
+      return false;
+    }
+    function closeMobileNavDrawer(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      var d = document.getElementById('MobileNavDrawer');
+      var b = document.getElementById('MobileNavBackdrop');
+      if (d) {
+        d.style.setProperty('transform', 'translateX(100%)', 'important');
+        d.style.setProperty('-webkit-transform', 'translateX(100%)', 'important');
+        d.classList.remove('translate-x-0');
+        d.classList.add('translate-x-full');
+      }
+      if (b) {
+        b.style.setProperty('opacity', '0', 'important');
+        b.style.setProperty('pointer-events', 'none', 'important');
+        b.classList.remove('opacity-100', 'pointer-events-auto');
+        b.classList.add('opacity-0', 'pointer-events-none');
+      }
+      document.body.style.overflow = '';
+      return false;
+    }
+    window.openMobileNavDrawer = openMobileNavDrawer;
+    window.closeMobileNavDrawer = closeMobileNavDrawer;
+  </script>
 </head>
 <body class="flex flex-col items-center justify-between p-3 sm:p-6">
 

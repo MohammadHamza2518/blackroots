@@ -11,59 +11,64 @@ if (!window.Razorpay && !document.getElementById('razorpay-checkout-sdk')) {
   document.head.appendChild(rzpScript);
 }
 
-/* 📱 Mobile Navigation Drawer Controls (Bulletproof Direct Touch Engine) */
-function openMobileNavDrawer() {
+/* 📱 Mobile Navigation Drawer Controls (Fail-Proof Zero-Lag Touch Engine) */
+function openMobileNavDrawer(e) {
+  if (e && e.preventDefault) e.preventDefault();
   const drawer = document.getElementById('MobileNavDrawer');
   const backdrop = document.getElementById('MobileNavBackdrop');
   if (drawer) {
-    if (drawer.style) drawer.style.transform = 'translateX(0%)';
+    drawer.style.setProperty('transform', 'translateX(0%)', 'important');
+    drawer.style.setProperty('-webkit-transform', 'translateX(0%)', 'important');
+    drawer.style.setProperty('display', 'flex', 'important');
+    drawer.style.setProperty('visibility', 'visible', 'important');
+    drawer.style.setProperty('pointer-events', 'auto', 'important');
+    drawer.style.setProperty('z-index', '999999', 'important');
     drawer.classList.remove('translate-x-full');
     drawer.classList.add('translate-x-0');
   }
   if (backdrop) {
-    if (backdrop.style) {
-      backdrop.style.opacity = '1';
-      backdrop.style.pointerEvents = 'auto';
-    }
+    backdrop.style.setProperty('opacity', '1', 'important');
+    backdrop.style.setProperty('pointer-events', 'auto', 'important');
+    backdrop.style.setProperty('display', 'block', 'important');
+    backdrop.style.setProperty('visibility', 'visible', 'important');
+    backdrop.style.setProperty('z-index', '999998', 'important');
     backdrop.classList.remove('opacity-0', 'pointer-events-none');
     backdrop.classList.add('opacity-100', 'pointer-events-auto');
   }
   document.body.style.overflow = 'hidden';
+  return false;
 }
 
-function closeMobileNavDrawer() {
+function closeMobileNavDrawer(e) {
+  if (e && e.preventDefault) e.preventDefault();
   const drawer = document.getElementById('MobileNavDrawer');
   const backdrop = document.getElementById('MobileNavBackdrop');
   if (drawer) {
-    if (drawer.style) drawer.style.transform = 'translateX(100%)';
+    drawer.style.setProperty('transform', 'translateX(100%)', 'important');
+    drawer.style.setProperty('-webkit-transform', 'translateX(100%)', 'important');
     drawer.classList.remove('translate-x-0');
     drawer.classList.add('translate-x-full');
   }
   if (backdrop) {
-    if (backdrop.style) {
-      backdrop.style.opacity = '0';
-      backdrop.style.pointerEvents = 'none';
-    }
+    backdrop.style.setProperty('opacity', '0', 'important');
+    backdrop.style.setProperty('pointer-events', 'none', 'important');
     backdrop.classList.remove('opacity-100', 'pointer-events-auto');
     backdrop.classList.add('opacity-0', 'pointer-events-none');
   }
   document.body.style.overflow = '';
+  return false;
 }
 
 window.openMobileNavDrawer = openMobileNavDrawer;
 window.closeMobileNavDrawer = closeMobileNavDrawer;
 
-// Auto-bind click & touchstart handlers
+// Bind single unified click/tap handler without duplicate event conflicts
 document.addEventListener('DOMContentLoaded', function() {
-  const btns = document.querySelectorAll('[onclick*="openMobileNavDrawer"], #HamburgerMenuBtn, .js-hamburger-trigger');
+  const btns = document.querySelectorAll('#HamburgerMenuBtn, .js-hamburger-trigger');
   btns.forEach(function(btn) {
     btn.addEventListener('click', function(e) {
       e.preventDefault();
-      openMobileNavDrawer();
-    });
-    btn.addEventListener('touchend', function(e) {
-      e.preventDefault();
-      openMobileNavDrawer();
+      openMobileNavDrawer(e);
     });
   });
 });
