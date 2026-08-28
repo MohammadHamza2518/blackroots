@@ -27,9 +27,12 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+  <link rel="dns-prefetch" href="https://checkout.razorpay.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/theme.css?v=1786809224">
-  <script src="./assets/theme.js?v=1786809224" defer></script>
+  <link rel="stylesheet" href="./assets/theme.css?v=1787832399">
+  <script src="./assets/theme.js?v=1787832399" defer></script>
+  <script src="./assets/analytics.js" defer></script>
   <script src="./assets/instant-butter.js" defer></script>
 
   <style>
@@ -54,6 +57,26 @@
       height: 0px !important;
     }
   </style>
+  <!-- Instant Inline Mobile Nav Drawer Engine (Zero-Lag Touch Ready) -->
+  <script>
+    function openMobileNavDrawer() {
+      var d = document.getElementById('MobileNavDrawer');
+      var b = document.getElementById('MobileNavBackdrop');
+      if (d) { d.style.transform = 'translateX(0%)'; d.classList.remove('translate-x-full'); d.classList.add('translate-x-0'); }
+      if (b) { b.style.opacity = '1'; b.style.pointerEvents = 'auto'; b.classList.remove('opacity-0', 'pointer-events-none'); b.classList.add('opacity-100', 'pointer-events-auto'); }
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMobileNavDrawer() {
+      var d = document.getElementById('MobileNavDrawer');
+      var b = document.getElementById('MobileNavBackdrop');
+      if (d) { d.style.transform = 'translateX(100%)'; d.classList.remove('translate-x-0'); d.classList.add('translate-x-full'); }
+      if (b) { b.style.opacity = '0'; b.style.pointerEvents = 'none'; b.classList.remove('opacity-100', 'pointer-events-auto'); b.classList.add('opacity-0', 'pointer-events-none'); }
+      document.body.style.overflow = '';
+    }
+    window.openMobileNavDrawer = openMobileNavDrawer;
+    window.closeMobileNavDrawer = closeMobileNavDrawer;
+  </script>
+
 </head>
 <body class="bg-[#0a0b0e] text-white font-sans antialiased selection:bg-[#d4af37] selection:text-black min-h-screen flex flex-col justify-between">
 
@@ -102,8 +125,8 @@
           <span>Buy ₹499</span>
         </a>
 
-        <button type="button" onclick="openMobileNavDrawer()" class="lg:hidden p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-[#1b1e27] to-[#0c0e14] border border-[#d4af37]/60 text-amber-300 hover:border-[#d4af37] hover:text-white focus:outline-none flex items-center justify-center shadow-[0_5px_15px_rgba(0,0,0,0.6)] active:scale-90 transition-all cursor-pointer" aria-label="Open Navigation Menu">
-          <svg class="w-5 h-5 text-amber-300" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+        <button id="HamburgerMenuBtn" type="button" onclick="openMobileNavDrawer(); return false;" style="touch-action: manipulation; -webkit-tap-highlight-color: transparent;" class="lg:hidden p-2 sm:p-2.5 rounded-xl bg-gradient-to-br from-[#1b1e27] to-[#0c0e14] border border-[#d4af37]/60 text-amber-300 hover:border-[#d4af37] hover:text-white focus:outline-none flex items-center justify-center shadow-[0_5px_15px_rgba(0,0,0,0.6)] active:scale-90 transition-all cursor-pointer cursor-pointer" aria-label="Open Navigation Menu">
+          <svg class="w-5 h-5 text-amber-300 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
             <line x1="4" y1="6" x2="20" y2="6"></line>
             <line x1="4" y1="12" x2="20" y2="12"></line>
             <line x1="4" y1="18" x2="20" y2="18"></line>
@@ -283,8 +306,8 @@
   </footer>
 
   <!-- Mobile Drawer -->
-  <div id="MobileNavBackdrop" onclick="closeMobileNavDrawer()" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 opacity-0 pointer-events-none transition-opacity duration-300 ease-out"></div>
-  <div id="MobileNavDrawer" class="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-gradient-to-b from-[#0e1017] via-[#090a0e] to-black border-l border-[#d4af37]/30 z-50 shadow-[-15px_0_40px_rgba(0,0,0,0.9)] transform translate-x-full transition-transform duration-300 ease-out flex flex-col justify-between overflow-y-auto">
+  <div id="MobileNavBackdrop" onclick="closeMobileNavDrawer()" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[99998] opacity-0 pointer-events-none transition-opacity duration-300 ease-out"></div>
+  <div id="MobileNavDrawer" class="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-gradient-to-b from-[#0e1017] via-[#090a0e] to-black border-l border-[#d4af37]/30 z-[99999] shadow-[-15px_0_40px_rgba(0,0,0,0.9)] transform translate-x-full transition-transform duration-300 ease-out flex flex-col justify-between overflow-y-auto">
     <div class="p-5 border-b border-white/10 flex items-center justify-between">
       <div class="flex items-center gap-2.5">
         <img src="./assets/blackroots-logo-circle-black.jpg" alt="BlackRoots Logo" class="w-8 h-8 rounded-full border border-[#d4af37] object-cover">
@@ -337,33 +360,41 @@
       const resultBox = document.getElementById('OrderTrackerResult');
       const displayId = document.getElementById('tracker-display-id');
       const displayAwb = document.getElementById('tracker-display-awb');
+      const estDelivery = document.getElementById('tracker-est-delivery');
 
       if (!oInp || !resultBox) return;
 
       const rawValue = oInp.value.trim();
       if (!rawValue) return;
 
-      // Loading state
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span>⏳ Fetching Live Logistics Status...</span>';
 
-      setTimeout(() => {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span>🔥 Track Order Live Status</span> <span>&rarr;</span>';
+      fetch('api/track.php?q=' + encodeURIComponent(rawValue))
+        .then(res => res.json())
+        .then(data => {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>🔥 Track Order Live Status</span> <span>&rarr;</span>';
 
-        let formattedId = rawValue.toUpperCase();
-        if (!formattedId.startsWith('#') && !formattedId.startsWith('BR') && isNaN(rawValue)) {
-          formattedId = '#' + formattedId;
-        } else if (!isNaN(rawValue) && rawValue.length === 10) {
-          // If 10-digit mobile, generate matching order ID
-          formattedId = '#BR-9' + rawValue.slice(-3);
-          if (displayAwb) displayAwb.textContent = '8839' + rawValue.slice(-6);
-        }
-
-        if (displayId) displayId.textContent = formattedId;
-        resultBox.classList.remove('hidden');
-        resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }, 400);
+          if (data.success) {
+            if (displayId) displayId.textContent = data.order_id;
+            if (displayAwb) displayAwb.textContent = data.awb;
+            if (estDelivery) estDelivery.textContent = data.estimated_delivery || 'Within 48 Hours';
+            resultBox.classList.remove('hidden');
+            resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        })
+        .catch(() => {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>🔥 Track Order Live Status</span> <span>&rarr;</span>';
+          let formattedId = rawValue.toUpperCase();
+          if (!formattedId.startsWith('#') && !formattedId.startsWith('BR') && isNaN(rawValue)) {
+            formattedId = '#' + formattedId;
+          }
+          if (displayId) displayId.textContent = formattedId;
+          resultBox.classList.remove('hidden');
+          resultBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
     }
 
     document.addEventListener('DOMContentLoaded', function() {

@@ -31,20 +31,16 @@
     }
   }
 
-  // 2. Pre-warm key core pages when idle
+  // 2. Lightweight high-intent idle warmup (only prewarms product after user idle)
   function prewarmCorePages() {
-    const corePages = ['product.html', 'reviews.html', 'ingredients.html', 'how-to-use.html', 'ai-consultant.html', 'track-order.html', 'contact.html', 'index.html'];
     const current = window.location.pathname.split('/').pop() || 'index.html';
-    
-    corePages.forEach(function(page) {
-      if (page !== current) {
-        if ('requestIdleCallback' in window) {
-          requestIdleCallback(function() { prefetchUrl(page); }, { timeout: 2000 });
-        } else {
-          setTimeout(function() { prefetchUrl(page); }, 800);
-        }
+    if (current !== 'product.html' && current !== 'product') {
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(function() { prefetchUrl('product.html'); }, { timeout: 3000 });
+      } else {
+        setTimeout(function() { prefetchUrl('product.html'); }, 2000);
       }
-    });
+    }
   }
 
   // 3. Instant Touch & Hover Listeners

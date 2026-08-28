@@ -564,9 +564,56 @@ function initLiveShopperCounter() {
   setTimeout(tick, 3000);
 }
 
+
+/* 🎬 Smart Mobile Video Lazy-Loader & Auto-Play Observer (Zero-Lag Mobile Speed) */
+function initSmartVideoLazyLoader() {
+  const videos = document.querySelectorAll('video[data-lazy-video]');
+  if (!videos.length) return;
+
+  if (!('IntersectionObserver' in window)) {
+    videos.forEach(function(v) {
+      v.querySelectorAll('source[data-src]').forEach(function(s) {
+        s.src = s.getAttribute('data-src');
+        s.removeAttribute('data-src');
+      });
+      v.load();
+    });
+    return;
+  }
+
+  const videoObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      const video = entry.target;
+      if (entry.isIntersecting) {
+        const sources = video.querySelectorAll('source[data-src]');
+        if (sources.length > 0) {
+          sources.forEach(function(s) {
+            s.src = s.getAttribute('data-src');
+            s.removeAttribute('data-src');
+          });
+          video.load();
+        }
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(function() {});
+        }
+      } else {
+        if (!video.paused) {
+          video.pause();
+        }
+      }
+    });
+  }, { rootMargin: '250px 0px 250px 0px', threshold: 0.05 });
+
+  videos.forEach(function(v) {
+    videoObserver.observe(v);
+  });
+}
+
 // Master DOM Ready Initializer
 document.addEventListener('DOMContentLoaded', function() {
   try { initLiveShopperCounter(); } catch(e) {}
+  try { initSmartVideoLazyLoader(); } catch(e) {}
   try { initShowerTimer(); } catch(e) {}
   try { initStickyHeader(); } catch(e) {}
   try { initCartDrawer(); } catch(e) {}

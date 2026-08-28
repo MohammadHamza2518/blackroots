@@ -29,6 +29,8 @@
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+  <link rel="dns-prefetch" href="https://checkout.razorpay.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="./assets/theme.css?v=20260828174000">
@@ -284,7 +286,7 @@
 
               <!-- Slide 6: Luxury Video Reel Player (Full Uncropped HD Playback) -->
               <div class="w-full h-full shrink-0 snap-center relative flex items-center justify-center bg-black">
-                <video id="ProductSlideVideo" src="./assets/reel-6.mp4" controls loop playsinline webkit-playsinline class="w-full h-full object-contain rounded-2xl block bg-black" poster="./assets/reel-thumb-6.jpg"></video>
+                <video id="ProductSlideVideo" data-lazy-video controls loop playsinline webkit-playsinline preload="none" class="w-full h-full object-contain rounded-2xl block bg-black" poster="./assets/reel-thumb-6.jpg"><source data-src="./assets/reel-6.mp4" type="video/mp4"></video>
               </div>
 
             </div>
@@ -548,11 +550,11 @@
           
           <div class="grid grid-cols-2 gap-2 rounded-2xl overflow-hidden relative">
             <div class="relative">
-              <img src="./assets/reviews/sunita-verma-before.jpg" alt="Before Sunita Verma" class="w-full h-44 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300">
+              <img src="./assets/reviews/sunita-verma-before.jpg" alt="Before Sunita Verma" class="w-full h-44 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async">
               <span class="absolute top-2 left-2 bg-red-950/90 text-red-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-red-500/40">BEFORE</span>
             </div>
             <div class="relative">
-              <img src="./assets/reviews/sunita-verma-after.jpg" alt="After Sunita Verma" class="w-full h-44 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300">
+              <img src="./assets/reviews/sunita-verma-after.jpg" alt="After Sunita Verma" class="w-full h-44 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async">
               <span class="absolute top-2 left-2 bg-emerald-950/90 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/40">AFTER 5 WASHES</span>
             </div>
           </div>
@@ -560,7 +562,7 @@
           <div class="flex items-center justify-between border-b border-white/10 pb-3">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-full p-0.5 bg-gradient-to-tr from-[#d4af37] via-[#f3e5ab] to-[#d4af37] shadow-md shrink-0 overflow-hidden border border-white/20">
-                <img src="./assets/reviews/sunita-verma-dp.jpg" alt="Sunita Verma" class="w-full h-full rounded-full object-cover object-top">
+                <img src="./assets/reviews/sunita-verma-dp.jpg" alt="Sunita Verma" class="w-full h-full rounded-full object-cover object-top" loading="lazy" decoding="async">
               </div>
               <div>
                 <h3 class="font-serif text-lg font-bold text-white group-hover:text-[#d4af37] transition-colors">Sunita Verma</h3>
@@ -591,11 +593,11 @@
           
           <div class="grid grid-cols-2 gap-2 rounded-2xl overflow-hidden relative">
             <div class="relative">
-              <img src="./assets/reviews/alok-mishra-before.jpg" alt="Before Alok Mishra" class="w-full h-44 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300">
+              <img src="./assets/reviews/alok-mishra-before.jpg" alt="Before Alok Mishra" class="w-full h-44 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async">
               <span class="absolute top-2 left-2 bg-red-950/90 text-red-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-red-500/40">BEFORE</span>
             </div>
             <div class="relative">
-              <img src="./assets/reviews/alok-mishra-after.jpg" alt="After Alok Mishra" class="w-full h-44 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300">
+              <img src="./assets/reviews/alok-mishra-after.jpg" alt="After Alok Mishra" class="w-full h-44 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async">
               <span class="absolute top-2 left-2 bg-emerald-950/90 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/40">AFTER 8 WASHES</span>
             </div>
           </div>
@@ -603,7 +605,7 @@
           <div class="flex items-center justify-between border-b border-white/10 pb-3">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-full p-0.5 bg-gradient-to-tr from-[#d4af37] via-[#f3e5ab] to-[#d4af37] shadow-md shrink-0 overflow-hidden border border-white/20">
-                <img src="./assets/reviews/alok-mishra-dp.jpg" alt="Alok Mishra" class="w-full h-full rounded-full object-cover object-top">
+                <img src="./assets/reviews/alok-mishra-dp.jpg" alt="Alok Mishra" class="w-full h-full rounded-full object-cover object-top" loading="lazy" decoding="async">
               </div>
               <div>
                 <h3 class="font-serif text-lg font-bold text-white group-hover:text-[#d4af37] transition-colors">Alok Mishra</h3>
@@ -634,11 +636,11 @@
           
           <div class="grid grid-cols-2 gap-2 rounded-2xl overflow-hidden relative">
             <div class="relative">
-              <img src="./assets/reviews/anita-patel-before.jpg" alt="Before Anita Patel" class="w-full h-44 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300">
+              <img src="./assets/reviews/anita-patel-before.jpg" alt="Before Anita Patel" class="w-full h-44 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async">
               <span class="absolute top-2 left-2 bg-red-950/90 text-red-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-red-500/40">BEFORE</span>
             </div>
             <div class="relative">
-              <img src="./assets/reviews/anita-patel-after.jpg" alt="After Anita Patel" class="w-full h-44 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300">
+              <img src="./assets/reviews/anita-patel-after.jpg" alt="After Anita Patel" class="w-full h-44 object-cover rounded-xl group-hover:scale-105 transition-transform duration-300" loading="lazy" decoding="async">
               <span class="absolute top-2 left-2 bg-emerald-950/90 text-emerald-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-500/40">AFTER 10 WASHES</span>
             </div>
           </div>
@@ -646,7 +648,7 @@
           <div class="flex items-center justify-between border-b border-white/10 pb-3">
             <div class="flex items-center gap-3">
               <div class="w-10 h-10 rounded-full p-0.5 bg-gradient-to-tr from-[#d4af37] via-[#f3e5ab] to-[#d4af37] shadow-md shrink-0 overflow-hidden border border-white/20">
-                <img src="./assets/reviews/anita-patel-dp.jpg" alt="Anita Patel" class="w-full h-full rounded-full object-cover object-top">
+                <img src="./assets/reviews/anita-patel-dp.jpg" alt="Anita Patel" class="w-full h-full rounded-full object-cover object-top" loading="lazy" decoding="async">
               </div>
               <div>
                 <h3 class="font-serif text-lg font-bold text-white group-hover:text-[#d4af37] transition-colors">Anita Patel</h3>
