@@ -599,22 +599,19 @@ I've been using BlackRoots 100% Herbal Shampoo infused with Bhringraj, Amla & Bl
 
     function getInfluencersDb() {
       try {
+        let initialized = localStorage.getItem('br_influencers_initialized');
         let stored = localStorage.getItem('br_influencers_db');
-        let db = stored ? JSON.parse(stored) : [];
-        if (!Array.isArray(db)) db = [];
-        
-        // Merge missing default influencers
-        DEFAULT_INFLUENCERS.forEach(def => {
-          if (!db.some(u => u.code === def.code || u.username === def.username || (u.id && u.id === def.id))) {
-            db.push(def);
-          }
-        });
-
-        localStorage.setItem('br_influencers_db', JSON.stringify(db));
-        return db;
+        if (!initialized || stored === null) {
+          localStorage.setItem('br_influencers_initialized', 'true');
+          localStorage.setItem('br_influencers_db', JSON.stringify(DEFAULT_INFLUENCERS));
+          return DEFAULT_INFLUENCERS;
+        }
+        return JSON.parse(stored) || [];
       } catch (e) {
         return DEFAULT_INFLUENCERS;
       }
+    }
+
     async function syncInfluencersFromServer() {
       try {
         const res = await fetch('api/admin?action=get_influencers');
