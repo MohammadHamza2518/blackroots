@@ -714,11 +714,12 @@ window.switchToSimPage = switchToSimPage;
 
   /* 🚀 Shiprocket One-Click Quick Checkout Configuration */
   window.SHIPROCKET_CHECKOUT_CONFIG = {
-    enabled: false, // Set to true once Shiprocket Merchant ID is added
-    merchantId: '', // e.g. "SR_CHECKOUT_XXXXX" or Fastrr Merchant ID
-    appId: '',      // e.g. Shiprocket App ID
-    channelId: '',  // Shiprocket Channel ID
-    environment: 'production'
+    enabled: true,
+    apiKey: 'hl7tTx1OioeJn0KS',
+    secretKey: 'SX9xl506RtMcE6761XJgkzhJOl1QCUW6',
+    merchantId: 'hl7tTx1OioeJn0KS',
+    environment: 'production',
+    themeColor: '#d4af37'
   };
 
   // Global pack state
