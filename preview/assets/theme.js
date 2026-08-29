@@ -893,30 +893,65 @@ window.switchToSimPage = switchToSimPage;
   };
 
   // Shiprocket One-Click Checkout Trigger Handler
+    // 🚀 Master Shiprocket Fastrr 1-Click Checkout Invoker
   window.triggerShiprocketCheckout = function(customPack) {
     const pack = customPack || window.selectedPack || {
       qty: 1,
+      basePrice: 499,
       price: 499,
       title: 'BlackRoots Ayurvedic Hair Darkening Shampoo (250ml)',
       sku: 'BR-250ML'
     };
 
-    if (window.SHIPROCKET_CHECKOUT_CONFIG && window.SHIPROCKET_CHECKOUT_CONFIG.enabled && window.SHIPROCKET_CHECKOUT_CONFIG.merchantId) {
-      if (typeof window.ShiprocketCheckout !== 'undefined' && window.ShiprocketCheckout.open) {
-        window.ShiprocketCheckout.open({
-          merchantId: window.SHIPROCKET_CHECKOUT_CONFIG.merchantId,
+    // Calculate final price with active discount
+    const isOnline = (window.currentPaymentMethod === 'Online');
+    const finalPrice = isOnline ? (pack.price - 50) : pack.price;
+
+    // Check if Shiprocket Fastrr / Headless SDK is available in window
+    if (typeof window.FastrrCheckout !== 'undefined' && window.FastrrCheckout.open) {
+      window.FastrrCheckout.open({
+        apiKey: 'hl7tTx1OioeJn0KS',
+        cart: {
           items: [{
             name: pack.title,
-            price: pack.price,
+            price: finalPrice,
             quantity: pack.qty || 1,
-            sku: pack.sku || 'BR-SHAMPOO-250ML'
-          }],
-          theme: { color: '#d4af37' }
-        });
-        return;
-      }
+            sku: pack.sku || 'BR-250ML'
+          }]
+        }
+      });
+      return;
     }
 
+    if (typeof window.Fastrr !== 'undefined' && window.Fastrr.openCheckout) {
+      window.Fastrr.openCheckout({
+        merchantId: 'hl7tTx1OioeJn0KS',
+        items: [{
+          name: pack.title,
+          price: finalPrice,
+          quantity: pack.qty || 1,
+          sku: pack.sku || 'BR-250ML'
+        }]
+      });
+      return;
+    }
+
+    if (typeof window.ShiprocketCheckout !== 'undefined' && window.ShiprocketCheckout.open) {
+      window.ShiprocketCheckout.open({
+        merchantId: 'hl7tTx1OioeJn0KS',
+        apiKey: 'hl7tTx1OioeJn0KS',
+        items: [{
+          name: pack.title,
+          price: finalPrice,
+          quantity: pack.qty || 1,
+          sku: pack.sku || 'BR-250ML'
+        }],
+        theme: { color: '#d4af37' }
+      });
+      return;
+    }
+
+    // High-converting luxury fallback modal
     if (typeof window.openQuickOrderModal === 'function') {
       window.openQuickOrderModal(pack.price, pack.title);
     }
