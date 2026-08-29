@@ -47,7 +47,7 @@
   function initInstantListeners() {
     // Touchstart: user finger touches the screen (gives ~150ms-300ms headstart before click)
     document.addEventListener('touchstart', function(e) {
-      const a = e.target.closest('a');
+      const a = (e && e.target && typeof e.target.closest === 'function') ? e.target.closest('a') : null;
       if (a && a.getAttribute('href')) {
         prefetchUrl(a.getAttribute('href'));
       }
@@ -55,7 +55,7 @@
 
     // Mouseover / Pointerenter on desktop (gives ~100ms headstart)
     document.addEventListener('pointerenter', function(e) {
-      const a = e.target.closest('a');
+      const a = (e && e.target && typeof e.target.closest === 'function') ? e.target.closest('a') : null;
       if (a && a.getAttribute('href')) {
         prefetchUrl(a.getAttribute('href'));
       }
