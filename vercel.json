@@ -1,15 +1,47 @@
 {
+  "version": 2,
+  "outputDirectory": ".",
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/influencer", "destination": "/influencer.html" },
-    { "source": "/product", "destination": "/product.html" },
-    { "source": "/track", "destination": "/track-order.html" },
-    { "source": "/track-order", "destination": "/track-order.html" },
-    { "source": "/reviews", "destination": "/reviews.html" },
-    { "source": "/ingredients", "destination": "/ingredients.html" },
-    { "source": "/how-to-use", "destination": "/how-to-use.html" },
-    { "source": "/ai-consultant", "destination": "/ai-consultant.html" },
-    { "source": "/contact", "destination": "/contact.html" }
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    },
+    {
+      "source": "/influencer",
+      "destination": "/influencer.html"
+    },
+    {
+      "source": "/product",
+      "destination": "/product.html"
+    },
+    {
+      "source": "/track",
+      "destination": "/track-order.html"
+    },
+    {
+      "source": "/track-order",
+      "destination": "/track-order.html"
+    },
+    {
+      "source": "/reviews",
+      "destination": "/reviews.html"
+    },
+    {
+      "source": "/ingredients",
+      "destination": "/ingredients.html"
+    },
+    {
+      "source": "/how-to-use",
+      "destination": "/how-to-use.html"
+    },
+    {
+      "source": "/ai-consultant",
+      "destination": "/ai-consultant.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact.html"
+    }
   ]
 }
