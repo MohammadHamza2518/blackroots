@@ -1182,1093 +1182,175 @@
     </div>
   </section>
 
-  <!-- Quick Order Modal -->
-  <div id="QuickOrderModal" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="relative w-full max-w-lg glass-panel-luxury border-2 border-[#d4af37] rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl text-left">
-      <button type="button" onclick="closeQuickOrderModal();" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl font-bold">✕</button>
+    <!-- 📦 Direct 1-Click Ultra-Luxury Quick Order Form Modal Popup -->
+  <div id="QuickOrderModal" class="hidden fixed inset-0 z-[999999] bg-black/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto" style="position:fixed;top:0;left:0;right:0;bottom:0;width:100vw;height:100vh;z-index:999999;background-color:rgba(0,0,0,0.85);backdrop-filter:blur(8px);display:none;" onclick="if(event.target===this)closeQuickOrderModal();">
+    <div class="relative w-full max-w-lg bg-[#0e1017] border-2 border-[#d4af37] rounded-3xl p-5 sm:p-6 space-y-4 shadow-[0_25px_70px_rgba(0,0,0,0.95)] text-left my-auto max-h-[92vh] overflow-y-auto" style="margin:auto;position:relative;z-index:1000000;background-color:#0e1017;">
+      <button type="button" onclick="closeQuickOrderModal();" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl font-black w-8 h-8 rounded-full bg-white/10 flex items-center justify-center cursor-pointer transition-colors z-10" aria-label="Close">&times;</button>
       
-      <div class="flex items-center gap-3 border-b border-white/10 pb-4">
-        <img src="./assets/blackroots-bottle-single.png" alt="Bottle" class="w-14 h-14 object-contain bg-black rounded-xl border border-[#d4af37]">
-        <div>
-          <h3 class="font-serif text-xl font-bold text-white">BlackRoots Shampoo (250ml)</h3>
-          <div class="text-xs text-amber-400 font-bold">Total: <span id="OrderModalPriceDisplay">&#8377;499</span> &bull; <span class="text-emerald-400">FREE Express Delivery</span></div>
+      <!-- 1. Header with Logo & Verified Badge -->
+      <div class="flex items-center gap-3 border-b border-white/10 pb-3 pr-8">
+        <img src="./assets/blackroots-logo-circle-black.jpg" alt="BlackRoots Logo" class="w-12 h-12 rounded-full border-2 border-[#d4af37] object-cover shadow shrink-0">
+        <div class="min-w-0">
+          <div class="flex items-center gap-1.5">
+            <h3 class="font-serif text-base sm:text-lg font-bold text-white leading-tight uppercase tracking-wider truncate">BlackRoots</h3>
+            <span class="bg-emerald-500/20 text-emerald-300 text-[9px] font-extrabold px-2 py-0.5 rounded-full border border-emerald-500/30 shrink-0">✓ Verified Official</span>
+          </div>
+          <p class="text-[10px] text-gray-400">100% Ayurvedic Hair Darkening Therapy (250ml)</p>
         </div>
       </div>
 
-      <form id="QuickOrderForm" class="space-y-4">
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- 2. Select Bundle Option (1 Bottle ₹499 vs 2 Bottles ₹799) -->
+      <div class="space-y-2">
+        <label class="block text-[10px] font-extrabold uppercase tracking-wider text-amber-300">Choose Quantity / Bundle:</label>
+        <div class="grid grid-cols-2 gap-2.5">
+          <!-- 1 Bottle -->
+          <div id="ModalPack1" onclick="selectModalBundle(1, 499, '1 Bottle (250ml)', 'Standard 1 Month Supply');" class="p-3 rounded-2xl border-2 border-[#d4af37] bg-[#d4af37]/15 cursor-pointer transition-all flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-[9px] font-bold text-gray-300 uppercase tracking-wider">1 Bottle</span>
+              <span class="w-3.5 h-3.5 rounded-full border-2 border-amber-400 flex items-center justify-center">
+                <span id="RadioDot1" class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+              </span>
+            </div>
+            <div class="flex items-baseline gap-1.5">
+              <span class="text-sm font-black text-white">&#8377;499</span>
+              <span class="text-[10px] text-gray-400 line-through">&#8377;999</span>
+            </div>
+            <span class="text-[9px] text-amber-300 font-semibold mt-0.5">1 Month Supply</span>
+          </div>
+
+          <!-- 2 Bottles (Best Seller) -->
+          <div id="ModalPack2" onclick="selectModalBundle(2, 799, '2 Bottles Pack (500ml)', 'Best Seller • Save ₹200');" class="p-3 rounded-2xl border border-white/10 bg-white/5 hover:border-amber-400 cursor-pointer transition-all flex flex-col justify-between relative overflow-hidden">
+            <span class="absolute top-0 right-0 bg-gradient-to-r from-[#d4af37] to-amber-500 text-black text-[8px] font-black px-2 py-0.5 rounded-bl-lg uppercase">SAVE &#8377;200</span>
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-[9px] font-bold text-gray-300 uppercase tracking-wider">2 Bottles</span>
+              <span class="w-3.5 h-3.5 rounded-full border-2 border-gray-500 flex items-center justify-center">
+                <span id="RadioDot2" class="w-1.5 h-1.5 rounded-full bg-amber-400 hidden"></span>
+              </span>
+            </div>
+            <div class="flex items-baseline gap-1.5">
+              <span class="text-sm font-black text-amber-300">&#8377;799</span>
+              <span class="text-[10px] text-gray-400 line-through">&#8377;1,998</span>
+            </div>
+            <span class="text-[9px] text-emerald-400 font-bold mt-0.5">&#8377;399/Bottle</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Dynamic Price Summary with ₹50 Online Discount Highlight -->
+      <div class="p-3 rounded-2xl bg-gradient-to-r from-emerald-950/70 via-black to-emerald-950/70 border border-emerald-500/40 flex items-center justify-between text-xs">
+        <div>
+          <div class="text-[10px] text-gray-300">Final Payable Amount:</div>
+          <div class="flex items-baseline gap-2">
+            <span id="OrderModalFinalPrice" class="text-2xl font-black text-amber-300">&#8377;449</span>
+            <span id="OrderModalOriginalPrice" class="text-xs text-gray-400 line-through">&#8377;499</span>
+          </div>
+        </div>
+        <div id="PrepaidSavingsTag" class="text-right">
+          <span class="inline-flex items-center gap-1 bg-emerald-500/20 text-emerald-300 text-[10px] font-black px-2.5 py-1 rounded-full border border-emerald-500/40 animate-pulse">
+            🎉 &#8377;50 Online Discount Applied!
+          </span>
+          <div class="text-[9px] text-gray-400 mt-0.5">⚡ Free Express Delivery Across India</div>
+        </div>
+      </div>
+
+      <form id="QuickOrderForm" class="space-y-3">
+        <!-- Customer Inputs -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <div>
-            <label class="block text-xs font-bold text-amber-300 uppercase mb-1">Full Name</label>
-            <input type="text" placeholder="Rahul Sharma" required class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white">
+            <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1">Full Name</label>
+            <input type="text" placeholder="e.g. Rahul Sharma" required class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37]">
           </div>
           <div>
-            <label class="block text-xs font-bold text-amber-300 uppercase mb-1">Mobile Number</label>
-            <input type="tel" placeholder="10-Digit Mobile" required class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white">
+            <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1">10-Digit Mobile Number</label>
+            <input type="tel" placeholder="e.g. 9876543210" required class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37]">
           </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <div>
-            <label class="block text-xs font-bold text-amber-300 uppercase mb-1">Pincode</label>
-            <input type="text" placeholder="6-Digit Pincode" required class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white">
+            <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1">Pincode (Fast Delivery)</label>
+            <input type="text" placeholder="6-Digit Pincode" required class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37]">
           </div>
           <div>
-            <label class="block text-xs font-bold text-amber-300 uppercase mb-1">City / Town</label>
-            <input type="text" placeholder="e.g. Mumbai" required class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white">
+            <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1">City / Town & State</label>
+            <input type="text" placeholder="e.g. Mumbai, Maharashtra" required class="w-full px-3.5 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37]">
           </div>
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-amber-300 uppercase mb-1">Complete House & Street Address</label>
-          <textarea rows="2" placeholder="House/Flat No, Building Name, Street" required class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white"></textarea>
+          <label class="block text-[10px] font-bold text-amber-300 uppercase mb-1">Complete House & Street Address</label>
+          <textarea rows="2" placeholder="House/Flat No, Building Name, Landmark, Area" required class="w-full px-3.5 py-2 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37]"></textarea>
         </div>
 
-        <button type="submit" class="btn-gold-luxury btn-shimmer w-full py-4 text-xs font-bold uppercase tracking-wider">
-          Confirm Order &rarr;&rarr;
+        <!-- 4. Creator / Influencer Promo Code Input -->
+        <div class="p-2.5 rounded-2xl bg-white/[0.03] border border-white/10 space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="text-[10px] font-bold text-gray-300 uppercase tracking-wider">Have a Creator / Promo Code?</label>
+            <span id="CouponDiscountNote" class="hidden text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20"></span>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="text" id="OrderCouponInput" placeholder="e.g. ROOTS10, PRIYA10" class="w-full px-3 py-2 rounded-xl bg-black border border-white/20 text-xs text-white uppercase font-bold focus:outline-none focus:border-[#d4af37]">
+            <button type="button" onclick="applyCheckoutCoupon()" class="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#d4af37] to-amber-500 text-black text-xs font-black uppercase hover:brightness-110 shadow shrink-0 cursor-pointer">
+              Apply
+            </button>
+          </div>
+        </div>
+
+        <!-- 5. Payment Method Selector (Pay Online -₹50 vs COD) -->
+        <div class="space-y-1.5">
+          <label class="block text-[10px] font-bold text-gray-300 uppercase tracking-wider">Select Payment Mode:</label>
+          <div class="grid grid-cols-2 gap-2.5">
+            <!-- Online Payment (Recommended: -₹50) -->
+            <label onclick="updatePaymentMethodChoice('Online');" class="relative flex flex-col p-2.5 rounded-2xl bg-gradient-to-br from-[#122415] to-[#0e1017] border-2 border-emerald-400/80 cursor-pointer transition-all hover:border-emerald-400 shadow-md">
+              <div class="flex items-center justify-between mb-1">
+                <input type="radio" name="payment_method_choice" value="Online" checked class="accent-emerald-400">
+                <span class="text-[8px] font-black uppercase tracking-wider bg-emerald-500 text-black px-1.5 py-0.5 rounded-full font-black">SAVE &#8377;50</span>
+              </div>
+              <span class="text-xs font-black text-emerald-300 flex items-center gap-1">⚡ Pay Online (UPI/Cards)</span>
+              <span class="text-[9px] text-gray-300 font-medium">GPay, PhonePe, Paytm, Cards</span>
+            </label>
+
+            <!-- Cash on Delivery (COD) -->
+            <label onclick="updatePaymentMethodChoice('COD');" class="relative flex flex-col p-2.5 rounded-2xl bg-white/[0.03] border border-white/15 cursor-pointer transition-all hover:border-white/30">
+              <div class="flex items-center justify-between mb-1">
+                <input type="radio" name="payment_method_choice" value="COD" class="accent-[#d4af37]">
+                <span class="text-[8px] font-semibold text-gray-400 bg-white/10 px-1.5 py-0.5 rounded">STANDARD</span>
+              </div>
+              <span class="text-xs font-bold text-gray-300 flex items-center gap-1">💵 Cash on Delivery</span>
+              <span class="text-[9px] text-gray-400">Pay cash at doorstep</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 6. Delivery Timeline Notice Strip -->
+        <div class="py-2 px-3 rounded-xl bg-black/60 border border-white/10 flex items-center justify-between text-[10px] text-gray-300">
+          <div class="flex items-center gap-2">
+            <span>⚡</span>
+            <span>Estimated Delivery: <strong class="text-amber-300">2-4 Business Days</strong></span>
+          </div>
+          <span class="text-gray-400">🔒 BlueDart / Delhivery</span>
+        </div>
+
+        <!-- 7. Confirm Order CTA Button -->
+        <button type="submit" id="ConfirmOrderButton" class="btn-gold-luxury btn-shimmer w-full py-3.5 text-xs font-black uppercase tracking-widest shadow-[0_10px_25px_rgba(212,175,55,0.4)] cursor-pointer flex items-center justify-center gap-2">
+          <span>PLACE ORDER &bull; <span id="SubmitButtonPrice">&#8377;449</span></span>
+          <span>&rarr;&rarr;</span>
         </button>
       </form>
 
-      <div id="QuickOrderSuccess" class="hidden text-center py-8 space-y-4">
-        <div class="w-16 h-16 rounded-full bg-emerald-500 text-black flex items-center justify-center text-3xl font-bold mx-auto">✓</div>
-        <h3 class="font-serif text-3xl font-bold text-white">Order Confirmed!</h3>
-        <p class="text-xs text-gray-300">Order ID: <strong class="text-amber-400">#BR-1025</strong>. We will dispatch your BlackRoots bottle from our Shuklaganj UP warehouse within 24 hours.</p>
-        <button type="button" onclick="closeQuickOrderModal();" class="btn-gold-luxury py-3 px-8 text-xs font-bold uppercase">Close & Continue</button>
+      <!-- 8. Order Success State -->
+      <div id="QuickOrderSuccess" class="hidden text-center py-6 space-y-4">
+        <div class="w-14 h-14 rounded-full bg-gradient-to-r from-[#d4af37] to-amber-400 text-black flex items-center justify-center text-2xl font-bold mx-auto shadow-xl">✓</div>
+        <h3 class="font-serif text-2xl font-bold text-white">Order Confirmed!</h3>
+        <p class="text-xs text-gray-300">Order ID: <strong class="text-amber-400 text-sm">#BR-1025</strong>. We will dispatch your BlackRoots bottle from our Shuklaganj UP warehouse within 24 hours.</p>
+        <div class="p-3 rounded-2xl bg-white/5 border border-white/10 text-xs text-gray-300 space-y-1">
+          <p>🚚 Free Express Courier Tracking link will be sent to your WhatsApp.</p>
+        </div>
+        <button type="button" onclick="closeQuickOrderModal();" class="btn-gold-luxury py-2.5 px-6 text-xs font-bold uppercase cursor-pointer">Close & Continue</button>
       </div>
+
     </div>
   </div>
-
-  <!-- Minimal Luxury Instagram Banner -->
-  <section class="py-14 bg-gradient-to-b from-[#0a0b0e] via-[#111319] to-[#0a0b0e] border-t border-[#d4af37]/20 relative overflow-hidden">
-    <div class="max-w-4xl mx-auto px-4 relative z-10">
-      <div class="glass-panel-luxury p-5 sm:p-7 rounded-2xl border border-[#d4af37]/45 shadow-[0_15px_40px_rgba(0,0,0,0.6)] backdrop-blur-xl">
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-left">
-          <div class="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-            <div class="relative shrink-0">
-              <div class="w-16 h-16 rounded-full p-0.5 bg-gradient-to-tr from-[#d4af37] via-[#f3e5ab] to-[#d4af37] shadow-md">
-                <img src="./assets/blackroots-logo-circle-black.jpg" alt="BlackRoots Official" class="w-full h-full object-cover rounded-full border-2 border-black">
-              </div>
-              <span class="absolute bottom-0 right-0 w-5 h-5 bg-[#0095f6] text-white rounded-full flex items-center justify-center text-[10px] font-black border-2 border-black shadow-md">✓</span>
-            </div>
-
-            <div class="space-y-1.5">
-              <div class="flex flex-wrap items-center justify-center sm:justify-start gap-1.5">
-                <h4 class="text-base sm:text-lg font-serif font-bold text-white tracking-wide">blackroots.in</h4>
-                <svg class="w-4 h-4 text-[#0095f6] fill-current shrink-0" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-                <span class="text-[9px] sm:text-[10px] font-bold text-[#d4af37] uppercase tracking-widest px-2 py-0.5 rounded-full bg-[#d4af37]/10 border border-[#d4af37]/20">Official</span>
-              </div>
-              <p class="text-xs text-gray-300 font-light">Follow our official Instagram for customer results & hair care guidance.</p>
-              <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2.5 text-[11px] text-gray-400 font-medium pt-0.5">
-                <span class="text-amber-300 font-bold">3K+ Followers</span>
-                <span>&bull;</span>
-                <span class="text-amber-300 font-bold">500+ Verified Reviews</span>
-                <span>&bull;</span>
-                <span class="text-emerald-400 font-bold">4.9★ Rating</span>
-              </div>
-            </div>
-          </div>
-
-          <a href="https://www.instagram.com/blackroots.in/?utm_source=ig_web_button_share_sheet" target="_blank" rel="noopener noreferrer" class="btn-gold-luxury btn-shimmer w-full sm:w-auto px-6 py-3.5 rounded-xl text-xs font-extrabold uppercase tracking-widest shadow-xl flex items-center justify-center gap-2 shrink-0 border border-[#fff]/30 group">
-            <svg class="w-4 h-4 text-black group-hover:rotate-6 transition-transform" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            <span>Follow @blackroots.in &rarr;</span>
-          </a>
-        </div>
-      
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="bg-[#0a0b0e] text-[#a1a8b3] border-t border-white/10 py-12 text-center text-xs">
-    <div class="max-w-7xl mx-auto px-4 space-y-6">
-      <div class="flex items-center justify-center gap-3">
-        <img src="./assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-10 h-10 rounded-full border border-[#d4af37]">
-        <span class="font-serif text-2xl font-bold text-white uppercase">BlackRoots</span>
-      </div>
-
-      <div class="flex flex-wrap justify-center items-center gap-4 sm:gap-6 text-xs text-gray-400 border-t border-b border-white/10 py-4 max-w-4xl mx-auto">
-        <a href="privacy-policy.html" class="hover:text-[#d4af37] transition-colors">Privacy Policy</a>
-        <span class="text-gray-600">&bull;</span>
-        <a href="terms.html" class="hover:text-[#d4af37] transition-colors">Terms & Conditions</a>
-        <span class="text-gray-600">&bull;</span>
-        <a href="refund-policy.html" class="hover:text-[#d4af37] transition-colors">Refund & Cancellation</a>
-        <span class="text-gray-600">&bull;</span>
-        <a href="shipping-policy.html" class="hover:text-[#d4af37] transition-colors">Shipping & Delivery</a>
-        <span class="text-gray-600">&bull;</span>
-        <a href="contact.html" class="hover:text-[#d4af37] transition-colors">Contact Us</a>
-      </div>
-
-      <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh &minus; 209861, Near Poni Road, India | Marketed by HRS Group</p>
-      <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | WhatsApp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
-      <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. All Rights Reserved.</p>
-    </div>
-  </footer>
-
-                <script>
-    // BlackRoots Perfect Startup-Grade Luxury Reviews Deck Engine (Photo Proof First & Zero Blank Space)
-    document.addEventListener('DOMContentLoaded', function() {
-      const CARDS_PER_SLIDE = 6;
-      let currentSlide = 0;
-      let currentFilter = 'all';
-
-      const customerGrid = document.getElementById('customer-reviews-grid');
-      const staticGridSource = document.querySelector('.columns-1');
-      const prevBtn = document.getElementById('deck-prev-btn');
-      const nextBtn = document.getElementById('deck-next-btn');
-      const slideBadge = document.getElementById('deck-slide-badge');
-      const showingText = document.getElementById('deck-showing-text');
-      const dotsContainer = document.getElementById('deck-dots-container');
-      const filterBtns = document.querySelectorAll('.js-filter-btn');
-      const showingCount = document.querySelector('.js-showing-count');
-      const sortSelect = document.getElementById('reviews-sort');
-
-      // Helper: Check if a card contains photo proof
-      function hasPhotoProof(card) {
-        if (!card) return false;
-        const img = card.querySelector('img[src*="review-photo"], img[src*="face-photo"], img[src*="before"], img[src*="after"], img[src*="bottle"], img[src*="girl"], img[src*="table"]');
-        return img !== null || card.hasAttribute('data-has-photo');
-      }
-
-      // Preserve all initial static review cards from HTML source grid
-      let allCardsArray = [];
-      if (staticGridSource) {
-        allCardsArray = Array.from(staticGridSource.querySelectorAll('[data-category]'));
-      }
-
-      // PRIORITIZE PHOTO PROOF REVIEWS FIRST IN DECK
-      allCardsArray.sort((a, b) => {
-        const aHasPhoto = hasPhotoProof(a);
-        const bHasPhoto = hasPhotoProof(b);
-        if (aHasPhoto && !bHasPhoto) return -1; // Photo proof cards FIRST
-        if (!aHasPhoto && bHasPhoto) return 1;
-        return 0;
-      });
-
-      function scrollToDeckTop() {
-        const header = document.getElementById('customer-reviews-grid') || customerGrid;
-        if (header) {
-          const yOffset = -110;
-          const y = header.getBoundingClientRect().top + window.pageYOffset + yOffset;
-          window.scrollTo({ top: y, behavior: 'smooth' });
-        }
-      }
-
-      function updateDeck() {
-        if (!customerGrid) return;
-
-        // Filter cards
-        const matchingCards = allCardsArray.filter(card => {
-          const cats = card.getAttribute('data-category') || '';
-          return currentFilter === 'all' || cats.includes(currentFilter);
-        });
-
-        const totalItems = matchingCards.length;
-        const totalSlides = Math.ceil(totalItems / CARDS_PER_SLIDE) || 1;
-
-        if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
-        if (currentSlide < 0) currentSlide = 0;
-
-        const startIdx = currentSlide * CARDS_PER_SLIDE;
-        const endIdx = startIdx + CARDS_PER_SLIDE;
-        const visibleCardsForSlide = matchingCards.slice(startIdx, endIdx);
-
-        // Render Exactly 6 Cards into 3-Column Symmetrical Grid
-        customerGrid.innerHTML = '';
-        visibleCardsForSlide.forEach(card => {
-          // Normalize card styles for 3-column grid layout
-          card.className = "p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass-panel-luxury border border-[#d4af37]/45 shadow-xl flex flex-col justify-between h-full transition-all duration-300 hover:border-[#d4af37] w-full box-border";
-          card.style.cssText = "display: flex !important; width: 100% !important; max-width: 100% !important; margin-bottom: 0 !important; box-sizing: border-box !important;";
-          
-          // Fill empty space for text-only cards so every card has equal height and zero blank gaps
-          if (!hasPhotoProof(card) && !card.querySelector('.js-filled-badge')) {
-            const bodyPara = card.querySelector('p');
-            if (bodyPara) {
-              const filler = document.createElement('div');
-              filler.className = "js-filled-badge mt-4 p-3 rounded-2xl bg-white/5 border border-white/10 text-[10px] text-gray-300 flex items-center justify-between";
-              filler.innerHTML = `
-                <span class="flex items-center gap-1.5 font-semibold text-emerald-400">
-                  <span>✓</span> Verified Scalp Buyer
-                </span>
-                <span class="text-amber-300 font-bold">100% Herbal Formula</span>
-              `;
-              bodyPara.after(filler);
-            }
-          }
-
-          customerGrid.appendChild(card);
-        });
-
-        // Update Slide Badge & Status Text
-        if (slideBadge) slideBadge.textContent = `Slide ${currentSlide + 1} of ${totalSlides}`;
-        if (showingText) showingText.textContent = `Showing ${visibleCardsForSlide.length} of ${totalItems} Verified Reviews`;
-        if (showingCount) showingCount.textContent = '1,280+';
-
-        // Update Prev / Next Buttons State
-        if (prevBtn) prevBtn.disabled = (currentSlide === 0);
-        if (nextBtn) nextBtn.disabled = (currentSlide >= totalSlides - 1);
-
-        // Render Interactive Dots
-        if (dotsContainer) {
-          dotsContainer.innerHTML = '';
-          if (totalSlides <= 1) {
-            dotsContainer.style.display = 'none';
-          } else {
-            dotsContainer.style.display = 'flex';
-            for (let i = 0; i < totalSlides; i++) {
-              const dot = document.createElement('button');
-              dot.type = 'button';
-              dot.className = `transition-all duration-300 cursor-pointer ${i === currentSlide ? 'w-8 h-2.5 bg-[#d4af37] rounded-full shadow-lg' : 'w-2.5 h-2.5 bg-white/20 hover:bg-white/40 rounded-full'}`;
-              dot.setAttribute('title', `Go to Slide ${i + 1}`);
-              dot.onclick = function(e) {
-                e.preventDefault();
-                currentSlide = i;
-                updateDeck();
-                scrollToDeckTop();
-              };
-              dotsContainer.appendChild(dot);
-            }
-          }
-        }
-      }
-
-      // Prev / Next Button Handlers
-      if (prevBtn) {
-        prevBtn.onclick = function(e) {
-          e.preventDefault();
-          if (currentSlide > 0) {
-            currentSlide--;
-            updateDeck();
-            scrollToDeckTop();
-          }
-        };
-      }
-
-      if (nextBtn) {
-        nextBtn.onclick = function(e) {
-          e.preventDefault();
-          const totalSlides = Math.ceil(allCardsArray.filter(c => currentFilter === 'all' || (c.getAttribute('data-category')||'').includes(currentFilter)).length / CARDS_PER_SLIDE);
-          if (currentSlide < totalSlides - 1) {
-            currentSlide++;
-            updateDeck();
-            scrollToDeckTop();
-          }
-        };
-      }
-
-      // Filter Button Listeners
-      filterBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-          currentFilter = this.getAttribute('data-filter') || 'all';
-          filterBtns.forEach(b => {
-            b.classList.remove('bg-[#d4af37]', 'text-black', 'shadow-md', 'active');
-            b.classList.add('bg-white/5', 'text-gray-300');
-          });
-          this.classList.remove('bg-white/5', 'text-gray-300');
-          this.classList.add('bg-[#d4af37]', 'text-black', 'shadow-md', 'active');
-          currentSlide = 0;
-          updateDeck();
-        });
-      });
-
-      // Sort Listener
-      if (sortSelect) {
-        sortSelect.addEventListener('change', function() {
-          const order = this.value;
-          allCardsArray.sort((a, b) => {
-            if (order === 'helpful') {
-              const aLikesMatch = a.innerHTML.match(/(?:&#128077;|👍)\s*<span[^>]*>(\d+)<\/span>/) || a.innerHTML.match(/&#128077;\s*(\d+)\s*Helpful/);
-              const bLikesMatch = b.innerHTML.match(/(?:&#128077;|👍)\s*<span[^>]*>(\d+)<\/span>/) || b.innerHTML.match(/&#128077;\s*(\d+)\s*Helpful/);
-              const aLikes = aLikesMatch ? parseInt(aLikesMatch[1]) : (parseInt(a.querySelector('.js-like-count')?.textContent) || 0);
-              const bLikes = bLikesMatch ? parseInt(bLikesMatch[1]) : (parseInt(b.querySelector('.js-like-count')?.textContent) || 0);
-              return bLikes - aLikes;
-            } else {
-              const da = parseInt(a.getAttribute('data-date') || '0');
-              const db = parseInt(b.getAttribute('data-date') || '0');
-              return order === 'newest' ? db - da : da - db;
-            }
-          });
-          
-          // Re-apply Photo Priority FIRST after sorting
-          allCardsArray.sort((a, b) => {
-            const aHasPhoto = hasPhotoProof(a);
-            const bHasPhoto = hasPhotoProof(b);
-            if (aHasPhoto && !bHasPhoto) return -1;
-            if (!aHasPhoto && bHasPhoto) return 1;
-            return 0;
-          });
-
-          currentSlide = 0;
-          updateDeck();
-        });
-      }
-
-      // Expose globally for new submitted reviews from modal
-      window.addNewReviewToDeck = function(cardDOM) {
-        cardDOM.setAttribute('data-has-photo', 'true');
-        allCardsArray.unshift(cardDOM);
-        currentSlide = 0;
-        updateDeck();
-        scrollToDeckTop();
-      };
-
-      // Initial run
-      updateDeck();
-    });
-  </script>
-
-  <!-- Customer Write Review Modal (Flipkart / Amazon Style) -->
-  <div id="add-review-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
-    
-    <div id="modal-card" class="bg-[#12151c] border border-[#d4af37]/40 shadow-2xl rounded-3xl p-6 sm:p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto relative text-left transform scale-95 transition-all duration-300">
-      
-      <!-- Close Button -->
-      <button type="button" id="close-review-modal" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 hover:text-white flex items-center justify-center text-lg font-bold transition-colors">
-        ✕
-      </button>
-
-      <!-- Modal Header -->
-      <div class="mb-6 space-y-1 pr-8">
-        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 text-[11px] font-bold uppercase tracking-wider mb-2">
-          <span>✓ Verified Customer Review</span>
-        </div>
-        <h3 class="font-serif text-2xl sm:text-3xl font-bold text-white flex items-center gap-2">
-          <span>✍️</span> Write Your Customer Review
-        </h3>
-        <p class="text-xs text-gray-300 font-light">
-          Share your genuine experience with BlackRoots. Max 2 photos proof & 300 words. Published live for 1,280+ shoppers!
-        </p>
-      </div>
-
-      <!-- Review Submission Form -->
-      <form id="review-form" class="space-y-4">
-        
-        <!-- Interactive Star Rating Picker -->
-        <div class="space-y-1.5 bg-white/5 p-4 rounded-2xl border border-white/10">
-          <label class="block text-xs font-bold text-gray-200 uppercase tracking-wider">
-            Overall Rating <span class="text-amber-400">*</span>
-          </label>
-          <div class="flex items-center gap-3">
-            <div id="star-rating-picker" class="flex text-3xl text-gray-600 cursor-pointer select-none">
-              <span data-star="1" class="hover:scale-125 transition-transform px-0.5 text-amber-400">★</span>
-              <span data-star="2" class="hover:scale-125 transition-transform px-0.5 text-amber-400">★</span>
-              <span data-star="3" class="hover:scale-125 transition-transform px-0.5 text-amber-400">★</span>
-              <span data-star="4" class="hover:scale-125 transition-transform px-0.5 text-amber-400">★</span>
-              <span data-star="5" class="hover:scale-125 transition-transform px-0.5 text-amber-400">★</span>
-            </div>
-            <span id="star-rating-label" class="text-xs font-bold text-amber-300 bg-amber-400/10 border border-amber-400/30 px-3 py-1 rounded-full whitespace-nowrap">
-              5.0 — Outstanding!
-            </span>
-            <input type="hidden" id="review-rating" name="rating" value="5">
-          </div>
-        </div>
-
-        <!-- Customer Profile Photo / DP Upload Field (Optional) -->
-        <div class="space-y-1.5 bg-white/5 p-3.5 rounded-2xl border border-white/10">
-          <label class="block text-xs font-bold text-gray-200 uppercase tracking-wider">
-            Customer Profile Photo / DP <span class="text-gray-400 font-normal lowercase">(optional avatar photo)</span>
-          </label>
-          <div class="flex items-center gap-3.5">
-            <div id="dp-preview-circle" class="w-12 h-12 rounded-full p-0.5 bg-gradient-to-tr from-[#d4af37] via-[#f3e5ab] to-[#d4af37] shadow-lg shrink-0 overflow-hidden relative cursor-pointer border border-white/20 hover:scale-105 transition-transform group">
-              <input type="file" id="review-dp-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" title="Click to select DP photo">
-              <div id="dp-placeholder" class="w-full h-full rounded-full bg-[#1a1d26] text-amber-300 font-bold text-base flex items-center justify-center group-hover:bg-[#252a38] transition-colors">
-                👤
-              </div>
-              <img id="dp-preview-img" src="" alt="DP Preview" class="hidden w-full h-full rounded-full object-cover object-center">
-            </div>
-            <div class="space-y-1">
-              <label for="review-dp-input" class="inline-block text-xs font-bold text-amber-300 hover:text-amber-200 cursor-pointer underline">
-                📷 Choose Customer Profile Photo (DP)
-              </label>
-              <p class="text-[10px] text-gray-400">Attach your profile picture to display verified DP avatar on your review card. Max 5MB.</p>
-              <button type="button" id="remove-dp-btn" class="hidden text-[10px] text-red-400 hover:text-red-300 font-bold">
-                ✕ Remove DP Photo
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Customer Name & Location Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="space-y-1">
-            <label for="review-name" class="block text-xs font-bold text-gray-300">Your Full Name <span class="text-amber-400">*</span></label>
-            <input type="text" id="review-name" required placeholder="e.g. Priya Sharma" class="w-full bg-[#1a1d26] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] transition-colors">
-          </div>
-          <div class="space-y-1">
-            <label for="review-city" class="block text-xs font-bold text-gray-300">Select City / State <span class="text-amber-400">* (Compulsory)</span></label>
-            <input type="text" id="review-city" list="city-list" required placeholder="e.g. Delhi NCR, Mumbai, Lucknow" class="w-full bg-[#1a1d26] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] transition-colors">
-            <datalist id="city-list">
-              <option value="Delhi NCR">
-              <option value="Mumbai, Maharashtra">
-              <option value="Bengaluru, Karnataka">
-              <option value="Hyderabad, Telangana">
-              <option value="Kolkata, West Bengal">
-              <option value="Chennai, Tamil Nadu">
-              <option value="Pune, Maharashtra">
-              <option value="Ahmedabad, Gujarat">
-              <option value="Jaipur, Rajasthan">
-              <option value="Lucknow, Uttar Pradesh">
-              <option value="Kanpur, Uttar Pradesh">
-              <option value="Patna, Bihar">
-              <option value="Surat, Gujarat">
-              <option value="Chandigarh">
-              <option value="Indore, Madhya Pradesh">
-              <option value="Bhopal, Madhya Pradesh">
-              <option value="Nagpur, Maharashtra">
-              <option value="Dehradun, Uttarakhand">
-              <option value="Kochi, Kerala">
-              <option value="Guwahati, Assam">
-            </datalist>
-          </div>
-        </div>
-
-        <!-- Category Selection Tag -->
-        <div class="space-y-1.5">
-          <label class="block text-xs font-bold text-gray-300">Usage Category</label>
-          <div class="grid grid-cols-2 gap-3">
-            <label class="cursor-pointer flex items-center gap-2 p-2.5 rounded-xl border border-white/10 bg-[#1a1d26] hover:border-[#d4af37]/50 transition-colors">
-              <input type="radio" name="review-category" value="men photo" class="accent-[#d4af37]">
-              <span class="text-xs text-amber-300 font-semibold">👨 Men's Scalp & Beard</span>
-            </label>
-            <label class="cursor-pointer flex items-center gap-2 p-2.5 rounded-xl border border-white/10 bg-[#1a1d26] hover:border-[#d4af37]/50 transition-colors">
-              <input type="radio" name="review-category" value="women photo" checked class="accent-[#d4af37]">
-              <span class="text-xs text-pink-300 font-semibold">👩 Women's Hair & Roots</span>
-            </label>
-          </div>
-        </div>
-
-        <!-- Review Title -->
-        <div class="space-y-1">
-          <label for="review-title" class="block text-xs font-bold text-gray-300">Review Title / Headline <span class="text-amber-400">*</span></label>
-          <input type="text" id="review-title" required placeholder="e.g. Visible dark hair transition in 3 washes!" class="w-full bg-[#1a1d26] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] transition-colors">
-        </div>
-
-        <!-- Review Body Text (Max 300 Words) -->
-        <div class="space-y-1">
-          <div class="flex items-center justify-between">
-            <label for="review-body" class="block text-xs font-bold text-gray-300">Detailed Experience <span class="text-amber-400">*</span></label>
-            <span id="word-count-badge" class="text-[11px] font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">0 / 300 words</span>
-          </div>
-          <textarea id="review-body" rows="4" required placeholder="Describe your experience: scalp sensation, grey coverage, fragrance, how many washes it took... (Max 300 words)" class="w-full bg-[#1a1d26] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] transition-colors resize-none"></textarea>
-          <p id="word-count-error" class="hidden text-[11px] text-red-400 font-bold">⚠️ Review text cannot exceed 300 words limit!</p>
-        </div>
-
-        <!-- Max 2 Photos Upload Field (Flipkart & Amazon Style) -->
-        <div class="space-y-2">
-          <div class="flex items-center justify-between">
-            <label class="block text-xs font-bold text-gray-300">📸 Attach Photos (Max 2 Photos)</label>
-            <span id="photo-count-badge" class="text-[10px] text-amber-300 font-semibold">0 / 2 photos selected</span>
-          </div>
-          
-          <div id="photo-upload-container" class="border-2 border-dashed border-white/20 hover:border-[#d4af37]/60 rounded-2xl p-4 text-center bg-white/5 transition-colors cursor-pointer relative">
-            <input type="file" id="review-photo-input" accept="image/*" multiple class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10">
-            
-            <div id="photo-upload-placeholder" class="space-y-1 pointer-events-none">
-              <div class="text-2xl">📸</div>
-              <p class="text-xs text-gray-300 font-medium">Click or Drag photos here (Upload up to 2 photos)</p>
-              <p class="text-[10px] text-gray-500">e.g., Photo 1: Hair Before/Bottle &bull; Photo 2: Hair After/Result</p>
-            </div>
-
-            <!-- Preview Grid for up to 2 Photos -->
-            <div id="photo-preview-container" class="hidden flex-wrap items-center justify-center gap-3 relative z-20 pointer-events-auto pt-1">
-              <!-- Dynamically populated previews -->
-            </div>
-          </div>
-        </div>
-
-        <!-- Verified Checkbox -->
-        <div class="flex items-center gap-2 pt-1">
-          <input type="checkbox" id="review-verified" checked class="w-4 h-4 accent-emerald-500 rounded cursor-pointer">
-          <label for="review-verified" class="text-xs text-gray-300 cursor-pointer select-none">
-            I certify this is a genuine purchase & honest experience with BlackRoots Shampoo.
-          </label>
-        </div>
-
-        <!-- Form Submit Buttons -->
-        <div class="pt-4 flex items-center justify-end gap-3 border-t border-white/10">
-          <button type="button" id="cancel-review-btn" class="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-bold text-xs transition-colors">
-            Cancel
-          </button>
-          <button type="submit" id="submit-review-btn" class="bg-gradient-to-r from-[#d4af37] via-amber-300 to-[#d4af37] text-black font-extrabold text-xs py-3 px-6 rounded-xl hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all transform active:scale-95 flex items-center gap-2 shadow-xl">
-            <span>🚀 Publish Review Live</span>
-          </button>
-        </div>
-
-      </form>
-    </div>
-  </div>
-
-  <!-- Dynamic Toast Notification Container -->
-    <!-- Dynamic Toast Notification Container -->
-  <div id="review-toast" class="fixed top-6 right-6 z-50 transform translate-y-[-100px] opacity-0 pointer-events-none transition-all duration-500 max-w-sm w-full bg-[#12151c] border-2 border-[#d4af37] shadow-2xl rounded-2xl p-4 flex items-center gap-3">
-    <div class="w-10 h-10 rounded-full bg-[#d4af37] text-black text-xl flex items-center justify-center font-bold shrink-0">🎉</div>
-    <div>
-      <h4 id="toast-title" class="font-bold text-xs text-amber-300 uppercase tracking-wide">Review Published!</h4>
-      <p id="toast-msg" class="text-xs text-gray-200">Your review has been added live to the customer ratings grid.</p>
-    </div>
-  </div>
-
-
-  <script>
-    // Write a Customer Review Modal & Real-Time Grid Prepend Logic (Compulsory City & Relative Time Display)
-    document.addEventListener('DOMContentLoaded', function() {
-      const modal = document.getElementById('add-review-modal');
-      const modalCard = document.getElementById('modal-card');
-      const openModalBtns = document.querySelectorAll('.js-open-review-modal');
-      const closeModalBtn = document.getElementById('close-review-modal');
-      const cancelModalBtn = document.getElementById('cancel-review-btn');
-      const reviewForm = document.getElementById('review-form');
-      
-      const starPicker = document.getElementById('star-rating-picker');
-      const starRatingInput = document.getElementById('review-rating');
-      const starRatingLabel = document.getElementById('star-rating-label');
-      
-      const reviewBodyInput = document.getElementById('review-body');
-      const wordCountBadge = document.getElementById('word-count-badge');
-      const wordCountError = document.getElementById('word-count-error');
-      
-      const photoInput = document.getElementById('review-photo-input');
-      const photoPlaceholder = document.getElementById('photo-upload-placeholder');
-      const photoPreviewContainer = document.getElementById('photo-preview-container');
-      const photoCountBadge = document.getElementById('photo-count-badge');
-      
-      const dpInput = document.getElementById('review-dp-input');
-      const dpPreviewImg = document.getElementById('dp-preview-img');
-      const dpPlaceholder = document.getElementById('dp-placeholder');
-      const removeDpBtn = document.getElementById('remove-dp-btn');
-      let uploadedDpDataUrl = '';
-      
-      let uploadedPhotosDataUrls = [];
-
-      const starLabels = {
-        1: '1.0 — Poor',
-        2: '2.0 — Fair',
-        3: '3.0 — Good',
-        4: '4.0 — Very Good',
-        5: '5.0 — Outstanding!'
-      };
-
-      // Open Modal Function
-      function openModal() {
-        if (!modal) return;
-        modal.classList.remove('opacity-0', 'pointer-events-none');
-        modalCard.classList.remove('scale-95');
-        modalCard.classList.add('scale-100');
-        document.body.style.overflow = 'hidden';
-      }
-
-      // Close Modal Function
-      function closeModal() {
-        if (!modal) return;
-        modal.classList.add('opacity-0', 'pointer-events-none');
-        modalCard.classList.remove('scale-100');
-        modalCard.classList.add('scale-95');
-        document.body.style.overflow = '';
-      }
-
-      openModalBtns.forEach(btn => btn.addEventListener('click', openModal));
-      if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
-      if (cancelModalBtn) cancelModalBtn.addEventListener('click', closeModal);
-
-      if (modal) {
-        modal.addEventListener('click', function(e) {
-          if (e.target === modal) closeModal();
-        });
-      }
-
-      // Star Rating Hover & Select Handler
-      if (starPicker) {
-        const stars = starPicker.querySelectorAll('[data-star]');
-        
-        function updateStars(rating) {
-          starRatingInput.value = rating;
-          starRatingLabel.textContent = starLabels[rating] || (rating + '.0');
-          
-          stars.forEach(star => {
-            const sVal = parseInt(star.getAttribute('data-star'));
-            if (sVal <= rating) {
-              star.classList.add('text-amber-400');
-              star.classList.remove('text-gray-600');
-            } else {
-              star.classList.remove('text-amber-400');
-              star.classList.add('text-gray-600');
-            }
-          });
-        }
-
-        stars.forEach(star => {
-          star.addEventListener('click', function() {
-            const val = parseInt(this.getAttribute('data-star'));
-            updateStars(val);
-          });
-
-          star.addEventListener('mouseenter', function() {
-            const val = parseInt(this.getAttribute('data-star'));
-            stars.forEach(s => {
-              const sVal = parseInt(s.getAttribute('data-star'));
-              if (sVal <= val) {
-                s.classList.add('text-amber-400');
-                s.classList.remove('text-gray-600');
-              } else {
-                s.classList.remove('text-amber-400');
-                s.classList.add('text-gray-600');
-              }
-            });
-          });
-        });
-
-        starPicker.addEventListener('mouseleave', function() {
-          const currentVal = parseInt(starRatingInput.value) || 5;
-          updateStars(currentVal);
-        });
-      }
-
-      // Live 300 Word Counter Handler
-      function getWordCount(text) {
-        const words = text.trim().split(/\s+/).filter(w => w.length > 0);
-        return words.length;
-      }
-
-      if (reviewBodyInput && wordCountBadge) {
-        reviewBodyInput.addEventListener('input', function() {
-          const count = getWordCount(this.value);
-          wordCountBadge.textContent = `${count} / 300 words`;
-
-          if (count > 300) {
-            wordCountBadge.classList.remove('text-emerald-400', 'bg-emerald-950/60', 'border-emerald-500/30');
-            wordCountBadge.classList.add('text-red-400', 'bg-red-950/80', 'border-red-500/50');
-            if (wordCountError) wordCountError.classList.remove('hidden');
-          } else {
-            wordCountBadge.classList.remove('text-red-400', 'bg-red-950/80', 'border-red-500/50');
-            wordCountBadge.classList.add('text-emerald-400', 'bg-emerald-950/60', 'border-emerald-500/30');
-            if (wordCountError) wordCountError.classList.add('hidden');
-          }
-        });
-      }
-
-      // Dynamic Relative Time Formatter ("Itne Din Purana")
-      function getRelativeTime(timestamp) {
-        if (!timestamp) return 'Just Now';
-        const now = Date.now();
-        const elapsedMs = now - timestamp;
-        const elapsedSec = Math.floor(elapsedMs / 1000);
-        const elapsedMin = Math.floor(elapsedSec / 60);
-        const elapsedHours = Math.floor(elapsedMin / 60);
-        const elapsedDays = Math.floor(elapsedHours / 24);
-        const elapsedWeeks = Math.floor(elapsedDays / 7);
-
-        if (elapsedSec < 45) return 'Just Now';
-        if (elapsedMin < 60) return `${elapsedMin} ${elapsedMin === 1 ? 'min' : 'mins'} ago`;
-        if (elapsedHours < 24) return `${elapsedHours} ${elapsedHours === 1 ? 'hour' : 'hours'} ago`;
-        if (elapsedDays < 7) return `${elapsedDays} ${elapsedDays === 1 ? 'day' : 'days'} ago`;
-        return `${elapsedWeeks} ${elapsedWeeks === 1 ? 'week' : 'weeks'} ago`;
-      }
-
-      // DP Avatar Upload Handler
-      if (dpInput) {
-        dpInput.addEventListener('change', function(e) {
-          const file = e.target.files[0];
-          if (!file) return;
-          if (file.size > 5 * 1024 * 1024) {
-            alert('Profile photo size exceeds 5MB limit!');
-            dpInput.value = '';
-            return;
-          }
-          const reader = new FileReader();
-          reader.onload = function(evt) {
-            uploadedDpDataUrl = evt.target.result;
-            if (dpPreviewImg) {
-              dpPreviewImg.src = uploadedDpDataUrl;
-              dpPreviewImg.classList.remove('hidden');
-            }
-            if (dpPlaceholder) dpPlaceholder.classList.add('hidden');
-            if (removeDpBtn) removeDpBtn.classList.remove('hidden');
-          };
-          reader.readAsDataURL(file);
-        });
-      }
-
-      if (removeDpBtn) {
-        removeDpBtn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          uploadedDpDataUrl = '';
-          if (dpInput) dpInput.value = '';
-          if (dpPreviewImg) {
-            dpPreviewImg.src = '';
-            dpPreviewImg.classList.add('hidden');
-          }
-          if (dpPlaceholder) dpPlaceholder.classList.remove('hidden');
-          removeDpBtn.classList.add('hidden');
-        });
-      }
-
-      // Max 2 Photos Upload Handler
-      function renderPhotoPreviews() {
-        if (!photoPreviewContainer) return;
-        photoPreviewContainer.innerHTML = '';
-
-        if (uploadedPhotosDataUrls.length === 0) {
-          photoPreviewContainer.classList.add('hidden');
-          photoPreviewContainer.classList.remove('flex');
-          if (photoPlaceholder) photoPlaceholder.classList.remove('hidden');
-          if (photoCountBadge) photoCountBadge.textContent = '0 / 2 photos selected';
-          return;
-        }
-
-        if (photoPlaceholder) photoPlaceholder.classList.add('hidden');
-        photoPreviewContainer.classList.remove('hidden');
-        photoPreviewContainer.classList.add('flex');
-        if (photoCountBadge) photoCountBadge.textContent = `${uploadedPhotosDataUrls.length} / 2 photos selected`;
-
-        uploadedPhotosDataUrls.forEach((url, idx) => {
-          const wrapper = document.createElement('div');
-          wrapper.className = "relative flex flex-col items-center gap-1";
-          wrapper.innerHTML = `
-            <div class="w-20 h-20 rounded-xl overflow-hidden border border-[#d4af37] shadow-lg relative bg-black">
-              <img src="${url}" alt="Preview ${idx + 1}" class="w-full h-full object-cover">
-              <span class="absolute top-1 left-1 bg-black/70 text-amber-300 font-bold text-[9px] px-1.5 py-0.5 rounded">#${idx + 1}</span>
-            </div>
-            <button type="button" class="js-remove-photo-item text-[10px] text-red-400 hover:text-red-300 font-bold bg-red-950/80 px-2 py-0.5 rounded-full border border-red-500/30" data-index="${idx}">
-              ✕ Remove
-            </button>
-          `;
-          photoPreviewContainer.appendChild(wrapper);
-        });
-
-        // Remove item click listeners
-        const removeBtns = photoPreviewContainer.querySelectorAll('.js-remove-photo-item');
-        removeBtns.forEach(btn => {
-          btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const index = parseInt(this.getAttribute('data-index'));
-            uploadedPhotosDataUrls.splice(index, 1);
-            renderPhotoPreviews();
-          });
-        });
-      }
-
-      if (photoInput) {
-        photoInput.addEventListener('change', function(e) {
-          const files = Array.from(e.target.files);
-          if (!files.length) return;
-
-          const availableSlots = 2 - uploadedPhotosDataUrls.length;
-          if (availableSlots <= 0) {
-            alert('Maximum 2 photos allowed per review!');
-            photoInput.value = '';
-            return;
-          }
-
-          const filesToProcess = files.slice(0, availableSlots);
-          if (files.length > availableSlots) {
-            alert(`You can only upload up to 2 photos. Processing first ${availableSlots} photo(s).`);
-          }
-
-          let processed = 0;
-          filesToProcess.forEach(file => {
-            if (file.size > 5 * 1024 * 1024) {
-              alert(`File "${file.name}" exceeds 5MB limit and was skipped.`);
-              return;
-            }
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-              uploadedPhotosDataUrls.push(evt.target.result);
-              processed++;
-              if (processed === filesToProcess.length) {
-                renderPhotoPreviews();
-                photoInput.value = '';
-              }
-            };
-            reader.readAsDataURL(file);
-          });
-        });
-      }
-
-      // Toast Notification Function
-      function showToast(name) {
-        const toast = document.getElementById('review-toast');
-        const toastMsg = document.getElementById('toast-msg');
-        if (!toast) return;
-
-        if (toastMsg) {
-          toastMsg.textContent = `Thank you ${name}! Your review has been added live to the page.`;
-        }
-
-        toast.classList.remove('translate-y-[-100px]', 'opacity-0', 'pointer-events-none');
-        toast.classList.add('translate-y-0', 'opacity-100');
-
-        setTimeout(() => {
-          toast.classList.remove('translate-y-0', 'opacity-100');
-          toast.classList.add('translate-y-[-100px]', 'opacity-0', 'pointer-events-none');
-        }, 5000);
-      }
-
-      // User Initials Creator
-      function getInitials(name) {
-        const parts = name.trim().split(' ');
-        if (parts.length >= 2) {
-          return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-        }
-        return name.slice(0, 2).toUpperCase();
-      }
-
-            // Create Review Card DOM Element (Bulletproof Layout, Responsive & Symmetric)
-      function createCardElement(data) {
-        const div = document.createElement('div');
-        div.className = "p-4 sm:p-6 rounded-2xl sm:rounded-3xl glass-panel-luxury border border-[#d4af37]/45 shadow-xl flex flex-col justify-between h-full transition-all duration-300 hover:border-[#d4af37] w-full box-border break-words overflow-hidden animate-fadeIn relative";
-        div.style.cssText = "display: flex !important; width: 100% !important; max-width: 100% !important; margin-bottom: 0 !important; box-sizing: border-box !important;";
-        div.setAttribute('data-category', data.category || 'all');
-        div.setAttribute('data-date', data.date || Date.now());
-
-        const initials = getInitials(data.name || 'Customer');
-        let avatarMarkup = '';
-        if (data.dp) {
-          avatarMarkup = `
-            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full p-0.5 bg-gradient-to-tr from-[#d4af37] via-[#f3e5ab] to-[#d4af37] shadow-lg shrink-0 overflow-hidden border border-white/20" title="${data.name}">
-              <img src="${data.dp}" alt="${data.name}" class="w-full h-full rounded-full object-cover object-center">
-            </div>
-          `;
-        } else {
-          avatarMarkup = `
-            <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-tr from-[#d4af37] via-[#f3e5ab] to-[#d4af37] text-black font-extrabold text-xs sm:text-sm flex items-center justify-center shadow-lg shrink-0 border border-white/20" title="${data.name}">
-              ${initials}
-            </div>
-          `;
-        }
-        
-        const catStr = (data.category || '').toLowerCase();
-        const categoryBadge = catStr.includes('men') 
-          ? '<span class="text-[9px] sm:text-[10px] text-amber-300 bg-amber-400/10 border-amber-400/30 font-semibold px-2 py-0.5 rounded-full border shrink-0">👨 Men\'s Scalp</span>'
-          : '<span class="text-[9px] sm:text-[10px] text-pink-300 bg-pink-400/10 border-pink-400/30 font-semibold px-2 py-0.5 rounded-full border shrink-0">👩 Women\'s Hair</span>';
-
-        const starCount = Math.min(5, Math.max(1, parseInt(data.rating) || 5));
-        const starsHtml = '★'.repeat(starCount) + '☆'.repeat(5 - starCount);
-        const relativeTimeText = getRelativeTime(data.timestamp || Date.now());
-
-        let photosArray = [];
-        if (Array.isArray(data.photos)) {
-          photosArray = data.photos;
-        } else if (data.photo) {
-          photosArray = [data.photo];
-        }
-
-        let photoMarkup = '';
-        if (photosArray.length === 1) {
-          photoMarkup = `
-            <div class="w-full rounded-2xl overflow-hidden border border-white/10 relative bg-black/60 mx-auto mt-2.5" style="aspect-ratio: 1/1; width: 100%; max-width: 100%;">
-              <img src="${photosArray[0]}" alt="Customer Photo Proof" class="w-full h-full object-cover object-center">
-            </div>
-          `;
-        } else if (photosArray.length >= 2) {
-          photoMarkup = `
-            <div class="grid grid-cols-2 gap-2 mt-2.5">
-              <div class="w-full rounded-xl overflow-hidden border border-white/10 relative bg-black/60" style="aspect-ratio: 1/1;">
-                <img src="${photosArray[0]}" alt="Customer Photo Proof 1" class="w-full h-full object-cover object-center">
-                <span class="absolute bottom-1.5 left-1.5 bg-black/75 text-amber-300 text-[8px] font-bold px-1.5 py-0.2 rounded">Photo 1</span>
-              </div>
-              <div class="w-full rounded-xl overflow-hidden border border-white/10 relative bg-black/60" style="aspect-ratio: 1/1;">
-                <img src="${photosArray[1]}" alt="Customer Photo Proof 2" class="w-full h-full object-cover object-center">
-                <span class="absolute bottom-1.5 left-1.5 bg-black/75 text-amber-300 text-[8px] font-bold px-1.5 py-0.2 rounded">Photo 2</span>
-              </div>
-            </div>
-          `;
-        } else {
-          // Filler badge for equal symmetrical heights
-          photoMarkup = `
-            <div class="mt-3 p-3 rounded-2xl bg-white/5 border border-white/10 text-[10px] text-gray-300 flex items-center justify-between">
-              <span class="flex items-center gap-1.5 font-semibold text-emerald-400">
-                <span>✓</span> Verified Scalp Buyer
-              </span>
-              <span class="text-amber-300 font-bold">100% Herbal Formula</span>
-            </div>
-          `;
-        }
-
-        // Sanitization helper
-        function escapeHtml(str) {
-          return (str || '').replace(/[&<>"']/g, function(m) {
-            return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'}[m];
-          });
-        }
-
-        const safeName = escapeHtml(data.name || 'Customer');
-        const safeCity = escapeHtml(data.city || 'India');
-        const safeTitle = escapeHtml(data.title || 'Genuine Experience');
-        const safeBody = escapeHtml(data.body || '');
-
-        div.innerHTML = `
-          <div class="space-y-2.5">
-            <div class="flex items-center justify-between gap-2">
-              <div class="flex items-center gap-2.5 min-w-0">
-                ${avatarMarkup}
-                <div class="min-w-0">
-                  <h3 class="font-serif text-sm sm:text-base font-bold text-white leading-snug flex items-center gap-1.5 truncate">
-                    <span>${safeName}</span>
-                    <span class="text-[8px] bg-amber-400/20 text-amber-300 px-1 py-0.2 rounded border border-amber-400/40 font-mono uppercase shrink-0">NEW</span>
-                  </h3>
-                  <span class="text-[10px] text-gray-400 block truncate">${safeCity} &bull; ${relativeTimeText}</span>
-                </div>
-              </div>
-              <span class="text-[9px] sm:text-[10px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-500/40 px-2 py-0.5 rounded-full flex items-center gap-1 shrink-0">✓ Verified</span>
-            </div>
-            
-            <div class="flex items-center justify-between pt-0.5">
-              <div class="text-amber-400 text-xs tracking-wider">${starsHtml} <span class="text-white font-bold ml-1">${parseFloat(data.rating || 5).toFixed(1)}</span></div>
-              ${categoryBadge}
-            </div>
-            
-            <h4 class="font-serif text-base sm:text-lg font-bold text-white leading-snug break-words">"${safeTitle}"</h4>
-            <p class="text-xs text-gray-300 leading-relaxed font-light whitespace-pre-line break-words">${safeBody}</p>
-            ${photoMarkup}
-          </div>
-          
-          <div class="pt-3 mt-3 border-t border-white/10 flex items-center justify-between text-[10px] sm:text-[11px] text-gray-400">
-            <span>Verified Purchase (250ml)</span>
-            <button type="button" class="js-like-btn hover:text-amber-300 flex items-center gap-1 font-bold text-gray-300 transition-colors cursor-pointer" data-likes="${data.likes || 1}">
-              👍 <span class="js-like-count">${data.likes || 1}</span> Helpful
-            </button>
-          </div>
-        `;
-
-        // Add Like click functionality
-        const likeBtn = div.querySelector('.js-like-btn');
-        if (likeBtn) {
-          likeBtn.addEventListener('click', function() {
-            let likes = parseInt(this.getAttribute('data-likes')) || 1;
-            likes++;
-            this.setAttribute('data-likes', likes);
-            this.querySelector('.js-like-count').textContent = likes;
-            this.classList.add('text-amber-400');
-          });
-        }
-
-        return div;
-      }
-
-      // Load Saved User Reviews from LocalStorage
-      const grid = document.querySelector('.columns-1');
-      function loadUserReviews() {
-        if (!grid) return;
-        const stored = localStorage.getItem('blackroots_user_reviews');
-        if (stored) {
-          try {
-            const userReviews = JSON.parse(stored);
-            userReviews.reverse().forEach(data => {
-              const card = createCardElement(data);
-              if (window.addNewReviewToDeck) { window.addNewReviewToDeck(card); } else if (grid) { grid.insertBefore(card, grid.firstChild); }
-            });
-            // Update counts
-            const showingCount = document.querySelector('.js-showing-count');
-            const visibleCards = document.querySelectorAll('[data-category]').length;
-            if (showingCount) showingCount.textContent = '1,280+';
-          } catch(e) {
-            console.error('Error loading saved reviews', e);
-          }
-        }
-      }
-
-      loadUserReviews();
-      
-
-      // Form Submit Handler
-      if (reviewForm) {
-        reviewForm.addEventListener('submit', function(e) {
-          e.preventDefault();
-          
-          const name = document.getElementById('review-name').value.trim();
-          const city = document.getElementById('review-city').value.trim();
-          const title = document.getElementById('review-title').value.trim();
-          const body = reviewBodyInput.value.trim();
-          const rating = starRatingInput.value || '5';
-          const catRadio = document.querySelector('input[name="review-category"]:checked');
-          let category = catRadio ? catRadio.value : 'women photo';
-
-          // Compulsory City Check
-          if (!city) {
-            alert('Please enter or select your City/Location (Compulsory field)!');
-            document.getElementById('review-city').focus();
-            return;
-          }
-
-          // Word Count Check (Max 300 Words)
-          const wordCount = getWordCount(body);
-          if (wordCount > 300) {
-            alert(`Your review text contains ${wordCount} words. Please shorten your review to 300 words or less!`);
-            reviewBodyInput.focus();
-            return;
-          }
-
-          if (uploadedPhotosDataUrls.length > 0 && !category.includes('photo')) {
-            category += ' photo';
-          }
-
-          const now = new Date();
-          const timestamp = now.getTime();
-          const dateStr = now.getFullYear().toString() +
-                          (now.getMonth() + 1).toString().padStart(2, '0') +
-                          now.getDate().toString().padStart(2, '0');
-
-          const reviewObj = {
-            id: timestamp,
-            name: name,
-            city: city,
-            title: title,
-            body: body,
-            rating: rating,
-            category: category,
-            photos: [...uploadedPhotosDataUrls],
-            timestamp: timestamp,
-            date: dateStr,
-            likes: 1
-          };
-
-          // Save to LocalStorage
-          let existing = [];
-          try {
-            existing = JSON.parse(localStorage.getItem('blackroots_user_reviews') || '[]');
-          } catch(err) {
-            existing = [];
-          }
-          existing.push(reviewObj);
-          localStorage.setItem('blackroots_user_reviews', JSON.stringify(existing));
-
-          // Prepend to Grid
-          const cardEl = createCardElement(reviewObj);
-          if (grid) {
-            grid.insertBefore(cardEl, grid.firstChild);
-            cardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-
-          // Reset Form & Close Modal
-          reviewForm.reset();
-          uploadedPhotosDataUrls = [];
-          renderPhotoPreviews();
-          if (wordCountBadge) {
-            wordCountBadge.textContent = '0 / 300 words';
-            wordCountBadge.className = "text-[11px] font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30";
-          }
-          closeModal();
-
-          // Show Toast Notification
-          showToast(name);
-
-          // Update visible review count
-          const showingCount = document.querySelector('.js-showing-count');
-          const totalCards = document.querySelectorAll('[data-category]').length;
-          if (showingCount) showingCount.textContent = '1,280+';
-        });
-      }
-    });
-  </script>
-
-
-  
-
-  
-      
-
-    
-
-  <script src="./assets/theme.js?v=1787929459"></script>
-  <script src="./assets/instant-butter.js" defer></script>
 
 <!-- 📱 Ultra-Luxury Mobile Navigation Drawer (Clean, Minimalist & Classy) -->
   <div id="MobileNavBackdrop" onclick="closeMobileNavDrawer()" class="fixed inset-0 bg-black/80 backdrop-blur-md z-[99998] opacity-0 pointer-events-none transition-opacity duration-300 ease-out" style="z-index: 999998 !important; touch-action: none !important;"></div>
