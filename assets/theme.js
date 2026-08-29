@@ -634,13 +634,20 @@ document.addEventListener('DOMContentLoaded', function() {
   try { initAIConsultantChat(); } catch(e) {}
 });
 
-/* 📦 Quick Order Modal Global Controls */
+/* 📦 Quick Order Modal Global Controls (Bulletproof & Immediate) */
 function openQuickOrderModal(customPrice, customTitle) {
   const modal = document.getElementById('QuickOrderModal');
   if (modal) {
-    let price = customPrice || (window.selectedPack ? window.selectedPack.price : 499);
-    const priceDisplay = document.getElementById('OrderModalPriceDisplay');
-    if (priceDisplay) priceDisplay.textContent = '₹' + price;
+    if (customPrice && typeof window.selectModalBundle === 'function') {
+      if (Number(customPrice) >= 700) {
+        window.selectModalBundle(2, 799, '2 Bottles Pack (500ml)', 'Best Seller • Save ₹200');
+      } else {
+        window.selectModalBundle(1, 499, '1 Bottle (250ml)', 'Standard 1 Month Supply');
+      }
+    }
+    if (typeof window.recalculateCheckoutPrice === 'function') {
+      window.recalculateCheckoutPrice();
+    }
     
     const form = document.getElementById('QuickOrderForm');
     const success = document.getElementById('QuickOrderSuccess');
@@ -655,9 +662,12 @@ function openQuickOrderModal(customPrice, customTitle) {
 
     modal.classList.remove('hidden');
     modal.classList.add('flex');
+    modal.style.removeProperty('display');
     modal.style.setProperty('display', 'flex', 'important');
     modal.style.setProperty('visibility', 'visible', 'important');
     modal.style.setProperty('opacity', '1', 'important');
+    modal.style.setProperty('pointer-events', 'auto', 'important');
+    modal.style.setProperty('z-index', '9999999', 'important');
     document.body.style.overflow = 'hidden';
   } else {
     window.location.href = 'product.html';
@@ -670,6 +680,9 @@ function closeQuickOrderModal() {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
     modal.style.setProperty('display', 'none', 'important');
+    modal.style.setProperty('visibility', 'hidden', 'important');
+    modal.style.setProperty('opacity', '0', 'important');
+    modal.style.setProperty('pointer-events', 'none', 'important');
     document.body.style.overflow = '';
   }
 }
@@ -1147,21 +1160,20 @@ window.switchToSimPage = switchToSimPage;
     }
   }
 
-  // Global Click Delegator
+    // Global Click Delegator for Buy / Order buttons
   document.addEventListener('click', function(e) {
-    const target = e.target.closest('.js-trigger-order, a[href="product.html"], a[href="#order"]');
+    const target = e.target.closest('.js-trigger-order, button[onclick*="openQuickOrderModal"], a[href="product.html"], a[href="#order"]');
     if (target) {
       const text = (target.textContent || '').toLowerCase();
       if (text.includes('buy') || text.includes('order') || text.includes('claim') || target.classList.contains('js-trigger-order')) {
         const modal = document.getElementById('QuickOrderModal');
         if (modal) {
           e.preventDefault();
-          e.stopPropagation();
           window.openQuickOrderModal();
         }
       }
     }
-  }, true);
+  });
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {
