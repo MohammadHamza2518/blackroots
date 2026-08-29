@@ -893,65 +893,76 @@ window.switchToSimPage = switchToSimPage;
   };
 
   // Shiprocket One-Click Checkout Trigger Handler
-    // 🚀 Master Shiprocket Fastrr 1-Click Checkout Invoker
-  window.triggerShiprocketCheckout = function(customPack) {
+      // 🚀 Master Shiprocket Fastrr 1-Click Checkout Invoker
+  window.triggerShiprocketCheckout = async function(customPack) {
     const pack = customPack || window.selectedPack || {
       qty: 1,
       basePrice: 499,
       price: 499,
-      title: 'BlackRoots Ayurvedic Hair Darkening Shampoo (250ml)',
+      title: 'BlackRoots Herbal Hair Darkening Shampoo (250ml)',
       sku: 'BR-250ML'
     };
 
-    // Calculate final price with active discount
     const isOnline = (window.currentPaymentMethod === 'Online');
     const finalPrice = isOnline ? (pack.price - 50) : pack.price;
 
-    // Check if Shiprocket Fastrr / Headless SDK is available in window
+    // Check for native Fastrr / Shiprocket SDK in window
     if (typeof window.FastrrCheckout !== 'undefined' && window.FastrrCheckout.open) {
-      window.FastrrCheckout.open({
-        apiKey: 'hl7tTx1OioeJn0KS',
-        cart: {
+      try {
+        window.FastrrCheckout.open({
+          apiKey: 'hl7tTx1OioeJn0KS',
+          cart: {
+            items: [{
+              name: pack.title,
+              price: finalPrice,
+              quantity: pack.qty || 1,
+              sku: pack.sku || 'BR-250ML'
+            }]
+          }
+        });
+        return;
+      } catch(e) {}
+    }
+
+    if (typeof window.Fastrr !== 'undefined' && window.Fastrr.openCheckout) {
+      try {
+        window.Fastrr.openCheckout({
+          merchantId: 'hl7tTx1OioeJn0KS',
           items: [{
             name: pack.title,
             price: finalPrice,
             quantity: pack.qty || 1,
             sku: pack.sku || 'BR-250ML'
           }]
+        });
+        return;
+      } catch(e) {}
+    }
+
+    // Try backend API launcher for Fastrr URL
+    try {
+      const res = await fetch('api/shiprocket-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: [{
+            name: pack.title,
+            price: finalPrice,
+            quantity: pack.qty || 1,
+            sku: pack.sku || 'BR-250ML'
+          }]
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.success && data.checkout_url) {
+          window.location.href = data.checkout_url;
+          return;
         }
-      });
-      return;
-    }
+      }
+    } catch(err) {}
 
-    if (typeof window.Fastrr !== 'undefined' && window.Fastrr.openCheckout) {
-      window.Fastrr.openCheckout({
-        merchantId: 'hl7tTx1OioeJn0KS',
-        items: [{
-          name: pack.title,
-          price: finalPrice,
-          quantity: pack.qty || 1,
-          sku: pack.sku || 'BR-250ML'
-        }]
-      });
-      return;
-    }
-
-    if (typeof window.ShiprocketCheckout !== 'undefined' && window.ShiprocketCheckout.open) {
-      window.ShiprocketCheckout.open({
-        merchantId: 'hl7tTx1OioeJn0KS',
-        apiKey: 'hl7tTx1OioeJn0KS',
-        items: [{
-          name: pack.title,
-          price: finalPrice,
-          quantity: pack.qty || 1,
-          sku: pack.sku || 'BR-250ML'
-        }],
-        theme: { color: '#d4af37' }
-      });
-      return;
-    }
-
-    // High-converting luxury fallback modal
+    // Fallback to Instant Luxury Modal
     if (typeof window.openQuickOrderModal === 'function') {
       window.openQuickOrderModal(pack.price, pack.title);
     }
