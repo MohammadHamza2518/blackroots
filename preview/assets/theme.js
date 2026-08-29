@@ -578,7 +578,7 @@ function initLiveShopperCounter() {
 
 /* 🎬 Smart Mobile Video Lazy-Loader & Auto-Play Observer (Zero-Lag Mobile Speed) */
 function initSmartVideoLazyLoader() {
-  const videos = document.querySelectorAll('video[data-lazy-video]');
+  const videos = document.querySelectorAll('.js-reel-card video, video[data-lazy-video]');
   if (!videos.length) return;
 
   if (!('IntersectionObserver' in window)) {
@@ -587,7 +587,8 @@ function initSmartVideoLazyLoader() {
         s.src = s.getAttribute('data-src');
         s.removeAttribute('data-src');
       });
-      v.load();
+      const p = v.play();
+      if (p !== undefined) p.catch(function() {});
     });
     return;
   }
