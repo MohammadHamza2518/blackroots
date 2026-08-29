@@ -712,12 +712,51 @@ window.switchToSimPage = switchToSimPage;
 (function() {
   'use strict';
 
+  /* 🚀 Shiprocket One-Click Quick Checkout Configuration */
+  window.SHIPROCKET_CHECKOUT_CONFIG = {
+    enabled: false, // Set to true once Shiprocket Merchant ID is added
+    merchantId: '', // e.g. "SR_CHECKOUT_XXXXX" or Fastrr Merchant ID
+    appId: '',      // e.g. Shiprocket App ID
+    channelId: '',  // Shiprocket Channel ID
+    environment: 'production'
+  };
+
   // Global pack state
   window.selectedPack = {
     qty: 1,
     price: 499,
     title: '1 Bottle (250ml) — 1 Month Supply',
     saveText: 'Save ₹500'
+  };
+
+  // Shiprocket One-Click Checkout Trigger Handler
+  window.triggerShiprocketCheckout = function(customPack) {
+    const pack = customPack || window.selectedPack || {
+      qty: 1,
+      price: 499,
+      title: 'BlackRoots Ayurvedic Hair Darkening Shampoo (250ml)',
+      sku: 'BR-250ML'
+    };
+
+    if (window.SHIPROCKET_CHECKOUT_CONFIG && window.SHIPROCKET_CHECKOUT_CONFIG.enabled && window.SHIPROCKET_CHECKOUT_CONFIG.merchantId) {
+      if (typeof window.ShiprocketCheckout !== 'undefined' && window.ShiprocketCheckout.open) {
+        window.ShiprocketCheckout.open({
+          merchantId: window.SHIPROCKET_CHECKOUT_CONFIG.merchantId,
+          items: [{
+            name: pack.title,
+            price: pack.price,
+            quantity: pack.qty || 1,
+            sku: pack.sku || 'BR-SHAMPOO-250ML'
+          }],
+          theme: { color: '#d4af37' }
+        });
+        return;
+      }
+    }
+
+    if (typeof window.openQuickOrderModal === 'function') {
+      window.openQuickOrderModal(pack.price, pack.title);
+    }
   };
 
   // Switch Pack Function on Product Page
