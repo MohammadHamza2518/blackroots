@@ -13,34 +13,47 @@ module.exports = async (req, res) => {
   const API_SECRET = 'SX9xl506RtMcE6761XJgkzhJOl1QCUW6';
 
   try {
-    const { items, customer, payment_method, coupon } = req.body || {};
-    const selectedItem = (items && items[0]) || {
-      name: 'BlackRoots Herbal Hair Darkening Shampoo (250ml)',
-      price: 499,
-      quantity: 1,
-      sku: 'BR-250ML'
-    };
+    const { qty = 1, price = 499, title = 'BlackRoots Herbal Hair Darkening Shampoo (250ml)', isOnline = true, coupon = '' } = req.body || {};
+
+    const basePrice = Number(price) || (qty === 2 ? 799 : 499);
+    const discountAmt = isOnline ? 50.0 : 0.0;
+    const finalPrice = Math.max(0, basePrice - discountAmt);
+    const variantId = qty === 2 ? "1002" : "1001";
+    const imgUrl = qty === 2 
+      ? "https://blackroots.in/assets/blackroots-bottle-duo.png" 
+      : "https://blackroots.in/assets/blackroots-bottle-single.png";
 
     const payload = {
-      cart: {
+      cart_data: {
         items: [
           {
-            name: selectedItem.name,
-            sku: selectedItem.sku || 'BR-250ML',
-            unit_price: Number(selectedItem.price) || 499,
-            quantity: Number(selectedItem.quantity) || 1
+            variant_id: variantId,
+            quantity: Number(qty) || 1,
+            catalog_data: {
+              price: Number(basePrice),
+              name: title,
+              image_url: imgUrl
+            }
           }
-        ]
+        ],
+        cart_discount: discountAmt > 0 ? {
+          coupon_code: coupon || "PREPAID50",
+          amount: discountAmt
+        } : undefined,
+        mobile_app: false
       },
-      redirect_url: 'https://blackroots.in/track-order.html',
-      cancel_url: 'https://blackroots.in/product.html'
+      redirect_url: "https://blackroots.in/track-order.html",
+      timestamp: new Date().toISOString()
     };
+
+    if (!payload.cart_data.cart_discount) {
+      delete payload.cart_data.cart_discount;
+    }
 
     const payloadString = JSON.stringify(payload);
     const hmac = crypto.createHmac('sha256', API_SECRET).update(payloadString).digest('base64');
 
-    // Call Shiprocket Checkout API
-    const response = await fetch('https://checkout-api.shiprocket.com/v1/checkout/create', {
+    const srResponse = await fetch('https://checkout-api.shiprocket.com/api/v1/access-token/checkout', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -50,27 +63,24 @@ module.exports = async (req, res) => {
       body: payloadString
     });
 
-    const data = await response.json().catch(() => null);
+    const data = await srResponse.json().catch(() => null);
 
-    if (response.ok && data && (data.checkout_url || data.url || data.token)) {
+    if (srResponse.ok && data && data.ok && data.result && data.result.token) {
       return res.status(200).json({
         success: true,
-        checkout_url: data.checkout_url || data.url,
-        token: data.token
+        token: data.result.token,
+        order_id: data.result.data ? data.result.data.order_id : null
       });
     } else {
-      // Fallback
       return res.status(200).json({
         success: false,
-        fallback: true,
-        message: (data && data.message) || 'Fastrr checkout processing',
+        error: (data && data.error) ? data.error.message : 'Unable to generate Fastrr token',
         raw: data
       });
     }
   } catch (err) {
-    return res.status(200).json({
+    return res.status(500).json({
       success: false,
-      fallback: true,
       error: err.message
     });
   }
