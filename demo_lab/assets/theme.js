@@ -3,12 +3,14 @@
    ========================================================================== */
 
 // Auto-load Razorpay Checkout SDK for Instant Prepaid Orders
-if (!window.Razorpay && !document.getElementById('razorpay-checkout-sdk')) {
-  const rzpScript = document.createElement('script');
-  rzpScript.id = 'razorpay-checkout-sdk';
-  rzpScript.src = 'https://checkout.razorpay.com/v1/checkout.js';
-  rzpScript.async = true;
-  document.head.appendChild(rzpScript);
+if (typeof window !== 'undefined' && typeof document !== 'undefined' && !window.Razorpay && !document.getElementById('razorpay-checkout-sdk')) {
+  if (document.head && document.createElement) {
+    const rzpScript = document.createElement('script');
+    rzpScript.id = 'razorpay-checkout-sdk';
+    rzpScript.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    rzpScript.async = true;
+    document.head.appendChild(rzpScript);
+  }
 }
 
 /* 📱 Mobile Navigation Drawer Controls (Fail-Proof Zero-Lag Touch Engine) */
