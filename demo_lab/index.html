@@ -40,60 +40,7 @@
   <script src="./assets/analytics.js" defer></script>
   <script src="./assets/instant-butter.js" defer></script>
 
-    <script>
-    // Self-contained instant modal opener (Always works immediately)
-    window.openQuickOrderModal = function(customPrice, customTitle) {
-      var modal = document.getElementById('QuickOrderModal');
-      if (modal) {
-        if (customPrice && typeof window.selectModalBundle === 'function') {
-          if (Number(customPrice) >= 700) {
-            window.selectModalBundle(2, 799, '2 Bottles Pack (500ml)', 'Best Seller • Save ₹200');
-          } else {
-            window.selectModalBundle(1, 499, '1 Bottle (250ml)', 'Standard 1 Month Supply');
-          }
-        }
-        if (typeof window.recalculateCheckoutPrice === 'function') {
-          window.recalculateCheckoutPrice();
-        }
-        
-        var form = document.getElementById('QuickOrderForm');
-        var success = document.getElementById('QuickOrderSuccess');
-        if (form) {
-          form.classList.remove('hidden');
-          form.style.setProperty('display', 'block', 'important');
-        }
-        if (success) {
-          success.classList.add('hidden');
-          success.style.setProperty('display', 'none', 'important');
-        }
-
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
-        modal.style.removeProperty('display');
-        modal.style.setProperty('display', 'flex', 'important');
-        modal.style.setProperty('visibility', 'visible', 'important');
-        modal.style.setProperty('opacity', '1', 'important');
-        modal.style.setProperty('pointer-events', 'auto', 'important');
-        modal.style.setProperty('z-index', '9999999', 'important');
-        document.body.style.overflow = 'hidden';
-      } else {
-        window.location.href = 'product.html';
-      }
-    };
-
-    window.closeQuickOrderModal = function() {
-      var modal = document.getElementById('QuickOrderModal');
-      if (modal) {
-        modal.classList.add('hidden');
-        modal.classList.remove('flex');
-        modal.style.setProperty('display', 'none', 'important');
-        modal.style.setProperty('visibility', 'hidden', 'important');
-        modal.style.setProperty('opacity', '0', 'important');
-        modal.style.setProperty('pointer-events', 'none', 'important');
-        document.body.style.overflow = '';
-      }
-    };
-  </script>
+    
   
   
 
@@ -270,9 +217,150 @@
   <!-- 🚀 Shiprocket Fastrr 1-Click Smart Checkout SDK -->
   <script src="https://sr-headless.shiprocket.in/fastrr-checkout.js" data-api-key="hl7tTx1OioeJn0KS" defer></script>
   <script src="https://fastrr-boost-ui.pickrr.com/assets/js/channels/headless.js" data-merchant-id="hl7tTx1OioeJn0KS" defer></script>
+  
   <!-- 🚀 Official Shiprocket Fastrr 1-Click Checkout Engine -->
   <link rel="stylesheet" href="https://checkout-ui.shiprocket.com/assets/styles/shopify.css">
-  <script src="https://checkout-ui.shiprocket.com/assets/js/channels/shopify.js" defer></script>
+  <script src="https://checkout-ui.shiprocket.com/assets/js/channels/shopify.js"></script>
+  <script>
+    async function computeFastrrHmac(secret, message) {
+      const enc = new TextEncoder();
+      const key = await window.crypto.subtle.importKey(
+        "raw", enc.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+      );
+      const signature = await window.crypto.subtle.sign("HMAC", key, enc.encode(message));
+      const bytes = new Uint8Array(signature);
+      let binary = '';
+      for (let i = 0; i < bytes.byteLength; i++) { binary += String.fromCharCode(bytes[i]); }
+      return window.btoa(binary);
+    }
+
+    async function triggerShiprocketCheckout(e, customPack) {
+      if (e && e.preventDefault) e.preventDefault();
+      if (e && e.stopPropagation) e.stopPropagation();
+
+      const pack = customPack || window.selectedPack || {
+        qty: 1,
+        price: 499,
+        title: 'BlackRoots Herbal Hair Darkening Shampoo (250ml)',
+        sku: 'BR-250ML'
+      };
+
+      const isOnline = (window.currentPaymentMethod === 'Online' || typeof window.currentPaymentMethod === 'undefined');
+      const discountAmt = isOnline ? 50.0 : 0.0;
+      const basePrice = Number(pack.price) || (pack.qty === 2 ? 799 : 499);
+      const variantId = (pack.qty === 2) ? '1002' : '1001';
+      const imgUrl = (pack.qty === 2)
+        ? 'https://blackroots.in/assets/blackroots-bottle-duo.png'
+        : 'https://blackroots.in/assets/blackroots-bottle-single.png';
+
+      const btn = (e && e.currentTarget) || document.querySelector('.js-trigger-order') || document.querySelector('button[onclick*="triggerShiprocketCheckout"]');
+      let origHtml = '';
+      if (btn) {
+        origHtml = btn.innerHTML;
+        btn.innerHTML = '<span class="inline-flex items-center justify-center gap-2"><svg class="animate-spin h-5 w-5 text-black" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> ⚡ Opening Shiprocket Fastrr...</span>';
+      }
+
+      const API_KEY = 'hl7tTx1OioeJn0KS';
+      const API_SECRET = 'SX9xl506RtMcE6761XJgkzhJOl1QCUW6';
+
+      const payload = {
+        cart_data: {
+          items: [
+            {
+              variant_id: variantId,
+              quantity: Number(pack.qty) || 1,
+              catalog_data: {
+                price: Number(basePrice),
+                name: pack.title || 'BlackRoots Herbal Hair Darkening Shampoo (250ml)',
+                image_url: imgUrl
+              }
+            }
+          ],
+          mobile_app: false
+        },
+        redirect_url: 'https://blackroots.in/track-order.html',
+        timestamp: new Date().toISOString()
+      };
+
+      if (discountAmt > 0) {
+        payload.cart_data.cart_discount = {
+          coupon_code: 'ONLINE50',
+          amount: discountAmt
+        };
+      }
+
+      const payloadString = JSON.stringify(payload);
+      let token = null;
+
+      // 1. Direct Web Crypto Shiprocket API Call
+      try {
+        const hmac = await computeFastrrHmac(API_SECRET, payloadString);
+        const res = await fetch('https://checkout-api.shiprocket.com/api/v1/access-token/checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Api-Key': API_KEY,
+            'X-Api-HMAC-SHA256': hmac
+          },
+          body: payloadString
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.ok && data.result && data.result.token) {
+            token = data.result.token;
+          }
+        }
+      } catch(err) {
+        console.warn('Direct Shiprocket call fallback:', err);
+      }
+
+      // 2. Serverless Backend Fallback
+      if (!token) {
+        try {
+          const res = await fetch('api/shiprocket-checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              qty: pack.qty || 1,
+              price: basePrice,
+              title: pack.title,
+              isOnline: isOnline
+            })
+          });
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.success && data.token) {
+              token = data.token;
+            }
+          }
+        } catch(err) {}
+      }
+
+      if (btn) btn.innerHTML = origHtml;
+
+      // 3. Launch Official Shiprocket Fastrr Iframe
+      if (token && typeof HeadlessCheckout !== 'undefined' && HeadlessCheckout.addToCart) {
+        HeadlessCheckout.addToCart(e, token, {
+          fallbackUrl: "https://blackroots.in/product.html"
+        });
+        return;
+      } else if (token && typeof window.FastrrCheckout !== 'undefined' && window.FastrrCheckout.open) {
+        window.FastrrCheckout.open({ token: token });
+        return;
+      }
+
+      // If all else fails, open backup modal
+      const modal = document.getElementById('QuickOrderModal');
+      if (modal) {
+        modal.style.display = 'flex';
+        modal.classList.remove('hidden');
+      }
+    }
+
+    window.openQuickOrderModal = function(price, title) {
+      triggerShiprocketCheckout(window.event, price ? { price: price, title: title, qty: (price >= 700 ? 2 : 1) } : null);
+    };
+  </script>
 </head>
 <body class="bg-[#0a0b0e] text-white font-sans antialiased selection:bg-[#d4af37] selection:text-black">
 
