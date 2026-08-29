@@ -33,7 +33,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="./assets/theme.css?v=1787929459">
-  <script src="./assets/theme.js?v=1787929459" defer></script>
+  <script src="./assets/theme.js?v=17880233877389638" defer></script>
   <script src="./assets/analytics.js" defer></script>
   <script src="./assets/instant-butter.js" defer></script>
 
@@ -209,6 +209,142 @@
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8) !important;
   }
 </style>
+<!-- 🚀 Universal Shiprocket Fastrr 1-Click Checkout Engine -->
+  <script>
+    (function() {
+      'use strict';
+
+      var API_KEY = 'hl7tTx1OioeJn0KS';
+      var API_SECRET = 'SX9xl506RtMcE6761XJgkzhJOl1QCUW6';
+      var fastrrTokenCache = {};
+
+      async function getHmac(secret, msg) {
+        var enc = new TextEncoder();
+        var key = await window.crypto.subtle.importKey(
+          "raw", enc.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
+        );
+        var sig = await window.crypto.subtle.sign("HMAC", key, enc.encode(msg));
+        var bytes = new Uint8Array(sig);
+        var bin = '';
+        for (var i = 0; i < bytes.byteLength; i++) { bin += String.fromCharCode(bytes[i]); }
+        return window.btoa(bin);
+      }
+
+      async function fetchToken(qty) {
+        var packQty = Number(qty) || 1;
+        var basePrice = (packQty === 2) ? 799 : 499;
+        var variantId = (packQty === 2) ? '1002' : '1001';
+        var imgUrl = (packQty === 2)
+          ? 'https://blackroots.in/assets/blackroots-bottle-duo.png'
+          : 'https://blackroots.in/assets/blackroots-bottle-single.png';
+        var isOnline = (window.currentPaymentMethod === 'Online' || typeof window.currentPaymentMethod === 'undefined');
+        var discountAmt = isOnline ? 50.0 : 0.0;
+
+        var payload = {
+          cart_data: {
+            items: [{
+              variant_id: variantId,
+              quantity: packQty,
+              catalog_data: {
+                price: basePrice,
+                name: (packQty === 2) ? 'BlackRoots Duo Pack (500ml)' : 'BlackRoots Herbal Hair Darkening Shampoo (250ml)',
+                image_url: imgUrl
+              }
+            }],
+            mobile_app: false
+          },
+          redirect_url: 'https://blackroots.in/track-order.html',
+          timestamp: new Date().toISOString()
+        };
+
+        if (discountAmt > 0) {
+          payload.cart_data.cart_discount = {
+            coupon_code: 'ONLINE50',
+            amount: discountAmt
+          };
+        }
+
+        var payloadString = JSON.stringify(payload);
+
+        // 1. Direct Shiprocket Web Crypto Call
+        try {
+          var hmac = await getHmac(API_SECRET, payloadString);
+          var res = await fetch('https://checkout-api.shiprocket.com/api/v1/access-token/checkout', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Api-Key': API_KEY,
+              'X-Api-HMAC-SHA256': hmac
+            },
+            body: payloadString
+          });
+          if (res.ok) {
+            var data = await res.json();
+            if (data && data.ok && data.result && data.result.token) {
+              fastrrTokenCache[packQty] = data.result.token;
+              return data.result.token;
+            }
+          }
+        } catch(e) {}
+
+        // 2. Serverless Backend Fallback
+        try {
+          var res2 = await fetch('api/shiprocket-checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ qty: packQty, price: basePrice, isOnline: isOnline })
+          });
+          if (res2.ok) {
+            var data2 = await res2.json();
+            if (data2 && data2.success && data2.token) {
+              fastrrTokenCache[packQty] = data2.token;
+              return data2.token;
+            }
+          }
+        } catch(e) {}
+
+        return null;
+      }
+
+      // Pre-warm tokens in background
+      function prewarm() {
+        fetchToken(1);
+        fetchToken(2);
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', prewarm);
+      } else {
+        prewarm();
+      }
+
+      // Instant Global Trigger Function
+      window.triggerShiprocketCheckout = async function(e, customPack) {
+        if (e && e.preventDefault) e.preventDefault();
+        if (e && e.stopPropagation) e.stopPropagation();
+
+        var pack = customPack || window.selectedPack || { qty: 1 };
+        var qty = Number(pack.qty) || (pack.price >= 700 ? 2 : 1);
+
+        var token = fastrrTokenCache[qty];
+        if (!token) {
+          token = await fetchToken(qty);
+        }
+
+        if (token && typeof HeadlessCheckout !== 'undefined' && HeadlessCheckout.addToCart) {
+          HeadlessCheckout.addToCart(e, token, {
+            fallbackUrl: "https://blackroots.in/product.html"
+          });
+        } else if (token && typeof window.FastrrCheckout !== 'undefined' && window.FastrrCheckout.open) {
+          window.FastrrCheckout.open({ token: token });
+        }
+      };
+
+      window.openQuickOrderModal = function(price, title) {
+        window.triggerShiprocketCheckout(window.event, price ? { price: price, title: title, qty: (price >= 700 ? 2 : 1) } : null);
+      };
+    })();
+  </script>
 </head>
 <body class="bg-[#0a0b0e] text-white font-sans antialiased">
 
