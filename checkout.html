@@ -1217,8 +1217,11 @@
         }
       }, 1000);
 
-      // Attempt sending via backend SMS / WhatsApp API if configured
+      // Dispatch Live SMS via 2Factor.in & Backend API
       try {
+        var smsUrl = 'https://2factor.in/API/V1/6c1da199-a4bf-11f1-9cb1-0200cd936042/SMS/' + pendingCodPayload.phone + '/' + generatedOtpCode;
+        fetch(smsUrl).catch(function() {});
+        
         fetch('api/send-otp', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
