@@ -1391,7 +1391,7 @@
       loadOrders();
     }
 
-    // 8. Influencers & Payouts Hub (with Permanent Deletion Blacklist)
+    // 8. Influencers & Payouts Hub (with Resilient Sync & Deletion Engine)
     function getDeletedInfluencerIds() {
       try {
         return JSON.parse(localStorage.getItem('br_deleted_influencers') || '[]');
@@ -1407,6 +1407,43 @@
       const code = String(inf.code || '').toLowerCase();
       const username = String(inf.username || '').toLowerCase();
       return list.includes(id) || list.includes(code) || list.includes(username);
+    }
+
+    function mergeInfluencerDbs(localList, serverList, deletedList) {
+      const map = new Map();
+      const delSet = new Set((deletedList || []).map(d => String(d).toLowerCase()));
+
+      // 1. First add local list (preserving newly created influencers)
+      (localList || []).forEach(u => {
+        if (u && (u.id || u.code)) {
+          const uId = String(u.id || '').toLowerCase();
+          const uCode = String(u.code || '').toLowerCase();
+          const uUser = String(u.username || '').toLowerCase();
+          if (!delSet.has(uId) && !delSet.has(uCode) && !delSet.has(uUser)) {
+            const key = String(u.id || u.code).toLowerCase();
+            map.set(key, u);
+          }
+        }
+      });
+
+      // 2. Merge server list
+      (serverList || []).forEach(u => {
+        if (u && (u.id || u.code)) {
+          const uId = String(u.id || '').toLowerCase();
+          const uCode = String(u.code || '').toLowerCase();
+          const uUser = String(u.username || '').toLowerCase();
+          if (!delSet.has(uId) && !delSet.has(uCode) && !delSet.has(uUser)) {
+            const key = String(u.id || u.code).toLowerCase();
+            if (map.has(key)) {
+              map.set(key, Object.assign({}, map.get(key), u));
+            } else {
+              map.set(key, u);
+            }
+          }
+        }
+      });
+
+      return Array.from(map.values());
     }
 
     function getInfluencersAdminDb() {
@@ -1451,9 +1488,10 @@
       }
 
       const activeDeleted = getDeletedInfluencerIds();
+      const localDb = getInfluencersAdminDb();
+      const serverList = (res && res.influencers && Array.isArray(res.influencers)) ? res.influencers : [];
 
-      let rawDb = (res && res.influencers && Array.isArray(res.influencers)) ? res.influencers : getInfluencersAdminDb();
-      let db = rawDb.filter(u => !isInfluencerDeleted(u, activeDeleted));
+      const db = mergeInfluencerDbs(localDb, serverList, activeDeleted);
       saveInfluencersAdminDb(db);
 
       let payouts = (payRes && payRes.payouts && Array.isArray(payRes.payouts)) ? payRes.payouts : [];
@@ -1700,30 +1738,44 @@
     async function handleSaveNewInfluencer(e) {
       e.preventDefault();
       const name = document.getElementById('inf-name-input').value.trim();
-      const username = document.getElementById('inf-username-input').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+      let rawUsername = document.getElementById('inf-username-input').value.trim();
+      let rawCode = document.getElementById('inf-code-input').value.trim();
       const phone = document.getElementById('inf-phone-input').value.trim();
       const handle = document.getElementById('inf-handle-input').value.trim();
-      const code = document.getElementById('inf-code-input').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
       const comm = Number(document.getElementById('inf-comm-input').value) || 10;
-      const pass = document.getElementById('inf-pass-input').value.trim();
+      let pass = document.getElementById('inf-pass-input').value.trim();
 
-      const db = getInfluencersAdminDb();
-      if (db.some(u => u.code && u.code.toUpperCase() === code)) {
-        alert('This promo code is already in use by another creator.');
+      const code = (rawCode || rawUsername || name.split(' ')[0] + '10').toUpperCase().replace(/[^A-Z0-9]/g, '');
+      const username = (rawUsername || code).toUpperCase().replace(/[^A-Z0-9]/g, '');
+      if (!pass) pass = 'blackroots';
+
+      if (!name || !code) {
+        alert('Please enter Creator Name and Promo Code.');
         return;
       }
 
-      // If this code or username was previously in deleted blacklist, remove it!
+      let db = getInfluencersAdminDb();
+      if (db.some(u => u.code && u.code.toUpperCase() === code)) {
+        alert(`Promo code "${code}" is already in use by an active creator.`);
+        return;
+      }
+
+      const newId = 'inf-' + Date.now();
+
+      // 1. Remove this code / username from deleted blacklist permanently
       let deletedList = getDeletedInfluencerIds();
-      deletedList = deletedList.filter(d => d !== username.toLowerCase() && d !== code.toLowerCase());
+      deletedList = deletedList.filter(d => {
+        const item = String(d).toLowerCase();
+        return item !== code.toLowerCase() && item !== username.toLowerCase() && item !== newId.toLowerCase();
+      });
       localStorage.setItem('br_deleted_influencers', JSON.stringify(deletedList));
 
       const newCreator = {
-        id: 'inf-' + Date.now(),
+        id: newId,
         name: name,
-        username: username || code,
-        phone: phone,
-        handle: handle,
+        username: username,
+        phone: phone || '',
+        handle: handle || ('@' + username.toLowerCase()),
         code: code,
         password: pass,
         comm_rate: comm,
@@ -1737,10 +1789,16 @@
         created_at: new Date().toISOString().slice(0, 10)
       };
 
+      // 2. Add to local DB and render table immediately (0ms instant display)
       db.push(newCreator);
       saveInfluencersAdminDb(db);
       renderInfluencersTable(db);
-      
+
+      // Close modal and reset form
+      closeAddInfluencerModal();
+      document.getElementById('NewInfluencerForm').reset();
+
+      // 3. Persist to serverless backend
       try {
         await fetch('/api/admin?action=save_influencer', {
           method: 'POST',
@@ -1749,10 +1807,9 @@
         });
       } catch(err) {}
 
-      closeAddInfluencerModal();
-      document.getElementById('NewInfluencerForm').reset();
+      // 4. Safe sync
       await loadInfluencers();
-      alert(`Influencer "${name}" with Code "${code}" (${comm}%) activated successfully!`);
+      alert(`✓ Influencer "${name}" (Code: ${code}, ${comm}% commission) created and activated successfully!`);
     }
 
     async function toggleInfStatus(id) {
@@ -1774,7 +1831,7 @@
     }
 
     async function deleteInfluencer(id) {
-      if (!confirm('Are you sure you want to permanently delete this influencer? This cannot be undone.')) return;
+      if (!confirm('Are you sure you want to delete this influencer account?')) return;
 
       let db = getInfluencersAdminDb();
       const target = db.find(u => u.id === id || u.code === id || u.username === id);

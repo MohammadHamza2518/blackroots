@@ -407,22 +407,31 @@ module.exports = async (req, res) => {
       return del !== infId && del !== infCode && del !== infUser;
     });
 
+    if (!inf.id) inf.id = 'inf-' + Date.now();
+    if (!inf.code) inf.code = (inf.username || inf.name || 'CODE').toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (!inf.username) inf.username = inf.code;
+    if (!inf.created_at) inf.created_at = new Date().toISOString().slice(0, 10);
+    if (inf.clicks === undefined) inf.clicks = 0;
+    if (inf.total_orders === undefined) inf.total_orders = 0;
+    if (inf.total_sales === undefined) inf.total_sales = 0;
+    if (inf.total_earned === undefined) inf.total_earned = 0;
+    if (inf.unpaid_balance === undefined) inf.unpaid_balance = 0;
+    if (!inf.status) inf.status = 'Active';
+
     const existingIdx = memoryStore.influencers.findIndex(u => u.id === inf.id || (u.code && inf.code && u.code.toUpperCase() === inf.code.toUpperCase()));
     if (existingIdx !== -1) {
       memoryStore.influencers[existingIdx] = Object.assign(memoryStore.influencers[existingIdx], inf);
     } else {
-      if (!inf.id) inf.id = 'inf-' + Date.now();
-      if (!inf.created_at) inf.created_at = new Date().toISOString().slice(0, 10);
-      if (inf.clicks === undefined) inf.clicks = 0;
-      if (inf.total_orders === undefined) inf.total_orders = 0;
-      if (inf.total_sales === undefined) inf.total_sales = 0;
-      if (inf.total_earned === undefined) inf.total_earned = 0;
-      if (inf.unpaid_balance === undefined) inf.unpaid_balance = 0;
-      if (!inf.status) inf.status = 'Active';
       memoryStore.influencers.push(inf);
     }
     saveDb();
-    return res.status(200).json({ success: true, message: 'Influencer saved!', influencer: inf });
+    return res.status(200).json({
+      success: true,
+      message: 'Influencer saved!',
+      influencer: inf,
+      influencers: memoryStore.influencers,
+      deleted_influencers: memoryStore.deleted_influencers
+    });
   }
   if (action === 'delete_influencer') {
     let body = req.body || {};
@@ -453,7 +462,7 @@ module.exports = async (req, res) => {
     saveDb();
     return res.status(200).json({
       success: true,
-      message: 'Influencer permanently deleted!',
+      message: 'Influencer deleted!',
       deleted_influencers: memoryStore.deleted_influencers,
       influencers: memoryStore.influencers
     });

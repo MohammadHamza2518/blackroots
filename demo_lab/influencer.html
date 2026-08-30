@@ -782,6 +782,43 @@
       return list.includes(id) || list.includes(code) || list.includes(username);
     }
 
+    function mergeInfluencerDbs(localList, serverList, deletedList) {
+      const map = new Map();
+      const delSet = new Set((deletedList || []).map(d => String(d).toLowerCase()));
+
+      // 1. First add local list
+      (localList || []).forEach(u => {
+        if (u && (u.id || u.code)) {
+          const uId = String(u.id || '').toLowerCase();
+          const uCode = String(u.code || '').toLowerCase();
+          const uUser = String(u.username || '').toLowerCase();
+          if (!delSet.has(uId) && !delSet.has(uCode) && !delSet.has(uUser)) {
+            const key = String(u.id || u.code).toLowerCase();
+            map.set(key, u);
+          }
+        }
+      });
+
+      // 2. Merge server list
+      (serverList || []).forEach(u => {
+        if (u && (u.id || u.code)) {
+          const uId = String(u.id || '').toLowerCase();
+          const uCode = String(u.code || '').toLowerCase();
+          const uUser = String(u.username || '').toLowerCase();
+          if (!delSet.has(uId) && !delSet.has(uCode) && !delSet.has(uUser)) {
+            const key = String(u.id || u.code).toLowerCase();
+            if (map.has(key)) {
+              map.set(key, Object.assign({}, map.get(key), u));
+            } else {
+              map.set(key, u);
+            }
+          }
+        }
+      });
+
+      return Array.from(map.values());
+    }
+
     function getInfluencersDb() {
       const deletedList = getDeletedInfluencerIds();
       try {
@@ -835,7 +872,8 @@
           const activeDeleted = getDeletedInfluencerIds();
 
           if (data && data.influencers && Array.isArray(data.influencers)) {
-            const cleanList = data.influencers.filter(u => !isInfluencerDeleted(u, activeDeleted));
+            const localList = getInfluencersDb();
+            const cleanList = mergeInfluencerDbs(localList, data.influencers, activeDeleted);
             localStorage.setItem('br_influencers_db', JSON.stringify(cleanList));
             if (currentInfluencer) {
               if (isInfluencerDeleted(currentInfluencer, activeDeleted)) {

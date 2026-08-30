@@ -188,6 +188,37 @@ async function runSystemTests() {
   const checkInf1Kicked = await callApi(adminHandler, 'POST', {}, { action: 'check_influencer_session', user_id: infUserId, token: infToken1 });
   assert('24. Influencer Device A Session Kicked Out (Single Device Enforced)', checkInf1Kicked.data && checkInf1Kicked.data.session_expired === true && checkInf1Kicked.data.code === 'SESSION_KICKED');
 
+  // TEST 16: Dynamic Creator Account Creation & Instant Login Lifecycle
+  const dynamicCreator = {
+    id: 'inf-vip-555',
+    name: 'Kabir Khan',
+    username: 'KABIRVIP',
+    phone: '9988776655',
+    handle: '@kabir_lifestyle',
+    code: 'KABIRVIP',
+    password: 'kabirpassword123',
+    comm_rate: 12
+  };
+  const createDynRes = await callApi(adminHandler, 'POST', {}, { action: 'save_influencer', ...dynamicCreator });
+  assert('25. Dynamic Creator Created & Saved Successfully', createDynRes.data && createDynRes.data.success === true && createDynRes.data.influencer.code === 'KABIRVIP');
+
+  // Verify creator exists in server list
+  const listAfterAdd = await callApi(adminHandler, 'GET', { action: 'get_influencers' });
+  const foundDynamic = listAfterAdd.data.influencers.find(u => u.code === 'KABIRVIP');
+  assert('26. Created Creator Exists in Registry (Never Disappears)', !!foundDynamic && foundDynamic.name === 'Kabir Khan');
+
+  // Creator logs into Influencer Portal
+  const dynLoginRes = await callApi(adminHandler, 'POST', {}, { action: 'influencer_login', login_id: 'KABIRVIP', password: 'kabirpassword123' });
+  assert('27. Newly Created Creator Can Log In Instantly', dynLoginRes.data && dynLoginRes.data.success === true && dynLoginRes.data.user.code === 'KABIRVIP');
+
+  // Delete the creator
+  const delDynRes = await callApi(adminHandler, 'POST', {}, { action: 'delete_influencer', id: 'inf-vip-555' });
+  assert('28. Easy Creator Deletion Executed', delDynRes.data && delDynRes.data.success === true);
+
+  const listAfterDel = await callApi(adminHandler, 'GET', { action: 'get_influencers' });
+  const stillInList = listAfterDel.data.influencers.some(u => u.id === 'inf-vip-555' || u.code === 'KABIRVIP');
+  assert('29. Deleted Creator Completely Erased from Active List', !stillInList);
+
   console.log('\n====================================================');
   console.log(`📊 SUMMARY: ${passed} / ${total} TESTS PASSED (100% SUCCESS)`);
   console.log('====================================================');
