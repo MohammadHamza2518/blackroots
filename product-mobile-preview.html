@@ -638,23 +638,75 @@
       fetchFastrrCheckoutToken(2);
     }, 500);
 
-                // ?? Official Shiprocket Fastrr 1-Click Checkout Invoker (Full-Screen Mobile & Instant Feedback)
-        // ?? Master BlackRoots D2C Luxury Checkout Invoker (Razorpay Live UPI + COD + ?50 Instant Discount)
-    function triggerShiprocketCheckout(e, customPack) {
+                
+  <!-- ?? Master Bulletproof Quick Order Modal & Trigger Engine (Always Ready & Instant) -->
+  <script>
+    window.selectedPack = window.selectedPack || {
+      qty: 1,
+      basePrice: 499,
+      price: 499,
+      title: '1 Bottle (250ml)',
+      saveText: 'Save ?500'
+    };
+    window.currentPaymentMethod = 'Online';
+
+    // Global Modal Open Function (Zero Dependency)
+    window.openQuickOrderModal = function(customPrice, customTitle, customQty) {
+      var price = Number(customPrice) || (window.selectedPack ? (window.selectedPack.basePrice || window.selectedPack.price) : 499) || 499;
+      var qty = Number(customQty) || (price >= 700 ? 2 : 1);
+      var title = customTitle || (qty === 2 ? '2 Bottles Pack (500ml)' : '1 Bottle (250ml)');
+
+      if (typeof window.selectModalBundle === 'function') {
+        window.selectModalBundle(qty, price >= 700 ? 799 : 499, title, qty === 2 ? 'Save ?1,199' : 'Save ?500');
+      }
+
+      var modal = document.getElementById('QuickOrderModal');
+      var card = document.getElementById('QuickOrderCard');
+      var form = document.getElementById('QuickOrderForm');
+      var success = document.getElementById('QuickOrderSuccess');
+
+      if (modal) {
+        if (form) form.classList.remove('hidden');
+        if (success) success.classList.add('hidden');
+
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100');
+        if (card) {
+          card.classList.remove('translate-y-full', 'sm:scale-95');
+          card.classList.add('translate-y-0', 'sm:scale-100');
+        }
+        document.body.style.overflow = 'hidden';
+        if (typeof window.recalculateCheckoutPrice === 'function') {
+          window.recalculateCheckoutPrice();
+        }
+      }
+    };
+
+    // Global Modal Close Function
+    window.closeQuickOrderModal = function() {
+      var modal = document.getElementById('QuickOrderModal');
+      var card = document.getElementById('QuickOrderCard');
+      if (modal) {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        modal.classList.remove('opacity-100');
+        if (card) {
+          card.classList.add('translate-y-full', 'sm:scale-95');
+          card.classList.remove('translate-y-0', 'sm:scale-100');
+        }
+        document.body.style.overflow = '';
+      }
+    };
+
+    // Master Buy Now Trigger (Directly Opens Native Luxury Drawer)
+    window.triggerShiprocketCheckout = function(e, customPack) {
       if (e && e.preventDefault) e.preventDefault();
       if (e && e.stopPropagation) e.stopPropagation();
       var pack = customPack || window.selectedPack || { qty: 1, price: 499 };
       var price = Number(pack.price) || (pack.qty === 2 ? 799 : 499);
       var title = pack.title || (pack.qty === 2 ? '2 Bottles Pack (500ml)' : '1 Bottle (250ml)');
       var qty = Number(pack.qty) || (price >= 700 ? 2 : 1);
-      if (typeof window.openQuickOrderModal === 'function') {
-        window.openQuickOrderModal(price, title, qty);
-      } else {
-        window.location.href = 'product.html';
-      }
-    }
-    window.triggerShiprocketCheckout = triggerShiprocketCheckout;
-    window.openQuickOrderModal = openQuickOrderModal;
+      window.openQuickOrderModal(price, title, qty);
+    };
   </script>
 </head>
 <body class="flex flex-col items-center justify-between p-3 sm:p-6">
