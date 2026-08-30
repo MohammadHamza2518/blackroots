@@ -569,21 +569,24 @@
 
   </main>
 
-          <!-- 🛡️ BlackRoots Smart Anti-RTO COD OTP Verification Modal (Clear Call + WhatsApp) -->
+            <!-- 🛡️ BlackRoots Smart Anti-RTO COD Voice Call OTP Verification Modal -->
   <div id="CodOtpModal" class="fixed inset-0 z-[99999] bg-black/85 backdrop-blur-md hidden items-center justify-center p-4 transition-all duration-300">
-    <div class="bg-[#0e121c] border border-amber-500/40 rounded-3xl max-w-sm w-full p-5 sm:p-6 space-y-3.5 shadow-[0_20px_60px_rgba(0,0,0,0.9)] relative text-center animate-fade-in">
+    <div class="bg-[#0e121c] border border-amber-500/40 rounded-3xl max-w-sm w-full p-5 sm:p-6 space-y-4 shadow-[0_20px_60px_rgba(0,0,0,0.9)] relative text-center animate-fade-in">
       
       <!-- Close Button -->
       <button type="button" onclick="closeCodOtpModal()" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white flex items-center justify-center text-xs transition-colors">
         ✕
       </button>
 
-      <!-- Icon & Header -->
+      <!-- Icon & Title -->
       <div class="space-y-1">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500/20 to-amber-600/10 border border-amber-500/40 text-amber-300 flex items-center justify-center text-xl mx-auto shadow-[0_0_15px_rgba(212,175,55,0.25)]">
+        <div class="w-13 h-13 rounded-2xl bg-gradient-to-tr from-amber-500/20 to-amber-600/10 border border-amber-500/40 text-amber-300 flex items-center justify-center text-2xl mx-auto shadow-[0_0_20px_rgba(212,175,55,0.25)]">
           📞
         </div>
-        <h3 class="text-base sm:text-lg font-extrabold text-white pt-0.5">
+        <span class="text-[10px] font-black uppercase tracking-widest text-amber-400 bg-amber-950/80 border border-amber-500/40 px-3 py-0.5 rounded-full">
+          COD Voice Verification
+        </span>
+        <h3 class="text-base sm:text-lg font-extrabold text-white pt-1">
           Mobile Number Verification
         </h3>
         <p class="text-xs text-gray-300">
@@ -592,23 +595,23 @@
         </p>
       </div>
 
-      <!-- Clear Voice Call Instruction Banner -->
-      <div class="p-3 rounded-2xl bg-amber-950/50 border border-amber-500/40 text-left space-y-1 shadow-inner">
-        <div class="flex items-center gap-1.5 text-amber-300 font-extrabold text-xs">
-          <span>📲</span>
-          <span>Aapke number par ek Call aa rahi hai</span>
+      <!-- Prominent Voice Call Instruction Banner -->
+      <div class="p-3.5 rounded-2xl bg-gradient-to-r from-amber-950/70 via-[#1c160a] to-amber-950/70 border-2 border-amber-400/60 text-left space-y-1 shadow-lg">
+        <div class="flex items-center gap-1.5 text-amber-300 font-black text-xs sm:text-sm">
+          <span class="text-base">📲</span>
+          <span>Aapke phone par call aayegi</span>
         </div>
-        <p class="text-[11px] text-gray-300 leading-relaxed font-medium">
-          Kripya <strong>Call uthayein</strong> — usme bola gaya <strong>4-Digit Code</strong> sunkar neeche enter karein.
+        <p class="text-[11px] text-gray-200 leading-relaxed font-medium">
+          Kripya <strong>Call uthayein (attend karein)</strong> — usme aapko <strong>4-Digit OTP bataya jayega</strong>. Wo code neeche enter karein.
         </p>
       </div>
 
-      <!-- Instant Code Hint Banner (For Fast Demo/Testing) -->
-      <div id="OtpInstantHintBanner" class="p-2.5 rounded-xl bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center justify-between gap-2 shadow-inner">
+      <!-- Instant Code Hint Banner with Working Auto Fill -->
+      <div id="OtpInstantHintBanner" class="p-2.5 rounded-xl bg-emerald-950/90 border border-emerald-500/50 text-emerald-300 text-xs font-bold flex items-center justify-between gap-2 shadow-inner">
         <span class="flex items-center gap-1.5 truncate">
-          <span>⚡</span> <span>Instant Code: <strong id="OtpHintCode" class="text-white font-mono text-sm tracking-wider">----</strong></span>
+          <span>⚡</span> <span>Code: <strong id="OtpHintCode" class="text-white font-mono text-sm tracking-wider">----</strong></span>
         </span>
-        <button type="button" onclick="autoFillCodOtp()" class="text-[10px] bg-emerald-500 text-black font-extrabold px-2.5 py-1 rounded-md uppercase hover:brightness-110 active:scale-95 shrink-0">
+        <button type="button" onclick="autoFillCodOtp()" class="text-[11px] bg-emerald-400 hover:bg-emerald-300 text-black font-black px-3 py-1 rounded-lg uppercase shadow hover:brightness-110 active:scale-95 shrink-0 cursor-pointer">
           Auto Fill
         </button>
       </div>
@@ -626,20 +629,6 @@
         <button type="button" id="VerifyOtpBtn" onclick="submitCodOtpVerification()" class="w-full btn-gold-luxury text-black font-extrabold text-xs sm:text-sm py-3.5 px-4 rounded-xl uppercase tracking-wider shadow-lg hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer">
           <span id="VerifyOtpBtnText">🔒 Verify OTP & Confirm Order →</span>
         </button>
-      </div>
-
-      <!-- Clear WhatsApp Option -->
-      <div class="pt-0.5">
-        <a id="OtpWhatsAppDirectBtn" href="#" target="_blank" class="w-full py-2.5 px-3 rounded-xl bg-[#0c1e18] hover:bg-[#102b22] border border-emerald-500/40 text-emerald-300 font-bold text-xs flex items-center justify-between transition-all shadow-md group">
-          <div class="flex items-center gap-2 text-left">
-            <span class="text-base">💬</span>
-            <div>
-              <span class="block text-white font-bold text-[11px] group-hover:text-emerald-300">Ya WhatsApp Par Code Mangwayein</span>
-              <span class="text-[10px] text-gray-400 font-normal">Click karte hi direct WhatsApp par code aayega</span>
-            </div>
-          </div>
-          <span class="text-emerald-400 text-sm font-bold">&rarr;</span>
-        </a>
       </div>
 
       <!-- Timer & Re-Call Option -->
@@ -1214,7 +1203,24 @@
       }
     }
 
-                function sendCodOtp() {
+                    function autoFillCodOtp() {
+      if (!generatedOtpCode || generatedOtpCode.length < 4) {
+        generatedOtpCode = Math.floor(1000 + Math.random() * 9000).toString();
+      }
+      
+      var hintCode = document.getElementById('OtpHintCode');
+      if (hintCode) hintCode.textContent = generatedOtpCode;
+
+      for (var i = 1; i <= 4; i++) {
+        var inp = document.getElementById('OtpDigit' + i);
+        if (inp) inp.value = generatedOtpCode[i - 1];
+      }
+
+      // Submit verification immediately
+      submitCodOtpVerification();
+    }
+
+    function sendCodOtp() {
       // Generate 4-digit OTP
       generatedOtpCode = Math.floor(1000 + Math.random() * 9000).toString();
 
@@ -1228,13 +1234,6 @@
       // Update On-Screen Hint
       var hintCode = document.getElementById('OtpHintCode');
       if (hintCode) hintCode.textContent = generatedOtpCode;
-
-      // Update WhatsApp Link
-      var waBtn = document.getElementById('OtpWhatsAppDirectBtn');
-      if (waBtn && pendingCodPayload) {
-        var waMsg = 'Namaste BlackRoots! My COD Order verification OTP is: ' + generatedOtpCode + ' for +91 ' + pendingCodPayload.phone;
-        waBtn.href = 'https://wa.me/919580835179?text=' + encodeURIComponent(waMsg);
-      }
 
       // Start 30s Countdown
       var timerBox = document.getElementById('OtpTimerBox');
@@ -1257,7 +1256,7 @@
         }
       }, 1000);
 
-      // Trigger 2Factor Instant Voice Call OTP + Serverless dispatch
+      // Trigger 2Factor Instant Voice Call OTP
       try {
         var voiceUrl = 'https://2factor.in/API/V1/6c1da199-a4bf-11f1-9cb1-0200cd936042/VOICE/' + pendingCodPayload.phone + '/' + generatedOtpCode;
         fetch(voiceUrl).catch(function() {});
