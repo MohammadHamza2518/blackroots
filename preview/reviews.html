@@ -719,26 +719,7 @@
 
             
 
-        <!-- Carousel Viewport & Track -->
-        <div id="carousel-viewport" class="overflow-hidden relative rounded-3xl p-1">
-          <div id="carousel-track" class="flex transition-transform duration-500 ease-out w-full">
-            <!-- Dynamic Slide Grids rendered here -->
-          </div>
-        </div>
-
-        <!-- Slider Dots & Indicator Footer -->
-        <div class="mt-8 flex flex-col items-center gap-3 text-center">
-          <div id="slider-dots-container" class="flex items-center justify-center gap-2">
-            <!-- Dynamically populated slide dots -->
-          </div>
-          <p class="text-[11px] text-gray-400">
-            💡 Swipe left/right or use <strong class="text-amber-300">‹ › arrows</strong> to explore verified customer reviews slides.
-          </p>
-        </div>
-
-      </div>
-
-            <!-- Real Customer Reviews Deck Section Header -->
+        <!-- Real Customer Reviews Deck Section Header -->
       <div class="mt-12 mb-8 text-center space-y-2">
         <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-[11px] font-bold uppercase tracking-wider">
           <span class="w-2 h-2 rounded-full bg-[#d4af37] animate-pulse"></span>
@@ -1498,6 +1479,206 @@
     </div>
 
   </div>
+
+    <script>
+    // BlackRoots Perfect Startup-Grade Luxury Reviews Deck Engine (Photo Proof First & Zero Blank Space)
+    document.addEventListener('DOMContentLoaded', function() {
+      const CARDS_PER_SLIDE = 6;
+      let currentSlide = 0;
+      let currentFilter = 'all';
+
+      const customerGrid = document.getElementById('customer-reviews-grid');
+      const staticGridSource = document.querySelector('.columns-1');
+      const prevBtn = document.getElementById('deck-prev-btn');
+      const nextBtn = document.getElementById('deck-next-btn');
+      const slideBadge = document.getElementById('deck-slide-badge');
+      const showingText = document.getElementById('deck-showing-text');
+      const dotsContainer = document.getElementById('deck-dots-container');
+      const filterBtns = document.querySelectorAll('.js-filter-btn');
+      const showingCount = document.querySelector('.js-showing-count');
+      const sortSelect = document.getElementById('reviews-sort');
+
+      // Helper: Check if a card contains photo proof
+      function hasPhotoProof(card) {
+        if (!card) return false;
+        const img = card.querySelector('img[src*="review-photo"], img[src*="face-photo"], img[src*="before"], img[src*="after"], img[src*="bottle"], img[src*="girl"], img[src*="table"], img[src*="new-avatar"]');
+        return img !== null || card.hasAttribute('data-has-photo');
+      }
+
+      // Preserve all initial static review cards from HTML source grid
+      let allCardsArray = [];
+      if (staticGridSource) {
+        allCardsArray = Array.from(staticGridSource.querySelectorAll('[data-category]'));
+      }
+
+      // PRIORITIZE PHOTO PROOF REVIEWS FIRST IN DECK
+      allCardsArray.sort((a, b) => {
+        const aHasPhoto = hasPhotoProof(a);
+        const bHasPhoto = hasPhotoProof(b);
+        if (aHasPhoto && !bHasPhoto) return -1;
+        if (!aHasPhoto && bHasPhoto) return 1;
+        return 0;
+      });
+
+      function scrollToDeckTop() {
+        const header = document.getElementById('customer-reviews-grid') || customerGrid;
+        if (header) {
+          const yOffset = -110;
+          const y = header.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+      }
+
+      function updateDeck() {
+        if (!customerGrid) return;
+
+        // Filter cards
+        const matchingCards = allCardsArray.filter(card => {
+          const cats = card.getAttribute('data-category') || '';
+          return currentFilter === 'all' || cats.includes(currentFilter);
+        });
+
+        const totalItems = matchingCards.length;
+        const totalSlides = Math.ceil(totalItems / CARDS_PER_SLIDE) || 1;
+
+        if (currentSlide >= totalSlides) currentSlide = totalSlides - 1;
+        if (currentSlide < 0) currentSlide = 0;
+
+        const startIdx = currentSlide * CARDS_PER_SLIDE;
+        const endIdx = startIdx + CARDS_PER_SLIDE;
+        const visibleCardsForSlide = matchingCards.slice(startIdx, endIdx);
+
+        // Render Exactly 6 Cards into 3-Column Symmetrical Grid
+        customerGrid.innerHTML = '';
+        visibleCardsForSlide.forEach(card => {
+          // Normalize card styles for 3-column grid layout
+          card.className = "p-6 rounded-3xl glass-panel-luxury border border-[#d4af37]/30 shadow-xl flex flex-col justify-between h-full transition-all duration-300 hover:border-[#d4af37]";
+          card.style.cssText = "display: flex !important; width: 100% !important; margin-bottom: 0 !important;";
+          
+          customerGrid.appendChild(card);
+        });
+
+        // Update Slide Badge & Status Text
+        if (slideBadge) slideBadge.textContent = `Slide ${currentSlide + 1} of ${totalSlides}`;
+        if (showingText) showingText.textContent = `Showing ${visibleCardsForSlide.length} of ${totalItems} Verified Reviews`;
+        if (showingCount) showingCount.textContent = `${totalItems} Reviews`;
+
+        // Update Prev / Next Buttons State
+        if (prevBtn) prevBtn.disabled = (currentSlide === 0);
+        if (nextBtn) nextBtn.disabled = (currentSlide >= totalSlides - 1);
+
+        // Render Interactive Dots
+        if (dotsContainer) {
+          dotsContainer.innerHTML = '';
+          if (totalSlides <= 1) {
+            dotsContainer.style.display = 'none';
+          } else {
+            dotsContainer.style.display = 'flex';
+            for (let i = 0; i < totalSlides; i++) {
+              const dot = document.createElement('button');
+              dot.type = 'button';
+              dot.className = `transition-all duration-300 cursor-pointer ${i === currentSlide ? 'w-8 h-2.5 bg-[#d4af37] rounded-full shadow-lg' : 'w-2.5 h-2.5 bg-white/20 hover:bg-white/40 rounded-full'}`;
+              dot.setAttribute('title', `Go to Slide ${i + 1}`);
+              dot.onclick = function(e) {
+                e.preventDefault();
+                currentSlide = i;
+                updateDeck();
+                scrollToDeckTop();
+              };
+              dotsContainer.appendChild(dot);
+            }
+          }
+        }
+      }
+
+      // Prev / Next Button Handlers
+      if (prevBtn) {
+        prevBtn.onclick = function(e) {
+          e.preventDefault();
+          if (currentSlide > 0) {
+            currentSlide--;
+            updateDeck();
+            scrollToDeckTop();
+          }
+        };
+      }
+
+      if (nextBtn) {
+        nextBtn.onclick = function(e) {
+          e.preventDefault();
+          const totalSlides = Math.ceil(allCardsArray.filter(c => currentFilter === 'all' || (c.getAttribute('data-category')||'').includes(currentFilter)).length / CARDS_PER_SLIDE);
+          if (currentSlide < totalSlides - 1) {
+            currentSlide++;
+            updateDeck();
+            scrollToDeckTop();
+          }
+        };
+      }
+
+      // Filter Button Listeners
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          currentFilter = this.getAttribute('data-filter') || 'all';
+          filterBtns.forEach(b => {
+            b.classList.remove('bg-[#d4af37]', 'text-black', 'shadow-md', 'active');
+            b.classList.add('bg-white/5', 'text-gray-300');
+          });
+          this.classList.remove('bg-white/5', 'text-gray-300');
+          this.classList.add('bg-[#d4af37]', 'text-black', 'shadow-md', 'active');
+          currentSlide = 0;
+          updateDeck();
+        });
+      });
+
+      // Helpful Like Buttons
+      document.querySelectorAll('.js-like-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          let countSpan = this.querySelector('.js-like-count');
+          if (countSpan) {
+            let likes = parseInt(this.getAttribute('data-likes') || countSpan.textContent || '0');
+            likes++;
+            this.setAttribute('data-likes', likes);
+            countSpan.textContent = likes;
+            this.classList.add('text-amber-400');
+          }
+        });
+      });
+
+      // Sort Listener
+      if (sortSelect) {
+        sortSelect.addEventListener('change', function() {
+          const order = this.value;
+          allCardsArray.sort((a, b) => {
+            if (order === 'helpful') {
+              const aLikes = parseInt(a.querySelector('.js-like-count')?.textContent || '0');
+              const bLikes = parseInt(b.querySelector('.js-like-count')?.textContent || '0');
+              return bLikes - aLikes;
+            } else {
+              const da = parseInt(a.getAttribute('data-date') || '0');
+              const db = parseInt(b.getAttribute('data-date') || '0');
+              return order === 'newest' ? db - da : da - db;
+            }
+          });
+          
+          // Re-apply Photo Priority FIRST after sorting
+          allCardsArray.sort((a, b) => {
+            const aHasPhoto = hasPhotoProof(a);
+            const bHasPhoto = hasPhotoProof(b);
+            if (aHasPhoto && !bHasPhoto) return -1;
+            if (!aHasPhoto && bHasPhoto) return 1;
+            return 0;
+          });
+
+          currentSlide = 0;
+          updateDeck();
+        });
+      }
+
+      // Initial run
+      updateDeck();
+    });
+  </script>
 
   <input type="hidden" value="blackroots.in" id="sellerDomain"/>
 </body>
