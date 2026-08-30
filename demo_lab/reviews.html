@@ -6,20 +6,20 @@
   <title>Verified Customer Reviews & Testimonials &mdash; BlackRoots Herbal Shampoo</title>
   <meta name="description" content="Read 1,280+ verified customer reviews for BlackRoots Herbal Hair Dye Shampoo. Real experiences, photo ratings from men & women across India.">
   <!-- Favicon & Touch Icons (Google & Browser Compliant) -->
-  <link rel="icon" type="image/x-icon" href="../favicon.ico">
-  <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
-  <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="48x48" href="../assets/favicon-48x48.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="../assets/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="144x144" href="../assets/favicon-144x144.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192x192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="../assets/favicon-512x512.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
-  <link rel="manifest" href="../site.webmanifest">
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="./assets/favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="./assets/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="144x144" href="./assets/favicon-144x144.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./assets/favicon-512x512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
+  <link rel="manifest" href="./site.webmanifest">
   <meta name="theme-color" content="#0a0b0e">
   <meta name="msapplication-TileColor" content="#0a0b0e">
-  <meta name="msapplication-TileImage" content="../assets/favicon-144x144.png">
+  <meta name="msapplication-TileImage" content="./assets/favicon-144x144.png">
 
   <!-- Primary Meta & Search Snippet Image -->
   <link rel="image_src" href="https://www.blackroots.in/assets/blackroots-botanical-pedestal-1x1.jpg">
@@ -1440,131 +1440,174 @@
           <span class="text-[8px] uppercase tracking-widest text-[#d4af37] font-semibold">Revive Your Natural Roots</span>
         </div>
       </div>
-      <button type="button" onclick="closeMobileNavDrawer()" class="w-8 h-8 rounded-full bg-white/10 border border-white/15 text-gray-300 flex items-center justify-center text-sm font-bold hover:bg-[#d4af37] hover:text-black active:scale-90 transition-all cursor-pointer" aria-label="Close Menu">
+
+<!-- Customer Write Review Modal (Flipkart / Amazon Style) -->
+  <div id="add-review-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+    
+    <div id="modal-card" class="bg-[#12151c] border border-[#d4af37]/40 shadow-2xl rounded-3xl p-6 sm:p-8 max-w-lg w-full max-h-[90vh] overflow-y-auto relative text-left transform scale-95 transition-all duration-300">
+      
+      <!-- Close Button -->
+      <button type="button" id="close-review-modal" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 hover:text-white flex items-center justify-center text-lg font-bold transition-colors">
         ✕
       </button>
-    </div>
 
-    <!-- 2. Scrollable Middle Body (Clean, Classy Navigation Links) -->
-    <div class="flex-1 overflow-y-auto px-4 py-3.5 space-y-1.5" style="-webkit-overflow-scrolling: touch; scrollbar-width: none; overscroll-behavior: contain;">
-      
-      <!-- Special Offer Banner (Classy & High Trust) -->
-      <div class="p-3 rounded-xl bg-emerald-950/70 border border-emerald-500/30 flex items-center justify-between text-xs mb-2.5 shadow-sm">
-        <div class="flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-          <span class="text-emerald-300 font-semibold text-xs">Free Express Delivery Across India</span>
+      <!-- Modal Header -->
+      <div class="mb-6 space-y-1 pr-8">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 text-[11px] font-bold uppercase tracking-wider mb-2">
+          <span>✓ Verified Customer Review</span>
         </div>
-        <span class="text-[#d4af37] font-bold text-xs">₹499</span>
+        <h3 class="font-serif text-2xl sm:text-3xl font-bold text-white flex items-center gap-2">
+          <span>✍️</span> Write Your Customer Review
+        </h3>
+        <p class="text-xs text-gray-300 font-light">
+          Share your genuine experience with BlackRoots. Max 2 photos proof & 300 words. Published live for 1,280+ shoppers!
+        </p>
       </div>
 
-      <!-- Navigation Menu Items -->
-      <a href="index.html" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-white/[0.03] border border-white/5 hover:border-[#d4af37]/40 hover:bg-white/[0.06] transition-all group">
-        <div class="flex items-center gap-3">
-          <span class="text-base">🏠</span>
-          <span class="text-xs font-semibold text-white uppercase tracking-wider group-hover:text-[#d4af37] transition-colors">Home</span>
-        </div>
-        <span class="text-gray-500 text-xs group-hover:text-[#d4af37] transition-colors">&rarr;</span>
-      </a>
-
-      <a href="product.html" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-[#d4af37]/15 border border-[#d4af37]/40 hover:bg-[#d4af37]/20 transition-all group">
-        <div class="flex items-center gap-3">
-          <span class="text-base">🛍️</span>
-          <div class="flex items-center gap-2">
-            <span class="text-xs font-bold text-[#d4af37] uppercase tracking-wider">Product (250ml)</span>
+      <!-- Review Submission Form -->
+      <form id="review-form" class="space-y-4">
+        
+        <!-- Interactive Star Rating Picker -->
+        <div class="space-y-1.5 bg-white/5 p-4 rounded-2xl border border-white/10">
+          <label class="block text-xs font-bold text-gray-200 uppercase tracking-wider">
+            Overall Rating <span class="text-amber-400">*</span>
+          </label>
+          <div class="flex items-center gap-3">
+            <div id="star-rating-picker" class="flex text-3xl text-gray-600 cursor-pointer select-none">
+              <span data-star="1" class="hover:scale-125 transition-transform px-0.5 text-amber-400">★</span>
+              <span data-star="2" class="hover:scale-125 transition-transform px-0.5 text-amber-400">★</span>
+              <span data-star="3" class="hover:scale-125 transition-transform px-0.5 text-amber-400">★</span>
+              <span data-star="4" class="hover:scale-125 transition-transform px-0.5 text-amber-400">★</span>
+              <span data-star="5" class="hover:scale-125 transition-transform px-0.5 text-amber-400">★</span>
+            </div>
+            <span id="star-rating-label" class="text-xs font-bold text-amber-300 bg-amber-400/10 border border-amber-400/30 px-3 py-1 rounded-full whitespace-nowrap">
+              5.0 — Outstanding!
+            </span>
+            <input type="hidden" id="review-rating" name="rating" value="5">
           </div>
         </div>
-        <span class="bg-[#d4af37] text-black font-black text-[10px] px-2 py-0.5 rounded-md">₹499</span>
-      </a>
 
-      <a href="ingredients.html" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-white/[0.03] border border-white/5 hover:border-[#d4af37]/40 hover:bg-white/[0.06] transition-all group">
-        <div class="flex items-center gap-3">
-          <span class="text-base">🌿</span>
-          <span class="text-xs font-semibold text-white uppercase tracking-wider group-hover:text-[#d4af37] transition-colors">Herbal Ingredients</span>
+        <!-- Customer Name & Location Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-1">
+            <label for="review-name" class="block text-xs font-bold text-gray-300">Your Full Name <span class="text-amber-400">*</span></label>
+            <input type="text" id="review-name" required placeholder="e.g. Priya Sharma" class="w-full bg-[#1a1d26] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] transition-colors">
+          </div>
+          <div class="space-y-1">
+            <label for="review-city" class="block text-xs font-bold text-gray-300">Select City / State <span class="text-amber-400">* (Compulsory)</span></label>
+            <input type="text" id="review-city" list="city-list" required placeholder="e.g. Delhi NCR, Mumbai, Lucknow" class="w-full bg-[#1a1d26] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] transition-colors">
+            <datalist id="city-list">
+              <option value="Delhi NCR">
+              <option value="Mumbai, Maharashtra">
+              <option value="Bengaluru, Karnataka">
+              <option value="Hyderabad, Telangana">
+              <option value="Kolkata, West Bengal">
+              <option value="Chennai, Tamil Nadu">
+              <option value="Pune, Maharashtra">
+              <option value="Ahmedabad, Gujarat">
+              <option value="Jaipur, Rajasthan">
+              <option value="Lucknow, Uttar Pradesh">
+              <option value="Kanpur, Uttar Pradesh">
+              <option value="Patna, Bihar">
+              <option value="Surat, Gujarat">
+              <option value="Chandigarh">
+              <option value="Indore, Madhya Pradesh">
+              <option value="Bhopal, Madhya Pradesh">
+              <option value="Nagpur, Maharashtra">
+              <option value="Dehradun, Uttarakhand">
+              <option value="Kochi, Kerala">
+              <option value="Guwahati, Assam">
+            </datalist>
+          </div>
         </div>
-        <span class="text-gray-500 text-xs group-hover:text-[#d4af37] transition-colors">&rarr;</span>
-      </a>
 
-      <a href="how-to-use.html" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-white/[0.03] border border-white/5 hover:border-[#d4af37]/40 hover:bg-white/[0.06] transition-all group">
-        <div class="flex items-center gap-3">
-          <span class="text-base">🚿</span>
-          <span class="text-xs font-semibold text-white uppercase tracking-wider group-hover:text-[#d4af37] transition-colors">Application Ritual</span>
+        <!-- Category Selection Tag -->
+        <div class="space-y-1.5">
+          <label class="block text-xs font-bold text-gray-300">Usage Category</label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="cursor-pointer flex items-center gap-2 p-2.5 rounded-xl border border-white/10 bg-[#1a1d26] hover:border-[#d4af37]/50 transition-colors">
+              <input type="radio" name="review-category" value="men photo" class="accent-[#d4af37]">
+              <span class="text-xs text-amber-300 font-semibold">👨 Men's Scalp & Beard</span>
+            </label>
+            <label class="cursor-pointer flex items-center gap-2 p-2.5 rounded-xl border border-white/10 bg-[#1a1d26] hover:border-[#d4af37]/50 transition-colors">
+              <input type="radio" name="review-category" value="women photo" checked class="accent-[#d4af37]">
+              <span class="text-xs text-pink-300 font-semibold">👩 Women's Hair & Roots</span>
+            </label>
+          </div>
         </div>
-        <span class="text-gray-500 text-xs group-hover:text-[#d4af37] transition-colors">&rarr;</span>
-      </a>
 
-      <a href="reviews.html" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-white/[0.03] border border-white/5 hover:border-[#d4af37]/40 hover:bg-white/[0.06] transition-all group">
-        <div class="flex items-center gap-3">
-          <span class="text-base">⭐</span>
-          <span class="text-xs font-semibold text-white uppercase tracking-wider group-hover:text-[#d4af37] transition-colors">Customer Reviews (4.9★)</span>
+        <!-- Review Title -->
+        <div class="space-y-1">
+          <label for="review-title" class="block text-xs font-bold text-gray-300">Review Title / Headline <span class="text-amber-400">*</span></label>
+          <input type="text" id="review-title" required placeholder="e.g. Visible dark hair transition in 3 washes!" class="w-full bg-[#1a1d26] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] transition-colors">
         </div>
-        <span class="text-gray-500 text-xs group-hover:text-[#d4af37] transition-colors">&rarr;</span>
-      </a>
 
-      <a href="ai-consultant.html" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-amber-500/10 border border-amber-500/25 hover:bg-amber-500/15 transition-all group">
-        <div class="flex items-center gap-3">
-          <span class="text-base">🩺</span>
-          <span class="text-xs font-bold text-amber-300 uppercase tracking-wider">AI Hair Doctor</span>
+        <!-- Review Body Text (Max 300 Words) -->
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <label for="review-body" class="block text-xs font-bold text-gray-300">Detailed Experience <span class="text-amber-400">*</span></label>
+            <span id="word-count-badge" class="text-[11px] font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">0 / 300 words</span>
+          </div>
+          <textarea id="review-body" rows="4" required placeholder="Describe your experience: scalp sensation, grey coverage, fragrance, how many washes it took... (Max 300 words)" class="w-full bg-[#1a1d26] border border-white/10 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] focus:ring-1 focus:ring-[#d4af37] transition-colors resize-none"></textarea>
+          <p id="word-count-error" class="hidden text-[11px] text-red-400 font-bold">⚠️ Review text cannot exceed 300 words limit!</p>
         </div>
-        <span class="text-amber-400 text-xs">&rarr;</span>
-      </a>
 
-      <a href="track-order.html" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-white/[0.03] border border-white/5 hover:border-[#d4af37]/40 hover:bg-white/[0.06] transition-all group">
-        <div class="flex items-center gap-3">
-          <span class="text-base">📦</span>
-          <span class="text-xs font-semibold text-white uppercase tracking-wider group-hover:text-[#d4af37] transition-colors">Track My Order</span>
-        </div>
-        <span class="text-gray-500 text-xs group-hover:text-[#d4af37] transition-colors">&rarr;</span>
-      </a>
+        <!-- Max 2 Photos Upload Field (Flipkart & Amazon Style) -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-bold text-gray-300">📸 Attach Photos (Max 2 Photos)</label>
+            <span id="photo-count-badge" class="text-[10px] text-amber-300 font-semibold">0 / 2 photos selected</span>
+          </div>
+          
+          <div id="photo-upload-container" class="border-2 border-dashed border-white/20 hover:border-[#d4af37]/60 rounded-2xl p-4 text-center bg-white/5 transition-colors cursor-pointer relative">
+            <input type="file" id="review-photo-input" accept="image/*" multiple class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10">
+            
+            <div id="photo-upload-placeholder" class="space-y-1 pointer-events-none">
+              <div class="text-2xl">📸</div>
+              <p class="text-xs text-gray-300 font-medium">Click or Drag photos here (Upload up to 2 photos)</p>
+              <p class="text-[10px] text-gray-500">e.g., Photo 1: Hair Before/Bottle &bull; Photo 2: Hair After/Result</p>
+            </div>
 
-      <a href="https://wa.me/919580835179?text=Namaste%20BlackRoots%20Team!%20I%20have%20a%20question%20about%20the%20shampoo." target="_blank" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/30 hover:bg-emerald-950/60 transition-all group">
-        <div class="flex items-center gap-3">
-          <span class="text-base">💬</span>
-          <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">WhatsApp Support</span>
+            <!-- Preview Grid for up to 2 Photos -->
+            <div id="photo-preview-container" class="hidden flex-wrap items-center justify-center gap-3 relative z-20 pointer-events-auto pt-1">
+              <!-- Dynamically populated previews -->
+            </div>
+          </div>
         </div>
-        <span class="text-emerald-400 text-xs">&rarr;</span>
-      </a>
 
-      <a href="contact.html" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-white/[0.02] border border-white/5 hover:border-white/20 transition-all group">
-        <div class="flex items-center gap-3">
-          <span class="text-base">📞</span>
-          <span class="text-xs font-medium text-gray-300 uppercase tracking-wider group-hover:text-white transition-colors">Customer Support</span>
+        <!-- Verified Checkbox -->
+        <div class="flex items-center gap-2 pt-1">
+          <input type="checkbox" id="review-verified" checked class="w-4 h-4 accent-emerald-500 rounded cursor-pointer">
+          <label for="review-verified" class="text-xs text-gray-300 cursor-pointer select-none">
+            I certify this is a genuine purchase & honest experience with BlackRoots Shampoo.
+          </label>
         </div>
-        <span class="text-gray-500 text-xs group-hover:text-white transition-colors">&rarr;</span>
-      </a>
 
-      <!-- Clean Minimalist Trust Strip -->
-      <div class="pt-2 border-t border-white/10 grid grid-cols-2 gap-2 text-[10px] text-gray-400">
-        <div class="p-2 rounded-xl bg-white/[0.02] border border-white/5 flex items-center gap-2">
-          <span>🌿</span>
-          <span class="text-white font-medium">100% Ayurvedic</span>
+        <!-- Form Submit Buttons -->
+        <div class="pt-4 flex items-center justify-end gap-3 border-t border-white/10">
+          <button type="button" id="cancel-review-btn" class="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-gray-300 font-bold text-xs transition-colors">
+            Cancel
+          </button>
+          <button type="submit" id="submit-review-btn" class="bg-gradient-to-r from-[#d4af37] via-amber-300 to-[#d4af37] text-black font-extrabold text-xs py-3 px-6 rounded-xl hover:shadow-[0_0_20px_rgba(212,175,55,0.4)] transition-all transform active:scale-95 flex items-center gap-2 shadow-xl">
+            <span>🚀 Publish Review Live</span>
+          </button>
         </div>
-        <div class="p-2 rounded-xl bg-white/[0.02] border border-white/5 flex items-center gap-2">
-          <span>⚡</span>
-          <span class="text-white font-medium">COD Available</span>
-        </div>
-      </div>
 
+      </form>
     </div>
-
-    <!-- 3. Drawer Footer CTA (Pinned & Classy) -->
-    <div class="p-4 border-t border-white/10 bg-[#08090d] space-y-2 shrink-0 shadow-[0_-10px_25px_rgba(0,0,0,0.8)]">
-      <button type="button" onclick="window.location.href='product.html';" class="group relative w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-xs py-3.5 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.3)] hover:brightness-110 active:scale-95 transition-all uppercase tracking-wider text-center cursor-pointer">
-        <span>ORDER NOW &bull; ₹499</span>
-        <span class="w-5 h-5 rounded-md bg-black text-[#d4af37] flex items-center justify-center font-black text-xs">
-          🛍️
-        </span>
-      </button>
-      <div class="flex items-center justify-center gap-2 text-[10px] text-gray-400 font-medium">
-        <span>⚡ Free Express Delivery</span>
-        <span>&bull;</span>
-        <span class="text-emerald-400 font-semibold">🔒 Cash On Delivery</span>
-      </div>
-    </div>
-
   </div>
 
-    <script>
-    // BlackRoots Perfect Startup-Grade Luxury Reviews Deck Engine (Photo Proof First & Zero Blank Space)
+  <!-- Dynamic Toast Notification Container -->
+  <div id="review-toast" class="fixed top-6 right-6 z-[110] bg-gradient-to-r from-[#123824] to-[#0a2014] border border-[#d4af37] text-white p-4 rounded-2xl shadow-2xl max-w-sm flex items-center gap-3 transform translate-y-[-100px] opacity-0 transition-all duration-500 pointer-events-none">
+    <div class="w-10 h-10 rounded-full bg-[#d4af37] text-black text-xl flex items-center justify-center font-bold shrink-0">🎉</div>
+    <div>
+      <h4 id="toast-title" class="font-bold text-xs text-amber-300 uppercase tracking-wide">Review Published!</h4>
+      <p id="toast-msg" class="text-xs text-gray-200">Your review has been added live to the customer ratings grid.</p>
+    </div>
+  </div>
+
+<script>
+    // BlackRoots Robust Luxury Deck & Customer Review Upload Engine
     document.addEventListener('DOMContentLoaded', function() {
       const CARDS_PER_SLIDE = 6;
       let currentSlide = 0;
@@ -1581,20 +1624,212 @@
       const showingCount = document.querySelector('.js-showing-count');
       const sortSelect = document.getElementById('reviews-sort');
 
-      // Helper: Check if a card contains photo proof
+      // Modal Elements
+      const modal = document.getElementById('add-review-modal');
+      const modalCard = document.getElementById('modal-card');
+      const openModalBtns = document.querySelectorAll('.js-open-review-modal');
+      const closeModalBtn = document.getElementById('close-review-modal');
+      const cancelModalBtn = document.getElementById('cancel-review-btn');
+      const reviewForm = document.getElementById('review-form');
+      
+      const starPicker = document.getElementById('star-rating-picker');
+      const starRatingInput = document.getElementById('review-rating');
+      const starRatingLabel = document.getElementById('star-rating-label');
+      
+      const reviewBodyInput = document.getElementById('review-body');
+      const wordCountBadge = document.getElementById('word-count-badge');
+      const wordCountError = document.getElementById('word-count-error');
+      
+      const photoInput = document.getElementById('review-photo-input');
+      const photoPlaceholder = document.getElementById('photo-upload-placeholder');
+      const photoPreviewContainer = document.getElementById('photo-preview-container');
+      const photoCountBadge = document.getElementById('photo-count-badge');
+
+      let uploadedPhotosDataUrls = [];
+
+      const starLabels = {
+        1: '1.0 ? Poor',
+        2: '2.0 ? Fair',
+        3: '3.0 ? Good',
+        4: '4.0 ? Very Good',
+        5: '5.0 ? Outstanding!'
+      };
+
       function hasPhotoProof(card) {
         if (!card) return false;
         const img = card.querySelector('img[src*="review-photo"], img[src*="face-photo"], img[src*="before"], img[src*="after"], img[src*="bottle"], img[src*="girl"], img[src*="table"], img[src*="result"]');
         return img !== null || card.hasAttribute('data-has-photo');
       }
 
-      // Preserve all initial static review cards from HTML source grid
       let allCardsArray = [];
       if (staticGridSource) {
         allCardsArray = Array.from(staticGridSource.querySelectorAll('[data-category]'));
       }
 
-      // PRIORITIZE PHOTO PROOF REVIEWS FIRST IN DECK
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>"']/g, function(m) {
+          return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m];
+        });
+      }
+
+      function getInitials(name) {
+        if (!name) return 'BR';
+        const parts = name.trim().split(' ').filter(Boolean);
+        if (parts.length >= 2) {
+          return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        }
+        return name.slice(0, 2).toUpperCase();
+      }
+
+      function getRelativeTime(timestamp) {
+        if (!timestamp) return 'Just Now';
+        const now = Date.now();
+        const elapsedMs = now - timestamp;
+        const elapsedSec = Math.floor(elapsedMs / 1000);
+        const elapsedMin = Math.floor(elapsedSec / 60);
+        const elapsedHours = Math.floor(elapsedMin / 60);
+        const elapsedDays = Math.floor(elapsedHours / 24);
+        const elapsedWeeks = Math.floor(elapsedDays / 7);
+
+        if (elapsedSec < 45) return 'Just Now';
+        if (elapsedMin < 60) return `${elapsedMin} ${elapsedMin === 1 ? 'min' : 'mins'} ago`;
+        if (elapsedHours < 24) return `${elapsedHours} ${elapsedHours === 1 ? 'hour' : 'hours'} ago`;
+        if (elapsedDays < 7) return `${elapsedDays} ${elapsedDays === 1 ? 'day' : 'days'} ago`;
+        return `${elapsedWeeks} ${elapsedWeeks === 1 ? 'week' : 'weeks'} ago`;
+      }
+
+      function showToast(name) {
+        const toast = document.getElementById('review-toast');
+        const toastMsg = document.getElementById('toast-msg');
+        if (!toast) return;
+
+        if (toastMsg) {
+          toastMsg.textContent = `Thank you ${escapeHtml(name)}! Your review has been added live to the customer ratings grid.`;
+        }
+
+        toast.classList.remove('translate-y-[-100px]', 'opacity-0', 'pointer-events-none');
+        toast.classList.add('translate-y-0', 'opacity-100');
+
+        setTimeout(() => {
+          toast.classList.remove('translate-y-0', 'opacity-100');
+          toast.classList.add('translate-y-[-100px]', 'opacity-0', 'pointer-events-none');
+        }, 5000);
+      }
+
+      function createCardElement(data) {
+        const div = document.createElement('div');
+        div.className = "p-6 rounded-3xl glass-panel-luxury border border-[#d4af37]/30 shadow-xl flex flex-col justify-between h-full transition-all duration-300 hover:border-[#d4af37]";
+        div.style.cssText = "display: flex !important; width: 100% !important; margin-bottom: 0 !important;";
+        div.setAttribute('data-category', data.category || 'women photo');
+        div.setAttribute('data-date', data.date || '20260831');
+
+        const initials = getInitials(data.name);
+        const categoryBadge = (data.category || '').includes('men') 
+          ? '<span class="text-[10px] text-amber-300 bg-amber-400/10 border-amber-400/30 font-semibold px-2 py-0.5 rounded-full border">?? Men's Scalp</span>'
+          : '<span class="text-[10px] text-pink-300 bg-pink-400/10 border-pink-400/30 font-semibold px-2 py-0.5 rounded-full border">?? Women's Hair</span>';
+
+        const starCount = Math.min(5, Math.max(1, parseInt(data.rating) || 5));
+        const starsHtml = '?'.repeat(starCount) + '?'.repeat(5 - starCount);
+        const relativeTimeText = getRelativeTime(data.timestamp || Date.now());
+
+        let photosArray = [];
+        if (Array.isArray(data.photos)) {
+          photosArray = data.photos;
+        } else if (data.photo) {
+          photosArray = [data.photo];
+        }
+
+        let photoMarkup = '';
+        if (photosArray.length === 1) {
+          photoMarkup = `
+            <div class="w-full rounded-2xl overflow-hidden border border-white/10 relative bg-black/60 mx-auto mt-2" style="aspect-ratio: 1/1; width: 100%; max-width: 100%; max-height: 240px;">
+              <img loading="lazy" decoding="async" src="${photosArray[0]}" alt="Customer Photo Proof" class="w-full h-full object-cover object-center">
+            </div>
+          `;
+        } else if (photosArray.length >= 2) {
+          photoMarkup = `
+            <div class="grid grid-cols-2 gap-2 mt-2">
+              <div class="rounded-xl overflow-hidden border border-white/10 relative bg-black/60" style="aspect-ratio: 1/1; max-height: 180px;">
+                <img loading="lazy" decoding="async" src="${photosArray[0]}" alt="Customer Photo Proof 1" class="w-full h-full object-cover object-center">
+                <span class="absolute bottom-1 left-1 bg-black/70 text-amber-300 text-[8px] font-bold px-1.5 py-0.5 rounded">Photo 1</span>
+              </div>
+              <div class="rounded-xl overflow-hidden border border-white/10 relative bg-black/60" style="aspect-ratio: 1/1; max-height: 180px;">
+                <img loading="lazy" decoding="async" src="${photosArray[1]}" alt="Customer Photo Proof 2" class="w-full h-full object-cover object-center">
+                <span class="absolute bottom-1 left-1 bg-black/70 text-amber-300 text-[8px] font-bold px-1.5 py-0.5 rounded">Photo 2</span>
+              </div>
+            </div>
+          `;
+        }
+
+        div.innerHTML = `
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full p-0.5 bg-gradient-to-tr from-[#d4af37] via-[#f3e5ab] to-[#d4af37] shadow-lg shrink-0 overflow-hidden flex items-center justify-center text-black font-extrabold text-sm border border-white/20 bg-black" title="${escapeHtml(data.name)}">
+                  ${initials}
+                </div>
+                <div>
+                  <h3 class="font-serif text-base font-bold text-white leading-snug flex items-center gap-1.5">
+                    ${escapeHtml(data.name)}
+                    <span class="text-[8px] bg-amber-400/20 text-amber-300 px-1 py-0.2 rounded border border-amber-400/40 font-mono uppercase">NEW</span>
+                  </h3>
+                  <span class="text-[10px] text-gray-400 block">${escapeHtml(data.city)} &bull; ${relativeTimeText}</span>
+                </div>
+              </div>
+              <span class="text-[10px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-500/40 px-2.5 py-0.5 rounded-full flex items-center gap-1">&#10003; Verified</span>
+            </div>
+            <div class="flex items-center justify-between pt-1">
+              <div class="text-amber-400 text-xs tracking-wider">${starsHtml} <span class="text-white font-bold ml-1">${parseFloat(data.rating).toFixed(1)}</span></div>
+              ${categoryBadge}
+            </div>
+            <h4 class="font-serif text-lg font-bold text-white leading-snug break-words">"${escapeHtml(data.title)}"</h4>
+            <p class="text-xs text-gray-300 leading-relaxed font-light break-words whitespace-pre-line">${escapeHtml(data.body)}</p>
+            ${photoMarkup}
+          </div>
+          <div class="pt-4 mt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-gray-400">
+            <span>Verified Purchase (250ml)</span>
+            <button type="button" class="js-like-btn hover:text-amber-300 flex items-center gap-1 font-bold text-gray-300 transition-colors cursor-pointer" data-likes="${data.likes || 1}">
+              ?? <span class="js-like-count">${data.likes || 1}</span> Helpful
+            </button>
+          </div>
+        `;
+
+        const likeBtn = div.querySelector('.js-like-btn');
+        if (likeBtn) {
+          likeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            let countSpan = this.querySelector('.js-like-count');
+            let likes = parseInt(this.getAttribute('data-likes') || '1');
+            likes++;
+            this.setAttribute('data-likes', likes);
+            if (countSpan) countSpan.textContent = likes;
+            this.classList.add('text-amber-400');
+          });
+        }
+
+        return div;
+      }
+
+      function loadUserReviews() {
+        const stored = localStorage.getItem('blackroots_user_reviews');
+        if (stored) {
+          try {
+            const userReviews = JSON.parse(stored);
+            if (Array.isArray(userReviews)) {
+              userReviews.forEach(data => {
+                const card = createCardElement(data);
+                allCardsArray.unshift(card);
+              });
+            }
+          } catch(e) {
+            console.error('Error loading saved reviews', e);
+          }
+        }
+      }
+
+      loadUserReviews();
+
       allCardsArray.sort((a, b) => {
         const aHasPhoto = hasPhotoProof(a);
         const bHasPhoto = hasPhotoProof(b);
@@ -1615,7 +1850,6 @@
       function updateDeck() {
         if (!customerGrid) return;
 
-        // Filter cards
         const matchingCards = allCardsArray.filter(card => {
           const cats = card.getAttribute('data-category') || '';
           return currentFilter === 'all' || cats.includes(currentFilter);
@@ -1631,26 +1865,20 @@
         const endIdx = startIdx + CARDS_PER_SLIDE;
         const visibleCardsForSlide = matchingCards.slice(startIdx, endIdx);
 
-        // Render Exactly 6 Cards into 3-Column Symmetrical Grid
         customerGrid.innerHTML = '';
         visibleCardsForSlide.forEach(card => {
-          // Normalize card styles for 3-column grid layout
           card.className = "p-6 rounded-3xl glass-panel-luxury border border-[#d4af37]/30 shadow-xl flex flex-col justify-between h-full transition-all duration-300 hover:border-[#d4af37]";
           card.style.cssText = "display: flex !important; width: 100% !important; margin-bottom: 0 !important;";
-          
           customerGrid.appendChild(card);
         });
 
-        // Update Slide Badge & Status Text
         if (slideBadge) slideBadge.textContent = `Slide ${currentSlide + 1} of ${totalSlides}`;
         if (showingText) showingText.textContent = `Showing ${visibleCardsForSlide.length} of ${totalItems} Verified Reviews`;
         if (showingCount) showingCount.textContent = `${totalItems} Reviews`;
 
-        // Update Prev / Next Buttons State
         if (prevBtn) prevBtn.disabled = (currentSlide === 0);
         if (nextBtn) nextBtn.disabled = (currentSlide >= totalSlides - 1);
 
-        // Render Interactive Dots
         if (dotsContainer) {
           dotsContainer.innerHTML = '';
           if (totalSlides <= 1) {
@@ -1674,7 +1902,6 @@
         }
       }
 
-      // Prev / Next Button Handlers
       if (prevBtn) {
         prevBtn.onclick = function(e) {
           e.preventDefault();
@@ -1698,7 +1925,6 @@
         };
       }
 
-      // Filter Button Listeners
       filterBtns.forEach(btn => {
         btn.addEventListener('click', function() {
           currentFilter = this.getAttribute('data-filter') || 'all';
@@ -1713,7 +1939,6 @@
         });
       });
 
-      // Helpful Like Buttons
       document.querySelectorAll('.js-like-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
           e.preventDefault();
@@ -1728,7 +1953,6 @@
         });
       });
 
-      // Sort Listener
       if (sortSelect) {
         sortSelect.addEventListener('change', function() {
           const order = this.value;
@@ -1744,21 +1968,268 @@
             }
           });
           
-          // Re-apply Photo Priority FIRST after sorting
-          allCardsArray.sort((a, b) => {
-            const aHasPhoto = hasPhotoProof(a);
-            const bHasPhoto = hasPhotoProof(b);
-            if (aHasPhoto && !bHasPhoto) return -1;
-            if (!aHasPhoto && bHasPhoto) return 1;
-            return 0;
-          });
-
           currentSlide = 0;
           updateDeck();
         });
       }
 
-      // Initial run
+      function openModal() {
+        if (!modal) return;
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        if (modalCard) {
+          modalCard.classList.remove('scale-95');
+          modalCard.classList.add('scale-100');
+        }
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal() {
+        if (!modal) return;
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        if (modalCard) {
+          modalCard.classList.remove('scale-100');
+          modalCard.classList.add('scale-95');
+        }
+        document.body.style.overflow = '';
+      }
+
+      openModalBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          openModal();
+        });
+      });
+
+      if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+      if (cancelModalBtn) cancelModalBtn.addEventListener('click', closeModal);
+
+      if (modal) {
+        modal.addEventListener('click', function(e) {
+          if (e.target === modal) closeModal();
+        });
+      }
+
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal && !modal.classList.contains('opacity-0')) {
+          closeModal();
+        }
+      });
+
+      if (starPicker) {
+        const stars = starPicker.querySelectorAll('[data-star]');
+        function updateStars(rating) {
+          if (starRatingInput) starRatingInput.value = rating;
+          if (starRatingLabel) starRatingLabel.textContent = starLabels[rating] || (rating + '.0');
+          stars.forEach(star => {
+            const sVal = parseInt(star.getAttribute('data-star'));
+            if (sVal <= rating) {
+              star.classList.add('text-amber-400');
+              star.classList.remove('text-gray-600');
+            } else {
+              star.classList.remove('text-amber-400');
+              star.classList.add('text-gray-600');
+            }
+          });
+        }
+        stars.forEach(star => {
+          star.addEventListener('click', function() {
+            updateStars(parseInt(this.getAttribute('data-star')));
+          });
+          star.addEventListener('mouseenter', function() {
+            const val = parseInt(this.getAttribute('data-star'));
+            stars.forEach(s => {
+              const sVal = parseInt(s.getAttribute('data-star'));
+              if (sVal <= val) {
+                s.classList.add('text-amber-400');
+                s.classList.remove('text-gray-600');
+              } else {
+                s.classList.remove('text-amber-400');
+                s.classList.add('text-gray-600');
+              }
+            });
+          });
+        });
+        starPicker.addEventListener('mouseleave', function() {
+          const currentVal = parseInt(starRatingInput?.value) || 5;
+          updateStars(currentVal);
+        });
+      }
+
+      function getWordCount(text) {
+        if (!text) return 0;
+        return text.trim().split(/\s+/).filter(w => w.length > 0).length;
+      }
+
+      if (reviewBodyInput && wordCountBadge) {
+        reviewBodyInput.addEventListener('input', function() {
+          const count = getWordCount(this.value);
+          wordCountBadge.textContent = `${count} / 300 words`;
+          if (count > 300) {
+            wordCountBadge.className = "text-[11px] font-bold text-red-400 bg-red-950/80 px-2 py-0.5 rounded border border-red-500/50";
+            if (wordCountError) wordCountError.classList.remove('hidden');
+          } else {
+            wordCountBadge.className = "text-[11px] font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30";
+            if (wordCountError) wordCountError.classList.add('hidden');
+          }
+        });
+      }
+
+      function renderPhotoPreviews() {
+        if (!photoPreviewContainer) return;
+        photoPreviewContainer.innerHTML = '';
+        if (uploadedPhotosDataUrls.length === 0) {
+          photoPreviewContainer.classList.add('hidden');
+          photoPreviewContainer.classList.remove('flex');
+          if (photoPlaceholder) photoPlaceholder.classList.remove('hidden');
+          if (photoCountBadge) photoCountBadge.textContent = '0 / 2 photos selected';
+          return;
+        }
+        if (photoPlaceholder) photoPlaceholder.classList.add('hidden');
+        photoPreviewContainer.classList.remove('hidden');
+        photoPreviewContainer.classList.add('flex');
+        if (photoCountBadge) photoCountBadge.textContent = `${uploadedPhotosDataUrls.length} / 2 photos selected`;
+
+        uploadedPhotosDataUrls.forEach((url, idx) => {
+          const wrapper = document.createElement('div');
+          wrapper.className = "relative flex flex-col items-center gap-1";
+          wrapper.innerHTML = `
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border border-[#d4af37] shadow-lg relative bg-black">
+              <img src="${url}" alt="Preview ${idx + 1}" class="w-full h-full object-cover">
+              <span class="absolute top-1 left-1 bg-black/80 text-amber-300 font-bold text-[9px] px-1.5 py-0.5 rounded">#${idx + 1}</span>
+            </div>
+            <button type="button" class="js-remove-photo-item text-[10px] text-red-400 hover:text-red-300 font-bold bg-red-950/80 px-2 py-0.5 rounded-full border border-red-500/30 cursor-pointer" data-index="${idx}">
+              ? Remove
+            </button>
+          `;
+          photoPreviewContainer.appendChild(wrapper);
+        });
+
+        const removeBtns = photoPreviewContainer.querySelectorAll('.js-remove-photo-item');
+        removeBtns.forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const index = parseInt(this.getAttribute('data-index'));
+            uploadedPhotosDataUrls.splice(index, 1);
+            renderPhotoPreviews();
+          });
+        });
+      }
+
+      if (photoInput) {
+        photoInput.addEventListener('change', function(e) {
+          const files = Array.from(e.target.files);
+          if (!files.length) return;
+          const availableSlots = 2 - uploadedPhotosDataUrls.length;
+          if (availableSlots <= 0) {
+            alert('Maximum 2 photos allowed per review!');
+            photoInput.value = '';
+            return;
+          }
+          const filesToProcess = files.slice(0, availableSlots);
+          let processed = 0;
+          filesToProcess.forEach(file => {
+            if (file.size > 5 * 1024 * 1024) {
+              alert(`File "${file.name}" exceeds 5MB limit.`);
+              return;
+            }
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+              uploadedPhotosDataUrls.push(evt.target.result);
+              processed++;
+              if (processed === filesToProcess.length) {
+                renderPhotoPreviews();
+                photoInput.value = '';
+              }
+            };
+            reader.readAsDataURL(file);
+          });
+        });
+      }
+
+      if (reviewForm) {
+        reviewForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          const name = (document.getElementById('review-name')?.value || '').trim();
+          const city = (document.getElementById('review-city')?.value || '').trim();
+          const title = (document.getElementById('review-title')?.value || '').trim();
+          const body = (reviewBodyInput?.value || '').trim();
+          const rating = starRatingInput?.value || '5';
+          const catRadio = document.querySelector('input[name="review-category"]:checked');
+          let category = catRadio ? catRadio.value : 'women';
+
+          if (!name || !city || !title || !body) {
+            alert('Please fill out all required fields!');
+            return;
+          }
+
+          const wordCount = getWordCount(body);
+          if (wordCount > 300) {
+            alert(`Review exceeds 300 words limit (${wordCount} words). Please shorten.`);
+            return;
+          }
+
+          if (uploadedPhotosDataUrls.length > 0 && !category.includes('photo')) {
+            category += ' photo';
+          }
+
+          const now = new Date();
+          const timestamp = now.getTime();
+          const dateStr = now.getFullYear().toString() + (now.getMonth() + 1).toString().padStart(2, '0') + now.getDate().toString().padStart(2, '0');
+
+          const reviewObj = {
+            id: timestamp,
+            name: name,
+            city: city,
+            title: title,
+            body: body,
+            rating: rating,
+            category: category,
+            photos: [...uploadedPhotosDataUrls],
+            timestamp: timestamp,
+            date: dateStr,
+            likes: 1
+          };
+
+          let existing = [];
+          try {
+            existing = JSON.parse(localStorage.getItem('blackroots_user_reviews') || '[]');
+            if (!Array.isArray(existing)) existing = [];
+          } catch(err) {
+            existing = [];
+          }
+          existing.unshift(reviewObj);
+          localStorage.setItem('blackroots_user_reviews', JSON.stringify(existing));
+
+          const newCardEl = createCardElement(reviewObj);
+          allCardsArray.unshift(newCardEl);
+
+          reviewForm.reset();
+          uploadedPhotosDataUrls = [];
+          renderPhotoPreviews();
+          if (wordCountBadge) {
+            wordCountBadge.textContent = '0 / 300 words';
+            wordCountBadge.className = "text-[11px] font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30";
+          }
+          closeModal();
+
+          currentSlide = 0;
+          currentFilter = 'all';
+          filterBtns.forEach(b => {
+            b.classList.remove('bg-[#d4af37]', 'text-black', 'shadow-md', 'active');
+            b.classList.add('bg-white/5', 'text-gray-300');
+          });
+          const allBtn = document.querySelector('.js-filter-btn[data-filter="all"]');
+          if (allBtn) {
+            allBtn.classList.remove('bg-white/5', 'text-gray-300');
+            allBtn.classList.add('bg-[#d4af37]', 'text-black', 'shadow-md', 'active');
+          }
+
+          updateDeck();
+          scrollToDeckTop();
+          showToast(name);
+        });
+      }
+
       updateDeck();
     });
   </script>
