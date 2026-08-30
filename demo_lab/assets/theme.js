@@ -638,15 +638,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // Fixed: Cleaned conflicting quick order invoker
 window.closeQuickOrderModal = function() {
     const modal = document.getElementById('QuickOrderModal');
-    const card = document.getElementById('QuickOrderCard');
     if (modal) {
       modal.style.display = 'none';
-      modal.style.opacity = '0';
-      modal.style.pointerEvents = 'none';
-      modal.style.visibility = 'hidden';
-      if (card) {
-        card.style.transform = 'translateY(100%) scale(0.95)';
-      }
       document.body.style.overflow = '';
     }
   };
@@ -663,7 +656,6 @@ window.closeQuickOrderModal = function() {
     window.selectModalBundle(qty, price >= 700 ? 799 : 499, title, qty === 2 ? 'Save ?1,199' : 'Save ?500');
 
     const modal = document.getElementById('QuickOrderModal');
-    const card = document.getElementById('QuickOrderCard');
     const form = document.getElementById('QuickOrderForm');
     const success = document.getElementById('QuickOrderSuccess');
 
@@ -672,16 +664,6 @@ window.closeQuickOrderModal = function() {
       if (success) success.classList.add('hidden');
 
       modal.style.display = 'flex';
-      modal.style.opacity = '1';
-      modal.style.pointerEvents = 'auto';
-      modal.style.visibility = 'visible';
-      modal.style.zIndex = '9999999';
-
-      if (card) {
-        card.style.transform = 'translateY(0) scale(1)';
-        card.style.opacity = '1';
-        card.style.visibility = 'visible';
-      }
       document.body.style.overflow = 'hidden';
       window.recalculateCheckoutPrice();
     }
@@ -690,15 +672,8 @@ window.closeQuickOrderModal = function() {
   // Close Quick Order Modal
   window.closeQuickOrderModal = function() {
     const modal = document.getElementById('QuickOrderModal');
-    const card = document.getElementById('QuickOrderCard');
     if (modal) {
       modal.style.display = 'none';
-      modal.style.opacity = '0';
-      modal.style.pointerEvents = 'none';
-      modal.style.visibility = 'hidden';
-      if (card) {
-        card.style.transform = 'translateY(100%) scale(0.95)';
-      }
       document.body.style.overflow = '';
     }
   };
