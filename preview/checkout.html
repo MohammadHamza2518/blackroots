@@ -686,7 +686,7 @@
       }
     }
 
-    function handlePincodeLiveValidation(input) {
+        function handlePincodeLiveValidation(input) {
       input.value = input.value.replace(/[^0-9]/g, '').slice(0, 6);
       var msg = document.getElementById('PincodeValidationMsg');
       if (!msg) return;
@@ -697,8 +697,46 @@
         msg.textContent = '⚠️ 6 Digits Required (' + input.value.length + '/6)';
         msg.className = 'text-[10px] font-bold text-amber-400 block';
       } else {
-        msg.textContent = '✓ Valid 6-Digit Pincode';
+        msg.textContent = '✓ Valid Pincode (Checking City/State...)';
         msg.className = 'text-[10px] font-bold text-emerald-400 block';
+
+        // Auto-fetch Indian City and State via Postal API
+        var pin = input.value;
+        fetch('https://api.postalpincode.in/pincode/' + pin)
+          .then(function(res) { return res.json(); })
+          .then(function(data) {
+            if (data && data[0] && data[0].Status === 'Success' && data[0].PostOffice && data[0].PostOffice.length > 0) {
+              var po = data[0].PostOffice[0];
+              var detectedCity = po.District || po.Block || po.Circle;
+              var detectedState = po.State;
+
+              var cityInput = document.getElementById('InputCustCity');
+              var stateSelect = document.getElementById('InputCustState');
+
+              if (cityInput && !cityInput.value) {
+                cityInput.value = detectedCity;
+              }
+
+              if (stateSelect && detectedState) {
+                for (var i = 0; i < stateSelect.options.length; i++) {
+                  if (stateSelect.options[i].value.toLowerCase().includes(detectedState.toLowerCase()) || detectedState.toLowerCase().includes(stateSelect.options[i].value.toLowerCase())) {
+                    stateSelect.selectedIndex = i;
+                    break;
+                  }
+                }
+              }
+
+              msg.textContent = '✓ ' + detectedCity + ', ' + detectedState;
+              msg.className = 'text-[10px] font-bold text-emerald-400 block';
+            } else {
+              msg.textContent = '✓ Valid 6-Digit Pincode';
+              msg.className = 'text-[10px] font-bold text-emerald-400 block';
+            }
+          })
+          .catch(function() {
+            msg.textContent = '✓ Valid 6-Digit Pincode';
+            msg.className = 'text-[10px] font-bold text-emerald-400 block';
+          });
       }
     }
 
