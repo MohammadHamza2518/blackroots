@@ -150,36 +150,34 @@
 <style id="FastrrLuxuryOverrides">
   #fastrr-main-container,
   .headless-modal {
-    background-color: rgba(0, 0, 0, 0.8) !important;
-    backdrop-filter: blur(14px) !important;
-    -webkit-backdrop-filter: blur(14px) !important;
-    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    position: fixed !important;
+    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(0, 0, 0, 0.85) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
     z-index: 2147483647 !important;
   }
 
   .headless-modal-content {
-    border-radius: 24px 24px 0 0 !important;
-    box-shadow: 0 -15px 50px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(212, 175, 55, 0.15) !important;
-    animation: fastrrSmoothSlideUp 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+    margin: auto !important;
+    max-height: 95vh !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(212, 175, 55, 0.25) !important;
+    border-radius: 20px !important;
     overflow: hidden !important;
     background: #0f1117 !important;
   }
 
-  @keyframes fastrrSmoothSlideUp {
-    0% {
-      opacity: 0;
-      transform: translateY(50px) scale(0.97);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
   #headless-iframe {
-    border-radius: 20px 20px 0 0 !important;
+    width: 100% !important;
+    border-radius: 20px !important;
     background-color: #0f1117 !important;
-    transition: opacity 0.25s ease-in-out !important;
   }
 
   #fastrr-pre-loader,
@@ -218,8 +216,9 @@
       var imgUrl = (packQty === 2)
         ? 'https://blackroots.in/assets/blackroots-bottle-duo.png'
         : 'https://blackroots.in/assets/blackroots-bottle-single.png';
-      var isOnline = (window.currentPaymentMethod === 'Online' || typeof window.currentPaymentMethod === 'undefined');
-      var discountAmt = isOnline ? 50.0 : 0.0;
+      
+      var urlParams = new URLSearchParams(window.location.search);
+      var appliedCoupon = (urlParams.get('coupon') || urlParams.get('ref') || '').toUpperCase().trim();
 
       var payload = {
         cart_data: {
@@ -238,10 +237,10 @@
         timestamp: new Date().toISOString()
       };
 
-      if (discountAmt > 0) {
+      if (appliedCoupon) {
         payload.cart_data.cart_discount = {
-          coupon_code: 'ONLINE50',
-          amount: discountAmt
+          coupon_code: appliedCoupon,
+          amount: 50.0
         };
       }
 
@@ -273,7 +272,7 @@
         var res2 = await fetch('api/shiprocket-checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ qty: packQty, price: basePrice, isOnline: isOnline })
+          body: JSON.stringify({ qty: packQty, price: basePrice, coupon: appliedCoupon })
         });
         if (res2.ok) {
           var data2 = await res2.json();

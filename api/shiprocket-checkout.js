@@ -13,11 +13,9 @@ module.exports = async (req, res) => {
   const API_SECRET = 'SX9xl506RtMcE6761XJgkzhJOl1QCUW6';
 
   try {
-    const { qty = 1, price = 499, title = 'BlackRoots Herbal Hair Darkening Shampoo (250ml)', isOnline = true, coupon = '' } = req.body || {};
+    const { qty = 1, price = 499, title = 'BlackRoots Herbal Hair Darkening Shampoo (250ml)', coupon = '' } = req.body || {};
 
     const basePrice = Number(price) || (qty === 2 ? 799 : 499);
-    const discountAmt = isOnline ? 50.0 : 0.0;
-    const finalPrice = Math.max(0, basePrice - discountAmt);
     const variantId = qty === 2 ? "1002" : "1001";
     const imgUrl = qty === 2 
       ? "https://blackroots.in/assets/blackroots-bottle-duo.png" 
@@ -36,18 +34,17 @@ module.exports = async (req, res) => {
             }
           }
         ],
-        cart_discount: discountAmt > 0 ? {
-          coupon_code: coupon || "PREPAID50",
-          amount: discountAmt
-        } : undefined,
         mobile_app: false
       },
       redirect_url: "https://blackroots.in/track-order.html",
       timestamp: new Date().toISOString()
     };
 
-    if (!payload.cart_data.cart_discount) {
-      delete payload.cart_data.cart_discount;
+    if (coupon && typeof coupon === 'string' && coupon.trim()) {
+      payload.cart_data.cart_discount = {
+        coupon_code: coupon.trim().toUpperCase(),
+        amount: 50.0
+      };
     }
 
     const payloadString = JSON.stringify(payload);
