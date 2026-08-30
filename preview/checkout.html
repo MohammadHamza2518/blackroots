@@ -992,115 +992,109 @@
         discount: pricing.onlineDiscount + pricing.couponDiscount
       };
 
-      var finalizeOrder = async function(payload) {
+            var finalizeOrder = async function(payload) {
         if (submitBtn) {
           submitBtn.disabled = true;
           submitBtn.innerHTML = '<span>⏳ Confirming Logistics Order...</span>';
         }
 
+        var orderId = '#BR-' + Math.floor(1000 + Math.random() * 9000);
+        var awb = '8839' + Math.floor(100000 + Math.random() * 900000);
+        
+        payload.order_id = orderId;
+        payload.product_bundle = payload.bundle || (currentPack === 2 ? '2 Bottles Pack (500ml)' : '1 Bottle (250ml)');
+        payload.status = (payload.payment_method && payload.payment_method.includes('Online')) ? 'Paid' : 'New';
+        payload.tracking_awb = awb;
+        payload.courier = 'Delhivery Express Air';
+        payload.created_at = new Date().toLocaleString();
+
+        // 1. Immediately Save to Local Database
         try {
-          var orderData = null;
-          var endpoints = ['api/order', 'api/order.js', 'api/order.php', 'backend_hostinger/order.php'];
-          for (var i = 0; i < endpoints.length; i++) {
-            try {
-              var res = await fetch(endpoints[i], {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-              });
-              if (res.ok) {
-                orderData = await res.json();
-                if (orderData && orderData.success) break;
-              }
-            } catch(err) {}
-          }
+          var curOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
+          curOrders = curOrders.filter(function(o) { return o.order_id !== orderId; });
+          curOrders.unshift(payload);
+          localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 200)));
 
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnHtml;
-          }
-
-          var orderId = (orderData && orderData.order_id) ? orderData.order_id : ('#BR-' + Math.floor(1000 + Math.random() * 9000));
-          payload.order_id = orderId;
-          payload.status = payload.payment_method.includes('Online') ? 'Paid' : 'New';
-          payload.created_at = new Date().toLocaleString();
-
-                    try {
-            var curOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
-            curOrders.unshift(payload);
-            localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 100)));
-
-            // Real-time Influencer DB Commission & Sales Sync
-            if (payload.coupon) {
-              var infDb = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
-              var infIdx = infDb.findIndex(function(u) {
-                return (u.code && u.code.toUpperCase() === payload.coupon.toUpperCase()) ||
-                       (u.id && u.id === payload.influencer_id);
-              });
-              if (infIdx !== -1) {
-                infDb[infIdx].total_orders = (infDb[infIdx].total_orders || 0) + 1;
-                infDb[infIdx].total_sales = (infDb[infIdx].total_sales || 0) + payload.price;
-                var earned = Math.round(payload.price * (infDb[infIdx].comm_rate || 10) / 100);
-                infDb[infIdx].total_earned = (infDb[infIdx].total_earned || 0) + earned;
-                infDb[infIdx].unpaid_balance = (infDb[infIdx].unpaid_balance || 0) + earned;
-                localStorage.setItem('br_influencers_db', JSON.stringify(infDb));
-              }
-            }
-          } catch(e) {}
-
-                    // Trigger Confetti Celebration (Flipkart / Amazon Style)
-          if (typeof confetti === 'function') {
-            confetti({
-              particleCount: 120,
-              spread: 70,
-              origin: { y: 0.6 }
+          // Real-time Influencer DB Commission & Sales Sync
+          if (payload.coupon) {
+            var infDb = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
+            var infIdx = infDb.findIndex(function(u) {
+              return (u.code && u.code.toUpperCase() === payload.coupon.toUpperCase()) ||
+                     (u.id && u.id === payload.influencer_id);
             });
-            setTimeout(function() {
-              confetti({ particleCount: 80, angle: 60, spread: 55, origin: { x: 0 } });
-              confetti({ particleCount: 80, angle: 120, spread: 55, origin: { x: 1 } });
-            }, 300);
+            if (infIdx !== -1) {
+              infDb[infIdx].total_orders = (infDb[infIdx].total_orders || 0) + 1;
+              infDb[infIdx].total_sales = (infDb[infIdx].total_sales || 0) + payload.price;
+              var earned = Math.round(payload.price * (infDb[infIdx].comm_rate || 10) / 100);
+              infDb[infIdx].total_earned = (infDb[infIdx].total_earned || 0) + earned;
+              infDb[infIdx].unpaid_balance = (infDb[infIdx].unpaid_balance || 0) + earned;
+              localStorage.setItem('br_influencers_db', JSON.stringify(infDb));
+            }
           }
+        } catch(e) {}
 
-          var activeView = document.getElementById('CheckoutActiveView');
-          var successView = document.getElementById('CheckoutSuccessView');
-          var successOrderId = document.getElementById('SuccessOrderIdDisplay');
-          var successCustName = document.getElementById('SuccessCustomerName');
-          var successCustPhone = document.getElementById('SuccessCustomerPhone');
-          var successBundle = document.getElementById('SuccessBundleDisplay');
-          var successAmount = document.getElementById('SuccessAmountDisplay');
-          var successStatus = document.getElementById('SuccessPaymentStatusDisplay');
-          var successTrackBtn = document.getElementById('SuccessTrackOrderBtn');
-          var successWhatsAppBtn = document.getElementById('SuccessWhatsAppChatBtn');
-
-          if (activeView) activeView.classList.add('hidden');
-          if (successView) successView.classList.remove('hidden');
-          if (successOrderId) successOrderId.textContent = orderId;
-          if (successCustName) successCustName.textContent = payload.name || 'Valued Customer';
-          if (successCustPhone) successCustPhone.textContent = '+91 ' + payload.phone;
-          if (successBundle) successBundle.textContent = payload.bundle;
-          if (successAmount) successAmount.textContent = '₹' + payload.price;
-          if (successStatus) {
-            successStatus.textContent = (payload.status === 'Paid') ? 'Paid Online (Razorpay UPI ✓)' : 'Cash on Delivery (₹' + payload.price + ')';
-            successStatus.className = (payload.status === 'Paid') ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold';
-          }
-          if (successTrackBtn) {
-            successTrackBtn.href = 'track-order.html?order_id=' + encodeURIComponent(orderId);
-          }
-          if (successWhatsAppBtn) {
-            var msg = 'Namaste BlackRoots! My Order ID is ' + orderId + ' (' + payload.bundle + ', Total: ₹' + payload.price + '). Please share dispatch updates.';
-            successWhatsAppBtn.href = 'https://wa.me/919580835179?text=' + encodeURIComponent(msg);
-          }
-
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-          if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
-
-        } catch(err) {
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnHtml;
-          }
-          alert('Order recorded locally.');
+        // 2. Dispatch to Server Endpoints
+        var endpoints = ['api/order', 'api/order.js', 'api/order.php', 'backend_hostinger/order.php'];
+        for (var i = 0; i < endpoints.length; i++) {
+          try {
+            fetch(endpoints[i], {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            }).catch(function() {});
+          } catch(err) {}
         }
+
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnHtml;
+        }
+
+        // 3. Trigger Confetti Celebration (Flipkart / Amazon Style)
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 120,
+            spread: 70,
+            origin: { y: 0.6 }
+          });
+          setTimeout(function() {
+            confetti({ particleCount: 80, angle: 60, spread: 55, origin: { x: 0 } });
+            confetti({ particleCount: 80, angle: 120, spread: 55, origin: { x: 1 } });
+          }, 300);
+        }
+
+        var activeView = document.getElementById('CheckoutActiveView');
+        var successView = document.getElementById('CheckoutSuccessView');
+        var successOrderId = document.getElementById('SuccessOrderIdDisplay');
+        var successCustName = document.getElementById('SuccessCustomerName');
+        var successCustPhone = document.getElementById('SuccessCustomerPhone');
+        var successBundle = document.getElementById('SuccessBundleDisplay');
+        var successAmount = document.getElementById('SuccessAmountDisplay');
+        var successStatus = document.getElementById('SuccessPaymentStatusDisplay');
+        var successTrackBtn = document.getElementById('SuccessTrackOrderBtn');
+        var successWhatsAppBtn = document.getElementById('SuccessWhatsAppChatBtn');
+
+        if (activeView) activeView.classList.add('hidden');
+        if (successView) successView.classList.remove('hidden');
+        if (successOrderId) successOrderId.textContent = orderId;
+        if (successCustName) successCustName.textContent = payload.name || 'Valued Customer';
+        if (successCustPhone) successCustPhone.textContent = '+91 ' + payload.phone;
+        if (successBundle) successBundle.textContent = payload.product_bundle;
+        if (successAmount) successAmount.textContent = '₹' + payload.price;
+        if (successStatus) {
+          successStatus.textContent = (payload.status === 'Paid') ? 'Paid Online (Razorpay UPI ✓)' : 'Cash on Delivery (₹' + payload.price + ')';
+          successStatus.className = (payload.status === 'Paid') ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold';
+        }
+        if (successTrackBtn) {
+          successTrackBtn.href = 'track-order.html?order_id=' + encodeURIComponent(orderId);
+        }
+        if (successWhatsAppBtn) {
+          var msg = 'Namaste BlackRoots! My Order ID is ' + orderId + ' (' + payload.product_bundle + ', Total: ₹' + payload.price + '). Please share dispatch updates.';
+          successWhatsAppBtn.href = 'https://wa.me/919580835179?text=' + encodeURIComponent(msg);
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
       };
 
       if (selectedMethod === 'Online') {

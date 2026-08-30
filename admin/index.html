@@ -1374,20 +1374,28 @@
       else if (currentTab === 'settings') loadSettings();
     }
 
-    // 5. Load Overview Dashboard
+        // 5. Load Overview Dashboard
     async function loadDashboard() {
       let data = await apiFetch('get_dashboard');
       let ordRes = await apiFetch('get_orders');
-      let orders = (ordRes && ordRes.orders && ordRes.orders.length) ? ordRes.orders : [];
-      if (orders.length > 0) {
-        try { localStorage.setItem('br_local_orders', JSON.stringify(orders)); } catch(e) {}
-      } else {
-        try { orders = JSON.parse(localStorage.getItem('br_local_orders') || '[]'); } catch(e) {}
-      }
+      let serverOrders = (ordRes && ordRes.orders && Array.isArray(ordRes.orders)) ? ordRes.orders : [];
+      let localOrders = [];
+      try { localOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]'); } catch(e) {}
+
+      let orderMap = new Map();
+      serverOrders.forEach(o => { if (o && o.order_id) orderMap.set(o.order_id, o); });
+      localOrders.forEach(o => {
+        if (o && o.order_id) {
+          let existing = orderMap.get(o.order_id) || {};
+          orderMap.set(o.order_id, Object.assign({}, existing, o));
+        }
+      });
+      let orders = Array.from(orderMap.values());
+      try { localStorage.setItem('br_local_orders', JSON.stringify(orders)); } catch(e) {}
 
       let totalRev = orders.reduce((sum, o) => sum + (Number(o.price) || 0), 0);
       let todayStr = new Date().toISOString().slice(0, 10);
-      let todayOrders = orders.filter(o => (o.created_at || '').includes(todayStr) || (o.created_at || '').includes('Today'));
+      let todayOrders = orders.filter(o => (o.created_at || '').includes(todayStr) || (o.created_at || '').includes('Today') || (o.created_at || '').includes(new Date().toLocaleDateString()));
       let todayRev = todayOrders.reduce((sum, o) => sum + (Number(o.price) || 0), 0);
       let pendingCnt = orders.filter(o => o.status === 'New' || o.status === 'Pending' || o.status === 'Confirmed').length;
       let paidCnt = orders.filter(o => o.status === 'Paid' || (o.payment_method && o.payment_method.includes('Online'))).length;
@@ -1398,20 +1406,20 @@
       } catch(e) {}
 
       let visitors = Number(localStorage.getItem('br_visitor_count') || 0);
-      let totalOrdersCnt = (data && data.total_orders !== undefined) ? data.total_orders : orders.length;
+      let totalOrdersCnt = orders.length;
       let uniqueVis = (data && data.total_visitors !== undefined) ? data.total_visitors : (visitors || 1);
       let convRate = uniqueVis > 0 ? ((totalOrdersCnt / uniqueVis) * 100).toFixed(1) : '0.0';
       let liveActive = (data && data.live_visitors_now !== undefined) ? data.live_visitors_now : 1;
 
       // Update Dashboard Hero Cards
-      document.getElementById('metric-total-revenue').textContent = '₹' + ((data && data.total_revenue) ? data.total_revenue : totalRev).toLocaleString();
-      document.getElementById('metric-today-revenue').textContent = '₹' + ((data && data.today_revenue) ? data.today_revenue : todayRev).toLocaleString();
-      document.getElementById('metric-today-orders').textContent = `(${data ? data.today_orders : todayOrders.length} orders)`;
+      document.getElementById('metric-total-revenue').textContent = '₹' + totalRev.toLocaleString();
+      document.getElementById('metric-today-revenue').textContent = '₹' + todayRev.toLocaleString();
+      document.getElementById('metric-today-orders').textContent = `(${todayOrders.length} orders)`;
       document.getElementById('metric-total-visitors').textContent = uniqueVis.toLocaleString();
       document.getElementById('metric-live-visitors-now').textContent = `${liveActive} Active Now`;
       document.getElementById('metric-total-orders').textContent = totalOrdersCnt;
-      document.getElementById('metric-pending-orders').textContent = (data ? data.pending_orders : pendingCnt);
-      document.getElementById('metric-paid-orders').textContent = `${data ? data.paid_orders_count : paidCnt} Paid`;
+      document.getElementById('metric-pending-orders').textContent = pendingCnt;
+      document.getElementById('metric-paid-orders').textContent = `${paidCnt} Paid`;
       document.getElementById('metric-conv-rate').textContent = convRate + '%';
       document.getElementById('metric-abandoned-leads').textContent = (data ? data.abandoned_leads : abandoned.length);
 
@@ -1499,15 +1507,23 @@
       `).join('');
     }
 
-    // 7. Orders Tab
+        // 7. Orders Tab
     async function loadOrders() {
       let res = await apiFetch('get_orders');
-      let orders = (res && res.orders && res.orders.length) ? res.orders : [];
-      if (orders.length > 0) {
-        try { localStorage.setItem('br_local_orders', JSON.stringify(orders)); } catch(e) {}
-      } else {
-        try { orders = JSON.parse(localStorage.getItem('br_local_orders') || '[]'); } catch(e) {}
-      }
+      let serverOrders = (res && res.orders && Array.isArray(res.orders)) ? res.orders : [];
+      let localOrders = [];
+      try { localOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]'); } catch(e) {}
+
+      let orderMap = new Map();
+      serverOrders.forEach(o => { if (o && o.order_id) orderMap.set(o.order_id, o); });
+      localOrders.forEach(o => {
+        if (o && o.order_id) {
+          let existing = orderMap.get(o.order_id) || {};
+          orderMap.set(o.order_id, Object.assign({}, existing, o));
+        }
+      });
+      let orders = Array.from(orderMap.values());
+      try { localStorage.setItem('br_local_orders', JSON.stringify(orders)); } catch(e) {}
 
       const search = (document.getElementById('order-search-input').value || '').toLowerCase();
       const statusFilter = document.getElementById('order-status-filter').value;
