@@ -290,6 +290,36 @@
       window.openQuickOrderModal(price, title, qty);
     };
   </script>
+<style id="QuickOrderModalStyles">
+  #QuickOrderModal {
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.25s ease-out, visibility 0.25s ease-out;
+  }
+  #QuickOrderModal.is-open {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    z-index: 2147483647 !important;
+  }
+  #QuickOrderModal #QuickOrderCard {
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease-out;
+    transform: translateY(100%);
+  }
+  @media screen and (min-width: 640px) {
+    #QuickOrderModal #QuickOrderCard {
+      transform: scale(0.95);
+    }
+  }
+  #QuickOrderModal.is-open #QuickOrderCard {
+    transform: translateY(0) scale(1) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+</style>
 </head>
 <body class="bg-[#0a0b0e] text-white font-sans antialiased selection:bg-[#d4af37] selection:text-black">
 <!-- Top Announcement Bar (Curated User Captions • Crisp & Luxury) -->
@@ -2136,7 +2166,7 @@
 
   <input type="hidden" value="blackroots.in" id="sellerDomain"/>
 <!-- ??? BlackRoots Ultra-Luxury Master Checkout Drawer / Modal (Razorpay UPI + COD + ?50 Instant Prepaid Discount) -->
-  <div id="QuickOrderModal" class="fixed inset-0 z-[9999999] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md transition-all duration-300" style="display: none; z-index: 9999999 !important; opacity: 0; pointer-events: none; visibility: hidden;">
+  <div id="QuickOrderModal" class="fixed inset-0 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md">
     
     <div id="QuickOrderCard" class="bg-[#0f121a] border-t sm:border border-[#d4af37]/40 shadow-[0_25px_70px_rgba(0,0,0,0.95)] rounded-t-3xl sm:rounded-3xl p-5 sm:p-7 max-w-lg w-full max-h-[92vh] overflow-y-auto relative text-left transform translate-y-full sm:translate-y-0 sm:scale-95 transition-all duration-300" style="scrollbar-width: thin; scrollbar-color: #d4af37 #0f121a;">
       
