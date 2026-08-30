@@ -510,6 +510,80 @@
 
   </main>
 
+  <!-- 🛡️ BlackRoots Smart Anti-RTO COD OTP Verification Modal (GoKwik / Flipkart Style) -->
+  <div id="CodOtpModal" class="fixed inset-0 z-[99999] bg-black/85 backdrop-blur-md hidden items-center justify-center p-4 transition-all duration-300">
+    <div class="bg-[#0e121c] border border-[#d4af37]/40 rounded-3xl max-w-sm w-full p-5 sm:p-6 space-y-4 shadow-[0_20px_60px_rgba(0,0,0,0.9)] relative text-center animate-fade-in">
+      
+      <!-- Close / Dismiss Button -->
+      <button type="button" onclick="closeCodOtpModal()" class="absolute top-4 right-4 w-7 h-7 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 hover:text-white flex items-center justify-center text-xs transition-colors">
+        ✕
+      </button>
+
+      <!-- Shield Icon -->
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-500/20 to-amber-600/10 border border-amber-500/40 text-amber-300 flex items-center justify-center text-2xl mx-auto shadow-[0_0_25px_rgba(212,175,55,0.25)]">
+        🛡️
+      </div>
+
+      <!-- Header Texts -->
+      <div class="space-y-1">
+        <span class="text-[10px] font-black uppercase tracking-widest text-emerald-400 bg-emerald-950/80 border border-emerald-500/40 px-3 py-0.5 rounded-full">
+          COD Mobile Verification
+        </span>
+        <h3 class="text-base sm:text-lg font-extrabold text-white pt-1">
+          Verify Mobile Number
+        </h3>
+        <p class="text-xs text-gray-300">
+          Enter 4-digit code sent to <strong id="OtpPhoneDisplay" class="text-amber-300 font-mono">+91 9876543210</strong>
+          <button type="button" onclick="closeCodOtpModal(true)" class="text-[11px] text-amber-400 underline font-bold ml-1 hover:text-amber-300">Edit</button>
+        </p>
+      </div>
+
+      <!-- Instant On-Screen OTP Notification Toast -->
+      <div id="OtpInstantHintBanner" class="p-2.5 rounded-xl bg-emerald-950/90 border border-emerald-500/50 text-emerald-300 text-xs font-bold flex items-center justify-between gap-2 shadow-inner">
+        <span class="flex items-center gap-1.5 truncate">
+          <span>📲</span> <span>Your OTP is: <strong id="OtpHintCode" class="text-white font-mono text-sm tracking-wider">----</strong></span>
+        </span>
+        <button type="button" onclick="autoFillCodOtp()" class="text-[10px] bg-emerald-500 text-black font-extrabold px-2 py-1 rounded-md uppercase hover:brightness-110 active:scale-95 shrink-0">
+          Auto Fill
+        </button>
+      </div>
+
+      <!-- 4-Digit Input Boxes -->
+      <div class="flex items-center justify-center gap-3 py-1">
+        <input type="tel" maxlength="1" id="OtpDigit1" class="otp-input w-12 h-14 bg-[#141926] border-2 border-white/25 focus:border-[#d4af37] focus:ring-2 focus:ring-[#d4af37]/30 rounded-xl text-center text-2xl font-black text-white outline-none transition-all" inputmode="numeric" autocomplete="one-time-code">
+        <input type="tel" maxlength="1" id="OtpDigit2" class="otp-input w-12 h-14 bg-[#141926] border-2 border-white/25 focus:border-[#d4af37] focus:ring-2 focus:ring-[#d4af37]/30 rounded-xl text-center text-2xl font-black text-white outline-none transition-all" inputmode="numeric">
+        <input type="tel" maxlength="1" id="OtpDigit3" class="otp-input w-12 h-14 bg-[#141926] border-2 border-white/25 focus:border-[#d4af37] focus:ring-2 focus:ring-[#d4af37]/30 rounded-xl text-center text-2xl font-black text-white outline-none transition-all" inputmode="numeric">
+        <input type="tel" maxlength="1" id="OtpDigit4" class="otp-input w-12 h-14 bg-[#141926] border-2 border-white/25 focus:border-[#d4af37] focus:ring-2 focus:ring-[#d4af37]/30 rounded-xl text-center text-2xl font-black text-white outline-none transition-all" inputmode="numeric">
+      </div>
+
+      <!-- Timer & Resend Options -->
+      <div class="text-xs text-gray-400 space-y-1">
+        <div id="OtpTimerBox" class="text-[11px] font-medium text-gray-400">
+          Resend code in <span id="OtpCountdown" class="text-amber-300 font-bold">30</span>s
+        </div>
+        <div id="OtpResendBox" class="hidden flex items-center justify-center gap-3 text-xs pt-0.5">
+          <button type="button" onclick="sendCodOtp()" class="text-amber-400 hover:text-amber-300 font-bold underline cursor-pointer">Resend Code</button>
+          <span>&bull;</span>
+          <a id="OtpWhatsAppLink" href="https://wa.me/919580835179?text=Namaste%20BlackRoots!%20Please%20send%20my%20order%20OTP." target="_blank" class="text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1">
+            <span>💬 via WhatsApp</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Primary Action Button -->
+      <div class="space-y-2 pt-1">
+        <button type="button" id="VerifyOtpBtn" onclick="submitCodOtpVerification()" class="w-full btn-gold-luxury text-black font-extrabold text-xs sm:text-sm py-3.5 px-4 rounded-xl uppercase tracking-wider shadow-lg hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer">
+          <span id="VerifyOtpBtnText">🔒 Verify & Confirm COD Order →</span>
+        </button>
+
+        <p class="text-[10px] text-gray-400">
+          Guarantees genuine priority delivery across India &bull; 100% Secure
+        </p>
+      </div>
+
+    </div>
+  </div>
+
   <!-- 3. Minimal Footer -->
   <footer class="bg-[#05060a] border-t border-white/[0.08] py-5 text-center text-[11px] text-gray-500 space-y-1.5">
     <div class="max-w-5xl mx-auto px-4 flex flex-wrap items-center justify-center gap-3.5 text-gray-400">
@@ -904,12 +978,12 @@
           });
           rzp.open();
         } else {
-        // 📦 INSTANT 1-CLICK CASH ON DELIVERY (ZERO WAITING & MAXIMUM CONVERSION)
-        finalizeOrder(orderPayload);
+        // 🛡️ CASH ON DELIVERY WITH ANTI-RTO OTP VERIFICATION
+        openCodOtpModal(orderPayload, finalizeOrder);
       }
       } else {
-        // 📦 INSTANT 1-CLICK CASH ON DELIVERY (ZERO WAITING & MAXIMUM CONVERSION)
-        finalizeOrder(orderPayload);
+        // 🛡️ CASH ON DELIVERY WITH ANTI-RTO OTP VERIFICATION
+        openCodOtpModal(orderPayload, finalizeOrder);
       }
     }
 
