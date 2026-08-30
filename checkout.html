@@ -255,47 +255,64 @@
             </div>
           </div>
 
-          <!-- STEP 3: Payment Method -->
+                    <!-- STEP 3: Payment Method (Ultra-Luxury & High-Converting) -->
           <div class="bg-[#0e111a] border border-white/[0.08] rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-lg">
             <div class="flex items-center justify-between border-b border-white/[0.08] pb-3">
               <div class="flex items-center gap-2">
                 <span class="w-5 h-5 rounded-full bg-[#d4af37] text-black font-extrabold text-xs flex items-center justify-center">3</span>
                 <h2 class="text-sm sm:text-base font-bold text-white">Payment Method</h2>
               </div>
-              <span class="text-[11px] text-emerald-400 font-semibold">Instant ₹50 Off Online</span>
+              <span class="text-[11px] text-emerald-400 font-semibold flex items-center gap-1">
+                <span>⚡</span> ₹50 Instant Discount Online
+              </span>
             </div>
 
-            <div class="space-y-2.5">
+            <div class="space-y-3">
               
               <!-- Online Payment Option (RECOMMENDED) -->
-              <label id="PaymentOptionOnline" onclick="selectPaymentMethod('Online')" class="p-3.5 rounded-xl border-2 border-emerald-500 bg-gradient-to-r from-emerald-950/70 via-[#0d2218] to-emerald-950/70 cursor-pointer flex items-center justify-between transition-all shadow-md">
-                <div class="flex items-center gap-3">
-                  <input type="radio" name="payment_choice" value="Online" checked class="w-4 h-4 accent-emerald-500 cursor-pointer">
-                  <div>
-                    <div class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
-                      <span>Pay Online (UPI / Cards / NetBanking)</span>
+              <div id="PaymentOptionOnline" onclick="selectPaymentMethod('Online')" class="p-4 rounded-2xl border-2 border-emerald-500/80 bg-gradient-to-r from-emerald-950/60 via-[#0c1f17] to-emerald-950/60 cursor-pointer transition-all duration-200 flex items-center justify-between shadow-lg relative group">
+                <div class="flex items-center gap-3.5 min-w-0">
+                  <div id="PaymentDotOnline" class="w-5 h-5 rounded-full border-2 border-emerald-400 flex items-center justify-center shrink-0 bg-emerald-950/80 transition-all">
+                    <div id="PaymentDotInnerOnline" class="w-2.5 h-2.5 rounded-full bg-emerald-400"></div>
+                  </div>
+                  <div class="min-w-0">
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="text-xs sm:text-sm font-extrabold text-white">Pay Online</span>
+                      <span class="text-[10px] font-bold text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-full">
+                        ₹50 Instant Discount
+                      </span>
                     </div>
-                    <p class="text-[11px] text-emerald-300 font-bold mt-0.5">
-                      ✓ FLAT ₹50 INSTANT DISCOUNT APPLIED
+                    <p class="text-[11px] text-gray-400 mt-0.5 truncate sm:text-clip">
+                      UPI (GPay, PhonePe, Paytm), Cards & NetBanking
                     </p>
                   </div>
                 </div>
-                <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-[10px] font-extrabold uppercase tracking-wider shrink-0">
-                  -₹50 OFF
-                </span>
-              </label>
+                <div class="shrink-0 flex items-center pl-2">
+                  <span class="text-[10px] font-extrabold text-emerald-300 uppercase tracking-wider bg-emerald-500/20 border border-emerald-500/40 px-2.5 py-1 rounded-lg">
+                    -₹50
+                  </span>
+                </div>
+              </div>
 
               <!-- Cash on Delivery Option -->
-              <label id="PaymentOptionCOD" onclick="selectPaymentMethod('COD')" class="p-3.5 rounded-xl border border-white/[0.12] bg-white/[0.02] hover:border-white/20 cursor-pointer flex items-center justify-between transition-all">
-                <div class="flex items-center gap-3">
-                  <input type="radio" name="payment_choice" value="COD" class="w-4 h-4 accent-amber-400 cursor-pointer">
-                  <div>
-                    <span class="text-xs sm:text-sm font-bold text-white">Cash on Delivery (COD)</span>
-                    <p class="text-[11px] text-gray-400 mt-0.5">Pay in cash when parcel arrives at your doorstep</p>
+              <div id="PaymentOptionCOD" onclick="selectPaymentMethod('COD')" class="p-4 rounded-2xl border border-white/[0.12] bg-white/[0.02] hover:border-white/20 cursor-pointer transition-all duration-200 flex items-center justify-between">
+                <div class="flex items-center gap-3.5 min-w-0">
+                  <div id="PaymentDotCOD" class="w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center shrink-0 bg-white/5 transition-all">
+                    <div id="PaymentDotInnerCOD" class="w-2.5 h-2.5 rounded-full bg-amber-400 hidden"></div>
+                  </div>
+                  <div class="min-w-0">
+                    <span class="text-xs sm:text-sm font-extrabold text-white">Cash on Delivery (COD)</span>
+                    <p class="text-[11px] text-gray-400 mt-0.5">
+                      Pay in cash when parcel arrives at your doorstep
+                    </p>
                   </div>
                 </div>
-                <span class="text-[11px] text-gray-400 font-medium shrink-0">Standard Price</span>
-              </label>
+                <div class="shrink-0 flex items-center pl-2">
+                  <span class="text-[11px] font-medium text-gray-400">
+                    Standard Price
+                  </span>
+                </div>
+              </div>
 
             </div>
           </div>
@@ -483,22 +500,29 @@
       recalculateCheckout();
     }
 
-    function selectPaymentMethod(method) {
+        function selectPaymentMethod(method) {
       currentPayment = method;
       var cardOnline = document.getElementById('PaymentOptionOnline');
       var cardCOD = document.getElementById('PaymentOptionCOD');
-      var radios = document.querySelectorAll('input[name="payment_choice"]');
-      
-      radios.forEach(function(r) {
-        r.checked = (r.value === method);
-      });
+      var dotOnline = document.getElementById('PaymentDotOnline');
+      var dotInnerOnline = document.getElementById('PaymentDotInnerOnline');
+      var dotCOD = document.getElementById('PaymentDotCOD');
+      var dotInnerCOD = document.getElementById('PaymentDotInnerCOD');
 
       if (method === 'Online') {
-        if (cardOnline) cardOnline.className = "p-3.5 rounded-xl border-2 border-emerald-500 bg-gradient-to-r from-emerald-950/70 via-[#0d2218] to-emerald-950/70 cursor-pointer flex items-center justify-between transition-all shadow-md";
-        if (cardCOD) cardCOD.className = "p-3.5 rounded-xl border border-white/[0.12] bg-white/[0.02] hover:border-white/20 cursor-pointer flex items-center justify-between transition-all";
+        if (cardOnline) cardOnline.className = "p-4 rounded-2xl border-2 border-emerald-500/80 bg-gradient-to-r from-emerald-950/60 via-[#0c1f17] to-emerald-950/60 cursor-pointer transition-all duration-200 flex items-center justify-between shadow-lg relative group";
+        if (cardCOD) cardCOD.className = "p-4 rounded-2xl border border-white/[0.12] bg-white/[0.02] hover:border-white/20 cursor-pointer transition-all duration-200 flex items-center justify-between";
+        if (dotOnline) dotOnline.className = "w-5 h-5 rounded-full border-2 border-emerald-400 flex items-center justify-center shrink-0 bg-emerald-950/80 transition-all";
+        if (dotInnerOnline) dotInnerOnline.classList.remove('hidden');
+        if (dotCOD) dotCOD.className = "w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center shrink-0 bg-white/5 transition-all";
+        if (dotInnerCOD) dotInnerCOD.classList.add('hidden');
       } else {
-        if (cardOnline) cardOnline.className = "p-3.5 rounded-xl border border-white/[0.12] bg-white/[0.02] hover:border-white/20 cursor-pointer flex items-center justify-between transition-all";
-        if (cardCOD) cardCOD.className = "p-3.5 rounded-xl border-2 border-amber-400 bg-amber-950/30 cursor-pointer flex items-center justify-between transition-all shadow-md";
+        if (cardOnline) cardOnline.className = "p-4 rounded-2xl border border-white/[0.12] bg-white/[0.02] hover:border-white/20 cursor-pointer transition-all duration-200 flex items-center justify-between";
+        if (cardCOD) cardCOD.className = "p-4 rounded-2xl border-2 border-amber-400/80 bg-gradient-to-r from-amber-950/40 via-[#1c1810] to-amber-950/40 cursor-pointer transition-all duration-200 flex items-center justify-between shadow-lg";
+        if (dotOnline) dotOnline.className = "w-5 h-5 rounded-full border-2 border-gray-600 flex items-center justify-center shrink-0 bg-white/5 transition-all";
+        if (dotInnerOnline) dotInnerOnline.classList.add('hidden');
+        if (dotCOD) dotCOD.className = "w-5 h-5 rounded-full border-2 border-amber-400 flex items-center justify-center shrink-0 bg-amber-950/80 transition-all";
+        if (dotInnerCOD) dotInnerCOD.classList.remove('hidden');
       }
 
       recalculateCheckout();
