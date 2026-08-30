@@ -384,19 +384,61 @@
       fetchFastrrCheckoutToken(2);
     }, 500);
 
-            // Global Master Checkout Invoker (Opens Native BlackRoots Luxury Drawer)
-    function triggerShiprocketCheckout(e, customPack) {
+                // ?? Official Shiprocket Fastrr 1-Click Checkout Invoker (Full-Screen Mobile & Instant Feedback)
+    async function triggerShiprocketCheckout(e, customPack) {
       if (e && e.preventDefault) e.preventDefault();
       if (e && e.stopPropagation) e.stopPropagation();
-      var pack = customPack || window.selectedPack || { qty: 1, price: 499 };
-      var price = Number(pack.price) || (pack.qty === 2 ? 799 : 499);
-      var title = pack.title || (pack.qty === 2 ? '2 Bottles Pack (500ml)' : '1 Bottle (250ml)');
-      var qty = Number(pack.qty) || (price >= 700 ? 2 : 1);
-      if (typeof window.openQuickOrderModal === 'function') {
-        window.openQuickOrderModal(price, title, qty);
-      } else {
-        window.location.href = 'product.html';
+
+      var btn = (e && e.currentTarget) ? e.currentTarget : (e && e.target ? e.target.closest('button, a') : null);
+      var originalBtnHtml = '';
+      if (btn && !btn.disabled) {
+        originalBtnHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.classList.add('opacity-80');
+        btn.innerHTML = '<span class="inline-flex items-center justify-center gap-2"><svg class="animate-spin h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg><span>OPENING SECURE CHECKOUT...</span></span>';
       }
+
+      function restoreBtn() {
+        if (btn && originalBtnHtml) {
+          btn.disabled = false;
+          btn.classList.remove('opacity-80');
+          btn.innerHTML = originalBtnHtml;
+        }
+      }
+
+      var pack = customPack || window.selectedPack || { qty: 1, price: 499 };
+      var qty = Number(pack.qty) || (Number(pack.price) >= 700 ? 2 : 1);
+
+      var token = fastrrTokenCache[qty];
+      if (!token) {
+        token = await fetchFastrrCheckoutToken(qty);
+      }
+
+      // Lock body scroll so mobile background stays pristine
+      document.body.style.overflow = 'hidden';
+
+      // Attach observer to unlock scroll when modal closes
+      var observer = new MutationObserver(function(mutations, obs) {
+        var modal = document.querySelector('.headless-modal, #fastrr-main-container');
+        if (!modal || modal.style.display === 'none' || modal.classList.contains('hidden')) {
+          document.body.style.overflow = '';
+          restoreBtn();
+          obs.disconnect();
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+
+      if (token && typeof HeadlessCheckout !== 'undefined' && HeadlessCheckout.addToCart) {
+        HeadlessCheckout.addToCart(null, token, {
+          fallbackUrl: "https://blackroots.in/product.html"
+        });
+      } else if (token && typeof window.FastrrCheckout !== 'undefined' && window.FastrrCheckout.open) {
+        window.FastrrCheckout.open({ token: token });
+      } else if (typeof window.openQuickOrderModal === 'function') {
+        window.openQuickOrderModal(pack.price || 499, pack.title || '1 Bottle (250ml)', qty);
+      }
+
+      setTimeout(restoreBtn, 3000);
     }
     window.triggerShiprocketCheckout = triggerShiprocketCheckout;
     window.openQuickOrderModal = openQuickOrderModal;
