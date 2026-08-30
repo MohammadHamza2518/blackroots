@@ -636,48 +636,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* 📦 Quick Order Modal Global Controls (Bulletproof & Immediate) */
 // Fixed: Cleaned conflicting quick order invoker
-window.closeQuickOrderModal = function() {};
-
-
-
-/* 📱 Mobile Simulator Page Switcher Helper */
-function switchToSimPage(page) {
-  const iframe = document.getElementById('SimulatedIframe');
-  const selector = document.getElementById('PageSelector');
-  if (iframe) {
-    iframe.src = page + '?v=' + Date.now();
-  }
-  if (selector) {
-    selector.value = page;
-  }
-  const tabHome = document.getElementById('TabHome');
-  const tabProd = document.getElementById('TabProduct');
-  if (tabHome && tabProd) {
-    if (page === 'index.html') {
-      tabHome.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-[#d4af37] text-black shadow';
-      tabProd.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-gray-300 hover:text-white';
-    } else if (page === 'product.html') {
-      tabProd.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all bg-[#d4af37] text-black shadow';
-      tabHome.className = 'px-3 py-1.5 rounded-lg text-xs font-bold transition-all text-gray-300 hover:text-white';
+window.closeQuickOrderModal = function() {
+    const modal = document.getElementById('QuickOrderModal');
+    const card = document.getElementById('QuickOrderCard');
+    if (modal) {
+      modal.style.display = 'none';
+      modal.style.opacity = '0';
+      modal.style.pointerEvents = 'none';
+      modal.style.visibility = 'hidden';
+      if (card) {
+        card.style.transform = 'translateY(100%) scale(0.95)';
+      }
+      document.body.style.overflow = '';
     }
-  }
-}
-
-window.switchToSimPage = switchToSimPage;
-
-/* ==========================================================================
-   ? MASTER 1-CLICK INSTANT ORDER & CHECKOUT ENGINE (100% WORKING EVERYWHERE)
-   ========================================================================== */
-(function() {
-  'use strict';
-
-  // Global pack state
-  window.selectedPack = {
-    qty: 1,
-    basePrice: 499,
-    price: 499,
-    title: '1 Bottle (250ml)',
-    saveText: 'Save ?500'
   };
 
   window.currentPaymentMethod = 'Online';
@@ -700,11 +671,16 @@ window.switchToSimPage = switchToSimPage;
       if (form) form.classList.remove('hidden');
       if (success) success.classList.add('hidden');
 
-      modal.classList.remove('opacity-0', 'pointer-events-none');
-      modal.classList.add('opacity-100');
+      modal.style.display = 'flex';
+      modal.style.opacity = '1';
+      modal.style.pointerEvents = 'auto';
+      modal.style.visibility = 'visible';
+      modal.style.zIndex = '9999999';
+
       if (card) {
-        card.classList.remove('translate-y-full', 'sm:scale-95');
-        card.classList.add('translate-y-0', 'sm:scale-100');
+        card.style.transform = 'translateY(0) scale(1)';
+        card.style.opacity = '1';
+        card.style.visibility = 'visible';
       }
       document.body.style.overflow = 'hidden';
       window.recalculateCheckoutPrice();
@@ -716,11 +692,12 @@ window.switchToSimPage = switchToSimPage;
     const modal = document.getElementById('QuickOrderModal');
     const card = document.getElementById('QuickOrderCard');
     if (modal) {
-      modal.classList.add('opacity-0', 'pointer-events-none');
-      modal.classList.remove('opacity-100');
+      modal.style.display = 'none';
+      modal.style.opacity = '0';
+      modal.style.pointerEvents = 'none';
+      modal.style.visibility = 'hidden';
       if (card) {
-        card.classList.add('translate-y-full', 'sm:scale-95');
-        card.classList.remove('translate-y-0', 'sm:scale-100');
+        card.style.transform = 'translateY(100%) scale(0.95)';
       }
       document.body.style.overflow = '';
     }

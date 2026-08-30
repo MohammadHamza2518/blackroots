@@ -202,235 +202,7 @@
   <script src="https://checkout-ui.shiprocket.com/assets/js/channels/shopify.js"></script>
   
 <!-- 🌟 Official Shiprocket Fastrr 1-Click Checkout Ultra-Luxury Smooth Styling -->
-<!-- ?? Official Shiprocket Fastrr 1-Click Checkout Ultra-Luxury Responsive Styling -->
-<style id="FastrrLuxuryOverrides">
-  /* Global Fastrr Modal Base */
-  #fastrr-main-container,
-  .headless-modal {
-    position: fixed !important;
-    inset: 0 !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    width: 100vw !important;
-    height: 100vh !important;
-    height: 100dvh !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: rgba(0, 0, 0, 0.85) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    z-index: 2147483647 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-  }
-
-  /* Desktop View: Centered Luxury Card with Gold Accent */
-  @media screen and (min-width: 769px) {
-    .headless-modal-content {
-      position: relative !important;
-      margin: auto !important;
-      width: 100% !important;
-      max-width: 480px !important;
-      height: 92vh !important;
-      max-height: 860px !important;
-      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(212, 175, 55, 0.35) !important;
-      border-radius: 24px !important;
-      overflow: hidden !important;
-      background: #0f1117 !important;
-      display: flex !important;
-      flex-direction: column !important;
-    }
-    .headless-modal-body,
-    .headless-modal-body > iframe,
-    #headless-iframe {
-      width: 100% !important;
-      height: 100% !important;
-      border-radius: 24px !important;
-      background-color: #0f1117 !important;
-      border: none !important;
-    }
-  }
-
-  /* Mobile View: Full Screen Native Sheet (No Top Offset, No Partial Card, No Image Peeking) */
-  @media screen and (max-width: 768px) {
-    #fastrr-main-container,
-    .headless-modal {
-      display: block !important;
-      position: fixed !important;
-      inset: 0 !important;
-      top: 0 !important;
-      left: 0 !important;
-      bottom: 0 !important;
-      right: 0 !important;
-      width: 100% !important;
-      height: 100% !important;
-      height: 100dvh !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      background: #0f1117 !important;
-      z-index: 2147483647 !important;
-      overflow: hidden !important;
-    }
-    .headless-modal-content {
-      position: fixed !important;
-      inset: 0 !important;
-      top: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      bottom: 0 !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      height: 100% !important;
-      height: 100dvh !important;
-      max-height: 100dvh !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      border-radius: 0 !important;
-      background: #0f1117 !important;
-      border: none !important;
-      box-shadow: none !important;
-      overflow: hidden !important;
-      z-index: 2147483647 !important;
-    }
-    .headless-modal-body,
-    .headless-modal-body > iframe,
-    #headless-iframe {
-      width: 100% !important;
-      height: 100% !important;
-      height: 100dvh !important;
-      min-height: 100% !important;
-      border: none !important;
-      border-radius: 0 !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      background: #0f1117 !important;
-      display: block !important;
-    }
-  }
-
-  /* Preloader & Luxury Aesthetics */
-  #fastrr-pre-loader,
-  .fastrr-pre-loader,
-  .fastrr-pre-loader-container,
-  .animation-loader,
-  .animation-container {
-    background-color: #0a0c10 !important;
-    backdrop-filter: blur(10px) !important;
-    z-index: 2147483647 !important;
-    border: none !important;
-  }
-  .splash__text {
-    color: #f5e4ab !important;
-    font-family: inherit !important;
-  }
-</style>
-<!-- 🚀 Universal Shiprocket Fastrr 1-Click Checkout Engine -->
-  <script>
-    var API_KEY = 'hl7tTx1OioeJn0KS';
-    var API_SECRET = 'SX9xl506RtMcE6761XJgkzhJOl1QCUW6';
-    var fastrrTokenCache = {};
-
-    async function getFastrrHmac(secret, msg) {
-      var enc = new TextEncoder();
-      var key = await window.crypto.subtle.importKey(
-        "raw", enc.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
-      );
-      var sig = await window.crypto.subtle.sign("HMAC", key, enc.encode(msg));
-      var bytes = new Uint8Array(sig);
-      var bin = '';
-      for (var i = 0; i < bytes.byteLength; i++) { bin += String.fromCharCode(bytes[i]); }
-      return window.btoa(bin);
-    }
-
-    async function fetchFastrrCheckoutToken(qty) {
-      var packQty = Number(qty) || 1;
-      var basePrice = (packQty === 2) ? 799 : 499;
-      var variantId = (packQty === 2) ? '1002' : '1001';
-      var imgUrl = (packQty === 2)
-        ? 'https://blackroots.in/assets/blackroots-bottle-duo.png'
-        : 'https://blackroots.in/assets/blackroots-bottle-single.png';
-      
-      var urlParams = new URLSearchParams(window.location.search);
-      var appliedCoupon = (urlParams.get('coupon') || urlParams.get('ref') || '').toUpperCase().trim();
-
-      var payload = {
-        cart_data: {
-          items: [{
-            variant_id: variantId,
-            quantity: packQty,
-            catalog_data: {
-              price: basePrice,
-              name: (packQty === 2) ? 'BlackRoots Duo Pack (500ml)' : 'BlackRoots Herbal Hair Darkening Shampoo (250ml)',
-              image_url: imgUrl
-            }
-          }],
-          mobile_app: false
-        },
-        redirect_url: 'https://blackroots.in/track-order.html',
-        timestamp: new Date().toISOString()
-      };
-
-      if (appliedCoupon) {
-        payload.cart_data.cart_discount = {
-          coupon_code: appliedCoupon,
-          amount: 50.0
-        };
-      }
-
-      var payloadString = JSON.stringify(payload);
-
-      // 1. Direct Web Crypto Shiprocket API Call
-      try {
-        var hmac = await getFastrrHmac(API_SECRET, payloadString);
-        var res = await fetch('https://checkout-api.shiprocket.com/api/v1/access-token/checkout', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Api-Key': API_KEY,
-            'X-Api-HMAC-SHA256': hmac
-          },
-          body: payloadString
-        });
-        if (res.ok) {
-          var data = await res.json();
-          if (data && data.ok && data.result && data.result.token) {
-            fastrrTokenCache[packQty] = data.result.token;
-            return data.result.token;
-          }
-        }
-      } catch(e) {}
-
-      // 2. Serverless Backend Fallback
-      try {
-        var res2 = await fetch('api/shiprocket-checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ qty: packQty, price: basePrice, coupon: appliedCoupon })
-        });
-        if (res2.ok) {
-          var data2 = await res2.json();
-          if (data2 && data2.success && data2.token) {
-            fastrrTokenCache[packQty] = data2.token;
-            return data2.token;
-          }
-        }
-      } catch(e) {}
-
-      return null;
-    }
-
-    // Pre-warm token silently in background
-    setTimeout(function() {
-      fetchFastrrCheckoutToken(1);
-      fetchFastrrCheckoutToken(2);
-    }, 500);
-
-                
-  <!-- ?? Master Bulletproof Quick Order Modal & Trigger Engine (Always Ready & Instant) -->
+  <!-- ?? Master BlackRoots D2C Luxury Quick Order Modal & Trigger Engine -->
   <script>
     window.selectedPack = window.selectedPack || {
       qty: 1,
@@ -441,7 +213,7 @@
     };
     window.currentPaymentMethod = 'Online';
 
-    // Global Modal Open Function (Zero Dependency)
+    // Global Modal Open Function
     window.openQuickOrderModal = function(customPrice, customTitle, customQty) {
       var price = Number(customPrice) || (window.selectedPack ? (window.selectedPack.basePrice || window.selectedPack.price) : 499) || 499;
       var qty = Number(customQty) || (price >= 700 ? 2 : 1);
@@ -460,11 +232,16 @@
         if (form) form.classList.remove('hidden');
         if (success) success.classList.add('hidden');
 
-        modal.classList.remove('opacity-0', 'pointer-events-none');
-        modal.classList.add('opacity-100');
+        modal.style.display = 'flex';
+        modal.style.opacity = '1';
+        modal.style.pointerEvents = 'auto';
+        modal.style.visibility = 'visible';
+        modal.style.zIndex = '9999999';
+
         if (card) {
-          card.classList.remove('translate-y-full', 'sm:scale-95');
-          card.classList.add('translate-y-0', 'sm:scale-100');
+          card.style.transform = 'translateY(0) scale(1)';
+          card.style.opacity = '1';
+          card.style.visibility = 'visible';
         }
         document.body.style.overflow = 'hidden';
         if (typeof window.recalculateCheckoutPrice === 'function') {
@@ -478,17 +255,18 @@
       var modal = document.getElementById('QuickOrderModal');
       var card = document.getElementById('QuickOrderCard');
       if (modal) {
-        modal.classList.add('opacity-0', 'pointer-events-none');
-        modal.classList.remove('opacity-100');
+        modal.style.display = 'none';
+        modal.style.opacity = '0';
+        modal.style.pointerEvents = 'none';
+        modal.style.visibility = 'hidden';
         if (card) {
-          card.classList.add('translate-y-full', 'sm:scale-95');
-          card.classList.remove('translate-y-0', 'sm:scale-100');
+          card.style.transform = 'translateY(100%) scale(0.95)';
         }
         document.body.style.overflow = '';
       }
     };
 
-    // Master Buy Now Trigger (Directly Opens Native Luxury Drawer)
+    // Master Buy Now Trigger
     window.triggerShiprocketCheckout = function(e, customPack) {
       if (e && e.preventDefault) e.preventDefault();
       if (e && e.stopPropagation) e.stopPropagation();
@@ -500,9 +278,8 @@
     };
   </script>
 </head>
-<body class="bg-[#0a0b0e] text-white font-sans antialiased">
-
-          <!-- Top Announcement Bar (Curated User Captions • Crisp & Luxury) -->
+<body class="bg-[#0a0b0e] text-white font-sans antialiased selection:bg-[#d4af37] selection:text-black">
+<!-- Top Announcement Bar (Curated User Captions • Crisp & Luxury) -->
   <div class="announcement-bar-solid py-2 px-3 text-center text-[11px] sm:text-xs font-bold tracking-wide" style="background: #133e28 !important; background-color: #133e28 !important; background-image: none !important;">
     <div class="max-w-7xl mx-auto flex items-center justify-center gap-2 flex-wrap whitespace-nowrap">
       <span class="inline-flex items-center gap-1 bg-[#d4af37] text-black font-extrabold text-[9px] sm:text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wider">
@@ -787,7 +564,7 @@
 
   <input type="hidden" value="blackroots.in" id="sellerDomain"/>
 <!-- ??? BlackRoots Ultra-Luxury Master Checkout Drawer / Modal (Razorpay UPI + COD + ?50 Instant Prepaid Discount) -->
-  <div id="QuickOrderModal" class="fixed inset-0 z-[999999] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300" style="z-index: 999999 !important; display: flex !important;">
+  <div id="QuickOrderModal" class="fixed inset-0 z-[9999999] flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/85 backdrop-blur-md transition-all duration-300" style="display: none; z-index: 9999999 !important; opacity: 0; pointer-events: none; visibility: hidden;">
     
     <div id="QuickOrderCard" class="bg-[#0f121a] border-t sm:border border-[#d4af37]/40 shadow-[0_25px_70px_rgba(0,0,0,0.95)] rounded-t-3xl sm:rounded-3xl p-5 sm:p-7 max-w-lg w-full max-h-[92vh] overflow-y-auto relative text-left transform translate-y-full sm:translate-y-0 sm:scale-95 transition-all duration-300" style="scrollbar-width: thin; scrollbar-color: #d4af37 #0f121a;">
       
