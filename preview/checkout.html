@@ -16,6 +16,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cinzel:wght@700;800&display=swap" rel="stylesheet">
   
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <!-- Razorpay SDK -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
@@ -97,53 +98,117 @@
   <!-- 2. Main Checkout Flow -->
   <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-9">
     
-    <!-- Success Confirmation Screen -->
-    <div id="CheckoutSuccessView" class="hidden max-w-lg mx-auto text-center space-y-6 py-6">
-      <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-black flex items-center justify-center text-3xl font-extrabold mx-auto shadow-[0_0_30px_rgba(16,185,129,0.4)]">
-        ✓
+            <!-- 🎉 FLIPKART / AMAZON STYLE POST-ORDER CELEBRATION & CONFIRMATION VIEW -->
+    <div id="CheckoutSuccessView" class="hidden max-w-xl mx-auto space-y-6 py-6 sm:py-8 text-center animate-fade-in">
+      
+      <!-- Animated Checkmark with Ripple -->
+      <div class="relative w-20 h-20 mx-auto flex items-center justify-center">
+        <div class="absolute inset-0 rounded-full bg-emerald-500/20 animate-ping"></div>
+        <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 text-black flex items-center justify-center text-4xl font-black shadow-[0_0_40px_rgba(16,185,129,0.5)] z-10">
+          ✓
+        </div>
       </div>
-      <div class="space-y-1.5">
-        <span class="text-[11px] font-extrabold uppercase tracking-widest text-emerald-400 bg-emerald-950/80 border border-emerald-500/40 px-3 py-1 rounded-full">
-          Order Successfully Placed
+
+      <!-- Header Celebration Title -->
+      <div class="space-y-2">
+        <span class="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-emerald-400 bg-emerald-950/80 border border-emerald-500/40 px-4 py-1 rounded-full shadow-inner">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Order Confirmed &bull; Dispatching Soon
         </span>
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-white pt-2">
-          Thank You for Your Order!
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-white pt-1">
+          Thank You, <span id="SuccessCustomerName" class="text-amber-300">Customer</span>! 🎉
         </h1>
-        <p class="text-xs text-gray-400">
-          Your BlackRoots Herbal Hair Darkening Shampoo package is being prepared for priority dispatch.
+        <p class="text-xs sm:text-sm text-gray-300 max-w-md mx-auto leading-relaxed">
+          Aapka Order successfully place ho gaya hai. Aapki <strong class="text-amber-300 font-mono">Order ID & Invoice</strong> aapke mobile number <strong id="SuccessCustomerPhone" class="text-white font-mono">+91 XXXXXXXXXX</strong> par <strong>WhatsApp & SMS</strong> ke zariye send kar di gayi hai.
         </p>
       </div>
 
-      <div class="p-5 rounded-2xl bg-[#0e121c] border border-white/10 text-left space-y-3 text-xs">
-        <div class="flex items-center justify-between pb-2.5 border-b border-white/10">
-          <span class="text-gray-400">Order ID:</span>
-          <span id="SuccessOrderIdDisplay" class="text-amber-300 font-mono font-bold text-sm">#BR-1049</span>
+      <!-- Flipkart-Style Live Delivery Progress Stepper -->
+      <div class="bg-[#0e121c] border border-white/10 rounded-2xl p-5 text-left space-y-4 shadow-xl">
+        <div class="flex items-center justify-between border-b border-white/10 pb-3">
+          <div>
+            <span class="text-[11px] text-gray-400 block font-medium">Order Reference:</span>
+            <span id="SuccessOrderIdDisplay" class="text-base sm:text-lg text-amber-300 font-mono font-black">#BR-1049</span>
+          </div>
+          <div class="text-right">
+            <span class="text-[11px] text-gray-400 block font-medium">Estimated Delivery:</span>
+            <span class="text-xs sm:text-sm text-emerald-400 font-bold">3 - 4 Business Days</span>
+          </div>
         </div>
-        <div class="flex items-center justify-between">
-          <span class="text-gray-400">Estimated Delivery:</span>
-          <span class="text-white font-semibold">3 - 4 Business Days</span>
+
+        <!-- 4-Step Stepper -->
+        <div class="grid grid-cols-4 gap-2 pt-1 text-center">
+          <div class="space-y-1.5 flex flex-col items-center">
+            <div class="w-8 h-8 rounded-full bg-emerald-500 text-black font-black text-xs flex items-center justify-center shadow-[0_0_12px_rgba(16,185,129,0.5)]">
+              ✓
+            </div>
+            <span class="text-[10px] font-bold text-emerald-400 block">Confirmed</span>
+          </div>
+          <div class="space-y-1.5 flex flex-col items-center">
+            <div class="w-8 h-8 rounded-full bg-amber-500 text-black font-black text-xs flex items-center justify-center animate-pulse shadow-[0_0_12px_rgba(245,158,11,0.5)]">
+              ⚡
+            </div>
+            <span class="text-[10px] font-bold text-amber-300 block">24h Dispatch</span>
+          </div>
+          <div class="space-y-1.5 flex flex-col items-center">
+            <div class="w-8 h-8 rounded-full bg-white/10 border border-white/20 text-gray-400 font-bold text-xs flex items-center justify-center">
+              🚚
+            </div>
+            <span class="text-[10px] font-medium text-gray-400 block">Air Express</span>
+          </div>
+          <div class="space-y-1.5 flex flex-col items-center">
+            <div class="w-8 h-8 rounded-full bg-white/10 border border-white/20 text-gray-400 font-bold text-xs flex items-center justify-center">
+              🏠
+            </div>
+            <span class="text-[10px] font-medium text-gray-400 block">Doorstep</span>
+          </div>
         </div>
-        <div class="flex items-center justify-between">
-          <span class="text-gray-400">Courier Partner:</span>
-          <span class="text-white font-semibold">Delhivery Express Air ⚡</span>
-        </div>
-        <div class="flex items-center justify-between">
-          <span class="text-gray-400">Payment Status:</span>
-          <span id="SuccessPaymentStatusDisplay" class="text-emerald-400 font-bold">Paid Online (Razorpay UPI)</span>
+
+        <!-- Order Summary Details Box -->
+        <div class="pt-3 border-t border-white/10 space-y-2 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="text-gray-400">Package:</span>
+            <span id="SuccessBundleDisplay" class="text-white font-bold">1 Bottle (250ml)</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-400">Courier Partner:</span>
+            <span class="text-white font-bold flex items-center gap-1">
+              <span>Delhivery Express Air</span>
+              <span class="text-[10px] text-amber-400 font-bold bg-amber-400/10 px-1.5 py-0.5 rounded">Priority</span>
+            </span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-400">Payment Status:</span>
+            <span id="SuccessPaymentStatusDisplay" class="text-emerald-400 font-bold">Paid Online (Razorpay UPI ✓)</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-gray-400">Total Amount:</span>
+            <span id="SuccessAmountDisplay" class="text-amber-400 font-extrabold text-sm">₹449</span>
+          </div>
         </div>
       </div>
 
-      <div class="space-y-2.5 pt-2">
-        <a id="SuccessTrackOrderBtn" href="track-order.html" class="w-full inline-flex items-center justify-center gap-2 btn-gold-luxury text-black font-extrabold text-xs py-3.5 px-6 rounded-xl uppercase tracking-wider shadow-lg">
-          <span>Track Order Real-Time &rarr;</span>
+      <!-- Action Buttons -->
+      <div class="space-y-3 pt-1">
+        <a id="SuccessTrackOrderBtn" href="track-order.html" class="w-full inline-flex items-center justify-center gap-2 btn-gold-luxury text-black font-black text-sm py-4 px-6 rounded-xl uppercase tracking-wider shadow-[0_10px_30px_rgba(212,175,55,0.35)] hover:brightness-110 active:scale-95 transition-all cursor-pointer">
+          <span>📦 Track Order Real-Time &rarr;</span>
         </a>
-        <a href="https://wa.me/919580835179?text=Namaste%20BlackRoots!%20I%20just%20placed%20an%20order." target="_blank" class="w-full inline-flex items-center justify-center gap-2 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 font-bold text-xs py-3 px-6 rounded-xl transition-all">
-          <span>💬 Get WhatsApp Order Updates</span>
+
+        <a id="SuccessWhatsAppChatBtn" href="https://wa.me/919580835179?text=Namaste%20BlackRoots!%20I%20just%20placed%20an%20order." target="_blank" class="w-full inline-flex items-center justify-center gap-2 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-500/40 text-emerald-300 font-bold text-xs py-3.5 px-6 rounded-xl uppercase tracking-wider transition-all shadow-md">
+          <span>💬 Get Instant WhatsApp Updates & Invoice</span>
         </a>
-        <a href="index.html" class="inline-block text-xs text-gray-400 hover:text-white pt-1 transition-colors">
-          &larr; Return to Home Page
-        </a>
+
+        <div class="flex items-center justify-center gap-4 text-xs pt-1">
+          <button type="button" onclick="window.print()" class="text-gray-400 hover:text-white underline">
+            📄 Print Receipt
+          </button>
+          <span>&bull;</span>
+          <a href="index.html" class="text-gray-400 hover:text-white underline">
+            &larr; Return to Store
+          </a>
+        </div>
       </div>
+
     </div>
 
     <!-- Active Checkout Grid -->
@@ -800,25 +865,51 @@
             localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 100)));
           } catch(e) {}
 
+                    // Trigger Confetti Celebration (Flipkart / Amazon Style)
+          if (typeof confetti === 'function') {
+            confetti({
+              particleCount: 120,
+              spread: 70,
+              origin: { y: 0.6 }
+            });
+            setTimeout(function() {
+              confetti({ particleCount: 80, angle: 60, spread: 55, origin: { x: 0 } });
+              confetti({ particleCount: 80, angle: 120, spread: 55, origin: { x: 1 } });
+            }, 300);
+          }
+
           var activeView = document.getElementById('CheckoutActiveView');
           var successView = document.getElementById('CheckoutSuccessView');
           var successOrderId = document.getElementById('SuccessOrderIdDisplay');
+          var successCustName = document.getElementById('SuccessCustomerName');
+          var successCustPhone = document.getElementById('SuccessCustomerPhone');
+          var successBundle = document.getElementById('SuccessBundleDisplay');
+          var successAmount = document.getElementById('SuccessAmountDisplay');
           var successStatus = document.getElementById('SuccessPaymentStatusDisplay');
           var successTrackBtn = document.getElementById('SuccessTrackOrderBtn');
+          var successWhatsAppBtn = document.getElementById('SuccessWhatsAppChatBtn');
 
           if (activeView) activeView.classList.add('hidden');
           if (successView) successView.classList.remove('hidden');
           if (successOrderId) successOrderId.textContent = orderId;
+          if (successCustName) successCustName.textContent = payload.name || 'Valued Customer';
+          if (successCustPhone) successCustPhone.textContent = '+91 ' + payload.phone;
+          if (successBundle) successBundle.textContent = payload.bundle;
+          if (successAmount) successAmount.textContent = '₹' + payload.price;
           if (successStatus) {
-            successStatus.textContent = (payload.status === 'Paid') ? 'Paid Online (Razorpay UPI ✓)' : 'Cash on Delivery (₹' + finalPrice + ')';
+            successStatus.textContent = (payload.status === 'Paid') ? 'Paid Online (Razorpay UPI ✓)' : 'Cash on Delivery (₹' + payload.price + ')';
             successStatus.className = (payload.status === 'Paid') ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold';
           }
           if (successTrackBtn) {
             successTrackBtn.href = 'track-order.html?order_id=' + encodeURIComponent(orderId);
           }
+          if (successWhatsAppBtn) {
+            var msg = 'Namaste BlackRoots! My Order ID is ' + orderId + ' (' + payload.bundle + ', Total: ₹' + payload.price + '). Please share dispatch updates.';
+            successWhatsAppBtn.href = 'https://wa.me/919580835179?text=' + encodeURIComponent(msg);
+          }
 
           window.scrollTo({ top: 0, behavior: 'smooth' });
-          if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+          if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
 
         } catch(err) {
           if (submitBtn) {
