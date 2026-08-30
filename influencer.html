@@ -467,8 +467,11 @@
             <button onclick="switchInfTab('orders')" class="text-xs text-[#d4af37] font-bold hover:underline">View All Orders &rarr;</button>
           </div>
 
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs text-gray-300 min-w-[500px]">
+          <div class="overflow-x-auto pb-2">
+            <div class="sm:hidden text-[10px] text-amber-300/80 font-bold mb-2 flex items-center gap-1">
+              <span>👈</span><span>Swipe horizontally to view all columns</span><span>👉</span>
+            </div>
+            <table class="w-full text-left text-xs text-gray-300 min-w-[520px]">
               <thead class="text-[10px] uppercase tracking-wider text-gray-400 border-b border-white/10 pb-2">
                 <tr>
                   <th class="py-3 px-3">Order ID</th>
@@ -550,14 +553,17 @@
               <h3 class="font-serif text-xl sm:text-2xl font-bold text-white">Referred Customer Orders</h3>
               <p class="text-xs text-gray-400">Complete history of customers who purchased using your affiliate link or promo code.</p>
             </div>
-            <div class="text-right">
+            <div class="text-left sm:text-right">
               <span class="text-xs text-gray-400 block">Total Lifetime Earnings</span>
               <span id="orders-tab-total-earned" class="text-2xl font-black text-emerald-400 font-mono">₹0</span>
             </div>
           </div>
 
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs text-gray-300 min-w-[600px]">
+          <div class="overflow-x-auto pb-2">
+            <div class="sm:hidden text-[10px] text-amber-300/80 font-bold mb-2 flex items-center gap-1">
+              <span>👈</span><span>Swipe horizontally to view all columns</span><span>👉</span>
+            </div>
+            <table class="w-full text-left text-xs text-gray-300 min-w-[620px]">
               <thead class="text-[10px] uppercase tracking-wider text-gray-400 border-b border-white/10 pb-2">
                 <tr>
                   <th class="py-3 px-3">Order ID</th>
@@ -623,8 +629,11 @@
               <p class="text-xs text-gray-400">All past withdrawal requests and bank settlement transaction UTR numbers.</p>
             </div>
 
-            <div class="overflow-x-auto">
-              <table class="w-full text-left text-xs text-gray-300 min-w-[500px]">
+            <div class="overflow-x-auto pb-2">
+              <div class="sm:hidden text-[10px] text-amber-300/80 font-bold mb-2 flex items-center gap-1">
+                <span>👈</span><span>Swipe horizontally to view all columns</span><span>👉</span>
+              </div>
+              <table class="w-full text-left text-xs text-gray-300 min-w-[520px]">
                 <thead class="text-[10px] uppercase tracking-wider text-gray-400 border-b border-white/10 pb-2">
                   <tr>
                     <th class="py-3 px-3">Request Date</th>
@@ -649,8 +658,8 @@
 
     </main>
 
-    <!-- Mobile Sticky Navigation Bar -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#11141b]/95 backdrop-blur-xl border-t border-[#d4af37]/30 flex items-center justify-around py-2.5 text-[10px] font-bold">
+    <!-- Mobile Sticky Navigation Bar with iPhone Safe-Area Inset -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#11141b]/95 backdrop-blur-xl border-t border-[#d4af37]/30 flex items-center justify-around py-2.5 pb-[max(0.6rem,env(safe-area-inset-bottom))] text-[10px] font-bold shadow-2xl">
       <button onclick="switchInfTab('overview')" class="mob-inf-tab flex flex-col items-center gap-1 text-[#d4af37]" data-tab="overview">
         <span class="text-base">📊</span>
         <span>Overview</span>
@@ -793,11 +802,27 @@
 
     async function syncInfluencersFromServer() {
       const deletedList = getDeletedInfluencerIds();
+      const currentToken = sessionStorage.getItem('br_active_inf_token') || localStorage.getItem('br_active_inf_token') || '';
+
+      // Heartbeat verify creator single-device session
+      if (currentInfluencer && currentToken) {
+        try {
+          const chk = await fetch(`/api/admin?action=check_influencer_session&user_id=${encodeURIComponent(currentInfluencer.id)}&token=${encodeURIComponent(currentToken)}`);
+          if (chk.ok) {
+            const chkData = await chk.json();
+            if (chkData && chkData.session_expired) {
+              handleInfluencerKicked(chkData.error);
+              return;
+            }
+          }
+        } catch(e) {}
+      }
+
       try {
         const [res, ordRes, payRes] = await Promise.all([
           fetch('/api/admin?action=get_influencers'),
           fetch('/api/admin?action=get_orders'),
-          fetch('/api/admin?action=get_payouts' + (currentInfluencer ? '&influencer_id=' + currentInfluencer.id : ''))
+          fetch('/api/admin?action=get_payouts' + (currentInfluencer ? '&influencer_id=' + encodeURIComponent(currentInfluencer.id) : ''))
         ]);
         
         if (res.ok) {
@@ -814,8 +839,8 @@
             localStorage.setItem('br_influencers_db', JSON.stringify(cleanList));
             if (currentInfluencer) {
               if (isInfluencerDeleted(currentInfluencer, activeDeleted)) {
-                // If currently logged-in account was deleted by admin, logout immediately
                 sessionStorage.removeItem('br_active_inf_id');
+                sessionStorage.removeItem('br_active_inf_token');
                 window.location.reload();
                 return;
               }
@@ -847,32 +872,50 @@
       } catch(e) {}
     }
 
-    // 2. Auth Flow (Login)
+    // 2. Auth Flow (Enforces 1 Device per Creator)
     async function handleInfluencerLogin(e) {
       e.preventDefault();
       const rawInput = document.getElementById('inf-login-id').value.trim();
       const loginId = rawInput.toUpperCase();
       const pass = document.getElementById('inf-login-pass').value.trim();
       const errorMsg = document.getElementById('login-error-msg');
+      const submitBtn = document.getElementById('login-submit-btn');
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Verifying Device & Session...';
+      }
 
       let user = null;
+      let sessionToken = null;
 
-      // 1. Try server API login
+      // 1. Try server API login with device identifier
       try {
         const res = await fetch('/api/admin?action=influencer_login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ login_id: rawInput, password: pass })
+          body: JSON.stringify({
+            login_id: rawInput,
+            password: pass,
+            device: navigator.userAgent || 'Mobile Device'
+          })
         });
         if (res.ok) {
           const data = await res.json();
           if (data && data.success && data.user) {
             user = data.user;
+            sessionToken = data.token;
             if (data.orders) localStorage.setItem('br_local_orders', JSON.stringify(data.orders));
             if (data.payouts) localStorage.setItem('br_influencer_payouts', JSON.stringify(data.payouts));
           }
         }
       } catch(err) {}
+      finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign In to Creator Portal →';
+        }
+      }
 
       // 2. Fallback to local DB if offline
       if (!user) {
@@ -900,6 +943,10 @@
       if (user) {
         currentInfluencer = user;
         sessionStorage.setItem('br_active_inf_id', user.id);
+        if (sessionToken) {
+          sessionStorage.setItem('br_active_inf_token', sessionToken);
+          localStorage.setItem('br_active_inf_token', sessionToken);
+        }
         errorMsg.classList.add('hidden');
         
         document.getElementById('InfluencerAuthScreen').classList.add('hidden');
@@ -907,7 +954,7 @@
         renderDashboard();
         showToast('Welcome back, ' + user.name + '!');
         
-        // Start Live Polling every 10s
+        // Start Live Polling & Single-Device Heartbeat every 10s
         if (!liveInfPollingInterval) {
           liveInfPollingInterval = setInterval(syncInfluencersFromServer, 10000);
         }
@@ -919,8 +966,27 @@
 
     function handleInfluencerLogout() {
       sessionStorage.removeItem('br_active_inf_id');
+      sessionStorage.removeItem('br_active_inf_token');
+      localStorage.removeItem('br_active_inf_token');
       if (liveInfPollingInterval) clearInterval(liveInfPollingInterval);
       window.location.reload();
+    }
+
+    function handleInfluencerKicked(reason) {
+      sessionStorage.removeItem('br_active_inf_id');
+      sessionStorage.removeItem('br_active_inf_token');
+      localStorage.removeItem('br_active_inf_token');
+      if (liveInfPollingInterval) clearInterval(liveInfPollingInterval);
+
+      document.getElementById('InfluencerDashboardApp').classList.add('hidden');
+      document.getElementById('InfluencerAuthScreen').classList.remove('hidden');
+
+      const errorMsg = document.getElementById('login-error-msg');
+      if (errorMsg) {
+        errorMsg.textContent = reason || '⚠️ Your creator account was logged in from another device. You have been logged out.';
+        errorMsg.classList.remove('hidden');
+      }
+      alert(reason || '⚠️ Your creator account was logged in from another device. For security, only 1 active device is permitted at a time.');
     }
 
     // 3. Render Dashboard Data (Shopify-Grade Calculation)

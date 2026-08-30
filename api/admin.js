@@ -75,7 +75,9 @@ let memoryStore = {
     }
   ],
   deleted_influencers: [],
-  payouts: []
+  payouts: [],
+  active_admin_session: null,
+  active_influencer_sessions: {}
 };
 
 // Persist in /tmp for Vercel serverless functions
@@ -204,14 +206,59 @@ module.exports = async (req, res) => {
     });
   }
 
-  // 4. Admin Login
+  // 4. Admin Login (Enforces 1 Active Admin User / Single Device at a Time)
   if (action === 'login') {
     const body = req.body || {};
+    const headers = req.headers || {};
     const pass = body.password || '';
     if (pass === memoryStore.settings.admin_password || pass === 'blackroots2026') {
-      return res.status(200).json({ success: true, message: 'Logged in successfully!' });
+      const adminToken = 'adm_tok_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+      const deviceInfo = (body.device || headers['user-agent'] || 'Admin Device').slice(0, 80);
+      const ip = String(headers['x-forwarded-for'] || req.socket?.remoteAddress || '127.0.0.1');
+
+      memoryStore.active_admin_session = {
+        token: adminToken,
+        device: deviceInfo,
+        ip: ip,
+        login_at: new Date().toISOString(),
+        last_active: Date.now()
+      };
+      saveDb();
+
+      return res.status(200).json({
+        success: true,
+        message: 'Logged in successfully!',
+        token: adminToken,
+        session_info: memoryStore.active_admin_session
+      });
     }
     return res.status(200).json({ success: false, error: 'Incorrect admin password.' });
+  }
+
+  // 4b. Check Admin Session Heartbeat (Single Session Verification)
+  if (action === 'check_admin_session') {
+    let body = req.body || {};
+    if (typeof body === 'string') {
+      try { body = JSON.parse(body); } catch(e) { body = {}; }
+    }
+    const headers = req.headers || {};
+    const clientToken = body.token || req.query.token || (headers['authorization'] ? headers['authorization'].replace('Bearer ', '') : '');
+
+    if (!memoryStore.active_admin_session || !memoryStore.active_admin_session.token) {
+      return res.status(200).json({ success: true, valid: true });
+    }
+
+    if (clientToken && clientToken !== memoryStore.active_admin_session.token) {
+      return res.status(200).json({
+        success: false,
+        session_expired: true,
+        code: 'SESSION_KICKED',
+        error: '⚠️ Admin account was logged into from another device. Your session has ended.'
+      });
+    }
+
+    memoryStore.active_admin_session.last_active = Date.now();
+    return res.status(200).json({ success: true, valid: true });
   }
 
   // 5. Get Comprehensive Shopify-Style Dashboard
@@ -412,7 +459,7 @@ module.exports = async (req, res) => {
     });
   }
 
-  // 11. Influencer Auth Login
+  // 11. Influencer Auth Login (Enforces 1 Device per Creator)
   if (action === 'influencer_login') {
     const body = req.body || {};
     const loginId = (body.login_id || body.username || body.code || '').trim().toUpperCase();
@@ -436,6 +483,22 @@ module.exports = async (req, res) => {
     });
 
     if (user && user.password && user.password.trim() === pass) {
+      if (!memoryStore.active_influencer_sessions) memoryStore.active_influencer_sessions = {};
+
+      const headers = req.headers || {};
+      const infToken = 'inf_tok_' + user.id + '_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+      const deviceInfo = (body.device || headers['user-agent'] || 'Mobile Device').slice(0, 80);
+      const ip = String(headers['x-forwarded-for'] || req.socket?.remoteAddress || '127.0.0.1');
+
+      memoryStore.active_influencer_sessions[user.id] = {
+        token: infToken,
+        device: deviceInfo,
+        ip: ip,
+        login_at: new Date().toISOString(),
+        last_active: Date.now()
+      };
+      saveDb();
+
       // Find orders referred by this user
       const matchedOrders = (memoryStore.orders || []).filter(o => 
         (o.coupon && o.coupon.toUpperCase() === user.code.toUpperCase()) ||
@@ -447,12 +510,38 @@ module.exports = async (req, res) => {
         success: true,
         message: 'Login successful',
         user: user,
+        token: infToken,
         orders: matchedOrders,
         payouts: userPayouts
       });
     }
 
     return res.status(200).json({ success: false, error: 'Invalid User ID or Password' });
+  }
+
+  // 11b. Check Influencer Session Heartbeat (Single Device Verification)
+  if (action === 'check_influencer_session') {
+    let body = req.body || {};
+    if (typeof body === 'string') {
+      try { body = JSON.parse(body); } catch(e) { body = {}; }
+    }
+    const userId = body.user_id || req.query.user_id;
+    const clientToken = body.token || req.query.token;
+
+    if (!memoryStore.active_influencer_sessions) memoryStore.active_influencer_sessions = {};
+    const active = memoryStore.active_influencer_sessions[userId];
+
+    if (active && active.token && clientToken && clientToken !== active.token) {
+      return res.status(200).json({
+        success: false,
+        session_expired: true,
+        code: 'SESSION_KICKED',
+        error: '⚠️ Your creator account was logged in from another device. You have been logged out.'
+      });
+    }
+
+    if (active) active.last_active = Date.now();
+    return res.status(200).json({ success: true, valid: true });
   }
 
   // 12. Creator Payouts System

@@ -140,6 +140,8 @@ async function runSystemTests() {
 
   // TEST 12: Marketing Pixels Config
   const cfgRes = await callApi(adminHandler, 'GET', { action: 'get_public_config' });
+  assert('14. Public Config Accessible', cfgRes.data && cfgRes.data.whatsapp_support.length > 5);
+
   // TEST 13: Delete Influencer Permanently
   const delRes = await callApi(adminHandler, 'POST', {}, { action: 'delete_influencer', id: 'inf-test-999' });
   assert('15. Admin Deletes Influencer', delRes.data && delRes.data.success === true);
@@ -147,6 +149,44 @@ async function runSystemTests() {
   const checkDeletedRes = await callApi(adminHandler, 'GET', { action: 'get_influencers' });
   const stillExists = checkDeletedRes.data.influencers.some(u => u.id === 'inf-test-999' || u.code === 'AARAV20');
   assert('16. Influencer Is Permanently Removed (Not Resurrected)', !stillExists, `Still exists: ${stillExists}`);
+
+  // TEST 14: Single Active Admin User Enforcement
+  const adminDev1 = await callApi(adminHandler, 'POST', {}, { action: 'login', password: 'blackroots2026', device: 'Admin Laptop Chrome' });
+  const tokenDev1 = adminDev1.data.token;
+  assert('17. Admin Logs In on Device 1 (Receives Token)', !!tokenDev1);
+
+  // Device 1 checks session - should be valid
+  const checkDev1Valid = await callApi(adminHandler, 'POST', {}, { action: 'check_admin_session', token: tokenDev1 });
+  assert('18. Admin Device 1 Session Valid', checkDev1Valid.data && checkDev1Valid.data.valid === true);
+
+  // Admin logs in on Device 2 (e.g. Mobile)
+  const adminDev2 = await callApi(adminHandler, 'POST', {}, { action: 'login', password: 'blackroots2026', device: 'Admin iPhone Safari' });
+  const tokenDev2 = adminDev2.data.token;
+  assert('19. Admin Logs In on Device 2 (New Token Generated)', !!tokenDev2 && tokenDev2 !== tokenDev1);
+
+  // Device 1 checks session again - should be KICKED!
+  const checkDev1Kicked = await callApi(adminHandler, 'POST', {}, { action: 'check_admin_session', token: tokenDev1 });
+  assert('20. Admin Device 1 Session Kicked Out (Single User Enforced)', checkDev1Kicked.data && checkDev1Kicked.data.session_expired === true && checkDev1Kicked.data.code === 'SESSION_KICKED');
+
+  // TEST 15: Single Device Influencer Enforcement
+  // Creator logs in on Device A
+  const infDev1 = await callApi(adminHandler, 'POST', {}, { action: 'influencer_login', login_id: 'LEDUBHAIYA', password: 'ledubhaiya', device: 'OnePlus 12' });
+  const infToken1 = infDev1.data.token;
+  const infUserId = infDev1.data.user.id;
+  assert('21. Influencer Logs In on Device A (Token Received)', !!infToken1);
+
+  // Device A checks session - should be valid
+  const checkInf1Valid = await callApi(adminHandler, 'POST', {}, { action: 'check_influencer_session', user_id: infUserId, token: infToken1 });
+  assert('22. Influencer Device A Session Valid', checkInf1Valid.data && checkInf1Valid.data.valid === true);
+
+  // Creator logs in on Device B (e.g. iPad)
+  const infDev2 = await callApi(adminHandler, 'POST', {}, { action: 'influencer_login', login_id: 'LEDUBHAIYA', password: 'ledubhaiya', device: 'iPad Pro' });
+  const infToken2 = infDev2.data.token;
+  assert('23. Influencer Logs In on Device B (New Token)', !!infToken2 && infToken2 !== infToken1);
+
+  // Device A checks session again - should be KICKED!
+  const checkInf1Kicked = await callApi(adminHandler, 'POST', {}, { action: 'check_influencer_session', user_id: infUserId, token: infToken1 });
+  assert('24. Influencer Device A Session Kicked Out (Single Device Enforced)', checkInf1Kicked.data && checkInf1Kicked.data.session_expired === true && checkInf1Kicked.data.code === 'SESSION_KICKED');
 
   console.log('\n====================================================');
   console.log(`📊 SUMMARY: ${passed} / ${total} TESTS PASSED (100% SUCCESS)`);

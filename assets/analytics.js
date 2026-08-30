@@ -55,7 +55,7 @@
 
   // Fetch public config from API or local cache
   function loadConfig() {
-    fetch('api/admin.php?action=get_public_config')
+    fetch('/api/admin?action=get_public_config')
       .then(res => res.json())
       .then(config => {
         if (config) {
@@ -83,7 +83,7 @@
     }
   };
 
-  // Automatic Real-Time Live Visitor Logger
+  // Automatic Real-Time Live Visitor Logger (Ultra Light-Speed sendBeacon & keepalive)
   function logLiveVisitor() {
     let sessionId = localStorage.getItem('br_session_id');
     if (!sessionId) {
@@ -115,15 +115,40 @@
       timestamp: new Date().toISOString()
     };
 
+    const payloadStr = JSON.stringify(payload);
+
+    // 1. Try Navigator sendBeacon (0ms main thread blocking)
+    if (navigator.sendBeacon) {
+      const blob = new Blob([payloadStr], { type: 'application/json' });
+      navigator.sendBeacon('/api/admin?action=log_visitor', blob);
+      return;
+    }
+
+    // 2. Fetch fallback with keepalive
     try {
-      fetch('api/admin?action=log_visitor', {
+      fetch('/api/admin?action=log_visitor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: payloadStr,
         keepalive: true
       }).catch(function() {});
     } catch(e) {}
   }
+
+  // Periodic lightweight heartbeat (every 20 seconds) for accurate live active traffic
+  setInterval(function() {
+    let sessionId = localStorage.getItem('br_session_id');
+    if (sessionId && document.visibilityState === 'visible') {
+      try {
+        fetch('/api/admin?action=log_visitor', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ session_id: sessionId, page: 'Active Session' }),
+          keepalive: true
+        }).catch(function() {});
+      } catch(e) {}
+    }
+  }, 20000);
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() {

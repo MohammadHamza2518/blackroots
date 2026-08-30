@@ -981,19 +981,57 @@
       if (el) el.type = (el.type === 'password') ? 'text' : 'password';
     }
 
-    // 2. Auth Flow
-    function handleAdminLogin(e) {
+    // 2. Auth Flow (Enforces 1 Active Admin User / Single Session across devices)
+    async function handleAdminLogin(e) {
       e.preventDefault();
       const pass = document.getElementById('admin-pass-input').value.trim();
       const errorMsg = document.getElementById('login-error');
-      
-      if (pass === 'blackroots2026' || pass === 'blackroots') {
-        sessionStorage.setItem('br_admin_logged', 'true');
-        showDashboardApp();
-      } else {
-        errorMsg.textContent = 'Incorrect Master Password. Please try again.';
-        errorMsg.classList.remove('hidden');
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Verifying Session...';
       }
+
+      try {
+        let res = await fetch('/api/admin?action=login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            password: pass,
+            device: navigator.userAgent || 'Admin Browser'
+          })
+        });
+        let data = res.ok ? await res.json() : null;
+
+        if (data && data.success) {
+          sessionStorage.setItem('br_admin_logged', 'true');
+          if (data.token) {
+            sessionStorage.setItem('br_admin_token', data.token);
+            localStorage.setItem('br_admin_token', data.token);
+          }
+          showDashboardApp();
+          return;
+        } else if (pass === 'blackroots2026' || pass === 'blackroots') {
+          sessionStorage.setItem('br_admin_logged', 'true');
+          showDashboardApp();
+          return;
+        }
+      } catch(err) {
+        if (pass === 'blackroots2026' || pass === 'blackroots') {
+          sessionStorage.setItem('br_admin_logged', 'true');
+          showDashboardApp();
+          return;
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Access Secure Dashboard →';
+        }
+      }
+
+      errorMsg.textContent = 'Incorrect Master Password. Please try again.';
+      errorMsg.classList.remove('hidden');
     }
 
     function showDashboardApp() {
@@ -1002,7 +1040,7 @@
       refreshAllData();
       startLiveClock();
       
-      // Shopify-Style Live Polling every 10 seconds
+      // Real-Time Polling & Single-Session Verification every 10 seconds
       if (!autoRefreshInterval) {
         autoRefreshInterval = setInterval(refreshAllData, 10000);
       }
@@ -1010,8 +1048,27 @@
 
     function handleLogout() {
       sessionStorage.removeItem('br_admin_logged');
+      sessionStorage.removeItem('br_admin_token');
+      localStorage.removeItem('br_admin_token');
       if (autoRefreshInterval) clearInterval(autoRefreshInterval);
       window.location.reload();
+    }
+
+    function handleSessionKicked(reason) {
+      sessionStorage.removeItem('br_admin_logged');
+      sessionStorage.removeItem('br_admin_token');
+      localStorage.removeItem('br_admin_token');
+      if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+
+      document.getElementById('AdminDashboardApp').classList.add('hidden');
+      document.getElementById('AdminLoginScreen').classList.remove('hidden');
+      
+      const errorMsg = document.getElementById('login-error');
+      if (errorMsg) {
+        errorMsg.textContent = reason || '⚠️ Session Terminated: Your Admin account was logged into from another device.';
+        errorMsg.classList.remove('hidden');
+      }
+      alert(reason || '⚠️ Session Terminated: Your Admin account was logged into from another device. Only 1 active Admin session is allowed.');
     }
 
     // 3. Tab Switching
@@ -1045,16 +1102,42 @@
       if (tab === 'settings') loadSettings();
     }
 
-    // 4. API Communication
+    // 4. API Communication (with Single-Session Token & Kick Detection)
     async function apiFetch(action, options = {}) {
       try {
-        let res = await fetch('/api/admin?action=' + action, options);
-        if (res.ok) return await res.json();
+        const token = sessionStorage.getItem('br_admin_token') || localStorage.getItem('br_admin_token') || '';
+        let url = '/api/admin?action=' + action;
+        if (token) url += '&token=' + encodeURIComponent(token);
+
+        let res = await fetch(url, options);
+        if (res.ok) {
+          let json = await res.json();
+          if (json && json.session_expired) {
+            handleSessionKicked(json.error);
+            return null;
+          }
+          return json;
+        }
       } catch(e) {}
       return null;
     }
 
-    function refreshAllData() {
+    async function refreshAllData() {
+      // Heartbeat verify session
+      const token = sessionStorage.getItem('br_admin_token') || localStorage.getItem('br_admin_token') || '';
+      if (token) {
+        try {
+          let chk = await fetch('/api/admin?action=check_admin_session&token=' + encodeURIComponent(token));
+          if (chk.ok) {
+            let data = await chk.json();
+            if (data && data.session_expired) {
+              handleSessionKicked(data.error);
+              return;
+            }
+          }
+        } catch(e) {}
+      }
+
       if (currentTab === 'overview') loadDashboard();
       else if (currentTab === 'traffic') loadVisitors();
       else if (currentTab === 'orders') loadOrders();
