@@ -210,52 +210,67 @@
             </div>
           </div>
 
-          <!-- STEP 2: Shipping Details -->
-          <div class="bg-[#0e111a] border border-white/[0.08] rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-lg">
+                    <!-- STEP 2: Shipping Details (Ultra-Clean, High-Contrast & Effortless) -->
+          <div class="bg-[#0e111a] border border-white/[0.08] rounded-2xl p-4 sm:p-5 space-y-4 shadow-lg">
             <div class="flex items-center justify-between border-b border-white/[0.08] pb-3">
               <div class="flex items-center gap-2">
                 <span class="w-5 h-5 rounded-full bg-[#d4af37] text-black font-extrabold text-xs flex items-center justify-center">2</span>
                 <h2 class="text-sm sm:text-base font-bold text-white">Delivery Address</h2>
               </div>
-              <span class="text-[11px] text-gray-400">All India Delivery</span>
+              <span class="text-[11px] text-gray-400 flex items-center gap-1">
+                <span>📍</span> All India Priority Shipping
+              </span>
             </div>
 
-            <div class="space-y-3">
+            <div class="space-y-3.5">
               
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div class="space-y-1">
-                  <label for="InputCustName" class="block text-[11px] font-bold text-gray-300">Full Name <span class="text-amber-400">*</span></label>
-                  <input type="text" id="InputCustName" required placeholder="e.g. Rahul Sharma" class="w-full bg-[#141824] border border-white/[0.12] rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-gray-500 transition-all">
-                </div>
-                <div class="space-y-1">
-                  <label for="InputCustPhone" class="block text-[11px] font-bold text-gray-300">Mobile Number (10 Digits) <span class="text-amber-400">*</span></label>
-                  <div class="flex items-center">
-                    <span class="bg-[#1c2233] border border-r-0 border-white/[0.12] rounded-l-xl px-3 py-2.5 text-xs text-gray-400 font-bold select-none">+91</span>
-                    <input type="tel" id="InputCustPhone" maxlength="10" required placeholder="9876543210" class="w-full bg-[#141824] border border-white/[0.12] rounded-r-xl px-3 py-2.5 text-xs text-white placeholder-gray-500 transition-all">
-                  </div>
+              <!-- Row 1: Full Name -->
+              <div class="space-y-1.5">
+                <label for="InputCustName" class="block text-xs font-bold text-gray-200 tracking-wide">
+                  Full Name <span class="text-amber-400 font-black">*</span>
+                </label>
+                <input type="text" id="InputCustName" required placeholder="Enter your full name (e.g. Rahul Sharma)" class="w-full bg-[#121622] border border-white/20 hover:border-white/30 focus:border-[#d4af37] focus:bg-[#161b2a] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-400 transition-all font-medium">
+              </div>
+
+              <!-- Row 2: Mobile Number with +91 -->
+              <div class="space-y-1.5">
+                <label for="InputCustPhone" class="block text-xs font-bold text-gray-200 tracking-wide">
+                  Mobile Number (10 Digits) <span class="text-amber-400 font-black">*</span>
+                </label>
+                <div class="flex items-center rounded-xl bg-[#121622] border border-white/20 hover:border-white/30 focus-within:border-[#d4af37] focus-within:ring-2 focus-within:ring-[#d4af37]/25 overflow-hidden transition-all">
+                  <span class="bg-[#1c2336] border-r border-white/15 px-3.5 py-3 text-xs sm:text-sm text-gray-300 font-bold select-none shrink-0">+91</span>
+                  <input type="tel" id="InputCustPhone" maxlength="10" required placeholder="10-digit mobile number" class="w-full bg-transparent px-4 py-3 text-sm text-white placeholder-gray-400 border-none outline-none font-medium">
                 </div>
               </div>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div class="space-y-1">
-                  <label for="InputCustPincode" class="block text-[11px] font-bold text-gray-300">Pincode (6 Digits) <span class="text-amber-400">*</span></label>
-                  <input type="tel" id="InputCustPincode" maxlength="6" required placeholder="e.g. 110001" class="w-full bg-[#141824] border border-white/[0.12] rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-gray-500 transition-all">
+              <!-- Row 3: Pincode & City (Side-by-Side on all screens for fast completion) -->
+              <div class="grid grid-cols-2 gap-3">
+                <div class="space-y-1.5">
+                  <label for="InputCustPincode" class="block text-xs font-bold text-gray-200 tracking-wide">
+                    Pincode <span class="text-amber-400 font-black">*</span>
+                  </label>
+                  <input type="tel" id="InputCustPincode" maxlength="6" required placeholder="6-digit pincode" class="w-full bg-[#121622] border border-white/20 hover:border-white/30 focus:border-[#d4af37] focus:bg-[#161b2a] rounded-xl px-3.5 py-3 text-sm text-white placeholder-gray-400 transition-all font-medium">
                 </div>
-                <div class="space-y-1">
-                  <label for="InputCustCity" class="block text-[11px] font-bold text-gray-300">City / District <span class="text-amber-400">*</span></label>
-                  <input type="text" id="InputCustCity" required placeholder="e.g. Delhi NCR, Mumbai" class="w-full bg-[#141824] border border-white/[0.12] rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-gray-500 transition-all">
+                <div class="space-y-1.5">
+                  <label for="InputCustCity" class="block text-xs font-bold text-gray-200 tracking-wide">
+                    City / District <span class="text-amber-400 font-black">*</span>
+                  </label>
+                  <input type="text" id="InputCustCity" required placeholder="City name" class="w-full bg-[#121622] border border-white/20 hover:border-white/30 focus:border-[#d4af37] focus:bg-[#161b2a] rounded-xl px-3.5 py-3 text-sm text-white placeholder-gray-400 transition-all font-medium">
                 </div>
               </div>
 
-              <div class="space-y-1">
-                <label for="InputCustAddress" class="block text-[11px] font-bold text-gray-300">Complete Address (House/Flat No, Street, Area) <span class="text-amber-400">*</span></label>
-                <textarea id="InputCustAddress" rows="2" required placeholder="e.g. Flat No 402, Sunshine Heights, Near City Mall, MG Road..." class="w-full bg-[#141824] border border-white/[0.12] rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-gray-500 transition-all resize-none"></textarea>
+              <!-- Row 4: Complete Address -->
+              <div class="space-y-1.5">
+                <label for="InputCustAddress" class="block text-xs font-bold text-gray-200 tracking-wide">
+                  Complete Address <span class="text-amber-400 font-black">*</span>
+                </label>
+                <textarea id="InputCustAddress" rows="2" required placeholder="House/Flat No., Building, Street, Landmark..." class="w-full bg-[#121622] border border-white/20 hover:border-white/30 focus:border-[#d4af37] focus:bg-[#161b2a] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-400 transition-all resize-none font-medium leading-relaxed"></textarea>
               </div>
 
             </div>
           </div>
 
-                    <!-- STEP 3: Payment Method (Ultra-Luxury & High-Converting) -->
+          <!-- STEP 3: Payment Method (Ultra-Luxury & High-Converting) -->
           <div class="bg-[#0e111a] border border-white/[0.08] rounded-2xl p-4 sm:p-5 space-y-3.5 shadow-lg">
             <div class="flex items-center justify-between border-b border-white/[0.08] pb-3">
               <div class="flex items-center gap-2">
