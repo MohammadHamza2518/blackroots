@@ -1860,3 +1860,61 @@ window.closeIngredientModal = closeIngredientModal;
     initOrderForm();
   }
 })();
+
+/* ==========================================================================
+   ⚡ MASTER 1-CLICK DEDICATED CHECKOUT ENGINE (FLIPKART / AMAZON / SHOPIFY STYLE)
+   ========================================================================== */
+(function() {
+  'use strict';
+
+  window.selectedPack = {
+    qty: 1,
+    basePrice: 499,
+    price: 499,
+    title: '1 Bottle (250ml)',
+    saveText: 'Save ₹500'
+  };
+
+  // Switch Pack Function on PDP
+  window.selectPack = function(qty, price, title, saveText) {
+    window.selectedPack = {
+      qty: qty,
+      basePrice: price,
+      price: price,
+      title: title,
+      saveText: saveText
+    };
+
+    const pdpPrice = document.getElementById('PDPPriceDisplay');
+    const buyBtnPrice = document.getElementById('BuyButtonPriceDisplay');
+    if (pdpPrice) pdpPrice.innerHTML = '&#8377;' + price;
+    if (buyBtnPrice) buyBtnPrice.innerHTML = '&#8377;' + price;
+  };
+
+  // Master Global Checkout Invoker (Direct Full Page Dedicated Checkout)
+  window.triggerShiprocketCheckout = function(e, customPack) {
+    if (e && e.preventDefault) e.preventDefault();
+    if (e && e.stopPropagation) e.stopPropagation();
+    let pack = customPack || window.selectedPack || { qty: 1, price: 499 };
+    let qty = (pack.qty === 2 || Number(pack.price) >= 700) ? 2 : 1;
+    let urlParams = new URLSearchParams(window.location.search);
+    let coupon = urlParams.get('coupon') || urlParams.get('ref') || '';
+    let target = 'checkout.html?pack=' + qty + (coupon ? '&coupon=' + encodeURIComponent(coupon) : '');
+    window.location.href = target;
+  };
+
+  // Open Quick Order Modal compatibility alias
+  window.openQuickOrderModal = function(customPrice, customTitle, customQty) {
+    let qty = Number(customQty) || (Number(customPrice) >= 700 ? 2 : 1);
+    window.triggerShiprocketCheckout(null, { qty: qty });
+  };
+
+  // Global delegator for any .js-trigger-order button
+  document.addEventListener('click', function(e) {
+    const target = e.target.closest('.js-trigger-order');
+    if (target) {
+      e.preventDefault();
+      window.triggerShiprocketCheckout(e);
+    }
+  });
+})();
