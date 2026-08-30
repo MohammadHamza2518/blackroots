@@ -275,66 +275,65 @@
             </div>
           </div>
 
-                              <!-- STEP 2: Shipping Details (Strict Validations & All India States) -->
-          <div class="bg-[#0e111a] border border-white/[0.08] rounded-2xl p-4 sm:p-5 space-y-4 shadow-lg">
+                                        <!-- STEP 2: Shipping Details (Ultra-Clean, Professional & Flawless Layout) -->
+          <div class="bg-[#0e111a] border border-white/[0.08] rounded-2xl p-4 sm:p-6 space-y-4 shadow-lg">
             <div class="flex items-center justify-between border-b border-white/[0.08] pb-3">
               <div class="flex items-center gap-2">
                 <span class="w-5 h-5 rounded-full bg-[#d4af37] text-black font-extrabold text-xs flex items-center justify-center">2</span>
                 <h2 class="text-sm sm:text-base font-bold text-white">Delivery Address</h2>
               </div>
               <span class="text-[11px] text-gray-400 flex items-center gap-1">
-                <span>📍</span> All India Priority Shipping
+                <span>📍</span> Priority Dispatch
               </span>
             </div>
 
             <div class="space-y-3.5">
               
-              <!-- Row 1: Full Name -->
-              <div class="space-y-1">
-                <label for="InputCustName" class="block text-xs font-bold text-gray-200 tracking-wide">
-                  Full Name <span class="text-amber-400 font-black">*</span>
-                </label>
-                <input type="text" id="InputCustName" required placeholder="Enter full name" class="w-full bg-[#121622] border border-white/20 hover:border-white/30 focus:border-[#d4af37] focus:bg-[#161b2a] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500/80 placeholder:font-normal transition-all font-medium">
-              </div>
-
-              <!-- Row 2: Mobile Number (Strict 10 Digits with Live Validation) -->
-              <div class="space-y-1">
-                <div class="flex items-center justify-between">
-                  <label for="InputCustPhone" class="block text-xs font-bold text-gray-200 tracking-wide">
-                    Mobile Number (10 Digits Only) <span class="text-amber-400 font-black">*</span>
+              <!-- Row 1: Full Name & Mobile Number (2 Cols on Desktop/Tablet, 1 Col on Mobile) -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <div class="space-y-1.5">
+                  <label for="InputCustName" class="block text-xs font-bold text-gray-300">
+                    Full Name <span class="text-amber-400 font-bold">*</span>
                   </label>
-                  <span id="PhoneValidationMsg" class="text-[11px] font-bold hidden"></span>
+                  <input type="text" id="InputCustName" required placeholder="Enter full name" class="w-full bg-[#121622] border border-white/20 hover:border-white/30 focus:border-[#d4af37] focus:bg-[#161b2a] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500/80 placeholder:font-normal transition-all font-medium">
+                  <p id="NameValidationMsg" class="text-[11px] text-rose-400 font-medium hidden mt-1"></p>
                 </div>
-                <div class="flex items-center rounded-xl bg-[#121622] border border-white/20 hover:border-white/30 focus-within:border-[#d4af37] focus-within:ring-2 focus-within:ring-[#d4af37]/25 overflow-hidden transition-all">
-                  <span class="bg-[#1c2336] border-r border-white/15 px-3.5 py-3 text-xs sm:text-sm text-gray-300 font-bold select-none shrink-0">+91</span>
-                  <input type="tel" id="InputCustPhone" maxlength="10" required placeholder="Enter 10-digit mobile number" oninput="handlePhoneLiveValidation(this)" class="w-full bg-transparent px-4 py-3 text-sm text-white placeholder-gray-500/80 placeholder:font-normal border-none outline-none font-medium" inputmode="numeric">
-                </div>
-              </div>
 
-              <!-- Row 3: Pincode & City (Side-by-Side) -->
-              <div class="grid grid-cols-2 gap-3">
-                <div class="space-y-1">
-                  <div class="flex items-center justify-between">
-                    <label for="InputCustPincode" class="block text-xs font-bold text-gray-200 tracking-wide">
-                      Pincode <span class="text-amber-400 font-black">*</span>
-                    </label>
+                <div class="space-y-1.5">
+                  <label for="InputCustPhone" class="block text-xs font-bold text-gray-300">
+                    Mobile Number <span class="text-amber-400 font-bold">*</span>
+                  </label>
+                  <div class="flex items-center rounded-xl bg-[#121622] border border-white/20 hover:border-white/30 focus-within:border-[#d4af37] focus-within:ring-2 focus-within:ring-[#d4af37]/25 overflow-hidden transition-all">
+                    <span class="bg-[#1c2336] border-r border-white/15 px-3.5 py-3 text-xs sm:text-sm text-gray-300 font-bold select-none shrink-0">+91</span>
+                    <input type="tel" id="InputCustPhone" maxlength="10" required placeholder="10-digit mobile number" oninput="handlePhoneInputClean(this)" class="w-full bg-transparent px-4 py-3 text-sm text-white placeholder-gray-500/80 placeholder:font-normal border-none outline-none font-medium" inputmode="numeric">
                   </div>
-                  <input type="tel" id="InputCustPincode" maxlength="6" required placeholder="Enter 6-digit pincode" oninput="handlePincodeLiveValidation(this)" class="w-full bg-[#121622] border border-white/20 hover:border-white/30 focus:border-[#d4af37] focus:bg-[#161b2a] rounded-xl px-3.5 py-3 text-sm text-white placeholder-gray-500/80 placeholder:font-normal transition-all font-medium" inputmode="numeric">
-                  <span id="PincodeValidationMsg" class="text-[10px] font-bold hidden mt-0.5 block"></span>
-                </div>
-
-                <div class="space-y-1">
-                  <label for="InputCustCity" class="block text-xs font-bold text-gray-200 tracking-wide">
-                    City / District <span class="text-amber-400 font-black">*</span>
-                  </label>
-                  <input type="text" id="InputCustCity" required placeholder="Enter city / district" class="w-full bg-[#121622] border border-white/20 hover:border-white/30 focus:border-[#d4af37] focus:bg-[#161b2a] rounded-xl px-3.5 py-3 text-sm text-white placeholder-gray-500/80 placeholder:font-normal transition-all font-medium">
+                  <p id="PhoneValidationMsg" class="text-[11px] text-rose-400 font-medium hidden mt-1"></p>
                 </div>
               </div>
 
-              <!-- Row 4: State / Union Territory Dropdown (All Indian States & UTs) -->
-              <div class="space-y-1">
-                <label for="InputCustState" class="block text-xs font-bold text-gray-200 tracking-wide">
-                  State / Union Territory <span class="text-amber-400 font-black">*</span>
+              <!-- Row 2: Pincode & City (Side-by-Side) -->
+              <div class="grid grid-cols-2 gap-3.5">
+                <div class="space-y-1.5">
+                  <label for="InputCustPincode" class="block text-xs font-bold text-gray-300">
+                    Pincode <span class="text-amber-400 font-bold">*</span>
+                  </label>
+                  <input type="tel" id="InputCustPincode" maxlength="6" required placeholder="6-digit pincode" oninput="handlePincodeInputClean(this)" class="w-full bg-[#121622] border border-white/20 hover:border-white/30 focus:border-[#d4af37] focus:bg-[#161b2a] rounded-xl px-3.5 py-3 text-sm text-white placeholder-gray-500/80 placeholder:font-normal transition-all font-medium" inputmode="numeric">
+                  <p id="PincodeValidationMsg" class="text-[11px] text-emerald-400 font-medium hidden mt-1"></p>
+                </div>
+
+                <div class="space-y-1.5">
+                  <label for="InputCustCity" class="block text-xs font-bold text-gray-300">
+                    City / District <span class="text-amber-400 font-bold">*</span>
+                  </label>
+                  <input type="text" id="InputCustCity" required placeholder="City name" class="w-full bg-[#121622] border border-white/20 hover:border-white/30 focus:border-[#d4af37] focus:bg-[#161b2a] rounded-xl px-3.5 py-3 text-sm text-white placeholder-gray-500/80 placeholder:font-normal transition-all font-medium">
+                  <p id="CityValidationMsg" class="text-[11px] text-rose-400 font-medium hidden mt-1"></p>
+                </div>
+              </div>
+
+              <!-- Row 3: State / Union Territory Dropdown -->
+              <div class="space-y-1.5">
+                <label for="InputCustState" class="block text-xs font-bold text-gray-300">
+                  State / Union Territory <span class="text-amber-400 font-bold">*</span>
                 </label>
                 <div class="relative">
                   <select id="InputCustState" required class="w-full bg-[#121622] border border-white/20 hover:border-white/30 focus:border-[#d4af37] focus:bg-[#161b2a] rounded-xl px-4 py-3 text-sm text-white transition-all font-medium appearance-none cursor-pointer">
@@ -380,14 +379,16 @@
                     ▼
                   </div>
                 </div>
+                <p id="StateValidationMsg" class="text-[11px] text-rose-400 font-medium hidden mt-1"></p>
               </div>
 
-              <!-- Row 5: Complete Address -->
-              <div class="space-y-1">
-                <label for="InputCustAddress" class="block text-xs font-bold text-gray-200 tracking-wide">
-                  Complete Address <span class="text-amber-400 font-black">*</span>
+              <!-- Row 4: Complete Address -->
+              <div class="space-y-1.5">
+                <label for="InputCustAddress" class="block text-xs font-bold text-gray-300">
+                  Complete Address <span class="text-amber-400 font-bold">*</span>
                 </label>
                 <textarea id="InputCustAddress" rows="2" required placeholder="House/Flat No., Building, Street, Landmark..." class="w-full bg-[#121622] border border-white/20 hover:border-white/30 focus:border-[#d4af37] focus:bg-[#161b2a] rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500/80 placeholder:font-normal transition-all resize-none font-medium leading-relaxed"></textarea>
+                <p id="AddressValidationMsg" class="text-[11px] text-rose-400 font-medium hidden mt-1"></p>
               </div>
 
             </div>
@@ -664,43 +665,19 @@
 
     
     // Live Phone & Pincode Helpers
-    function handlePhoneLiveValidation(input) {
+    
+    function handlePhoneInputClean(input) {
       input.value = input.value.replace(/[^0-9]/g, '').slice(0, 10);
       var msg = document.getElementById('PhoneValidationMsg');
-      if (!msg) return;
-
-      if (input.value.length === 0) {
-        msg.classList.add('hidden');
-      } else if (input.value.length < 10) {
-        msg.textContent = '⚠️ 10 Digits Required (' + input.value.length + '/10)';
-        msg.className = 'text-[11px] font-bold text-amber-400 block';
-      } else {
-        // Valid 10 digits
-        if (/^[6-9]\d{9}$/.test(input.value)) {
-          msg.textContent = '✓ Valid Number';
-          msg.className = 'text-[11px] font-bold text-emerald-400 block';
-        } else {
-          msg.textContent = '⚠️ Invalid Indian Mobile';
-          msg.className = 'text-[11px] font-bold text-rose-400 block';
-        }
-      }
+      if (msg) msg.classList.add('hidden');
     }
 
-        function handlePincodeLiveValidation(input) {
+    function handlePincodeInputClean(input) {
       input.value = input.value.replace(/[^0-9]/g, '').slice(0, 6);
       var msg = document.getElementById('PincodeValidationMsg');
       if (!msg) return;
 
-      if (input.value.length === 0) {
-        msg.classList.add('hidden');
-      } else if (input.value.length < 6) {
-        msg.textContent = '⚠️ 6 Digits Required (' + input.value.length + '/6)';
-        msg.className = 'text-[10px] font-bold text-amber-400 block';
-      } else {
-        msg.textContent = '✓ Valid Pincode (Checking City/State...)';
-        msg.className = 'text-[10px] font-bold text-emerald-400 block';
-
-        // Auto-fetch Indian City and State via Postal API
+      if (input.value.length === 6) {
         var pin = input.value;
         fetch('https://api.postalpincode.in/pincode/' + pin)
           .then(function(res) { return res.json(); })
@@ -727,16 +704,12 @@
               }
 
               msg.textContent = '✓ ' + detectedCity + ', ' + detectedState;
-              msg.className = 'text-[10px] font-bold text-emerald-400 block';
-            } else {
-              msg.textContent = '✓ Valid 6-Digit Pincode';
-              msg.className = 'text-[10px] font-bold text-emerald-400 block';
+              msg.className = 'text-[11px] text-emerald-400 font-medium block mt-1';
+              msg.classList.remove('hidden');
             }
-          })
-          .catch(function() {
-            msg.textContent = '✓ Valid 6-Digit Pincode';
-            msg.className = 'text-[10px] font-bold text-emerald-400 block';
-          });
+          }).catch(function() {});
+      } else {
+        msg.classList.add('hidden');
       }
     }
 
@@ -927,33 +900,72 @@
 
       var cleanPhone = (phone.length > 10 && phone.startsWith('91')) ? phone.slice(2) : phone;
 
+            // Validate Form
+      var errName = document.getElementById('NameValidationMsg');
+      var errPhone = document.getElementById('PhoneValidationMsg');
+      var errPin = document.getElementById('PincodeValidationMsg');
+      var errCity = document.getElementById('CityValidationMsg');
+      var errState = document.getElementById('StateValidationMsg');
+      var errAddress = document.getElementById('AddressValidationMsg');
+
+      if (errName) errName.classList.add('hidden');
+      if (errPhone) errPhone.classList.add('hidden');
+      if (errPin) errPin.classList.add('hidden');
+      if (errCity) errCity.classList.add('hidden');
+      if (errState) errState.classList.add('hidden');
+      if (errAddress) errAddress.classList.add('hidden');
+
       if (!name) {
-        alert('Please enter your Full Name.');
+        if (errName) {
+          errName.textContent = 'Please enter your full name.';
+          errName.classList.remove('hidden');
+        }
         document.getElementById('InputCustName')?.focus();
         return;
       }
+
       if (cleanPhone.length !== 10) {
-        alert('Please enter a valid 10-digit Indian mobile number.');
+        if (errPhone) {
+          errPhone.textContent = 'Please enter a valid 10-digit mobile number.';
+          errPhone.classList.remove('hidden');
+        }
         document.getElementById('InputCustPhone')?.focus();
         return;
       }
+
       if (pincode.length !== 6) {
-        alert('Please enter a valid 6-digit delivery pincode.');
+        if (errPin) {
+          errPin.textContent = 'Please enter a valid 6-digit pincode.';
+          errPin.className = 'text-[11px] text-rose-400 font-medium block mt-1';
+          errPin.classList.remove('hidden');
+        }
         document.getElementById('InputCustPincode')?.focus();
         return;
       }
+
       if (!city) {
-        alert('Please enter your City/District.');
+        if (errCity) {
+          errCity.textContent = 'Please enter your city/district.';
+          errCity.classList.remove('hidden');
+        }
         document.getElementById('InputCustCity')?.focus();
         return;
       }
+
       if (!state) {
-        alert('Please select your State / Union Territory.');
+        if (errState) {
+          errState.textContent = 'Please select your state.';
+          errState.classList.remove('hidden');
+        }
         document.getElementById('InputCustState')?.focus();
         return;
       }
+
       if (!address) {
-        alert('Please enter your Complete Delivery Address.');
+        if (errAddress) {
+          errAddress.textContent = 'Please enter your complete delivery address.';
+          errAddress.classList.remove('hidden');
+        }
         document.getElementById('InputCustAddress')?.focus();
         return;
       }
