@@ -696,7 +696,8 @@
             <p class="text-xs text-gray-400">Manage shipments, assign courier tracking AWBs, update order statuses, and message customers.</p>
           </div>
 
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-3 flex-wrap">
+            <button type="button" onclick="exportShiprocketCSV()" class="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:brightness-110 text-black font-extrabold text-xs shadow-md transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"><span>?? Export Shiprocket CSV</span></button>
             <input type="text" id="order-search-input" oninput="debounceOrderSearch()" placeholder="Search Name, Phone, City, Order ID, Promo..." class="px-4 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] w-full sm:w-64">
             <select id="order-status-filter" onchange="loadOrders()" class="px-3 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
               <option value="">All Statuses</option>
@@ -1520,7 +1521,7 @@
             ${o.tracking_awb || 'Auto-assigning...'}
           </td>
           <td class="py-3 px-3 text-right">
-            <a href="https://wa.me/91${o.phone}?text=${encodeURIComponent('Namaste ' + (o.name || '') + ' ji! BlackRoots Herbal Shampoo se aapka order ' + (o.order_id || '') + ' successfully dispatch kiya ja chuka hai.')}" target="_blank" class="inline-flex items-center gap-1 bg-emerald-500 text-black px-2.5 py-1 rounded-lg text-[10px] font-bold hover:brightness-110">
+            <button type="button" onclick="openShippingLabelModal('${o.order_id}')" class="inline-flex items-center gap-1 bg-[#d4af37] text-black px-2.5 py-1 rounded-lg text-[10px] font-bold hover:brightness-110 cursor-pointer mr-1"><span>??? Label</span></button><a href="https://wa.me/91${o.phone}?text=${encodeURIComponent('Namaste ' + (o.name || '') + ' ji! BlackRoots Herbal Shampoo se aapka order ' + (o.order_id || '') + ' successfully dispatch kiya ja chuka hai.')}" target="_blank" class="inline-flex items-center gap-1 bg-emerald-500 text-black px-2.5 py-1 rounded-lg text-[10px] font-bold hover:brightness-110">
               💬 WhatsApp
             </a>
           </td>
@@ -2426,5 +2427,83 @@
 
     </div>
   </div>
+
+  <!-- Printable Thermal Shipping Label & Invoice Modal -->
+  <div id="ShippingLabelModal" class="fixed inset-0 z-[999999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+    <div class="bg-[#0f121a] border border-[#d4af37]/40 shadow-2xl rounded-3xl p-6 max-w-xl w-full max-h-[92vh] overflow-y-auto relative text-left">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
+        <h3 class="font-serif text-lg font-bold text-white flex items-center gap-2">
+          <span>???</span> Thermal Shipping Label & Invoice
+        </h3>
+        <button type="button" onclick="closeShippingLabelModal()" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white flex items-center justify-center font-bold transition-colors cursor-pointer">
+          ?
+        </button>
+      </div>
+
+      <!-- Printable Area -->
+      <div id="PrintableLabelArea" class="bg-white text-black p-5 rounded-2xl font-sans border border-gray-300 shadow-inner space-y-3">
+        <!-- Brand Header & Courier Box -->
+        <div class="flex items-center justify-between pb-3 border-b-2 border-black">
+          <div>
+            <h2 class="text-xl font-black tracking-tight text-black">BLACKROOTS HERBAL</h2>
+            <div class="text-[10px] text-gray-700 font-medium">Japanese Botanical Care &bull; www.blackroots.in</div>
+          </div>
+          <div class="text-right border-2 border-black px-3 py-1 rounded-lg">
+            <div class="text-[9px] font-black uppercase text-gray-600">COURIER AIR</div>
+            <div id="lbl-courier-name" class="text-xs font-black">DELHIVERY EXPRESS</div>
+          </div>
+        </div>
+
+        <!-- AWB Barcode Simulation -->
+        <div class="text-center py-2 bg-gray-50 border border-gray-300 rounded-lg">
+          <div class="font-mono text-xl tracking-[6px] font-black select-none" style="letter-spacing: 6px;">||| | |||| ||| |||| | |||||</div>
+          <div class="text-xs font-mono font-bold mt-1">AWB: <span id="lbl-awb-code">883910492812</span></div>
+        </div>
+
+        <!-- Ship To Customer Address -->
+        <div class="p-3 bg-gray-100 rounded-xl border border-gray-300 space-y-1">
+          <div class="text-[10px] font-black text-gray-500 uppercase tracking-wider">DELIVER TO (CUSTOMER):</div>
+          <div id="lbl-cust-name" class="text-sm font-black text-black">Rahul Sharma</div>
+          <div id="lbl-cust-phone" class="text-xs font-bold text-gray-800">Phone: +91 9876543210</div>
+          <div id="lbl-cust-address" class="text-xs text-gray-900 leading-snug">House No. 42, 2nd Floor, Near Main Market, Shanti Nagar</div>
+          <div class="text-xs font-black text-black pt-1">
+            PINCODE: <span id="lbl-cust-pincode" class="bg-black text-white px-2 py-0.5 rounded">110001</span> &bull; <span id="lbl-cust-city">Delhi NCR</span>
+          </div>
+        </div>
+
+        <!-- Order Items & Payment Collectable -->
+        <div class="flex items-center justify-between p-3 border-2 border-black rounded-xl">
+          <div>
+            <div class="text-[10px] text-gray-600 font-bold uppercase">ORDER DETAILS:</div>
+            <div id="lbl-item-name" class="text-xs font-black text-black">1x BlackRoots Shampoo (250ml)</div>
+            <div id="lbl-order-id" class="text-[10px] font-mono text-gray-700">Order: #BR-1025</div>
+          </div>
+          <div class="text-right">
+            <div class="text-[10px] text-gray-600 font-bold uppercase">COLLECTABLE:</div>
+            <div id="lbl-collectable-amount" class="text-lg font-black text-black">?499 (COD)</div>
+          </div>
+        </div>
+
+        <!-- Return / Sender Info -->
+        <div class="text-[9px] text-gray-600 pt-1 border-t border-gray-300 flex justify-between">
+          <span>Return If Undelivered: BlackRoots Logistics Hub, India</span>
+          <span>Support: +91 9580835179</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-white/10 mt-4">
+        <button type="button" onclick="closeShippingLabelModal()" class="px-4 py-2 rounded-xl bg-white/5 text-gray-300 font-bold text-xs hover:bg-white/10 cursor-pointer">
+          Close
+        </button>
+        <button type="button" onclick="printShippingLabel()" class="btn-gold-luxury px-6 py-2.5 rounded-xl text-black font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-lg cursor-pointer">
+          <span>??? Print Label / Invoice</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
 </body>
 </html>
