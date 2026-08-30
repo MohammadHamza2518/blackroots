@@ -635,7 +635,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /* 📦 Quick Order Modal Global Controls (Bulletproof & Immediate) */
-window.openQuickOrderModal = function(p, t) { if(window.triggerShiprocketCheckout) window.triggerShiprocketCheckout(window.event, p ? {price: p, title: t} : null); };
+// Fixed: Cleaned conflicting quick order invoker
 window.closeQuickOrderModal = function() {};
 
 
@@ -665,106 +665,68 @@ function switchToSimPage(page) {
 
 window.switchToSimPage = switchToSimPage;
 
-
-
 /* ==========================================================================
-   ⚡ MASTER 1-CLICK INSTANT ORDER & CHECKOUT ENGINE (100% WORKING EVERYWHERE)
+   ? MASTER 1-CLICK INSTANT ORDER & CHECKOUT ENGINE (100% WORKING EVERYWHERE)
    ========================================================================== */
 (function() {
   'use strict';
 
-  /* 🚀 Shiprocket One-Click Quick Checkout Configuration */
-  window.SHIPROCKET_CHECKOUT_CONFIG = {
-    enabled: true,
-    apiKey: 'hl7tTx1OioeJn0KS',
-    secretKey: 'SX9xl506RtMcE6761XJgkzhJOl1QCUW6',
-    merchantId: 'hl7tTx1OioeJn0KS',
-    environment: 'production',
-    themeColor: '#d4af37'
-  };
-
-  // Global pack state (Default: 1 Bottle @ ₹499)
+  // Global pack state
   window.selectedPack = {
     qty: 1,
     basePrice: 499,
     price: 499,
-    title: '1 Bottle (250ml) — 1 Month Supply',
-    saveText: 'Save ₹500'
+    title: '1 Bottle (250ml)',
+    saveText: 'Save ?500'
   };
 
-  window.currentPaymentMethod = 'Online'; // 'Online' (-₹50 discount) or 'COD'
+  window.currentPaymentMethod = 'Online';
   window.appliedCouponData = null;
 
-  // Real-time Pricing Calculation Function
-  window.recalculateCheckoutPrice = function() {
-    const basePrice = window.selectedPack ? (window.selectedPack.basePrice || window.selectedPack.price || 499) : 499;
-    const isOnline = (window.currentPaymentMethod === 'Online');
-    const onlineDiscount = isOnline ? 50 : 0;
-    
-    // Coupon Discount Calculation (10% on base)
-    let couponDiscount = 0;
-    if (window.appliedCouponData && window.appliedCouponData.code) {
-      couponDiscount = Math.round(basePrice * (window.appliedCouponData.comm_rate || 10) / 100);
-      window.appliedCouponData.discount = couponDiscount;
-    }
+  // Open Quick Order Modal
+  window.openQuickOrderModal = function(customPrice, customTitle, customQty) {
+    let price = Number(customPrice) || (window.selectedPack ? (window.selectedPack.basePrice || window.selectedPack.price) : 499) || 499;
+    let qty = Number(customQty) || (price >= 700 ? 2 : 1);
+    let title = customTitle || (qty === 2 ? '2 Bottles Pack (500ml)' : '1 Bottle (250ml)');
 
-    const totalDiscount = onlineDiscount + couponDiscount;
-    const finalPayable = Math.max(0, basePrice - totalDiscount);
+    window.selectModalBundle(qty, price >= 700 ? 799 : 499, title, qty === 2 ? 'Save ?1,199' : 'Save ?500');
 
-    // Update Modal Displays
-    const finalPriceEl = document.getElementById('OrderModalFinalPrice');
-    const origPriceEl = document.getElementById('OrderModalOriginalPrice');
-    const modalPriceDisplay = document.getElementById('OrderModalPriceDisplay');
-    const submitBtnPrice = document.getElementById('SubmitButtonPrice');
-    const savingsTag = document.getElementById('PrepaidSavingsTag');
-    const couponNote = document.getElementById('CouponDiscountNote');
+    const modal = document.getElementById('QuickOrderModal');
+    const card = document.getElementById('QuickOrderCard');
+    const form = document.getElementById('QuickOrderForm');
+    const success = document.getElementById('QuickOrderSuccess');
 
-    if (finalPriceEl) finalPriceEl.innerHTML = '&#8377;' + finalPayable;
-    if (origPriceEl) {
-      if (totalDiscount > 0) {
-        origPriceEl.innerHTML = '&#8377;' + basePrice;
-        origPriceEl.style.display = 'inline';
-      } else {
-        origPriceEl.style.display = 'none';
+    if (modal) {
+      if (form) form.classList.remove('hidden');
+      if (success) success.classList.add('hidden');
+
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modal.classList.add('opacity-100');
+      if (card) {
+        card.classList.remove('translate-y-full', 'sm:scale-95');
+        card.classList.add('translate-y-0', 'sm:scale-100');
       }
+      document.body.style.overflow = 'hidden';
+      window.recalculateCheckoutPrice();
     }
-    if (modalPriceDisplay) modalPriceDisplay.innerHTML = '&#8377;' + finalPayable;
-    if (submitBtnPrice) submitBtnPrice.innerHTML = '&#8377;' + finalPayable;
-
-    if (savingsTag) {
-      if (isOnline) {
-        savingsTag.innerHTML = `
-          <span class="inline-flex items-center gap-1 bg-emerald-500/20 text-emerald-300 text-[10px] font-black px-2.5 py-1 rounded-full border border-emerald-500/40 animate-pulse">
-            🎉 &#8377;50 Online Discount Applied!
-          </span>
-          <div class="text-[9px] text-gray-400 mt-0.5">⚡ Free Express Delivery Across India</div>
-        `;
-        savingsTag.style.display = 'block';
-      } else {
-        savingsTag.innerHTML = `
-          <span class="inline-flex items-center gap-1 bg-white/10 text-gray-300 text-[10px] font-bold px-2 py-0.5 rounded-full border border-white/10">
-            💵 Cash on Delivery Selected
-          </span>
-          <div class="text-[9px] text-emerald-400 font-semibold mt-0.5">Tip: Pay Online & Save &#8377;50 Instantly</div>
-        `;
-        savingsTag.style.display = 'block';
-      }
-    }
-
-    if (couponNote && window.appliedCouponData) {
-      couponNote.textContent = `✓ Code ${window.appliedCouponData.code} Applied (-₹${couponDiscount})`;
-      couponNote.classList.remove('hidden');
-    }
-
-    return {
-      basePrice: basePrice,
-      onlineDiscount: onlineDiscount,
-      couponDiscount: couponDiscount,
-      finalPayable: finalPayable
-    };
   };
 
-  // Switch Modal Bundle (1 Bottle ₹499 vs 2 Bottles ₹799)
+  // Close Quick Order Modal
+  window.closeQuickOrderModal = function() {
+    const modal = document.getElementById('QuickOrderModal');
+    const card = document.getElementById('QuickOrderCard');
+    if (modal) {
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modal.classList.remove('opacity-100');
+      if (card) {
+        card.classList.add('translate-y-full', 'sm:scale-95');
+        card.classList.remove('translate-y-0', 'sm:scale-100');
+      }
+      document.body.style.overflow = '';
+    }
+  };
+
+  // Switch Bundle (1 Bottle ?499 vs 2 Bottles ?799)
   window.selectModalBundle = function(qty, basePrice, title, saveText) {
     window.selectedPack = {
       qty: qty,
@@ -780,45 +742,50 @@ window.switchToSimPage = switchToSimPage;
     const dot2 = document.getElementById('RadioDot2');
 
     if (qty === 1) {
-      if (card1) { card1.className = "p-3 rounded-2xl border-2 border-[#d4af37] bg-[#d4af37]/15 cursor-pointer transition-all flex flex-col justify-between"; }
-      if (card2) { card2.className = "p-3 rounded-2xl border border-white/10 bg-white/5 hover:border-amber-400 cursor-pointer transition-all flex flex-col justify-between relative overflow-hidden"; }
-      if (dot1) dot1.classList.remove('hidden');
-      if (dot2) dot2.classList.add('hidden');
+      if (card1) card1.className = "p-3 rounded-2xl border-2 border-[#d4af37] bg-[#d4af37]/15 cursor-pointer transition-all flex flex-col justify-between";
+      if (card2) card2.className = "p-3 rounded-2xl border border-white/10 bg-white/5 hover:border-amber-400 cursor-pointer transition-all flex flex-col justify-between relative overflow-hidden";
+      if (dot1) { dot1.classList.remove('hidden'); dot1.classList.add('flex'); }
+      if (dot2) { dot2.classList.add('hidden'); dot2.classList.remove('flex'); }
     } else {
-      if (card1) { card1.className = "p-3 rounded-2xl border border-white/10 bg-white/5 hover:border-amber-400 cursor-pointer transition-all flex flex-col justify-between"; }
-      if (card2) { card2.className = "p-3 rounded-2xl border-2 border-[#d4af37] bg-[#d4af37]/15 cursor-pointer transition-all flex flex-col justify-between relative overflow-hidden"; }
-      if (dot1) dot1.classList.add('hidden');
-      if (dot2) dot2.classList.remove('hidden');
+      if (card1) card1.className = "p-3 rounded-2xl border border-white/10 bg-white/5 hover:border-amber-400 cursor-pointer transition-all flex flex-col justify-between";
+      if (card2) card2.className = "p-3 rounded-2xl border-2 border-[#d4af37] bg-[#d4af37]/15 cursor-pointer transition-all flex flex-col justify-between relative overflow-hidden";
+      if (dot1) { dot1.classList.add('hidden'); dot1.classList.remove('flex'); }
+      if (dot2) { dot2.classList.remove('hidden'); dot2.classList.add('flex'); }
     }
 
-    // Sync with PDP page if open on product.html
+    // Sync PDP page elements if on product.html
     const pdpPrice = document.getElementById('PDPPriceDisplay');
     const buyBtnPrice = document.getElementById('BuyButtonPriceDisplay');
-    if (pdpPrice) pdpPrice.textContent = '₹' + basePrice;
-    if (buyBtnPrice) buyBtnPrice.textContent = '₹' + basePrice;
+    if (pdpPrice) pdpPrice.innerHTML = '&#8377;' + basePrice;
+    if (buyBtnPrice) buyBtnPrice.innerHTML = '&#8377;' + basePrice;
 
     window.recalculateCheckoutPrice();
   };
 
-  // Payment Method Selection Handler (Online -₹50 vs COD)
+  // Switch Pack Function on PDP
+  window.selectPack = function(qty, price, title, saveText) {
+    window.selectModalBundle(qty, price, title, saveText);
+  };
+
+  // Payment Method Selection (Online -?50 vs COD)
   window.updatePaymentMethodChoice = function(method) {
     window.currentPaymentMethod = method;
     const radios = document.querySelectorAll('input[name="payment_method_choice"]');
     radios.forEach(function(r) {
-      if (r.value === method) r.checked = true;
+      r.checked = (r.value === method);
     });
-
     window.recalculateCheckoutPrice();
   };
 
-  // Apply Creator / Promo Code
+  // Apply Coupon Function
   window.applyCheckoutCoupon = function() {
     const input = document.getElementById('OrderCouponInput');
+    const note = document.getElementById('CouponDiscountNote');
     if (!input) return;
 
     const rawCode = input.value.trim().toUpperCase();
     if (!rawCode) {
-      alert('Please enter a creator or promo code.');
+      alert('Please enter a coupon code.');
       return;
     }
 
@@ -836,264 +803,299 @@ window.switchToSimPage = switchToSimPage;
       influencer_id: creator ? creator.id : null
     };
 
-    localStorage.setItem('br_active_coupon', rawCode);
+    if (note) {
+      note.textContent = '? Coupon "' + rawCode + '" applied successfully!';
+      note.classList.remove('hidden');
+    }
+
     window.recalculateCheckoutPrice();
   };
 
-  // Switch Pack Function on Product Page
-  window.selectPack = function(qty, price, title, saveText) {
-    window.selectModalBundle(qty, price, title, saveText);
+  // Real-time Pricing Calculator
+  window.recalculateCheckoutPrice = function() {
+    const basePrice = window.selectedPack ? (window.selectedPack.basePrice || 499) : 499;
+    const isOnline = (window.currentPaymentMethod === 'Online');
+    const onlineDiscount = isOnline ? 50 : 0;
+
+    let couponDiscount = 0;
+    if (window.appliedCouponData && window.appliedCouponData.code) {
+      couponDiscount = Math.round(basePrice * (window.appliedCouponData.comm_rate || 10) / 100);
+      window.appliedCouponData.discount = couponDiscount;
+    }
+
+    const totalDiscount = onlineDiscount + couponDiscount;
+    const finalPayable = Math.max(0, basePrice - totalDiscount);
+
+    // Update DOM
+    const summaryItem = document.getElementById('SummaryItemPrice');
+    const onlineRow = document.getElementById('SummaryOnlineDiscountRow');
+    const couponRow = document.getElementById('SummaryCouponDiscountRow');
+    const couponVal = document.getElementById('SummaryCouponDiscountVal');
+    const finalPriceDisplay = document.getElementById('OrderModalFinalPrice');
+    const btnText = document.getElementById('SubmitOrderBtnText');
+
+    if (summaryItem) summaryItem.innerHTML = '&#8377;' + basePrice;
+    
+    if (onlineRow) {
+      onlineRow.style.display = isOnline ? 'flex' : 'none';
+    }
+
+    if (couponRow && couponVal) {
+      if (couponDiscount > 0) {
+        couponRow.classList.remove('hidden');
+        couponVal.innerHTML = '-&#8377;' + couponDiscount;
+      } else {
+        couponRow.classList.add('hidden');
+      }
+    }
+
+    if (finalPriceDisplay) {
+      finalPriceDisplay.innerHTML = '&#8377;' + finalPayable;
+    }
+
+    if (btnText) {
+      if (isOnline) {
+        btnText.innerHTML = '?? Pay &#8377;' + finalPayable + ' via UPI / GPay / Cards &rarr;';
+      } else {
+        btnText.innerHTML = '?? Confirm Cash on Delivery (&#8377;' + finalPayable + ') &rarr;';
+      }
+    }
+
+    return {
+      basePrice: basePrice,
+      onlineDiscount: onlineDiscount,
+      couponDiscount: couponDiscount,
+      finalPayable: finalPayable
+    };
   };
 
-  // Form submission handler & Abandoned Checkout Capture
+  // Form Initializer & Submission
   function initOrderForm() {
     const form = document.getElementById('QuickOrderForm');
-    if (form) {
-      // 1. Abandoned Checkout Lead Capture on Phone Input
-      const phoneInput = form.querySelector('input[type="tel"]') || form.querySelectorAll('input')[1];
-      const nameInput = form.querySelector('input[type="text"]') || form.querySelectorAll('input')[0];
+    if (!form) return;
 
-      if (phoneInput) {
-        let lastCapturedPhone = '';
-        function checkAndCaptureLead() {
-          const rawPhone = phoneInput.value.replace(/[^0-9]/g, '');
-          if (rawPhone.length >= 10 && rawPhone !== lastCapturedPhone) {
-            lastCapturedPhone = rawPhone;
-            const price = window.selectedPack ? (window.selectedPack.basePrice || 499) : 499;
-            const bundleName = window.selectedPack ? window.selectedPack.title : '1 Bottle (250ml)';
-            
-            const abPayload = {
-              name: nameInput ? nameInput.value.trim() : 'Visitor',
-              phone: rawPhone,
-              bundle: bundleName,
-              price: price
-            };
-            fetch('api/abandoned', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(abPayload)
-            }).catch(function() {
-              fetch('api/abandoned.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(abPayload)
-              }).catch(function() {});
-            });
+    form.onsubmit = async function(e) {
+      e.preventDefault();
+      
+      const name = (document.getElementById('OrderCustName')?.value || '').trim();
+      const phone = (document.getElementById('OrderCustPhone')?.value || '').trim().replace(/[^0-9]/g, '');
+      const pincode = (document.getElementById('OrderCustPincode')?.value || '').trim().replace(/[^0-9]/g, '');
+      const city = (document.getElementById('OrderCustCity')?.value || '').trim();
+      const address = (document.getElementById('OrderCustAddress')?.value || '').trim();
 
-            try {
-              let cur = JSON.parse(localStorage.getItem('br_abandoned_leads') || '[]');
-              cur.unshift(abPayload);
-              localStorage.setItem('br_abandoned_leads', JSON.stringify(cur.slice(0, 50)));
-            } catch(e) {}
-          }
-        }
+      const cleanPhone = (phone.length > 10 && phone.startsWith('91')) ? phone.slice(2) : phone;
 
-        phoneInput.addEventListener('blur', checkAndCaptureLead);
-        phoneInput.addEventListener('input', function() {
-          if (phoneInput.value.replace(/[^0-9]/g, '').length === 10) {
-            checkAndCaptureLead();
-          }
-        });
+      if (!name) {
+        alert('Please enter your Full Name.');
+        document.getElementById('OrderCustName')?.focus();
+        return;
+      }
+      if (cleanPhone.length !== 10) {
+        alert('Please enter a valid 10-digit Indian mobile number.');
+        document.getElementById('OrderCustPhone')?.focus();
+        return;
+      }
+      if (pincode.length !== 6) {
+        alert('Please enter a valid 6-digit delivery pincode.');
+        document.getElementById('OrderCustPincode')?.focus();
+        return;
+      }
+      if (!city) {
+        alert('Please enter your City/District.');
+        document.getElementById('OrderCustCity')?.focus();
+        return;
+      }
+      if (!address) {
+        alert('Please enter your Complete Delivery Address.');
+        document.getElementById('OrderCustAddress')?.focus();
+        return;
       }
 
-      // 2. Full Order Submission Handler (Fastrr / Razorpay + Instant COD)
-      form.onsubmit = async function(e) {
-        e.preventDefault();
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const originalBtnText = submitBtn ? submitBtn.innerHTML : 'Confirm Order';
+      const pricing = window.recalculateCheckoutPrice();
+      const finalPrice = pricing.finalPayable;
+      const selectedMethod = window.currentPaymentMethod || 'Online';
+      const submitBtn = document.getElementById('SubmitOrderBtn');
+      const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
 
-        const allInputs = form.querySelectorAll('input:not([type="radio"]), textarea');
-        const pricing = window.recalculateCheckoutPrice();
-        const finalPrice = pricing.finalPayable;
-        const selectedMethod = window.currentPaymentMethod || 'Online';
+      let orderPayload = {
+        name: name,
+        phone: cleanPhone,
+        pincode: pincode,
+        city: city,
+        address: address,
+        bundle: window.selectedPack ? window.selectedPack.title : '1 Bottle (250ml)',
+        price: finalPrice,
+        payment_method: selectedMethod === 'Online' ? 'Online (Prepaid UPI/Cards - ?50 OFF)' : 'Cash on Delivery (COD)',
+        payment_id: '',
+        coupon: window.appliedCouponData ? window.appliedCouponData.code : '',
+        discount: pricing.onlineDiscount + pricing.couponDiscount
+      };
 
-        let custName = allInputs[0] ? allInputs[0].value.trim() : '';
-        let custPhone = allInputs[1] ? allInputs[1].value.trim().replace(/[^0-9]/g, '') : '';
-        let custPincode = allInputs[2] ? allInputs[2].value.trim().replace(/[^0-9]/g, '') : '';
-        let custCity = allInputs[3] ? allInputs[3].value.trim() : '';
-        let custAddress = allInputs[4] ? allInputs[4].value.trim() : '';
-
-        if (custPhone.length > 10 && custPhone.startsWith('91')) custPhone = custPhone.slice(2);
-
-        if (custPhone.length !== 10) {
-          alert('Please enter a valid 10-digit Indian mobile number.');
-          return;
-        }
-        if (custPincode.length !== 6) {
-          alert('Please enter a valid 6-digit delivery pincode.');
-          return;
+      const processOrderExecution = async (payload) => {
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<span>? Confirming Logistics Order...</span>';
         }
 
-        let orderPayload = {
-          name: custName,
-          phone: custPhone,
-          pincode: custPincode,
-          city: custCity,
-          address: custAddress,
-          bundle: window.selectedPack ? window.selectedPack.title : '1 Bottle (250ml)',
-          price: finalPrice,
-          payment_method: selectedMethod === 'Online' ? 'Online (Prepaid UPI/Cards - ₹50 OFF)' : 'Cash on Delivery (COD)',
-          payment_id: '',
-          coupon: window.appliedCouponData ? window.appliedCouponData.code : '',
-          discount: pricing.onlineDiscount + pricing.couponDiscount
-        };
-
-        const processOrderExecution = async (payload) => {
-          if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<span>⏳ Confirming Logistics Order...</span>';
+        try {
+          let orderData = null;
+          const endpoints = ['api/order', 'api/order.js', 'api/order.php', 'backend_hostinger/order.php'];
+          for (let ep of endpoints) {
+            try {
+              let res = await fetch(ep, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+              });
+              if (res.ok) {
+                orderData = await res.json();
+                if (orderData && orderData.success) break;
+              }
+            } catch(err) {}
           }
+
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHtml;
+          }
+
+          const orderId = (orderData && orderData.order_id) ? orderData.order_id : ('#BR-' + Math.floor(1000 + Math.random() * 9000));
+          payload.order_id = orderId;
+          payload.status = payload.payment_method.includes('Online') ? 'Paid' : 'New';
+          payload.created_at = new Date().toLocaleString();
 
           try {
-            let orderData = null;
-            const endpoints = ['api/order', 'api/order.js', 'api/order.php'];
-            for (let ep of endpoints) {
-              try {
-                let res = await fetch(ep, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(payload)
-                });
-                if (res.ok) {
-                  orderData = await res.json();
-                  if (orderData && orderData.success) break;
-                }
-              } catch(err) {}
-            }
+            let curOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
+            curOrders.unshift(payload);
+            localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 100)));
+          } catch(e) {}
 
+          // Show Success View
+          form.classList.add('hidden');
+          const success = document.getElementById('QuickOrderSuccess');
+          const successOrderId = document.getElementById('SuccessOrderId');
+          const successStatus = document.getElementById('SuccessPaymentStatus');
+          const successTrackLink = document.getElementById('SuccessTrackLink');
+
+          if (success) success.classList.remove('hidden');
+          if (successOrderId) successOrderId.textContent = orderId;
+          if (successStatus) {
+            successStatus.textContent = payload.status === 'Paid' ? 'Paid Online (Razorpay UPI ?)' : 'Cash on Delivery (?' + finalPrice + ')';
+            successStatus.className = payload.status === 'Paid' ? 'text-emerald-400 font-bold' : 'text-amber-400 font-bold';
+          }
+          if (successTrackLink) {
+            successTrackLink.href = 'track-order.html?order_id=' + encodeURIComponent(orderId);
+          }
+
+          if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        } catch(err) {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHtml;
+          }
+          alert('Network issue. Order recorded locally.');
+        }
+      };
+
+      // ONLINE RAZORPAY PAYMENT
+      if (selectedMethod === 'Online') {
+        if (typeof Razorpay !== 'undefined') {
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span>? Opening Instant UPI Gateway...</span>';
+          }
+
+          const rzpOptions = {
+            key: 'rzp_live_TV9VNPhiYYbB07',
+            amount: Math.round(finalPrice * 100),
+            currency: 'INR',
+            name: 'BlackRoots Herbal Care',
+            description: orderPayload.bundle + ' (Prepaid Offer - ?50 OFF)',
+            image: './assets/blackroots-logo-circle-black.jpg',
+            prefill: {
+              name: orderPayload.name,
+              contact: orderPayload.phone,
+              email: ''
+            },
+            theme: {
+              color: '#d4af37'
+            },
+            modal: {
+              ondismiss: function() {
+                if (submitBtn) {
+                  submitBtn.disabled = false;
+                  submitBtn.innerHTML = originalBtnHtml;
+                }
+              }
+            },
+            handler: function(response) {
+              orderPayload.payment_id = response.razorpay_payment_id || '';
+              orderPayload.payment_method = 'Online (Razorpay UPI/Cards - ?50 OFF)';
+              orderPayload.status = 'Paid';
+              processOrderExecution(orderPayload);
+            }
+          };
+
+          const rzpInstance = new Razorpay(rzpOptions);
+          rzpInstance.on('payment.failed', function(resp) {
+            alert('Payment Failed: ' + (resp.error ? resp.error.description : 'Transaction cancelled'));
             if (submitBtn) {
               submitBtn.disabled = false;
-              submitBtn.innerHTML = originalBtnText;
+              submitBtn.innerHTML = originalBtnHtml;
             }
-
-            const orderId = (orderData && orderData.order_id) ? orderData.order_id : ('#BR-' + Math.floor(1000 + Math.random() * 9000));
-            payload.order_id = orderId;
-            payload.status = payload.payment_method.includes('Online') ? 'Paid' : 'New';
-            payload.created_at = new Date().toLocaleString();
-
-            try {
-              let curOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
-              curOrders.unshift(payload);
-              localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 100)));
-
-              if (payload.coupon) {
-                let db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
-                let inf = db.find(u => u.code && u.code.toUpperCase() === payload.coupon.toUpperCase());
-                if (inf) {
-                  let commRate = inf.comm_rate || 10;
-                  let commAmt = Math.round(payload.price * (commRate / 100));
-                  inf.total_orders = (Number(inf.total_orders) || 0) + 1;
-                  inf.total_sales = (Number(inf.total_sales) || 0) + Number(payload.price);
-                  if (payload.payment_method && (payload.payment_method.includes('Online') || payload.status === 'Paid')) {
-                    inf.total_earned = (Number(inf.total_earned) || 0) + commAmt;
-                    inf.unpaid_balance = (Number(inf.unpaid_balance) || 0) + commAmt;
-                  }
-                  payload.influencer = inf.name;
-                  localStorage.setItem('br_influencers_db', JSON.stringify(db));
-                }
-              }
-            } catch(e) {}
-
-            form.classList.add('hidden');
-            const success = document.getElementById('QuickOrderSuccess');
-            if (success) {
-              success.classList.remove('hidden');
-              const idDisplay = success.querySelector('strong');
-              if (idDisplay) idDisplay.textContent = orderId;
-            }
-
-            if (window.trackD2CEvent) {
-              window.trackD2CEvent('Purchase', {
-                value: payload.price,
-                currency: 'INR',
-                order_id: orderId,
-                payment_type: payload.payment_method,
-                items: [{ item_name: 'BlackRoots Herbal Hair Dye Shampoo', price: payload.price, quantity: 1 }]
-              });
-            }
-
-            if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
-          } catch(err) {
-            if (submitBtn) {
-              submitBtn.disabled = false;
-              submitBtn.innerHTML = originalBtnText;
-            }
-          }
-        };
-
-        if (selectedMethod === 'Online') {
-          if (typeof Razorpay !== 'undefined') {
-            if (submitBtn) {
-              submitBtn.disabled = true;
-              submitBtn.innerHTML = '<span>⚡ Opening Instant UPI Gateway...</span>';
-            }
-
-            const rzpOptions = {
-              key: 'rzp_live_TV9VNPhiYYbB07',
-              amount: Math.round(finalPrice * 100),
-              currency: 'INR',
-              name: 'BlackRoots Herbal Care',
-              description: orderPayload.bundle + ' (Prepaid Offer - ₹50 OFF)',
-              image: './assets/blackroots-logo-circle-black.jpg',
-              prefill: {
-                name: orderPayload.name,
-                contact: orderPayload.phone,
-                email: ''
-              },
-              theme: {
-                color: '#d4af37'
-              },
-              modal: {
-                ondismiss: function() {
-                  if (submitBtn) {
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = originalBtnText;
-                  }
-                }
-              },
-              handler: function(response) {
-                orderPayload.payment_id = response.razorpay_payment_id || '';
-                orderPayload.payment_method = 'Online (Prepaid UPI/Cards - ₹50 OFF)';
-                orderPayload.status = 'Paid';
-                processOrderExecution(orderPayload);
-              }
-            };
-
-            const rzpInstance = new Razorpay(rzpOptions);
-            rzpInstance.on('payment.failed', function(resp) {
-              alert('Payment Failed: ' + (resp.error ? resp.error.description : 'Transaction cancelled'));
-              if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnText;
-              }
-            });
-            rzpInstance.open();
-          } else {
-            processOrderExecution(orderPayload);
-          }
+          });
+          rzpInstance.open();
         } else {
           processOrderExecution(orderPayload);
         }
-      };
-    }
+      } else {
+        // CASH ON DELIVERY (COD)
+        processOrderExecution(orderPayload);
+      }
+    };
   }
 
-    if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-      initOrderForm();
-      window.recalculateCheckoutPrice();
-    });
+  // Master Global Invoker Trigger
+  window.triggerShiprocketCheckout = function(e, customPack) {
+    if (e && e.preventDefault) e.preventDefault();
+    if (e && e.stopPropagation) e.stopPropagation();
+    let price = customPack ? (customPack.price || 499) : 499;
+    let title = customPack ? (customPack.title || '1 Bottle (250ml)') : '1 Bottle (250ml)';
+    let qty = customPack ? (customPack.qty || (price >= 700 ? 2 : 1)) : 1;
+    window.openQuickOrderModal(price, title, qty);
+  };
+
+  // Close modal on escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      window.closeQuickOrderModal();
+    }
+  });
+
+  // Close modal when clicking backdrop
+  document.addEventListener('click', function(e) {
+    const modal = document.getElementById('QuickOrderModal');
+    if (modal && e.target === modal) {
+      window.closeQuickOrderModal();
+    }
+  });
+
+  // Global delegator for any .js-trigger-order button
+  document.addEventListener('click', function(e) {
+    const target = e.target.closest('.js-trigger-order');
+    if (target) {
+      e.preventDefault();
+      window.openQuickOrderModal();
+    }
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initOrderForm);
   } else {
     initOrderForm();
-    window.recalculateCheckoutPrice();
   }
 })();
 
-
-
-/* ==========================================================================
-   🌿 INGREDIENTS PAGE INTERACTIVE FILTER & DETAIL MODAL ENGINE
-   ========================================================================== */
 function initIngredientFilters() {
   const filterBtns = document.querySelectorAll('.js-ingredient-filter');
   const cards = document.querySelectorAll('.js-ingredient-card');
