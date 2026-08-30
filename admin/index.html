@@ -51,11 +51,6 @@
       -webkit-text-fill-color: transparent;
     }
   </style>
-  <!-- 🚀 Shiprocket Fastrr 1-Click Smart Checkout SDK -->
-  <!-- 🚀 Official Shiprocket Fastrr 1-Click Checkout Engine -->
-  <link rel="stylesheet" href="https://checkout-ui.shiprocket.com/assets/styles/shopify.css">
-  <script src="https://checkout-ui.shiprocket.com/assets/js/channels/shopify.js"></script>
-  
 <!-- 🌟 Official Shiprocket Fastrr 1-Click Checkout Ultra-Luxury Smooth Styling -->
 <style id="FastrrLuxuryOverrides">
   #fastrr-main-container,
@@ -630,6 +625,40 @@
           </table>
         </div>
 
+        <!-- Creator Payout Requests Table -->
+        <div class="p-6 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <div>
+              <h3 class="font-serif text-lg font-bold text-white">Creator Withdrawal &amp; Payout Requests</h3>
+              <p class="text-xs text-gray-400">Review creator UPI withdrawal requests, enter bank/UPI transaction UTR, and mark as Paid.</p>
+            </div>
+            <button type="button" onclick="loadInfluencers()" class="self-start sm:self-auto px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-gray-300 hover:text-white flex items-center gap-1 cursor-pointer">
+              <span>↻ Refresh Requests</span>
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-gray-300 min-w-[750px]">
+              <thead class="text-[10px] uppercase tracking-wider text-gray-400 border-b border-white/10 pb-2">
+                <tr>
+                  <th class="py-3 px-3">Date</th>
+                  <th class="py-3 px-3">Creator Name &amp; Code</th>
+                  <th class="py-3 px-3">Requested Amount</th>
+                  <th class="py-3 px-3">UPI ID</th>
+                  <th class="py-3 px-3">Status</th>
+                  <th class="py-3 px-3">UTR / Reference</th>
+                  <th class="py-3 px-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="all-payout-requests-table" class="divide-y divide-white/5 font-light">
+                <tr>
+                  <td colspan="7" class="py-8 text-center text-gray-500">No withdrawal requests submitted yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </section>
 
       <!-- TAB 5: ABANDONED CHECKOUT LEADS -->
@@ -778,6 +807,114 @@
     </div>
   </div>
 
+  <!-- MODAL: EDIT INFLUENCER -->
+  <div id="EditInfluencerModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-lg p-6 sm:p-8 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-2xl space-y-6 text-left my-auto">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="font-serif text-xl font-bold text-white">Edit Creator Profile</h3>
+        <button type="button" onclick="closeEditInfluencerModal()" class="text-gray-400 hover:text-white text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="EditInfluencerForm" onsubmit="handleSaveEditInfluencer(event)" class="space-y-4">
+        <input type="hidden" id="edit-inf-id">
+        <div>
+          <label class="block text-xs font-bold text-gray-300 mb-1">Creator Full Name *</label>
+          <input type="text" id="edit-inf-name" required class="w-full px-4 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-300 mb-1">Portal User ID *</label>
+            <input type="text" id="edit-inf-username" required class="w-full px-4 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-amber-300 uppercase font-mono font-bold focus:outline-none focus:border-[#d4af37]">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-300 mb-1">Assigned Password *</label>
+            <input type="text" id="edit-inf-pass" required class="w-full px-4 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white font-mono focus:outline-none focus:border-[#d4af37]">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-gray-300 mb-1">WhatsApp Phone *</label>
+            <input type="tel" id="edit-inf-phone" required class="w-full px-4 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-300 mb-1">Instagram Handle</label>
+            <input type="text" id="edit-inf-handle" class="w-full px-4 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-300 mb-1">Promo Code *</label>
+            <input type="text" id="edit-inf-code" required class="w-full px-3 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-amber-300 uppercase font-mono font-black focus:outline-none focus:border-[#d4af37]">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-300 mb-1">Commission %</label>
+            <input type="number" id="edit-inf-comm" required min="1" max="50" class="w-full px-3 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-300 mb-1">Unpaid Bal (₹)</label>
+            <input type="number" id="edit-inf-balance" required min="0" class="w-full px-3 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-amber-400 font-mono font-bold focus:outline-none focus:border-[#d4af37]">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-300 mb-1">UPI ID for Payouts</label>
+          <input type="text" id="edit-inf-upi" placeholder="e.g. name@okaxis" class="w-full px-4 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white font-mono focus:outline-none focus:border-[#d4af37]">
+        </div>
+
+        <div class="pt-3 flex items-center justify-end gap-3">
+          <button type="button" onclick="closeEditInfluencerModal()" class="px-4 py-2 rounded-xl bg-white/5 text-gray-400 text-xs font-bold hover:text-white">Cancel</button>
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-[#d4af37] text-black font-black text-xs hover:brightness-110 shadow-lg cursor-pointer">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: PROCESS PAYOUT -->
+  <div id="ProcessPayoutModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="w-full max-w-md p-6 sm:p-8 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-2xl space-y-6 text-left my-auto">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="font-serif text-xl font-bold text-white">Approve &amp; Settle Creator Payout</h3>
+        <button type="button" onclick="closeProcessPayoutModal()" class="text-gray-400 hover:text-white text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="ProcessPayoutForm" onsubmit="handleConfirmPayout(event)" class="space-y-4">
+        <input type="hidden" id="payout-modal-id">
+        <div class="p-4 rounded-2xl bg-black/50 border border-white/10 space-y-2">
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-400">Creator:</span>
+            <span id="payout-modal-creator" class="text-white font-bold"></span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-400">Promo Code:</span>
+            <span id="payout-modal-code" class="text-amber-300 font-mono font-bold"></span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-gray-400">Transfer UPI ID:</span>
+            <span id="payout-modal-upi" class="text-cyan-300 font-mono font-bold"></span>
+          </div>
+          <div class="flex justify-between text-sm border-t border-white/10 pt-2 font-bold">
+            <span class="text-gray-300">Amount Payable:</span>
+            <span id="payout-modal-amt" class="text-emerald-400 font-mono text-base"></span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-300 mb-1">Bank / UPI Transfer UTR Reference *</label>
+          <input type="text" id="payout-modal-utr" required placeholder="e.g. UPI/629104819201" class="w-full px-4 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white font-mono focus:outline-none focus:border-[#d4af37]">
+          <p class="text-[10px] text-gray-500 mt-1">This reference number will be visible to the creator on their VIP Portal.</p>
+        </div>
+
+        <div class="pt-3 flex items-center justify-end gap-3">
+          <button type="button" onclick="closeProcessPayoutModal()" class="px-4 py-2 rounded-xl bg-white/5 text-gray-400 text-xs font-bold hover:text-white">Cancel</button>
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-emerald-500 text-black font-black text-xs hover:brightness-110 shadow-lg cursor-pointer">✓ Mark as Paid &amp; Settle</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- JAVASCRIPT LOGIC -->
   <script>
     const DEFAULT_INFLUENCERS_ADMIN = [
@@ -911,7 +1048,7 @@
     // 4. API Communication
     async function apiFetch(action, options = {}) {
       try {
-        let res = await fetch('api/admin?action=' + action, options);
+        let res = await fetch('/api/admin?action=' + action, options);
         if (res.ok) return await res.json();
       } catch(e) {}
       return null;
@@ -1161,7 +1298,7 @@
         }
 
         try {
-          fetch('api/admin?action=update_order', {
+          fetch('/api/admin?action=update_order', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ order_id: orderId, status: newStatus })
@@ -1171,7 +1308,7 @@
       loadOrders();
     }
 
-    // 8. Influencers Hub
+    // 8. Influencers & Payouts Hub
     function getInfluencersAdminDb() {
       try {
         let initialized = localStorage.getItem('br_influencers_initialized');
@@ -1195,10 +1332,20 @@
 
     async function loadInfluencers() {
       let res = await apiFetch('get_influencers');
+      let payRes = await apiFetch('get_payouts');
+
       let db = (res && res.influencers && res.influencers.length > 0) ? res.influencers : getInfluencersAdminDb();
       if (res && res.influencers && res.influencers.length > 0) {
         saveInfluencersAdminDb(db);
       }
+
+      let payouts = (payRes && payRes.payouts && Array.isArray(payRes.payouts)) ? payRes.payouts : [];
+      if (payouts.length > 0) {
+        try { localStorage.setItem('br_influencer_payouts', JSON.stringify(payouts)); } catch(e) {}
+      } else {
+        try { payouts = JSON.parse(localStorage.getItem('br_influencer_payouts') || '[]'); } catch(e) {}
+      }
+
       let totalInfOrders = db.reduce((sum, u) => sum + (Number(u.total_orders) || 0), 0);
       let totalInfSales = db.reduce((sum, u) => sum + (Number(u.total_sales) || 0), 0);
       let totalPendingPayout = db.reduce((sum, u) => sum + (Number(u.unpaid_balance) || 0), 0);
@@ -1209,6 +1356,7 @@
       document.getElementById('metric-inf-pending-payout').textContent = '₹' + totalPendingPayout.toLocaleString();
 
       renderInfluencersTable(db);
+      renderPayoutRequestsTable(payouts);
     }
 
     function renderInfluencersTable(influencers) {
@@ -1256,8 +1404,48 @@
             </span>
           </td>
           <td class="py-3 px-3 text-right space-x-1 whitespace-nowrap">
+            <button onclick="openEditInfluencerModal('${u.id}')" class="px-2 py-1 rounded bg-amber-500/10 hover:bg-amber-500/20 text-[10px] text-amber-300 font-bold cursor-pointer">Edit</button>
             <button onclick="toggleInfStatus('${u.id}')" class="px-2 py-1 rounded bg-white/5 hover:bg-white/10 text-[10px] text-gray-300 font-bold cursor-pointer">Toggle</button>
             <button onclick="deleteInfluencer('${u.id}')" class="px-2 py-1 rounded bg-red-500/10 hover:bg-red-500/20 text-[10px] text-red-400 font-bold cursor-pointer">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function renderPayoutRequestsTable(payouts) {
+      const tbody = document.getElementById('all-payout-requests-table');
+      if (!tbody) return;
+
+      if (!payouts || !payouts.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="py-8 text-center text-gray-500">No withdrawal requests submitted yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = payouts.map(p => `
+        <tr class="hover:bg-white/5 transition-colors">
+          <td class="py-3 px-3 text-gray-400 text-[11px] font-mono">${p.date || 'Recent'}</td>
+          <td class="py-3 px-3">
+            <div class="font-bold text-white">${p.name || 'Creator'}</div>
+            <div class="text-[10px] text-amber-300 font-mono">${p.code || ''}</div>
+          </td>
+          <td class="py-3 px-3 font-bold text-emerald-400 font-mono text-sm">₹${p.amount}</td>
+          <td class="py-3 px-3 font-mono text-cyan-300 font-bold text-xs">${p.upi_id || ''}</td>
+          <td class="py-3 px-3">
+            <span class="px-2.5 py-0.5 rounded-full text-[9px] font-bold ${p.status === 'Paid' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'}">
+              ${p.status === 'Paid' ? '✓ Paid to UPI' : '⏳ Pending Approval'}
+            </span>
+          </td>
+          <td class="py-3 px-3 font-mono text-[11px] text-gray-400">
+            ${p.utr && p.utr !== 'Pending Admin Transfer' ? `<span class="text-white">${p.utr}</span>` : '<span class="text-gray-500">Pending Transfer</span>'}
+          </td>
+          <td class="py-3 px-3 text-right">
+            ${p.status !== 'Paid' ? `
+              <button onclick="openProcessPayoutModal('${p.id}')" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:brightness-110 text-black font-black text-[10px] uppercase tracking-wider shadow-md cursor-pointer">
+                ✓ Approve &amp; Pay
+              </button>
+            ` : `
+              <span class="text-[10px] text-emerald-400 font-bold">Settled</span>
+            `}
           </td>
         </tr>
       `).join('');
@@ -1271,6 +1459,125 @@
     function closeAddInfluencerModal() {
       document.getElementById('AddInfluencerModal').classList.add('hidden');
       document.getElementById('AddInfluencerModal').classList.remove('flex');
+    }
+
+    function openEditInfluencerModal(id) {
+      const db = getInfluencersAdminDb();
+      const inf = db.find(u => u.id === id || u.code === id);
+      if (!inf) return;
+
+      document.getElementById('edit-inf-id').value = inf.id;
+      document.getElementById('edit-inf-name').value = inf.name;
+      document.getElementById('edit-inf-username').value = inf.username || inf.code;
+      document.getElementById('edit-inf-pass').value = inf.password || '';
+      document.getElementById('edit-inf-phone').value = inf.phone || '';
+      document.getElementById('edit-inf-handle').value = inf.handle || '';
+      document.getElementById('edit-inf-code').value = inf.code || '';
+      document.getElementById('edit-inf-comm').value = inf.comm_rate || 10;
+      document.getElementById('edit-inf-balance').value = Number(inf.unpaid_balance) || 0;
+      document.getElementById('edit-inf-upi').value = inf.upi_id || '';
+
+      document.getElementById('EditInfluencerModal').classList.remove('hidden');
+      document.getElementById('EditInfluencerModal').classList.add('flex');
+    }
+
+    function closeEditInfluencerModal() {
+      document.getElementById('EditInfluencerModal').classList.add('hidden');
+      document.getElementById('EditInfluencerModal').classList.remove('flex');
+    }
+
+    function handleSaveEditInfluencer(e) {
+      e.preventDefault();
+      const id = document.getElementById('edit-inf-id').value;
+      const db = getInfluencersAdminDb();
+      const idx = db.findIndex(u => u.id === id);
+      if (idx === -1) return;
+
+      db[idx].name = document.getElementById('edit-inf-name').value.trim();
+      db[idx].username = document.getElementById('edit-inf-username').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+      db[idx].password = document.getElementById('edit-inf-pass').value.trim();
+      db[idx].phone = document.getElementById('edit-inf-phone').value.trim();
+      db[idx].handle = document.getElementById('edit-inf-handle').value.trim();
+      db[idx].code = document.getElementById('edit-inf-code').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+      db[idx].comm_rate = Number(document.getElementById('edit-inf-comm').value) || 10;
+      db[idx].unpaid_balance = Number(document.getElementById('edit-inf-balance').value) || 0;
+      db[idx].upi_id = document.getElementById('edit-inf-upi').value.trim();
+
+      saveInfluencersAdminDb(db);
+
+      try {
+        fetch('/api/admin?action=save_influencer', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(db[idx])
+        }).catch(function() {});
+      } catch(err) {}
+
+      closeEditInfluencerModal();
+      loadInfluencers();
+      alert('Creator profile updated successfully!');
+    }
+
+    function openProcessPayoutModal(payoutId) {
+      let payouts = [];
+      try { payouts = JSON.parse(localStorage.getItem('br_influencer_payouts') || '[]'); } catch(e) {}
+      const p = payouts.find(item => item.id === payoutId);
+      if (!p) return;
+
+      document.getElementById('payout-modal-id').value = p.id;
+      document.getElementById('payout-modal-creator').textContent = p.name;
+      document.getElementById('payout-modal-code').textContent = p.code;
+      document.getElementById('payout-modal-upi').textContent = p.upi_id;
+      document.getElementById('payout-modal-amt').textContent = '₹' + p.amount;
+      document.getElementById('payout-modal-utr').value = '';
+
+      document.getElementById('ProcessPayoutModal').classList.remove('hidden');
+      document.getElementById('ProcessPayoutModal').classList.add('flex');
+    }
+
+    function closeProcessPayoutModal() {
+      document.getElementById('ProcessPayoutModal').classList.add('hidden');
+      document.getElementById('ProcessPayoutModal').classList.remove('flex');
+    }
+
+    function handleConfirmPayout(e) {
+      e.preventDefault();
+      const payoutId = document.getElementById('payout-modal-id').value;
+      const utr = document.getElementById('payout-modal-utr').value.trim();
+
+      if (!utr) {
+        alert('Please enter the Bank / UPI Transfer UTR Reference.');
+        return;
+      }
+
+      let payouts = [];
+      try { payouts = JSON.parse(localStorage.getItem('br_influencer_payouts') || '[]'); } catch(e) {}
+      const p = payouts.find(item => item.id === payoutId);
+      if (p) {
+        p.status = 'Paid';
+        p.utr = utr;
+        localStorage.setItem('br_influencer_payouts', JSON.stringify(payouts));
+
+        // Deduct from influencer balance
+        let db = getInfluencersAdminDb();
+        let inf = db.find(u => u.id === p.influencer_id || u.code === p.code);
+        if (inf) {
+          inf.unpaid_balance = Math.max(0, (Number(inf.unpaid_balance) || 0) - p.amount);
+          saveInfluencersAdminDb(db);
+        }
+
+        try {
+          fetch('/api/admin?action=update_payout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: payoutId, status: 'Paid', utr: utr })
+          }).catch(function() {});
+        } catch(err) {}
+      }
+
+      closeProcessPayoutModal();
+      loadInfluencers();
+      alert(`Payout of ₹${p ? p.amount : ''} marked as Paid with UTR: ${utr}`);
     }
 
     function handleSaveNewInfluencer(e) {
@@ -1312,7 +1619,7 @@
       saveInfluencersAdminDb(db);
       
       try {
-        fetch('api/admin?action=save_influencer', {
+        fetch('/api/admin?action=save_influencer', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newCreator)
@@ -1331,7 +1638,7 @@
         inf.status = inf.status === 'Active' ? 'Suspended' : 'Active';
         saveInfluencersAdminDb(db);
         try {
-          fetch('api/admin?action=save_influencer', {
+          fetch('/api/admin?action=save_influencer', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(inf)
@@ -1347,7 +1654,7 @@
       db = db.filter(u => u.id !== id && u.code !== id);
       saveInfluencersAdminDb(db);
       try {
-        fetch('api/admin?action=delete_influencer', {
+        fetch('/api/admin?action=delete_influencer', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id: id })
@@ -1411,7 +1718,7 @@
       localStorage.setItem('br_analytics_config', JSON.stringify(config));
       
       try {
-        fetch('api/admin?action=save_settings', {
+        fetch('/api/admin?action=save_settings', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(config)
@@ -1478,6 +1785,5 @@
       showDashboardApp();
     }
   </script>
-  <input type="hidden" value="blackroots.in" id="sellerDomain"/>
 </body>
 </html>

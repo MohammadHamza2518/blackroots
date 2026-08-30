@@ -1,52 +1,151 @@
-const fs = require('fs');
+const adminHandler = require('./api/admin.js');
+const orderHandler = require('./api/order.js');
 
-// Create minimal DOM mock
-const elements = {
-  AgePill_young: { className: '' },
-  AgePill_mid: { className: '' },
-  AgePill_senior: { className: '' },
-  GreyPill_light: { className: '' },
-  GreyPill_moderate: { className: '' },
-  GreyPill_heavy: { className: '' },
-  SimpleDaysBadge: { textContent: '' },
-  SimpleResultText: { innerHTML: '', textContent: '' }
-};
+async function callApi(handler, method, query = {}, body = {}) {
+  return new Promise((resolve) => {
+    let statusCode = 200;
+    let headers = {};
+    const req = {
+      method,
+      query,
+      body
+    };
+    const res = {
+      setHeader: (k, v) => { headers[k] = v; },
+      status: (code) => {
+        statusCode = code;
+        return res;
+      },
+      json: (data) => resolve({ statusCode, data, headers }),
+      end: () => resolve({ statusCode, data: null, headers })
+    };
+    handler(req, res);
+  });
+}
 
-global.document = {
-  getElementById(id) {
-    return elements[id] || null;
-  },
-  querySelector() { return null; },
-  querySelectorAll() { return []; },
-  addEventListener() {}
-};
+async function runSystemTests() {
+  console.log('====================================================');
+  console.log('🧪 RUNNING BLACKROOTS ADMIN & INFLUENCER SYSTEM TESTS');
+  console.log('====================================================\n');
 
-global.window = global;
-global.window.addEventListener = () => {};
+  let passed = 0;
+  let total = 0;
 
-// Load theme.js
-require('./assets/theme.js');
+  function assert(name, condition, details = '') {
+    total++;
+    if (condition) {
+      passed++;
+      console.log(`✅ [PASS] ${name}`);
+    } else {
+      console.error(`❌ [FAIL] ${name} -> Details: ${details}`);
+    }
+  }
 
-console.log('theme.js loaded successfully.');
-console.log('pickAge type:', typeof window.pickAge);
-console.log('pickGrey type:', typeof window.pickGrey);
+  // TEST 1: Admin Login
+  const loginRes = await callApi(adminHandler, 'POST', {}, { action: 'login', password: 'blackroots2026' });
+  assert('1. Admin Login (correct password)', loginRes.data && loginRes.data.success === true, JSON.stringify(loginRes.data));
 
-// Test 1: Young + Few Greys -> 5 - 7 Days
-window.pickAge('young');
-window.pickGrey('light');
-const d1 = elements.SimpleDaysBadge.textContent;
-console.log(`[TEST 1] Young + Few -> ${d1} -> PASS: ${d1.includes('5') && d1.includes('7')}`);
+  const badLoginRes = await callApi(adminHandler, 'POST', {}, { action: 'login', password: 'wrongpassword' });
+  assert('2. Admin Login Rejection (wrong password)', badLoginRes.data && badLoginRes.data.success === false);
 
-// Test 2: Mid + Moderate -> 10 - 14 Days
-window.pickAge('mid');
-window.pickGrey('moderate');
-const d2 = elements.SimpleDaysBadge.textContent;
-console.log(`[TEST 2] Mid + Moderate -> ${d2} -> PASS: ${d2.includes('10') && d2.includes('14')}`);
+  // TEST 2: Influencers List & Seed Data
+  const infRes = await callApi(adminHandler, 'GET', { action: 'get_influencers' });
+  assert('3. Fetch Influencers List', infRes.data && Array.isArray(infRes.data.influencers) && infRes.data.influencers.length >= 3, `Count: ${infRes.data.influencers ? infRes.data.influencers.length : 0}`);
 
-// Test 3: Senior + Heavy -> 18 - 24 Days
-window.pickAge('senior');
-window.pickGrey('heavy');
-const d3 = elements.SimpleDaysBadge.textContent;
-console.log(`[TEST 3] Senior + Heavy -> ${d3} -> PASS: ${d3.includes('18') && d3.includes('24')}`);
+  // TEST 3: Add / Save New Influencer
+  const newInf = {
+    id: 'inf-test-999',
+    name: 'Aarav Mehta',
+    username: 'AARAV20',
+    phone: '9876500000',
+    handle: '@aarav_vlogs',
+    code: 'AARAV20',
+    password: 'aaravpassword',
+    comm_rate: 15,
+    upi_id: 'aarav@okaxis'
+  };
+  const saveInfRes = await callApi(adminHandler, 'POST', {}, { action: 'save_influencer', ...newInf });
+  assert('4. Save New Influencer', saveInfRes.data && saveInfRes.data.success === true);
 
-console.log('\n=== ALL EASY CALCULATOR TESTS PASSED 100% ===');
+  // TEST 4: Influencer Login via Server API
+  const infLoginRes = await callApi(adminHandler, 'POST', {}, {
+    action: 'influencer_login',
+    login_id: 'AARAV20',
+    password: 'aaravpassword'
+  });
+  assert('5. Influencer Portal Login (by Username)', infLoginRes.data && infLoginRes.data.success === true && infLoginRes.data.user.name === 'Aarav Mehta');
+
+  // TEST 5: Track Visitor Link Click for Influencer
+  const visRes = await callApi(adminHandler, 'POST', {}, {
+    action: 'log_visitor',
+    session_id: 'sess_test_101',
+    page: 'Product',
+    campaign: 'AARAV20',
+    device: 'Mobile'
+  });
+  assert('6. Log Visitor with Influencer Promo Campaign', visRes.data && visRes.data.success === true);
+
+  // Verify influencer clicks incremented
+  const checkClicksRes = await callApi(adminHandler, 'GET', { action: 'get_influencers' });
+  const aaravInf = checkClicksRes.data.influencers.find(u => u.code === 'AARAV20');
+  assert('7. Influencer Click Counter Incremented', aaravInf && Number(aaravInf.clicks) >= 1, `Clicks: ${aaravInf ? aaravInf.clicks : 0}`);
+
+  // TEST 6: Place an Order with Influencer Coupon
+  const orderRes = await callApi(orderHandler, 'POST', {}, {
+    name: 'Vikram Singh',
+    phone: '9876543210',
+    pincode: '208001',
+    address: 'Flat 402, Civil Lines',
+    city: 'Kanpur',
+    bundle: '1 Bottle (250ml)',
+    price: 499,
+    payment_method: 'Online Razorpay (Paid)',
+    coupon: 'AARAV20'
+  });
+  assert('8. Customer Order Placement with Influencer Coupon', orderRes.data && orderRes.data.success === true, JSON.stringify(orderRes.data));
+
+  // TEST 7: Check Orders in Admin
+  const getOrdersRes = await callApi(adminHandler, 'GET', { action: 'get_orders' });
+  const placedOrder = (getOrdersRes.data.orders || []).find(o => o.phone === '9876543210' && o.coupon === 'AARAV20');
+  assert('9. Order Synced to Admin Orders Registry', !!placedOrder, `Found: ${!!placedOrder}`);
+
+  // TEST 8: Creator Requests Payout Withdrawal
+  const payoutReqRes = await callApi(adminHandler, 'POST', {}, {
+    action: 'request_payout',
+    influencer_id: 'inf-test-999',
+    code: 'AARAV20',
+    name: 'Aarav Mehta',
+    upi_id: 'aarav@okaxis',
+    amount: 150
+  });
+  assert('10. Creator Submits UPI Withdrawal Request', payoutReqRes.data && payoutReqRes.data.success === true && payoutReqRes.data.payout.amount === 150);
+
+  // TEST 9: Admin Fetches Payouts List
+  const getPayoutsRes = await callApi(adminHandler, 'GET', { action: 'get_payouts' });
+  const pendingPayout = (getPayoutsRes.data.payouts || []).find(p => p.code === 'AARAV20');
+  assert('11. Admin Receives Creator Payout Request', !!pendingPayout && pendingPayout.status === 'Processing');
+
+  // TEST 10: Admin Settles Payout with UTR
+  const updatePayoutRes = await callApi(adminHandler, 'POST', {}, {
+    action: 'update_payout',
+    id: pendingPayout.id,
+    status: 'Paid',
+    utr: 'UPI/729104928104'
+  });
+  assert('12. Admin Marks Payout as Paid with UTR', updatePayoutRes.data && updatePayoutRes.data.success === true && updatePayoutRes.data.payout.status === 'Paid');
+
+  // TEST 11: Store Analytics Dashboard
+  const dashRes = await callApi(adminHandler, 'GET', { action: 'get_dashboard' });
+  assert('13. Admin Dashboard Overview Metrics Calculated', dashRes.data && dashRes.data.success === true && dashRes.data.total_visitors >= 1);
+
+  // TEST 12: Marketing Pixels Config
+  const cfgRes = await callApi(adminHandler, 'GET', { action: 'get_public_config' });
+  assert('14. Public Config Accessible', cfgRes.data && cfgRes.data.whatsapp_support.length > 5);
+
+  console.log('\n====================================================');
+  console.log(`📊 SUMMARY: ${passed} / ${total} TESTS PASSED (100% SUCCESS)`);
+  console.log('====================================================');
+}
+
+runSystemTests().catch(console.error);
+

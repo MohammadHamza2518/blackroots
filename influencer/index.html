@@ -68,11 +68,6 @@
       transform: scale(0.98);
     }
   </style>
-  <!-- 🚀 Shiprocket Fastrr 1-Click Smart Checkout SDK -->
-  <!-- 🚀 Official Shiprocket Fastrr 1-Click Checkout Engine -->
-  <link rel="stylesheet" href="https://checkout-ui.shiprocket.com/assets/styles/shopify.css">
-  <script src="https://checkout-ui.shiprocket.com/assets/js/channels/shopify.js"></script>
-  
 <!-- 🌟 Official Shiprocket Fastrr 1-Click Checkout Ultra-Luxury Smooth Styling -->
 <style id="FastrrLuxuryOverrides">
   #fastrr-main-container,
@@ -778,9 +773,10 @@
 
     async function syncInfluencersFromServer() {
       try {
-        const [res, ordRes] = await Promise.all([
-          fetch('api/admin?action=get_influencers'),
-          fetch('api/admin?action=get_orders')
+        const [res, ordRes, payRes] = await Promise.all([
+          fetch('/api/admin?action=get_influencers'),
+          fetch('/api/admin?action=get_orders'),
+          fetch('/api/admin?action=get_payouts' + (currentInfluencer ? '&influencer_id=' + currentInfluencer.id : ''))
         ]);
         
         if (res.ok) {
@@ -803,6 +799,13 @@
           }
         }
 
+        if (payRes.ok) {
+          const payData = await payRes.json();
+          if (payData && payData.payouts && Array.isArray(payData.payouts)) {
+            localStorage.setItem('br_influencer_payouts', JSON.stringify(payData.payouts));
+          }
+        }
+
         if (currentInfluencer) {
           renderDashboard();
         }
@@ -810,31 +813,56 @@
     }
 
     // 2. Auth Flow (Login)
-    function handleInfluencerLogin(e) {
+    async function handleInfluencerLogin(e) {
       e.preventDefault();
       const rawInput = document.getElementById('inf-login-id').value.trim();
       const loginId = rawInput.toUpperCase();
       const pass = document.getElementById('inf-login-pass').value.trim();
       const errorMsg = document.getElementById('login-error-msg');
 
-      const db = getInfluencersDb();
-      const user = db.find(u => {
-        const uName = (u.username || '').toUpperCase();
-        const uCode = (u.code || '').toUpperCase();
-        const uPhone = (u.phone || '').replace(/[^0-9]/g, '');
-        const uHandle = (u.handle || '').toUpperCase().replace('@', '');
-        const cleanLogin = loginId.replace('@', '');
-        const cleanPhone = rawInput.replace(/[^0-9]/g, '');
+      let user = null;
 
-        return (
-          uName === loginId ||
-          uCode === loginId ||
-          (cleanPhone.length >= 10 && uPhone.includes(cleanPhone)) ||
-          (cleanLogin.length > 2 && uHandle === cleanLogin)
-        );
-      });
+      // 1. Try server API login
+      try {
+        const res = await fetch('/api/admin?action=influencer_login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ login_id: rawInput, password: pass })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.success && data.user) {
+            user = data.user;
+            if (data.orders) localStorage.setItem('br_local_orders', JSON.stringify(data.orders));
+            if (data.payouts) localStorage.setItem('br_influencer_payouts', JSON.stringify(data.payouts));
+          }
+        }
+      } catch(err) {}
 
-      if (user && user.password && user.password.trim() === pass) {
+      // 2. Fallback to local DB if offline
+      if (!user) {
+        const db = getInfluencersDb();
+        user = db.find(u => {
+          const uName = (u.username || '').toUpperCase();
+          const uCode = (u.code || '').toUpperCase();
+          const uPhone = (u.phone || '').replace(/[^0-9]/g, '');
+          const uHandle = (u.handle || '').toUpperCase().replace('@', '');
+          const cleanLogin = loginId.replace('@', '');
+          const cleanPhone = rawInput.replace(/[^0-9]/g, '');
+
+          return (
+            uName === loginId ||
+            uCode === loginId ||
+            (cleanPhone.length >= 10 && uPhone.includes(cleanPhone)) ||
+            (cleanLogin.length > 2 && uHandle === cleanLogin)
+          );
+        });
+        if (user && user.password && user.password.trim() !== pass) {
+          user = null;
+        }
+      }
+
+      if (user) {
         currentInfluencer = user;
         sessionStorage.setItem('br_active_inf_id', user.id);
         errorMsg.classList.add('hidden');
@@ -1107,6 +1135,15 @@
         localStorage.setItem('br_influencers_db', JSON.stringify(db));
       }
 
+      // Push to Serverless Backend
+      try {
+        fetch('/api/admin?action=request_payout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newReq)
+        }).catch(function() {});
+      } catch(err) {}
+
       showToast('✓ Withdrawal request of ₹' + amt + ' submitted! Admin will transfer to ' + upi + ' via UPI.');
       document.getElementById('wallet-amount-input').value = '';
       renderInfluencerPayouts();
@@ -1144,6 +1181,5 @@
       syncInfluencersFromServer();
     })();
   </script>
-  <input type="hidden" value="blackroots.in" id="sellerDomain"/>
 </body>
 </html>

@@ -332,14 +332,22 @@ module.exports = async (req, res) => {
   if (action === 'save_influencer') {
     if (!memoryStore.influencers) memoryStore.influencers = [];
     const inf = req.body || {};
-    const existingIdx = memoryStore.influencers.findIndex(u => u.id === inf.id || u.code === inf.code);
+    const existingIdx = memoryStore.influencers.findIndex(u => u.id === inf.id || (u.code && inf.code && u.code.toUpperCase() === inf.code.toUpperCase()));
     if (existingIdx !== -1) {
       memoryStore.influencers[existingIdx] = Object.assign(memoryStore.influencers[existingIdx], inf);
     } else {
+      if (!inf.id) inf.id = 'inf-' + Date.now();
+      if (!inf.created_at) inf.created_at = new Date().toISOString().slice(0, 10);
+      if (inf.clicks === undefined) inf.clicks = 0;
+      if (inf.total_orders === undefined) inf.total_orders = 0;
+      if (inf.total_sales === undefined) inf.total_sales = 0;
+      if (inf.total_earned === undefined) inf.total_earned = 0;
+      if (inf.unpaid_balance === undefined) inf.unpaid_balance = 0;
+      if (!inf.status) inf.status = 'Active';
       memoryStore.influencers.push(inf);
     }
     saveDb();
-    return res.status(200).json({ success: true, message: 'Influencer saved!' });
+    return res.status(200).json({ success: true, message: 'Influencer saved!', influencer: inf });
   }
   if (action === 'delete_influencer') {
     if (!memoryStore.influencers) memoryStore.influencers = [];
@@ -347,6 +355,141 @@ module.exports = async (req, res) => {
     memoryStore.influencers = memoryStore.influencers.filter(u => u.id !== infId && u.code !== infId);
     saveDb();
     return res.status(200).json({ success: true, message: 'Influencer deleted!' });
+  }
+
+  // 11. Influencer Auth Login
+  if (action === 'influencer_login') {
+    const body = req.body || {};
+    const loginId = (body.login_id || body.username || body.code || '').trim().toUpperCase();
+    const pass = (body.password || '').trim();
+    const cleanPhone = loginId.replace(/[^0-9]/g, '');
+    const cleanHandle = loginId.replace('@', '');
+
+    const infList = memoryStore.influencers || [];
+    const user = infList.find(u => {
+      const uName = (u.username || '').toUpperCase();
+      const uCode = (u.code || '').toUpperCase();
+      const uPhone = (u.phone || '').replace(/[^0-9]/g, '');
+      const uHandle = (u.handle || '').toUpperCase().replace('@', '');
+
+      return (
+        uName === loginId ||
+        uCode === loginId ||
+        (cleanPhone.length >= 10 && uPhone.includes(cleanPhone)) ||
+        (cleanHandle.length > 2 && uHandle === cleanHandle)
+      );
+    });
+
+    if (user && user.password && user.password.trim() === pass) {
+      // Find orders referred by this user
+      const matchedOrders = (memoryStore.orders || []).filter(o => 
+        (o.coupon && o.coupon.toUpperCase() === user.code.toUpperCase()) ||
+        (o.influencer && o.influencer.toUpperCase() === user.code.toUpperCase())
+      );
+      const userPayouts = (memoryStore.payouts || []).filter(p => p.influencer_id === user.id || p.code === user.code);
+
+      return res.status(200).json({
+        success: true,
+        message: 'Login successful',
+        user: user,
+        orders: matchedOrders,
+        payouts: userPayouts
+      });
+    }
+
+    return res.status(200).json({ success: false, error: 'Invalid User ID or Password' });
+  }
+
+  // 12. Creator Payouts System
+  if (action === 'request_payout') {
+    const body = req.body || {};
+    const infId = body.influencer_id;
+    const code = body.code;
+    const name = body.name || 'Creator';
+    const upiId = (body.upi_id || '').trim();
+    const amount = Number(body.amount) || 0;
+
+    if (!upiId || !upiId.includes('@')) {
+      return res.status(200).json({ success: false, error: 'Valid UPI ID required' });
+    }
+    if (amount < 100) {
+      return res.status(200).json({ success: false, error: 'Minimum withdrawal is ₹100' });
+    }
+
+    if (!memoryStore.payouts) memoryStore.payouts = [];
+    const inf = (memoryStore.influencers || []).find(u => u.id === infId || u.code === code);
+    if (inf) {
+      inf.upi_id = upiId;
+    }
+
+    const payoutEntry = {
+      id: 'pay-' + Date.now(),
+      influencer_id: infId || (inf ? inf.id : ''),
+      code: code || (inf ? inf.code : ''),
+      name: name,
+      upi_id: upiId,
+      amount: amount,
+      status: 'Processing',
+      date: new Date().toISOString().slice(0, 10),
+      utr: 'Pending Admin Transfer'
+    };
+
+    memoryStore.payouts.unshift(payoutEntry);
+    saveDb();
+
+    return res.status(200).json({ success: true, message: 'Payout request submitted successfully!', payout: payoutEntry });
+  }
+
+  if (action === 'get_payouts') {
+    const infId = req.query.influencer_id || (req.body && req.body.influencer_id);
+    const code = req.query.code || (req.body && req.body.code);
+    let list = memoryStore.payouts || [];
+
+    if (infId || code) {
+      list = list.filter(p => (infId && p.influencer_id === infId) || (code && p.code === code));
+    }
+
+    return res.status(200).json({ success: true, payouts: list });
+  }
+
+  if (action === 'update_payout') {
+    const body = req.body || {};
+    const payoutId = body.id || body.payout_id;
+    const newStatus = body.status;
+    const utr = body.utr;
+
+    if (!memoryStore.payouts) memoryStore.payouts = [];
+    const payout = memoryStore.payouts.find(p => p.id === payoutId);
+    if (payout) {
+      const prevStatus = payout.status;
+      if (newStatus) payout.status = newStatus;
+      if (utr) payout.utr = utr;
+
+      // If marked as Paid, deduct from influencer balance
+      if (newStatus === 'Paid' && prevStatus !== 'Paid') {
+        const inf = (memoryStore.influencers || []).find(u => u.id === payout.influencer_id || u.code === payout.code);
+        if (inf) {
+          inf.unpaid_balance = Math.max(0, (Number(inf.unpaid_balance) || 0) - payout.amount);
+        }
+      }
+
+      saveDb();
+      return res.status(200).json({ success: true, message: 'Payout status updated!', payout: payout });
+    }
+    return res.status(200).json({ success: false, error: 'Payout request not found' });
+  }
+
+  // 13. Comprehensive Sync All (Admin & Portal Unified Data)
+  if (action === 'sync_all') {
+    return res.status(200).json({
+      success: true,
+      settings: memoryStore.settings,
+      orders: (memoryStore.orders || []).slice().reverse(),
+      influencers: memoryStore.influencers || [],
+      payouts: memoryStore.payouts || [],
+      abandoned: (memoryStore.abandoned || []).slice().reverse(),
+      visitors: (memoryStore.visitors || []).slice(0, 50)
+    });
   }
 
   return res.status(200).json({ success: true, message: 'BlackRoots API ready' });
