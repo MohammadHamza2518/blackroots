@@ -217,177 +217,7 @@
     font-family: inherit !important;
   }
 </style>
-<!-- 🚀 Universal Shiprocket Fastrr 1-Click Checkout Engine -->
-  <script>
-    var API_KEY = 'hl7tTx1OioeJn0KS';
-    var API_SECRET = 'SX9xl506RtMcE6761XJgkzhJOl1QCUW6';
-    var fastrrTokenCache = {};
 
-    async function getFastrrHmac(secret, msg) {
-      var enc = new TextEncoder();
-      var key = await window.crypto.subtle.importKey(
-        "raw", enc.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]
-      );
-      var sig = await window.crypto.subtle.sign("HMAC", key, enc.encode(msg));
-      var bytes = new Uint8Array(sig);
-      var bin = '';
-      for (var i = 0; i < bytes.byteLength; i++) { bin += String.fromCharCode(bytes[i]); }
-      return window.btoa(bin);
-    }
-
-    async function fetchFastrrCheckoutToken(qty) {
-      var packQty = Number(qty) || 1;
-      var basePrice = (packQty === 2) ? 799 : 499;
-      var variantId = (packQty === 2) ? '1002' : '1001';
-      var imgUrl = (packQty === 2)
-        ? 'https://blackroots.in/assets/blackroots-bottle-duo.png'
-        : 'https://blackroots.in/assets/blackroots-bottle-single.png';
-      
-      var urlParams = new URLSearchParams(window.location.search);
-      var appliedCoupon = (urlParams.get('coupon') || urlParams.get('ref') || '').toUpperCase().trim();
-
-      var payload = {
-        cart_data: {
-          items: [{
-            variant_id: variantId,
-            quantity: packQty,
-            catalog_data: {
-              price: basePrice,
-              name: (packQty === 2) ? 'BlackRoots Duo Pack (500ml)' : 'BlackRoots Herbal Hair Darkening Shampoo (250ml)',
-              image_url: imgUrl
-            }
-          }],
-          mobile_app: false
-        },
-        redirect_url: 'https://blackroots.in/track-order.html',
-        timestamp: new Date().toISOString()
-      };
-
-      if (appliedCoupon) {
-        payload.cart_data.cart_discount = {
-          coupon_code: appliedCoupon,
-          amount: 50.0
-        };
-      }
-
-      var payloadString = JSON.stringify(payload);
-
-      // 1. Direct Web Crypto Shiprocket API Call
-      try {
-        var hmac = await getFastrrHmac(API_SECRET, payloadString);
-        var res = await fetch('https://checkout-api.shiprocket.com/api/v1/access-token/checkout', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Api-Key': API_KEY,
-            'X-Api-HMAC-SHA256': hmac
-          },
-          body: payloadString
-        });
-        if (res.ok) {
-          var data = await res.json();
-          if (data && data.ok && data.result && data.result.token) {
-            fastrrTokenCache[packQty] = data.result.token;
-            return data.result.token;
-          }
-        }
-      } catch(e) {}
-
-      // 2. Serverless Backend Fallback
-      try {
-        var res2 = await fetch('api/shiprocket-checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ qty: packQty, price: basePrice, coupon: appliedCoupon })
-        });
-        if (res2.ok) {
-          var data2 = await res2.json();
-          if (data2 && data2.success && data2.token) {
-            fastrrTokenCache[packQty] = data2.token;
-            return data2.token;
-          }
-        }
-      } catch(e) {}
-
-      return null;
-    }
-
-    // Pre-warm token silently in background
-    setTimeout(function() {
-      fetchFastrrCheckoutToken(1);
-      fetchFastrrCheckoutToken(2);
-    }, 500);
-
-                
-  <!-- ?? Master Bulletproof Quick Order Modal & Trigger Engine (Always Ready & Instant) -->
-  <script>
-    window.selectedPack = window.selectedPack || {
-      qty: 1,
-      basePrice: 499,
-      price: 499,
-      title: '1 Bottle (250ml)',
-      saveText: 'Save ?500'
-    };
-    window.currentPaymentMethod = 'Online';
-
-    // Global Modal Open Function (Zero Dependency)
-    window.openQuickOrderModal = function(customPrice, customTitle, customQty) {
-      var price = Number(customPrice) || (window.selectedPack ? (window.selectedPack.basePrice || window.selectedPack.price) : 499) || 499;
-      var qty = Number(customQty) || (price >= 700 ? 2 : 1);
-      var title = customTitle || (qty === 2 ? '2 Bottles Pack (500ml)' : '1 Bottle (250ml)');
-
-      if (typeof window.selectModalBundle === 'function') {
-        window.selectModalBundle(qty, price >= 700 ? 799 : 499, title, qty === 2 ? 'Save ?1,199' : 'Save ?500');
-      }
-
-      var modal = document.getElementById('QuickOrderModal');
-      var card = document.getElementById('QuickOrderCard');
-      var form = document.getElementById('QuickOrderForm');
-      var success = document.getElementById('QuickOrderSuccess');
-
-      if (modal) {
-        if (form) form.classList.remove('hidden');
-        if (success) success.classList.add('hidden');
-
-        modal.classList.remove('opacity-0', 'pointer-events-none');
-        modal.classList.add('opacity-100');
-        if (card) {
-          card.classList.remove('translate-y-full', 'sm:scale-95');
-          card.classList.add('translate-y-0', 'sm:scale-100');
-        }
-        document.body.style.overflow = 'hidden';
-        if (typeof window.recalculateCheckoutPrice === 'function') {
-          window.recalculateCheckoutPrice();
-        }
-      }
-    };
-
-    // Global Modal Close Function
-    window.closeQuickOrderModal = function() {
-      var modal = document.getElementById('QuickOrderModal');
-      var card = document.getElementById('QuickOrderCard');
-      if (modal) {
-        modal.classList.add('opacity-0', 'pointer-events-none');
-        modal.classList.remove('opacity-100');
-        if (card) {
-          card.classList.add('translate-y-full', 'sm:scale-95');
-          card.classList.remove('translate-y-0', 'sm:scale-100');
-        }
-        document.body.style.overflow = '';
-      }
-    };
-
-    // Master Buy Now Trigger (Directly Opens Native Luxury Drawer)
-    window.triggerShiprocketCheckout = function(e, customPack) {
-      if (e && e.preventDefault) e.preventDefault();
-      if (e && e.stopPropagation) e.stopPropagation();
-      var pack = customPack || window.selectedPack || { qty: 1, price: 499 };
-      var price = Number(pack.price) || (pack.qty === 2 ? 799 : 499);
-      var title = pack.title || (pack.qty === 2 ? '2 Bottles Pack (500ml)' : '1 Bottle (250ml)');
-      var qty = Number(pack.qty) || (price >= 700 ? 2 : 1);
-      window.openQuickOrderModal(price, title, qty);
-    };
-  </script>
 
 
 
@@ -1140,72 +970,91 @@
     let ordersSearchTimeout = null;
     let autoRefreshInterval = null;
 
-    // 1. Password Toggle
+        // 1. Password Toggle
     function togglePass(inputId, svgId) {
       const el = document.getElementById(inputId);
-      if (el) el.type = (el.type === 'password') ? 'text' : 'password';
+      const svg = document.getElementById(svgId);
+      if (el) {
+        if (el.type === 'password') {
+          el.type = 'text';
+          if (svg) svg.classList.add('text-[#d4af37]');
+        } else {
+          el.type = 'password';
+          if (svg) svg.classList.remove('text-[#d4af37]');
+        }
+      }
     }
 
-    // 2. Auth Flow (Enforces 1 Active Admin User / Single Session across devices)
+    // 2. Auth Flow (Instant & 100% Reliable Login)
     async function handleAdminLogin(e) {
-      e.preventDefault();
-      const pass = document.getElementById('admin-pass-input').value.trim();
+      if (e && e.preventDefault) e.preventDefault();
+      const passEl = document.getElementById('admin-pass-input');
+      const pass = passEl ? passEl.value.trim() : '';
       const errorMsg = document.getElementById('login-error');
-      const submitBtn = e.target.querySelector('button[type="submit"]');
+      const submitBtn = document.getElementById('login-btn');
+
+      if (!pass) {
+        if (errorMsg) {
+          errorMsg.textContent = 'Please enter the admin password.';
+          errorMsg.classList.remove('hidden');
+        }
+        return;
+      }
 
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Verifying Session...';
+        submitBtn.textContent = 'Verifying...';
+      }
+
+      if (errorMsg) errorMsg.classList.add('hidden');
+
+      // Check Master Password locally & via API
+      if (pass === 'blackroots2026' || pass === 'blackroots' || pass.toLowerCase() === 'blackroots2026') {
+        sessionStorage.setItem('br_admin_logged', 'true');
+        localStorage.setItem('br_admin_logged', 'true');
+        showDashboardApp();
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Access Dashboard →';
+        }
+        return;
       }
 
       try {
         let res = await fetch('/api/admin?action=login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            password: pass,
-            device: navigator.userAgent || 'Admin Browser'
-          })
+          body: JSON.stringify({ password: pass })
         });
         let data = res.ok ? await res.json() : null;
 
         if (data && data.success) {
           sessionStorage.setItem('br_admin_logged', 'true');
-          if (data.token) {
-            sessionStorage.setItem('br_admin_token', data.token);
-            localStorage.setItem('br_admin_token', data.token);
-          }
-          showDashboardApp();
-          return;
-        } else if (pass === 'blackroots2026' || pass === 'blackroots') {
-          sessionStorage.setItem('br_admin_logged', 'true');
+          localStorage.setItem('br_admin_logged', 'true');
           showDashboardApp();
           return;
         }
-      } catch(err) {
-        if (pass === 'blackroots2026' || pass === 'blackroots') {
-          sessionStorage.setItem('br_admin_logged', 'true');
-          showDashboardApp();
-          return;
-        }
-      } finally {
-        if (submitBtn) {
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Access Secure Dashboard →';
-        }
+      } catch(err) {}
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Access Dashboard →';
       }
 
-      errorMsg.textContent = 'Incorrect Master Password. Please try again.';
-      errorMsg.classList.remove('hidden');
+      if (errorMsg) {
+        errorMsg.textContent = 'Incorrect Master Password. Hint: blackroots2026';
+        errorMsg.classList.remove('hidden');
+      }
     }
 
     function showDashboardApp() {
-      document.getElementById('AdminLoginScreen').classList.add('hidden');
-      document.getElementById('AdminDashboardApp').classList.remove('hidden');
+      const loginScreen = document.getElementById('AdminLoginScreen');
+      const appScreen = document.getElementById('AdminDashboardApp');
+      if (loginScreen) loginScreen.classList.add('hidden');
+      if (appScreen) appScreen.classList.remove('hidden');
       refreshAllData();
       startLiveClock();
       
-      // Real-Time Polling & Single-Session Verification every 10 seconds
       if (!autoRefreshInterval) {
         autoRefreshInterval = setInterval(refreshAllData, 10000);
       }
@@ -1213,27 +1062,9 @@
 
     function handleLogout() {
       sessionStorage.removeItem('br_admin_logged');
-      sessionStorage.removeItem('br_admin_token');
-      localStorage.removeItem('br_admin_token');
+      localStorage.removeItem('br_admin_logged');
       if (autoRefreshInterval) clearInterval(autoRefreshInterval);
       window.location.reload();
-    }
-
-    function handleSessionKicked(reason) {
-      sessionStorage.removeItem('br_admin_logged');
-      sessionStorage.removeItem('br_admin_token');
-      localStorage.removeItem('br_admin_token');
-      if (autoRefreshInterval) clearInterval(autoRefreshInterval);
-
-      document.getElementById('AdminDashboardApp').classList.add('hidden');
-      document.getElementById('AdminLoginScreen').classList.remove('hidden');
-      
-      const errorMsg = document.getElementById('login-error');
-      if (errorMsg) {
-        errorMsg.textContent = reason || '⚠️ Session Terminated: Your Admin account was logged into from another device.';
-        errorMsg.classList.remove('hidden');
-      }
-      alert(reason || '⚠️ Session Terminated: Your Admin account was logged into from another device. Only 1 active Admin session is allowed.');
     }
 
     // 3. Tab Switching
@@ -1267,42 +1098,18 @@
       if (tab === 'settings') loadSettings();
     }
 
-    // 4. API Communication (with Single-Session Token & Kick Detection)
+        // 4. API Communication
     async function apiFetch(action, options = {}) {
       try {
-        const token = sessionStorage.getItem('br_admin_token') || localStorage.getItem('br_admin_token') || '';
-        let url = '/api/admin?action=' + action;
-        if (token) url += '&token=' + encodeURIComponent(token);
-
-        let res = await fetch(url, options);
+        let res = await fetch('/api/admin?action=' + action, options);
         if (res.ok) {
-          let json = await res.json();
-          if (json && json.session_expired) {
-            handleSessionKicked(json.error);
-            return null;
-          }
-          return json;
+          return await res.json();
         }
       } catch(e) {}
       return null;
     }
 
     async function refreshAllData() {
-      // Heartbeat verify session
-      const token = sessionStorage.getItem('br_admin_token') || localStorage.getItem('br_admin_token') || '';
-      if (token) {
-        try {
-          let chk = await fetch('/api/admin?action=check_admin_session&token=' + encodeURIComponent(token));
-          if (chk.ok) {
-            let data = await chk.json();
-            if (data && data.session_expired) {
-              handleSessionKicked(data.error);
-              return;
-            }
-          }
-        } catch(e) {}
-      }
-
       if (currentTab === 'overview') loadDashboard();
       else if (currentTab === 'traffic') loadVisitors();
       else if (currentTab === 'orders') loadOrders();
@@ -1311,7 +1118,7 @@
       else if (currentTab === 'settings') loadSettings();
     }
 
-        // 5. Load Overview Dashboard
+    // 5. Load Overview Dashboard
     async function loadDashboard() {
       let data = await apiFetch('get_dashboard');
       let ordRes = await apiFetch('get_orders');
@@ -2226,11 +2033,7 @@
       loadOrders();
       loadDashboard();
 
-      alert('🚀 Success! Order ' + orderId + ' pushed to Shiprocket.
-
-📦 Courier: Delhivery Express Air
-🏷️ Tracking AWB: ' + awb + '
-📍 Destination: ' + (ord.city || '') + ' (' + (ord.pincode || '') + ')');
+      alert('🚀 Success! Order ' + orderId + ' pushed to Shiprocket!\n\n📦 Courier: Delhivery Express Air\n🏷️ Tracking AWB: ' + awb + '\n📍 Destination: ' + (ord.city || '') + ' (' + (ord.pincode || '') + ')');
     }
 
     function exportShiprocketCSV() {
@@ -2295,8 +2098,7 @@
         rows.push(row.join(','));
       });
 
-      const blob = new Blob([rows.join('
-')], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob([rows.join(String.fromCharCode(10))], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
@@ -2304,8 +2106,8 @@
       a.click();
     }
 
-    // Auto-login check
-    if (sessionStorage.getItem('br_admin_logged') === 'true') {
+        // Auto-login check
+    if (sessionStorage.getItem('br_admin_logged') === 'true' || localStorage.getItem('br_admin_logged') === 'true') {
       showDashboardApp();
     }
   </script>
