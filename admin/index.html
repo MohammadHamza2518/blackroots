@@ -1313,20 +1313,24 @@
       try {
         let initialized = localStorage.getItem('br_influencers_initialized');
         let stored = localStorage.getItem('br_influencers_db');
-        if (!initialized || stored === null) {
+        if (!initialized && stored === null) {
           localStorage.setItem('br_influencers_initialized', 'true');
           localStorage.setItem('br_influencers_db', JSON.stringify(DEFAULT_INFLUENCERS_ADMIN));
           return DEFAULT_INFLUENCERS_ADMIN;
         }
-        return JSON.parse(stored) || [];
+        if (stored !== null) {
+          return JSON.parse(stored) || [];
+        }
+        return [];
       } catch(e) {
-        return DEFAULT_INFLUENCERS_ADMIN;
+        return [];
       }
     }
 
     function saveInfluencersAdminDb(db) {
       try {
-        localStorage.setItem('br_influencers_db', JSON.stringify(db));
+        localStorage.setItem('br_influencers_initialized', 'true');
+        localStorage.setItem('br_influencers_db', JSON.stringify(db || []));
       } catch(e) {}
     }
 
@@ -1334,10 +1338,8 @@
       let res = await apiFetch('get_influencers');
       let payRes = await apiFetch('get_payouts');
 
-      let db = (res && res.influencers && res.influencers.length > 0) ? res.influencers : getInfluencersAdminDb();
-      if (res && res.influencers && res.influencers.length > 0) {
-        saveInfluencersAdminDb(db);
-      }
+      let db = (res && res.influencers && Array.isArray(res.influencers)) ? res.influencers : getInfluencersAdminDb();
+      saveInfluencersAdminDb(db);
 
       let payouts = (payRes && payRes.payouts && Array.isArray(payRes.payouts)) ? payRes.payouts : [];
       if (payouts.length > 0) {
@@ -1580,7 +1582,7 @@
       alert(`Payout of ₹${p ? p.amount : ''} marked as Paid with UTR: ${utr}`);
     }
 
-    function handleSaveNewInfluencer(e) {
+    async function handleSaveNewInfluencer(e) {
       e.preventDefault();
       const name = document.getElementById('inf-name-input').value.trim();
       const username = document.getElementById('inf-username-input').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -1591,7 +1593,7 @@
       const pass = document.getElementById('inf-pass-input').value.trim();
 
       const db = getInfluencersAdminDb();
-      if (db.some(u => u.code === code)) {
+      if (db.some(u => u.code && u.code.toUpperCase() === code)) {
         alert('This promo code is already in use by another creator.');
         return;
       }
@@ -1617,50 +1619,68 @@
 
       db.push(newCreator);
       saveInfluencersAdminDb(db);
+      renderInfluencersTable(db);
       
       try {
-        fetch('/api/admin?action=save_influencer', {
+        await fetch('/api/admin?action=save_influencer', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newCreator)
-        }).catch(function() {});
+        });
       } catch(err) {}
 
       closeAddInfluencerModal();
-      loadInfluencers();
+      document.getElementById('NewInfluencerForm').reset();
+      await loadInfluencers();
       alert(`Influencer "${name}" with Code "${code}" (${comm}%) activated successfully!`);
     }
 
-    function toggleInfStatus(id) {
+    async function toggleInfStatus(id) {
       let db = getInfluencersAdminDb();
-      let inf = db.find(u => u.id === id);
+      let inf = db.find(u => u.id === id || u.code === id);
       if (inf) {
         inf.status = inf.status === 'Active' ? 'Suspended' : 'Active';
         saveInfluencersAdminDb(db);
+        renderInfluencersTable(db);
         try {
-          fetch('/api/admin?action=save_influencer', {
+          await fetch('/api/admin?action=save_influencer', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(inf)
-          }).catch(function() {});
+          });
         } catch(err) {}
-        loadInfluencers();
+        await loadInfluencers();
       }
     }
 
-    function deleteInfluencer(id) {
-      if (!confirm('Are you sure you want to permanently delete this influencer?')) return;
+    async function deleteInfluencer(id) {
+      if (!confirm('Are you sure you want to permanently delete this influencer? This cannot be undone.')) return;
+
+      // 1. Immediately update local state so table updates with zero lag
       let db = getInfluencersAdminDb();
-      db = db.filter(u => u.id !== id && u.code !== id);
+      db = db.filter(u => u.id !== id && u.code !== id && (u.username || '') !== id);
       saveInfluencersAdminDb(db);
+      renderInfluencersTable(db);
+
+      // 2. Call serverless backend to delete permanently from server DB
       try {
-        fetch('/api/admin?action=delete_influencer', {
+        let res = await fetch('/api/admin?action=delete_influencer', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id: id })
-        }).catch(function() {});
-      } catch(err) {}
-      loadInfluencers();
+        });
+        if (res.ok) {
+          let data = await res.json();
+          if (data && data.influencers && Array.isArray(data.influencers)) {
+            saveInfluencersAdminDb(data.influencers);
+          }
+        }
+      } catch(err) {
+        console.error('Delete influencer error:', err);
+      }
+
+      // 3. Re-render with full metrics updated
+      await loadInfluencers();
     }
 
     // 9. Abandoned Leads Tab

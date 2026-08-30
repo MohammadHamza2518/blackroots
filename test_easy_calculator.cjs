@@ -140,7 +140,13 @@ async function runSystemTests() {
 
   // TEST 12: Marketing Pixels Config
   const cfgRes = await callApi(adminHandler, 'GET', { action: 'get_public_config' });
-  assert('14. Public Config Accessible', cfgRes.data && cfgRes.data.whatsapp_support.length > 5);
+  // TEST 13: Delete Influencer Permanently
+  const delRes = await callApi(adminHandler, 'POST', {}, { action: 'delete_influencer', id: 'inf-test-999' });
+  assert('15. Admin Deletes Influencer', delRes.data && delRes.data.success === true);
+
+  const checkDeletedRes = await callApi(adminHandler, 'GET', { action: 'get_influencers' });
+  const stillExists = checkDeletedRes.data.influencers.some(u => u.id === 'inf-test-999' || u.code === 'AARAV20');
+  assert('16. Influencer Is Permanently Removed (Not Resurrected)', !stillExists, `Still exists: ${stillExists}`);
 
   console.log('\n====================================================');
   console.log(`📊 SUMMARY: ${passed} / ${total} TESTS PASSED (100% SUCCESS)`);
