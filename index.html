@@ -322,15 +322,20 @@
   <script src="https://checkout-ui.shiprocket.com/assets/js/channels/shopify.js"></script>
   
 <!-- 🌟 Official Shiprocket Fastrr 1-Click Checkout Ultra-Luxury Smooth Styling -->
+<!-- ?? Official Shiprocket Fastrr 1-Click Checkout Ultra-Luxury Responsive Styling -->
 <style id="FastrrLuxuryOverrides">
+  /* Global Fastrr Modal Base */
   #fastrr-main-container,
   .headless-modal {
     position: fixed !important;
     inset: 0 !important;
     top: 0 !important;
     left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
     width: 100vw !important;
     height: 100vh !important;
+    height: 100dvh !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -338,32 +343,109 @@
     backdrop-filter: blur(12px) !important;
     -webkit-backdrop-filter: blur(12px) !important;
     z-index: 2147483647 !important;
-  }
-
-  .headless-modal-content {
-    margin: auto !important;
-    max-height: 95vh !important;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(212, 175, 55, 0.25) !important;
-    border-radius: 20px !important;
+    margin: 0 !important;
+    padding: 0 !important;
     overflow: hidden !important;
-    background: #0f1117 !important;
   }
 
-  #headless-iframe {
-    width: 100% !important;
-    border-radius: 20px !important;
-    background-color: #0f1117 !important;
+  /* Desktop View: Centered Luxury Card with Gold Accent */
+  @media screen and (min-width: 769px) {
+    .headless-modal-content {
+      position: relative !important;
+      margin: auto !important;
+      width: 100% !important;
+      max-width: 480px !important;
+      height: 92vh !important;
+      max-height: 860px !important;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95), 0 0 0 1px rgba(212, 175, 55, 0.35) !important;
+      border-radius: 24px !important;
+      overflow: hidden !important;
+      background: #0f1117 !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    .headless-modal-body,
+    .headless-modal-body > iframe,
+    #headless-iframe {
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 24px !important;
+      background-color: #0f1117 !important;
+      border: none !important;
+    }
   }
 
+  /* Mobile View: Full Screen Native Sheet (No Top Offset, No Partial Card, No Image Peeking) */
+  @media screen and (max-width: 768px) {
+    #fastrr-main-container,
+    .headless-modal {
+      display: block !important;
+      position: fixed !important;
+      inset: 0 !important;
+      top: 0 !important;
+      left: 0 !important;
+      bottom: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      height: 100dvh !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      background: #0f1117 !important;
+      z-index: 2147483647 !important;
+      overflow: hidden !important;
+    }
+    .headless-modal-content {
+      position: fixed !important;
+      inset: 0 !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      height: 100% !important;
+      height: 100dvh !important;
+      max-height: 100dvh !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border-radius: 0 !important;
+      background: #0f1117 !important;
+      border: none !important;
+      box-shadow: none !important;
+      overflow: hidden !important;
+      z-index: 2147483647 !important;
+    }
+    .headless-modal-body,
+    .headless-modal-body > iframe,
+    #headless-iframe {
+      width: 100% !important;
+      height: 100% !important;
+      height: 100dvh !important;
+      min-height: 100% !important;
+      border: none !important;
+      border-radius: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      background: #0f1117 !important;
+      display: block !important;
+    }
+  }
+
+  /* Preloader & Luxury Aesthetics */
   #fastrr-pre-loader,
   .fastrr-pre-loader,
+  .fastrr-pre-loader-container,
   .animation-loader,
   .animation-container {
-    background-color: rgba(15, 17, 23, 0.95) !important;
+    background-color: #0a0c10 !important;
     backdrop-filter: blur(10px) !important;
-    border-radius: 20px !important;
-    border: 1px solid rgba(212, 175, 55, 0.2) !important;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8) !important;
+    z-index: 2147483647 !important;
+    border: none !important;
+  }
+  .splash__text {
+    color: #f5e4ab !important;
+    font-family: inherit !important;
   }
 </style>
 <!-- 🚀 Universal Shiprocket Fastrr 1-Click Checkout Engine -->
@@ -467,10 +549,27 @@
       fetchFastrrCheckoutToken(2);
     }, 500);
 
-    // Global Hoisted Master Invoker
+        // Global Hoisted Master Invoker with Instant Button Feedback & Native Mobile Screen Lock
     async function triggerShiprocketCheckout(e, customPack) {
       if (e && e.preventDefault) e.preventDefault();
       if (e && e.stopPropagation) e.stopPropagation();
+
+      var btn = (e && e.currentTarget) ? e.currentTarget : (e && e.target ? e.target.closest('button, a') : null);
+      var originalBtnHtml = '';
+      if (btn && !btn.disabled) {
+        originalBtnHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.classList.add('opacity-80');
+        btn.innerHTML = '<span class="inline-flex items-center justify-center gap-2"><svg class="animate-spin h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg><span>OPENING SECURE CHECKOUT...</span></span>';
+      }
+
+      function restoreBtn() {
+        if (btn && originalBtnHtml) {
+          btn.disabled = false;
+          btn.classList.remove('opacity-80');
+          btn.innerHTML = originalBtnHtml;
+        }
+      }
 
       var pack = customPack || window.selectedPack || { qty: 1 };
       var qty = Number(pack.qty) || (pack.price >= 700 ? 2 : 1);
@@ -480,17 +579,29 @@
         token = await fetchFastrrCheckoutToken(qty);
       }
 
+      // Lock body scroll so mobile background stays pristine
+      document.body.style.overflow = 'hidden';
+
+      // Attach observer to unlock scroll when modal closes
+      var observer = new MutationObserver(function(mutations, obs) {
+        var modal = document.querySelector('.headless-modal, #fastrr-main-container');
+        if (!modal || modal.style.display === 'none' || modal.classList.contains('hidden')) {
+          document.body.style.overflow = '';
+          restoreBtn();
+          obs.disconnect();
+        }
+      });
+      observer.observe(document.body, { childList: true, subtree: true, attributes: true });
+
       if (token && typeof HeadlessCheckout !== 'undefined' && HeadlessCheckout.addToCart) {
-        HeadlessCheckout.addToCart(e, token, {
+        HeadlessCheckout.addToCart(null, token, {
           fallbackUrl: "https://blackroots.in/product.html"
         });
       } else if (token && typeof window.FastrrCheckout !== 'undefined' && window.FastrrCheckout.open) {
         window.FastrrCheckout.open({ token: token });
       }
-    }
 
-    function openQuickOrderModal(price, title) {
-      triggerShiprocketCheckout(window.event, price ? { price: price, title: title, qty: (price >= 700 ? 2 : 1) } : null);
+      setTimeout(restoreBtn, 2500);
     }
 
     window.triggerShiprocketCheckout = triggerShiprocketCheckout;
