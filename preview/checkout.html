@@ -1202,8 +1202,8 @@
       }
     }
 
-            function sendCodOtp() {
-      // Generate 4-digit verification code
+                function sendCodOtp() {
+      // Generate 4-digit OTP
       generatedOtpCode = Math.floor(1000 + Math.random() * 9000).toString();
 
       // Clear Inputs
@@ -1211,44 +1211,53 @@
         var inp = document.getElementById('OtpDigit' + i);
         if (inp) inp.value = '';
       }
+      document.getElementById('OtpDigit1')?.focus();
 
       // Update On-Screen Hint
       var hintCode = document.getElementById('OtpHintCode');
       if (hintCode) hintCode.textContent = generatedOtpCode;
 
-      // Update 1-Click WhatsApp Verification Link
+      // Update WhatsApp Link
       var waBtn = document.getElementById('OtpWhatsAppDirectBtn');
       if (waBtn && pendingCodPayload) {
-        var waMsg = 'Namaste BlackRoots Herbal Care! Please confirm my COD Order.
-
-' +
-                    '📦 Product: ' + pendingCodPayload.bundle + '
-' +
-                    '💰 Total Amount: ₹' + pendingCodPayload.price + ' (COD)
-' +
-                    '👤 Name: ' + pendingCodPayload.name + '
-' +
-                    '📞 Phone: +91 ' + pendingCodPayload.phone + '
-' +
-                    '📍 Address: ' + pendingCodPayload.address + ', ' + pendingCodPayload.city + ', ' + pendingCodPayload.state + ' - ' + pendingCodPayload.pincode + '
-' +
-                    '🔐 Verification Code: ' + generatedOtpCode;
-
+        var waMsg = 'Namaste BlackRoots! My COD Order verification OTP is: ' + generatedOtpCode + ' for +91 ' + pendingCodPayload.phone;
         waBtn.href = 'https://wa.me/919580835179?text=' + encodeURIComponent(waMsg);
       }
 
-      console.log('💬 [WhatsApp Anti-RTO Shield] Generated Verification Code for +91 ' + pendingCodPayload.phone + ' is: ' + generatedOtpCode);
-    }
+      // Start 30s Countdown
+      var timerBox = document.getElementById('OtpTimerBox');
+      var resendBox = document.getElementById('OtpResendBox');
+      var countdownEl = document.getElementById('OtpCountdown');
+      var seconds = 30;
 
-    function handleWhatsAppOrderConfirm() {
-      // Allow 1.5 seconds for WhatsApp window to trigger, then automatically finalize order
-      setTimeout(function() {
-        if (pendingCodPayload && pendingFinalizeCallback) {
-          closeCodOtpModal();
-          pendingCodPayload.verification_method = 'WhatsApp 1-Click Verified (Anti-RTO)';
-          pendingFinalizeCallback(pendingCodPayload);
+      if (timerBox) timerBox.classList.remove('hidden');
+      if (resendBox) resendBox.classList.add('hidden');
+      if (countdownEl) countdownEl.textContent = seconds;
+
+      if (otpTimerInterval) clearInterval(otpTimerInterval);
+      otpTimerInterval = setInterval(function() {
+        seconds--;
+        if (countdownEl) countdownEl.textContent = seconds;
+        if (seconds <= 0) {
+          clearInterval(otpTimerInterval);
+          if (timerBox) timerBox.classList.add('hidden');
+          if (resendBox) resendBox.classList.remove('hidden');
         }
-      }, 1200);
+      }, 1000);
+
+      // Trigger 2Factor Instant Voice Call OTP + Serverless dispatch
+      try {
+        var voiceUrl = 'https://2factor.in/API/V1/6c1da199-a4bf-11f1-9cb1-0200cd936042/VOICE/' + pendingCodPayload.phone + '/' + generatedOtpCode;
+        fetch(voiceUrl).catch(function() {});
+
+        fetch('api/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: pendingCodPayload.phone, otp: generatedOtpCode })
+        }).catch(function() {});
+      } catch(e) {}
+
+      console.log('📞 [Voice Call OTP Triggered] +91 ' + pendingCodPayload.phone + ' with code: ' + generatedOtpCode);
     }
 
     function setupOtpInputHandlers() {
