@@ -1219,7 +1219,7 @@
 
       // Dispatch Live SMS via 2Factor.in & Backend API
       try {
-        var smsUrl = 'https://2factor.in/API/V1/6c1da199-a4bf-11f1-9cb1-0200cd936042/SMS/' + pendingCodPayload.phone + '/' + generatedOtpCode;
+        var smsUrl = 'https://2factor.in/API/V1/6c1da199-a4bf-11f1-9cb1-0200cd936042/SMS/' + pendingCodPayload.phone + '/' + generatedOtpCode + '/OTP1';
         fetch(smsUrl).catch(function() {});
         
         fetch('api/send-otp', {

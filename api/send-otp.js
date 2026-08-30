@@ -1,4 +1,4 @@
-// Vercel Serverless Function & Node.js API: Send Real SMS OTP to Indian Mobile via 2Factor & Fast2SMS
+// Vercel Serverless Function & Node.js API: Send Real SMS OTP to Indian Mobile via 2Factor Pure SMS
 const https = require('https');
 
 const TWOFACTOR_API_KEY = process.env.TWOFACTOR_API_KEY || '6c1da199-a4bf-11f1-9cb1-0200cd936042';
@@ -21,14 +21,14 @@ module.exports = async (req, res) => {
       return res.status(400).json({ success: false, message: 'Valid 10-digit phone and OTP required' });
     }
 
-    // Dispatch via 2Factor.in Live Telecom SMS Gateway
-    const url = `https://2factor.in/API/V1/${TWOFACTOR_API_KEY}/SMS/${cleanPhone}/${otp}`;
+    // Dispatch via 2Factor.in Pure Text SMS Template (OTP1)
+    const url = `https://2factor.in/API/V1/${TWOFACTOR_API_KEY}/SMS/${cleanPhone}/${otp}/OTP1`;
 
     https.get(url, (smsRes) => {
       let data = '';
       smsRes.on('data', chunk => data += chunk);
       smsRes.on('end', () => {
-        return res.status(200).json({ success: true, provider: '2Factor', response: data, phone: cleanPhone, otp: otp });
+        return res.status(200).json({ success: true, provider: '2Factor_Pure_SMS', response: data, phone: cleanPhone, otp: otp });
       });
     }).on('error', (err) => {
       return res.status(200).json({ success: true, simulated: true, error: err.message, otp: otp });
