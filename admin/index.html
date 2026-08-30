@@ -1308,18 +1308,38 @@
       loadOrders();
     }
 
-    // 8. Influencers & Payouts Hub
+    // 8. Influencers & Payouts Hub (with Permanent Deletion Blacklist)
+    function getDeletedInfluencerIds() {
+      try {
+        return JSON.parse(localStorage.getItem('br_deleted_influencers') || '[]');
+      } catch(e) {
+        return [];
+      }
+    }
+
+    function isInfluencerDeleted(inf, deletedList) {
+      if (!inf) return true;
+      const list = (deletedList || getDeletedInfluencerIds()).map(d => String(d).toLowerCase());
+      const id = String(inf.id || '').toLowerCase();
+      const code = String(inf.code || '').toLowerCase();
+      const username = String(inf.username || '').toLowerCase();
+      return list.includes(id) || list.includes(code) || list.includes(username);
+    }
+
     function getInfluencersAdminDb() {
+      const deletedList = getDeletedInfluencerIds();
       try {
         let initialized = localStorage.getItem('br_influencers_initialized');
         let stored = localStorage.getItem('br_influencers_db');
         if (!initialized && stored === null) {
           localStorage.setItem('br_influencers_initialized', 'true');
-          localStorage.setItem('br_influencers_db', JSON.stringify(DEFAULT_INFLUENCERS_ADMIN));
-          return DEFAULT_INFLUENCERS_ADMIN;
+          const cleanDefault = DEFAULT_INFLUENCERS_ADMIN.filter(u => !isInfluencerDeleted(u, deletedList));
+          localStorage.setItem('br_influencers_db', JSON.stringify(cleanDefault));
+          return cleanDefault;
         }
         if (stored !== null) {
-          return JSON.parse(stored) || [];
+          let list = JSON.parse(stored) || [];
+          return list.filter(u => !isInfluencerDeleted(u, deletedList));
         }
         return [];
       } catch(e) {
@@ -1329,16 +1349,28 @@
 
     function saveInfluencersAdminDb(db) {
       try {
+        const deletedList = getDeletedInfluencerIds();
+        const cleanDb = (db || []).filter(u => !isInfluencerDeleted(u, deletedList));
         localStorage.setItem('br_influencers_initialized', 'true');
-        localStorage.setItem('br_influencers_db', JSON.stringify(db || []));
+        localStorage.setItem('br_influencers_db', JSON.stringify(cleanDb));
       } catch(e) {}
     }
 
     async function loadInfluencers() {
+      const deletedList = getDeletedInfluencerIds();
       let res = await apiFetch('get_influencers');
       let payRes = await apiFetch('get_payouts');
 
-      let db = (res && res.influencers && Array.isArray(res.influencers)) ? res.influencers : getInfluencersAdminDb();
+      // Merge server's deleted list if available
+      if (res && res.deleted_influencers && Array.isArray(res.deleted_influencers)) {
+        const merged = [...new Set([...deletedList, ...res.deleted_influencers.map(s => String(s).toLowerCase())])];
+        localStorage.setItem('br_deleted_influencers', JSON.stringify(merged));
+      }
+
+      const activeDeleted = getDeletedInfluencerIds();
+
+      let rawDb = (res && res.influencers && Array.isArray(res.influencers)) ? res.influencers : getInfluencersAdminDb();
+      let db = rawDb.filter(u => !isInfluencerDeleted(u, activeDeleted));
       saveInfluencersAdminDb(db);
 
       let payouts = (payRes && payRes.payouts && Array.isArray(payRes.payouts)) ? payRes.payouts : [];
@@ -1598,6 +1630,11 @@
         return;
       }
 
+      // If this code or username was previously in deleted blacklist, remove it!
+      let deletedList = getDeletedInfluencerIds();
+      deletedList = deletedList.filter(d => d !== username.toLowerCase() && d !== code.toLowerCase());
+      localStorage.setItem('br_deleted_influencers', JSON.stringify(deletedList));
+
       const newCreator = {
         id: 'inf-' + Date.now(),
         name: name,
@@ -1656,30 +1693,44 @@
     async function deleteInfluencer(id) {
       if (!confirm('Are you sure you want to permanently delete this influencer? This cannot be undone.')) return;
 
-      // 1. Immediately update local state so table updates with zero lag
       let db = getInfluencersAdminDb();
-      db = db.filter(u => u.id !== id && u.code !== id && (u.username || '') !== id);
+      const target = db.find(u => u.id === id || u.code === id || u.username === id);
+      
+      // 1. Immediately record in permanent deleted blacklist
+      let deletedList = getDeletedInfluencerIds();
+      if (target) {
+        if (target.id) deletedList.push(String(target.id).toLowerCase());
+        if (target.code) deletedList.push(String(target.code).toLowerCase());
+        if (target.username) deletedList.push(String(target.username).toLowerCase());
+      }
+      deletedList.push(String(id).toLowerCase());
+      deletedList = [...new Set(deletedList)];
+      localStorage.setItem('br_deleted_influencers', JSON.stringify(deletedList));
+
+      // 2. Immediately filter local state & storage and re-render table in 0ms
+      db = db.filter(u => !isInfluencerDeleted(u, deletedList));
       saveInfluencersAdminDb(db);
       renderInfluencersTable(db);
 
-      // 2. Call serverless backend to delete permanently from server DB
+      // 3. Call serverless backend to delete permanently
       try {
         let res = await fetch('/api/admin?action=delete_influencer', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: id })
+          body: JSON.stringify({ id: id, deleted_list: deletedList })
         });
         if (res.ok) {
           let data = await res.json();
-          if (data && data.influencers && Array.isArray(data.influencers)) {
-            saveInfluencersAdminDb(data.influencers);
+          if (data && data.deleted_influencers && Array.isArray(data.deleted_influencers)) {
+            const merged = [...new Set([...deletedList, ...data.deleted_influencers.map(s => String(s).toLowerCase())])];
+            localStorage.setItem('br_deleted_influencers', JSON.stringify(merged));
           }
         }
       } catch(err) {
         console.error('Delete influencer error:', err);
       }
 
-      // 3. Re-render with full metrics updated
+      // 4. Re-render with full metrics updated
       await loadInfluencers();
     }
 

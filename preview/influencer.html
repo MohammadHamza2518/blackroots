@@ -756,22 +756,43 @@
     let currentInfluencer = null;
     let liveInfPollingInterval = null;
 
+    function getDeletedInfluencerIds() {
+      try {
+        return JSON.parse(localStorage.getItem('br_deleted_influencers') || '[]');
+      } catch(e) {
+        return [];
+      }
+    }
+
+    function isInfluencerDeleted(inf, deletedList) {
+      if (!inf) return true;
+      const list = (deletedList || getDeletedInfluencerIds()).map(d => String(d).toLowerCase());
+      const id = String(inf.id || '').toLowerCase();
+      const code = String(inf.code || '').toLowerCase();
+      const username = String(inf.username || '').toLowerCase();
+      return list.includes(id) || list.includes(code) || list.includes(username);
+    }
+
     function getInfluencersDb() {
+      const deletedList = getDeletedInfluencerIds();
       try {
         let initialized = localStorage.getItem('br_influencers_initialized');
         let stored = localStorage.getItem('br_influencers_db');
         if (!initialized || stored === null) {
           localStorage.setItem('br_influencers_initialized', 'true');
-          localStorage.setItem('br_influencers_db', JSON.stringify(DEFAULT_INFLUENCERS));
-          return DEFAULT_INFLUENCERS;
+          const cleanDefault = DEFAULT_INFLUENCERS.filter(u => !isInfluencerDeleted(u, deletedList));
+          localStorage.setItem('br_influencers_db', JSON.stringify(cleanDefault));
+          return cleanDefault;
         }
-        return JSON.parse(stored) || [];
+        let list = JSON.parse(stored) || [];
+        return list.filter(u => !isInfluencerDeleted(u, deletedList));
       } catch (e) {
-        return DEFAULT_INFLUENCERS;
+        return DEFAULT_INFLUENCERS.filter(u => !isInfluencerDeleted(u, deletedList));
       }
     }
 
     async function syncInfluencersFromServer() {
+      const deletedList = getDeletedInfluencerIds();
       try {
         const [res, ordRes, payRes] = await Promise.all([
           fetch('/api/admin?action=get_influencers'),
@@ -781,10 +802,24 @@
         
         if (res.ok) {
           const data = await res.json();
-          if (data && data.influencers && Array.isArray(data.influencers) && data.influencers.length > 0) {
-            localStorage.setItem('br_influencers_db', JSON.stringify(data.influencers));
+          if (data && data.deleted_influencers && Array.isArray(data.deleted_influencers)) {
+            const merged = [...new Set([...deletedList, ...data.deleted_influencers.map(s => String(s).toLowerCase())])];
+            localStorage.setItem('br_deleted_influencers', JSON.stringify(merged));
+          }
+
+          const activeDeleted = getDeletedInfluencerIds();
+
+          if (data && data.influencers && Array.isArray(data.influencers)) {
+            const cleanList = data.influencers.filter(u => !isInfluencerDeleted(u, activeDeleted));
+            localStorage.setItem('br_influencers_db', JSON.stringify(cleanList));
             if (currentInfluencer) {
-              const refreshed = data.influencers.find(u => u.id === currentInfluencer.id || u.code === currentInfluencer.code || (u.username && u.username.toUpperCase() === currentInfluencer.username.toUpperCase()));
+              if (isInfluencerDeleted(currentInfluencer, activeDeleted)) {
+                // If currently logged-in account was deleted by admin, logout immediately
+                sessionStorage.removeItem('br_active_inf_id');
+                window.location.reload();
+                return;
+              }
+              const refreshed = cleanList.find(u => u.id === currentInfluencer.id || u.code === currentInfluencer.code || (u.username && u.username.toUpperCase() === currentInfluencer.username.toUpperCase()));
               if (refreshed) {
                 currentInfluencer = refreshed;
               }

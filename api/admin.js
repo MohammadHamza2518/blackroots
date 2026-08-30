@@ -73,7 +73,9 @@ let memoryStore = {
       status: 'Active',
       created_at: '2026-08-10'
     }
-  ]
+  ],
+  deleted_influencers: [],
+  payouts: []
 };
 
 // Persist in /tmp for Vercel serverless functions
@@ -85,6 +87,17 @@ function loadDb() {
       memoryStore = Object.assign(memoryStore, data);
     }
   } catch (e) {}
+
+  // Always enforce deleted influencers filter
+  if (memoryStore.deleted_influencers && Array.isArray(memoryStore.deleted_influencers) && memoryStore.influencers) {
+    const delSet = new Set(memoryStore.deleted_influencers.map(s => String(s).toLowerCase()));
+    memoryStore.influencers = memoryStore.influencers.filter(u => {
+      const uId = String(u.id || '').toLowerCase();
+      const uCode = String(u.code || '').toLowerCase();
+      const uUser = String(u.username || '').toLowerCase();
+      return !delSet.has(uId) && !delSet.has(uCode) && !delSet.has(uUser);
+    });
+  }
 }
 function saveDb() {
   try {
@@ -327,11 +340,26 @@ module.exports = async (req, res) => {
 
   // 10. Influencers API
   if (action === 'get_influencers') {
-    return res.status(200).json({ success: true, influencers: memoryStore.influencers || [] });
+    return res.status(200).json({ success: true, influencers: memoryStore.influencers || [], deleted_influencers: memoryStore.deleted_influencers || [] });
   }
   if (action === 'save_influencer') {
     if (!memoryStore.influencers) memoryStore.influencers = [];
-    const inf = req.body || {};
+    if (!memoryStore.deleted_influencers) memoryStore.deleted_influencers = [];
+    let body = req.body || {};
+    if (typeof body === 'string') {
+      try { body = JSON.parse(body); } catch(e) { body = {}; }
+    }
+    const inf = body;
+    
+    // Un-blacklist if creator is explicitly saved/re-added
+    const infId = String(inf.id || '').toLowerCase();
+    const infCode = String(inf.code || '').toLowerCase();
+    const infUser = String(inf.username || '').toLowerCase();
+    memoryStore.deleted_influencers = memoryStore.deleted_influencers.filter(d => {
+      const del = String(d).toLowerCase();
+      return del !== infId && del !== infCode && del !== infUser;
+    });
+
     const existingIdx = memoryStore.influencers.findIndex(u => u.id === inf.id || (u.code && inf.code && u.code.toUpperCase() === inf.code.toUpperCase()));
     if (existingIdx !== -1) {
       memoryStore.influencers[existingIdx] = Object.assign(memoryStore.influencers[existingIdx], inf);
@@ -354,18 +382,34 @@ module.exports = async (req, res) => {
     if (typeof body === 'string') {
       try { body = JSON.parse(body); } catch(e) { body = {}; }
     }
-    const infId = String((body && (body.id || body.code || body.username)) || req.query.id || req.query.code || req.query.username || '').trim().toLowerCase();
+    if (!memoryStore.deleted_influencers) memoryStore.deleted_influencers = [];
+    if (!memoryStore.influencers) memoryStore.influencers = [];
 
-    if (infId && memoryStore.influencers) {
-      memoryStore.influencers = memoryStore.influencers.filter(u => {
-        const uId = String(u.id || '').toLowerCase();
-        const uCode = String(u.code || '').toLowerCase();
-        const uUser = String(u.username || '').toLowerCase();
-        return uId !== infId && uCode !== infId && uUser !== infId;
-      });
-      saveDb();
-    }
-    return res.status(200).json({ success: true, message: 'Influencer permanently deleted!', influencers: memoryStore.influencers || [] });
+    const infId = String((body && (body.id || body.code || body.username)) || req.query.id || req.query.code || req.query.username || '').trim().toLowerCase();
+    const extraDeleted = Array.isArray(body.deleted_list) ? body.deleted_list : [];
+
+    if (infId) memoryStore.deleted_influencers.push(infId);
+    extraDeleted.forEach(d => {
+      if (d) memoryStore.deleted_influencers.push(String(d).toLowerCase());
+    });
+    memoryStore.deleted_influencers = [...new Set(memoryStore.deleted_influencers)];
+
+    const delSet = new Set(memoryStore.deleted_influencers.map(s => String(s).toLowerCase()));
+
+    memoryStore.influencers = memoryStore.influencers.filter(u => {
+      const uId = String(u.id || '').toLowerCase();
+      const uCode = String(u.code || '').toLowerCase();
+      const uUser = String(u.username || '').toLowerCase();
+      return !delSet.has(uId) && !delSet.has(uCode) && !delSet.has(uUser);
+    });
+
+    saveDb();
+    return res.status(200).json({
+      success: true,
+      message: 'Influencer permanently deleted!',
+      deleted_influencers: memoryStore.deleted_influencers,
+      influencers: memoryStore.influencers
+    });
   }
 
   // 11. Influencer Auth Login

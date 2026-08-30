@@ -61,13 +61,23 @@ const defaultInfluencers = [
 
 const tmpFile = path.join('/tmp', 'blackroots_db.json');
 function getDb() {
-  let db = { orders: [], abandoned: [], settings: {}, influencers: defaultInfluencers, visitors: [], unique_sessions: {} };
+  let db = { orders: [], abandoned: [], settings: {}, influencers: defaultInfluencers, deleted_influencers: [], visitors: [], unique_sessions: {} };
   try {
     if (fs.existsSync(tmpFile)) {
       const parsed = JSON.parse(fs.readFileSync(tmpFile, 'utf8'));
       db = Object.assign(db, parsed);
     }
   } catch (e) {}
+
+  if (db.deleted_influencers && Array.isArray(db.deleted_influencers) && db.influencers) {
+    const delSet = new Set(db.deleted_influencers.map(s => String(s).toLowerCase()));
+    db.influencers = db.influencers.filter(u => {
+      const uId = String(u.id || '').toLowerCase();
+      const uCode = String(u.code || '').toLowerCase();
+      const uUser = String(u.username || '').toLowerCase();
+      return !delSet.has(uId) && !delSet.has(uCode) && !delSet.has(uUser);
+    });
+  }
   return db;
 }
 function saveDb(db) {
