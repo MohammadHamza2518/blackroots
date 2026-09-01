@@ -967,7 +967,8 @@
 
     function getDeletedInfluencerIds() {
       try {
-        return JSON.parse(localStorage.getItem('br_deleted_influencers') || '[]');
+        const raw = JSON.parse(localStorage.getItem('br_deleted_influencers') || '[]');
+        return (Array.isArray(raw) ? raw : []).filter(d => typeof d === 'string' && d.trim().length > 0).map(d => d.trim().toLowerCase());
       } catch(e) {
         return [];
       }
@@ -975,38 +976,39 @@
 
     function isInfluencerDeleted(inf, deletedList) {
       if (!inf) return true;
-      const list = (deletedList || getDeletedInfluencerIds()).map(d => String(d).toLowerCase());
-      const id = String(inf.id || '').toLowerCase();
-      const code = String(inf.code || '').toLowerCase();
-      const username = String(inf.username || '').toLowerCase();
-      return list.includes(id) || list.includes(code) || list.includes(username);
+      const list = (deletedList || getDeletedInfluencerIds());
+      if (!list || !list.length) return false;
+      const id = String(inf.id || '').trim().toLowerCase();
+      const code = String(inf.code || '').trim().toLowerCase();
+      const username = String(inf.username || '').trim().toLowerCase();
+      return (id && list.includes(id)) || (code && list.includes(code)) || (username && list.includes(username));
     }
 
     function mergeInfluencerDbs(localList, serverList, deletedList) {
       const map = new Map();
-      const delSet = new Set((deletedList || []).map(d => String(d).toLowerCase()));
+      const delSet = new Set((deletedList || []).filter(d => d && d.trim().length > 0).map(d => String(d).toLowerCase().trim()));
 
-      // 1. First add local list
-      (localList || []).forEach(u => {
+      // 1. First add server list
+      (serverList || []).forEach(u => {
         if (u && (u.id || u.code)) {
-          const uId = String(u.id || '').toLowerCase();
-          const uCode = String(u.code || '').toLowerCase();
-          const uUser = String(u.username || '').toLowerCase();
-          if (!delSet.has(uId) && !delSet.has(uCode) && !delSet.has(uUser)) {
-            const key = String(u.id || u.code).toLowerCase();
+          const uId = String(u.id || '').toLowerCase().trim();
+          const uCode = String(u.code || '').toLowerCase().trim();
+          const uUser = String(u.username || '').toLowerCase().trim();
+          if ((!uId || !delSet.has(uId)) && (!uCode || !delSet.has(uCode)) && (!uUser || !delSet.has(uUser))) {
+            const key = String(u.id || u.code).toLowerCase().trim();
             map.set(key, u);
           }
         }
       });
 
-      // 2. Merge server list
-      (serverList || []).forEach(u => {
+      // 2. Merge local list (local overrides so new creators are never wiped)
+      (localList || []).forEach(u => {
         if (u && (u.id || u.code)) {
-          const uId = String(u.id || '').toLowerCase();
-          const uCode = String(u.code || '').toLowerCase();
-          const uUser = String(u.username || '').toLowerCase();
-          if (!delSet.has(uId) && !delSet.has(uCode) && !delSet.has(uUser)) {
-            const key = String(u.id || u.code).toLowerCase();
+          const uId = String(u.id || '').toLowerCase().trim();
+          const uCode = String(u.code || '').toLowerCase().trim();
+          const uUser = String(u.username || '').toLowerCase().trim();
+          if ((!uId || !delSet.has(uId)) && (!uCode || !delSet.has(uCode)) && (!uUser || !delSet.has(uUser))) {
+            const key = String(u.id || u.code).toLowerCase().trim();
             if (map.has(key)) {
               map.set(key, Object.assign({}, map.get(key), u));
             } else {

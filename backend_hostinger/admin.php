@@ -264,7 +264,7 @@ if ($action === 'save_influencer') {
     $raw = file_get_contents('php://input');
     $input = json_decode($raw, true) ?: $_POST;
 
-    $id = $input['id'] ?? ('inf-' . time());
+    $id = trim($input['id'] ?? ('inf-' . time()));
     $name = trim($input['name'] ?? 'Creator');
     $username = trim($input['username'] ?? ($input['code'] ?? 'creator'));
     $phone = trim($input['phone'] ?? '');
@@ -273,32 +273,60 @@ if ($action === 'save_influencer') {
     $password = trim($input['password'] ?? 'blackroots');
     $comm_rate = (int)($input['comm_rate'] ?? 10);
     $upi_id = trim($input['upi_id'] ?? '');
+    $status = trim($input['status'] ?? 'Active');
 
     try {
-        $ins = $pdo->prepare("
-            INSERT INTO influencers (id, name, username, phone, handle, code, password, comm_rate, upi_id, status)
-            VALUES (:id, :name, :user, :phone, :handle, :code, :pass, :comm, :upi, 'Active')
-            ON CONFLICT(id) DO UPDATE SET
-                name = :name,
-                username = :user,
-                phone = :phone,
-                handle = :handle,
-                code = :code,
-                password = :pass,
-                comm_rate = :comm,
-                upi_id = :upi
-        ");
-        $ins->execute([
-            ':id' => $id,
-            ':name' => $name,
-            ':user' => $username,
-            ':phone' => $phone,
-            ':handle' => $handle,
-            ':code' => $code,
-            ':pass' => $password,
-            ':comm' => $comm_rate,
-            ':upi' => $upi_id
-        ]);
+        // Check if creator exists by id, code or username
+        $check = $pdo->prepare("SELECT id FROM influencers WHERE id = :id OR LOWER(code) = LOWER(:code) OR LOWER(username) = LOWER(:user)");
+        $check->execute([':id' => $id, ':code' => $code, ':user' => $username]);
+        $existing = $check->fetch();
+
+        if ($existing) {
+            $realId = $existing['id'];
+            $upd = $pdo->prepare("
+                UPDATE influencers SET 
+                    name = :name, 
+                    username = :user, 
+                    phone = :phone, 
+                    handle = :handle, 
+                    code = :code, 
+                    password = :pass, 
+                    comm_rate = :comm, 
+                    upi_id = :upi, 
+                    status = :status 
+                WHERE id = :id
+            ");
+            $upd->execute([
+                ':name' => $name,
+                ':user' => $username,
+                ':phone' => $phone,
+                ':handle' => $handle,
+                ':code' => $code,
+                ':pass' => $password,
+                ':comm' => $comm_rate,
+                ':upi' => $upi_id,
+                ':status' => $status,
+                ':id' => $realId
+            ]);
+            $id = $realId;
+        } else {
+            $ins = $pdo->prepare("
+                INSERT INTO influencers (id, name, username, phone, handle, code, password, comm_rate, clicks, total_orders, total_sales, total_earned, unpaid_balance, upi_id, status)
+                VALUES (:id, :name, :user, :phone, :handle, :code, :pass, :comm, 0, 0, 0, 0, 0, :upi, :status)
+            ");
+            $ins->execute([
+                ':id' => $id,
+                ':name' => $name,
+                ':user' => $username,
+                ':phone' => $phone,
+                ':handle' => $handle,
+                ':code' => $code,
+                ':pass' => $password,
+                ':comm' => $comm_rate,
+                ':upi' => $upi_id,
+                ':status' => $status
+            ]);
+        }
 
         $st = $pdo->prepare("SELECT * FROM influencers WHERE id = :id");
         $st->execute([':id' => $id]);
