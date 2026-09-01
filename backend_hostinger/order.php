@@ -49,33 +49,24 @@ if (empty($name) || empty($address)) {
     exit;
 }
 
-// Check for duplicate spam submissions within last 2 minutes
-try {
-    $stmt = $pdo->prepare("SELECT id, order_id FROM orders WHERE phone = :ph AND created_at >= datetime('now', '-2 minutes')");
-    $stmt->execute([':ph' => $clean_phone]);
-    $dup = $stmt->fetch();
-    if ($dup) {
-        echo json_encode([
-            'success' => true,
-            'order_id' => $dup['order_id'],
-            'message' => 'Your order is already registered! Our logistics team will call you before delivery.',
-            'is_duplicate' => true
-        ]);
-        exit;
-    }
-} catch (Exception $e) {}
-
-// Generate Order ID: #BR-XXXX
-$stmt = $pdo->query("SELECT MAX(id) as max_id FROM orders");
-$row = $stmt->fetch();
-$next_num = ($row && $row['max_id']) ? ($row['max_id'] + 1025) : 1025;
-$order_id = '#BR-' . $next_num;
-$default_awb = '8839' . rand(100000, 999999);
+// Generate / Accept Order ID: #BR-XXXX
+$client_oid = trim($input['order_id'] ?? '');
+if (!empty($client_oid)) {
+    $order_id = $client_oid;
+} else {
+    $stmt = $pdo->query("SELECT MAX(id) as max_id FROM orders");
+    $row = $stmt->fetch();
+    $next_num = ($row && $row['max_id']) ? ($row['max_id'] + 1025) : 1025;
+    $order_id = '#BR-' . $next_num;
+}
+$default_awb = trim($input['tracking_awb'] ?? ('8839' . rand(100000, 999999)));
+$coupon = trim($input['coupon'] ?? ($input['coupon_code'] ?? ''));
+$nowStr = date('Y-m-d H:i:s');
 
 try {
     $ins = $pdo->prepare("
-        INSERT INTO orders (order_id, name, phone, email, address, city, state, pincode, product_bundle, price, payment_method, status, tracking_awb, courier)
-        VALUES (:oid, :name, :phone, :email, :addr, :city, :state, :pin, :bundle, :price, :pm, :status, :awb, 'Delhivery Express Air')
+        INSERT INTO orders (order_id, name, phone, email, address, city, state, pincode, product_bundle, price, payment_method, status, tracking_awb, courier, coupon, created_at)
+        VALUES (:oid, :name, :phone, :email, :addr, :city, :state, :pin, :bundle, :price, :pm, :status, :awb, 'Delhivery Express Air', :coupon, :created)
     ");
     $ins->execute([
         ':oid' => $order_id,
@@ -90,23 +81,69 @@ try {
         ':price' => $price,
         ':pm' => $payment_method,
         ':status' => $status,
-        ':awb' => $default_awb
+        ':awb' => $default_awb,
+        ':coupon' => $coupon,
+        ':created' => $nowStr
     ]);
+
+    // Real-time Influencer Attribution
+    if (!empty($coupon)) {
+        $cClean = strtoupper($coupon);
+        $infSt = $pdo->prepare("SELECT * FROM influencers WHERE UPPER(code) = ? OR UPPER(username) = ? OR UPPER(code) = ? OR UPPER(username) = ? LIMIT 1");
+        $infSt->execute([$cClean, $cClean, $cClean . '10', $cClean . '10']);
+        $inf = $infSt->fetch();
+        if ($inf) {
+            $comm = round($price * (($inf['comm_rate'] ?? 10) / 100));
+            $upInf = $pdo->prepare("
+                UPDATE influencers 
+                SET total_orders = COALESCE(total_orders, 0) + 1,
+                    total_sales = COALESCE(total_sales, 0) + ?,
+                    total_earned = COALESCE(total_earned, 0) + ?,
+                    unpaid_balance = COALESCE(unpaid_balance, 0) + ?
+                WHERE id = ?
+            ");
+            $upInf->execute([$price, $comm, $comm, $inf['id']]);
+        }
+    }
 
     // Mark from abandoned leads as recovered if exists
     try {
         $pdo->prepare("UPDATE abandoned_checkouts SET recovered = 1 WHERE phone = :ph")->execute([':ph' => $clean_phone]);
     } catch (Exception $e) {}
 
+    // Auto-Push to Shiprocket if configured
+    try {
+        require_once __DIR__ . '/shiprocket.php';
+        $srEmail = get_setting('shiprocket_email', '');
+        $srPass = get_setting('shiprocket_password', '');
+        if (!empty($srEmail) && !empty($srPass)) {
+            shiprocket_create_order([
+                'order_id' => $order_id,
+                'name' => $name,
+                'phone' => $clean_phone,
+                'email' => $email,
+                'address' => $address,
+                'city' => $city,
+                'state' => $state,
+                'pincode' => $clean_pincode,
+                'price' => $price,
+                'payment_method' => $payment_method,
+                'bundle' => $bundle
+            ]);
+        }
+    } catch (Exception $e) {}
+
     // Trigger Meta Conversions API (CAPI) Server-side
-    trigger_meta_capi_purchase($order_id, $price, [
-        'phone' => $clean_phone,
-        'name' => $name,
-        'email' => $email,
-        'city' => $city,
-        'state' => $state,
-        'pincode' => $clean_pincode
-    ]);
+    try {
+        trigger_meta_capi_purchase($order_id, $price, [
+            'phone' => $clean_phone,
+            'name' => $name,
+            'email' => $email,
+            'city' => $city,
+            'state' => $state,
+            'pincode' => $clean_pincode
+        ]);
+    } catch (Exception $e) {}
 
     // Check Shiprocket Auto Push
     $sr_auto = get_setting('shiprocket_auto_push', '0');

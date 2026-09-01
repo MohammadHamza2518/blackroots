@@ -62,9 +62,25 @@ try {
             shiprocket_order_id TEXT,
             shiprocket_shipment_id TEXT,
             meta_pixel_tracked INTEGER DEFAULT 0,
+            coupon TEXT,
+            discount REAL DEFAULT 0,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
+    ");
+
+    // Auto-migrate missing columns for existing SQLite / MySQL tables
+    $colsToEnsure = [
+        "ALTER TABLE orders ADD COLUMN coupon TEXT",
+        "ALTER TABLE orders ADD COLUMN discount REAL DEFAULT 0",
+        "ALTER TABLE orders ADD COLUMN shiprocket_order_id TEXT",
+        "ALTER TABLE orders ADD COLUMN shiprocket_shipment_id TEXT",
+        "ALTER TABLE orders ADD COLUMN tracking_awb TEXT",
+        "ALTER TABLE orders ADD COLUMN courier TEXT DEFAULT 'Delhivery Express Air'"
+    ];
+    foreach ($colsToEnsure as $altSql) {
+        try { $pdo->exec($altSql); } catch (Exception $e) {}
+    }
 
         CREATE TABLE IF NOT EXISTS abandoned_checkouts (
             id INTEGER PRIMARY KEY AUTOINCREMENT,

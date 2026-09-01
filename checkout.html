@@ -1168,14 +1168,14 @@
         var isSubdir = window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
         var prefix = isSubdir ? '../' : '';
         var endpoints = [
-          prefix + 'backend_hostinger/admin.php?action=save_order',
           '/backend_hostinger/admin.php?action=save_order',
+          '/backend_hostinger/order.php',
           '/api/admin?action=save_order',
+          '/api/order',
+          prefix + 'backend_hostinger/admin.php?action=save_order',
+          prefix + 'backend_hostinger/order.php',
           prefix + 'api/admin?action=save_order',
           prefix + 'api/admin.js?action=save_order',
-          prefix + 'backend_hostinger/order.php',
-          '/backend_hostinger/order.php',
-          '/api/order',
           prefix + 'api/order',
           prefix + 'api/order.js',
           prefix + 'api/order.php'
@@ -1185,7 +1185,8 @@
             fetch(endpoints[i], {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload)
+              body: JSON.stringify(payload),
+              keepalive: true
             }).catch(function() {});
           } catch(err) {}
         }

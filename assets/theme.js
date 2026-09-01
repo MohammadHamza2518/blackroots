@@ -992,14 +992,14 @@ document.addEventListener('DOMContentLoaded', function() {
           const isSubdir = window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
           const prefix = isSubdir ? '../' : '';
           const endpoints = [
-            prefix + 'backend_hostinger/admin.php?action=save_order',
             '/backend_hostinger/admin.php?action=save_order',
+            '/backend_hostinger/order.php',
             '/api/admin?action=save_order',
+            '/api/order',
+            prefix + 'backend_hostinger/admin.php?action=save_order',
+            prefix + 'backend_hostinger/order.php',
             prefix + 'api/admin?action=save_order',
             prefix + 'api/admin.js?action=save_order',
-            prefix + 'backend_hostinger/order.php',
-            '/backend_hostinger/order.php',
-            '/api/order',
             prefix + 'api/order',
             prefix + 'api/order.js',
             prefix + 'api/order.php'
@@ -1009,7 +1009,8 @@ document.addEventListener('DOMContentLoaded', function() {
               let res = await fetch(ep, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(payload),
+                keepalive: true
               });
               if (res.ok) {
                 orderData = await res.json();
@@ -1762,14 +1763,14 @@ window.closeIngredientModal = closeIngredientModal;
           const isSubdir = window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
           const prefix = isSubdir ? '../' : '';
           const endpoints = [
-            prefix + 'backend_hostinger/admin.php?action=save_order',
             '/backend_hostinger/admin.php?action=save_order',
+            '/backend_hostinger/order.php',
             '/api/admin?action=save_order',
+            '/api/order',
+            prefix + 'backend_hostinger/admin.php?action=save_order',
+            prefix + 'backend_hostinger/order.php',
             prefix + 'api/admin?action=save_order',
             prefix + 'api/admin.js?action=save_order',
-            prefix + 'backend_hostinger/order.php',
-            '/backend_hostinger/order.php',
-            '/api/order',
             prefix + 'api/order',
             prefix + 'api/order.js',
             prefix + 'api/order.php'
@@ -1779,7 +1780,8 @@ window.closeIngredientModal = closeIngredientModal;
               let res = await fetch(ep, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(payload),
+                keepalive: true
               });
               if (res.ok) {
                 orderData = await res.json();

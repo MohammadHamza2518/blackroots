@@ -85,16 +85,17 @@ if ($action === 'save_order') {
             $up = $pdo->prepare("
                 UPDATE orders SET 
                     name = ?, phone = ?, email = ?, address = ?, city = ?, state = ?, pincode = ?, 
-                    product_bundle = ?, price = ?, payment_method = ?, status = ?, tracking_awb = ?, courier = ?
+                    product_bundle = ?, price = ?, payment_method = ?, status = ?, tracking_awb = ?, courier = ?, coupon = ?
                 WHERE order_id = ?
             ");
-            $up->execute([$name, $phone, $email, $address, $city, $state, $pincode, $bundle, $price, $payment_method, $status, $awb, $courier, $order_id]);
+            $up->execute([$name, $phone, $email, $address, $city, $state, $pincode, $bundle, $price, $payment_method, $status, $awb, $courier, $coupon, $order_id]);
         } else {
+            $nowStr = date('Y-m-d H:i:s');
             $ins = $pdo->prepare("
-                INSERT INTO orders (order_id, name, phone, email, address, city, state, pincode, product_bundle, price, payment_method, status, tracking_awb, courier, created_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+                INSERT INTO orders (order_id, name, phone, email, address, city, state, pincode, product_bundle, price, payment_method, status, tracking_awb, courier, coupon, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
-            $ins->execute([$order_id, $name, $phone, $email, $address, $city, $state, $pincode, $bundle, $price, $payment_method, $status, $awb, $courier]);
+            $ins->execute([$order_id, $name, $phone, $email, $address, $city, $state, $pincode, $bundle, $price, $payment_method, $status, $awb, $courier, $coupon, $nowStr]);
         }
 
         // Real-time Influencer Attribution
@@ -156,7 +157,9 @@ if ($action === 'save_order') {
 if ($action === 'get_dashboard') {
     try {
         // Today Stats
-        $st1 = $pdo->query("SELECT COUNT(*) as total_orders, COALESCE(SUM(price), 0) as total_revenue FROM orders WHERE date(created_at) = date('now')");
+        $todayStart = date('Y-m-d 00:00:00');
+        $st1 = $pdo->prepare("SELECT COUNT(*) as total_orders, COALESCE(SUM(price), 0) as total_revenue FROM orders WHERE created_at >= :ts");
+        $st1->execute([':ts' => $todayStart]);
         $today = $st1->fetch();
 
         // Overall Stats
