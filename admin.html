@@ -1099,13 +1099,28 @@
     }
 
         // 4. API Communication
+    // 4. API Communication (Multi-Tier Resilient Architecture)
     async function apiFetch(action, options = {}) {
-      try {
-        let res = await fetch('/api/admin?action=' + action, options);
-        if (res.ok) {
-          return await res.json();
-        }
-      } catch(e) {}
+      const isSubdir = window.location.pathname.includes('/admin/') || window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
+      const prefix = isSubdir ? '../' : '';
+      const endpoints = [
+        '/api/admin?action=' + action,
+        prefix + 'api/admin?action=' + action,
+        prefix + 'api/admin.js?action=' + action,
+        prefix + 'backend_hostinger/admin.php?action=' + action,
+        prefix + 'api/admin.php?action=' + action
+      ];
+      for (const ep of endpoints) {
+        try {
+          let res = await fetch(ep, options);
+          if (res.ok) {
+            let data = await res.json();
+            if (data && (data.success || data.orders || data.influencers || data.settings || data.leads || data.total_revenue !== undefined)) {
+              return data;
+            }
+          }
+        } catch(e) {}
+      }
       return null;
     }
 
@@ -1561,7 +1576,7 @@
             </span>
           </td>
           <td class="py-3 px-3 text-right space-x-1 whitespace-nowrap">
-            <a href="https://wa.me/91${String(u.phone || '').replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Namaste ' + u.name + '! Your BlackRoots VIP Creator Account is active.\n\nPortal: https://blackroots.in/influencer\nUser ID: ' + (u.username || u.code) + '\nPassword: ' + (u.password || 'blackroots') + '\nPromo Code: ' + u.code + ' (' + (u.comm_rate || 10) + '% Commission)')}" target="_blank" class="px-2 py-1 rounded bg-[#25D366]/20 hover:bg-[#25D366] text-[10px] text-[#25D366] hover:text-black font-bold cursor-pointer transition-colors" title="Send Login Credentials to Creator on WhatsApp">
+            <a href="https://wa.me/91${String(u.phone || '').replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Namaste ' + u.name + '! BlackRoots VIP Creator Portal par aapka account active ho gaya hai.\n\n🚀 Direct 1-Tap Login:\nhttps://blackroots.in/influencer.html?u=' + encodeURIComponent(u.username || u.code) + '&p=' + encodeURIComponent(u.password || 'blackroots') + '&auth=1\n\n📌 Manual Login Credentials:\nPortal: https://blackroots.in/influencer\nUser ID: ' + (u.username || u.code) + '\nPassword: ' + (u.password || 'blackroots') + '\nPromo Code: ' + u.code + ' (' + (u.comm_rate || 10) + '% Commission on every sale)')}" target="_blank" class="px-2 py-1 rounded bg-[#25D366]/20 hover:bg-[#25D366] text-[10px] text-[#25D366] hover:text-black font-bold cursor-pointer transition-colors" title="Send Direct Login Credentials to Creator on WhatsApp">
               💬 WhatsApp
             </a>
             <button onclick="openEditInfluencerModal('${u.id}')" class="px-2 py-1 rounded bg-amber-500/10 hover:bg-amber-500/20 text-[10px] text-amber-300 font-bold cursor-pointer">Edit</button>

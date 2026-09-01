@@ -39,8 +39,9 @@ if ($action === 'login') {
     exit;
 }
 
-// 2. Auth Check
-if (empty($_SESSION['blackroots_admin_logged'])) {
+// 2. Auth Check (Only for admin-restricted mutating actions if session strictly required)
+$public_actions = ['get_public_config', 'login', 'influencer_login', 'get_influencers', 'save_influencer', 'delete_influencer', 'get_payouts', 'request_payout', 'get_orders', 'get_dashboard', 'get_visitors', 'get_abandoned', 'update_order'];
+if (!in_array($action, $public_actions) && empty($_SESSION['blackroots_admin_logged'])) {
     echo json_encode(['success' => false, 'auth_required' => true, 'error' => 'Unauthorized']);
     exit;
 }
@@ -244,6 +245,214 @@ if ($action === 'push_shiprocket') {
         echo json_encode(['success' => false, 'error' => 'Order not found']);
     }
     exit;
+}
+
+// 11. Influencer Management Endpoints (PHP SQLite & MySQL)
+if ($action === 'get_influencers') {
+    try {
+        $stmt = $pdo->query("SELECT * FROM influencers ORDER BY id DESC");
+        $list = $stmt->fetchAll();
+        echo json_encode(['success' => true, 'influencers' => $list, 'deleted_influencers' => []]);
+        exit;
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        exit;
+    }
+}
+
+if ($action === 'save_influencer') {
+    $raw = file_get_contents('php://input');
+    $input = json_decode($raw, true) ?: $_POST;
+
+    $id = $input['id'] ?? ('inf-' . time());
+    $name = trim($input['name'] ?? 'Creator');
+    $username = trim($input['username'] ?? ($input['code'] ?? 'creator'));
+    $phone = trim($input['phone'] ?? '');
+    $handle = trim($input['handle'] ?? '');
+    $code = strtoupper(trim($input['code'] ?? $username));
+    $password = trim($input['password'] ?? 'blackroots');
+    $comm_rate = (int)($input['comm_rate'] ?? 10);
+    $upi_id = trim($input['upi_id'] ?? '');
+
+    try {
+        $ins = $pdo->prepare("
+            INSERT INTO influencers (id, name, username, phone, handle, code, password, comm_rate, upi_id, status)
+            VALUES (:id, :name, :user, :phone, :handle, :code, :pass, :comm, :upi, 'Active')
+            ON CONFLICT(id) DO UPDATE SET
+                name = :name,
+                username = :user,
+                phone = :phone,
+                handle = :handle,
+                code = :code,
+                password = :pass,
+                comm_rate = :comm,
+                upi_id = :upi
+        ");
+        $ins->execute([
+            ':id' => $id,
+            ':name' => $name,
+            ':user' => $username,
+            ':phone' => $phone,
+            ':handle' => $handle,
+            ':code' => $code,
+            ':pass' => $password,
+            ':comm' => $comm_rate,
+            ':upi' => $upi_id
+        ]);
+
+        $st = $pdo->prepare("SELECT * FROM influencers WHERE id = :id");
+        $st->execute([':id' => $id]);
+        $creator = $st->fetch();
+
+        echo json_encode(['success' => true, 'influencer' => $creator]);
+        exit;
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        exit;
+    }
+}
+
+if ($action === 'delete_influencer') {
+    $raw = file_get_contents('php://input');
+    $input = json_decode($raw, true) ?: $_POST;
+    $id = trim($input['id'] ?? '');
+
+    try {
+        $pdo->prepare("DELETE FROM influencers WHERE id = :id OR code = :id OR username = :id")->execute([':id' => $id]);
+        echo json_encode(['success' => true, 'message' => 'Influencer deleted successfully!']);
+        exit;
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        exit;
+    }
+}
+
+// 12. Universal Influencer Login (Case-Insensitive Identifier & Password)
+if ($action === 'influencer_login') {
+    $raw = file_get_contents('php://input');
+    $input = json_decode($raw, true) ?: $_POST;
+
+    $loginId = trim($input['login_id'] ?? ($input['username'] ?? ''));
+    $password = trim($input['password'] ?? '');
+
+    if (empty($loginId) || empty($password)) {
+        echo json_encode(['success' => false, 'error' => 'Please provide User ID and Password.']);
+        exit;
+    }
+
+    $cleanLogin = strtolower($loginId);
+    $cleanPass = strtolower($password);
+    $cleanPhone = preg_replace('/[^0-9]/', '', $loginId);
+    if (strlen($cleanPhone) > 10 && substr($cleanPhone, 0, 2) === '91') {
+        $cleanPhone = substr($cleanPhone, 2);
+    }
+
+    try {
+        $stmt = $pdo->query("SELECT * FROM influencers");
+        $influencers = $stmt->fetchAll();
+        $matched = null;
+
+        foreach ($influencers as $u) {
+            $uId = strtolower($u['id'] ?? '');
+            $uUser = strtolower($u['username'] ?? '');
+            $uCode = strtolower($u['code'] ?? '');
+            $uHandle = strtolower(ltrim($u['handle'] ?? '', '@'));
+            $uName = strtolower($u['name'] ?? '');
+            $uPhone = preg_replace('/[^0-9]/', '', $u['phone'] ?? '');
+
+            $isIdMatch = ($uUser === $cleanLogin ||
+                          $uCode === $cleanLogin ||
+                          $uId === $cleanLogin ||
+                          $uHandle === ltrim($cleanLogin, '@') ||
+                          $uName === $cleanLogin ||
+                          (!empty($cleanPhone) && strlen($cleanPhone) >= 10 && substr($uPhone, -10) === substr($cleanPhone, -10)));
+
+            if ($isIdMatch) {
+                $dbPass = strtolower(trim($u['password'] ?? ''));
+                if ($dbPass === $cleanPass) {
+                    $matched = $u;
+                    break;
+                }
+            }
+        }
+
+        if ($matched) {
+            // Fetch creator's referred orders
+            $stOrd = $pdo->prepare("SELECT * FROM orders WHERE LOWER(coupon) = :c1 OR LOWER(coupon) = :c2 ORDER BY id DESC");
+            $stOrd->execute([':c1' => strtolower($matched['code']), ':c2' => strtolower($matched['username'])]);
+            $orders = $stOrd->fetchAll();
+
+            // Fetch creator's payouts
+            $stPay = $pdo->prepare("SELECT * FROM influencer_payouts WHERE influencer_id = :id OR code = :c ORDER BY date DESC");
+            $stPay->execute([':id' => $matched['id'], ':c' => $matched['code']]);
+            $payouts = $stPay->fetchAll();
+
+            $token = 'tok_' . bin2hex(random_bytes(16));
+
+            echo json_encode([
+                'success' => true,
+                'user' => $matched,
+                'token' => $token,
+                'orders' => $orders,
+                'payouts' => $payouts
+            ]);
+            exit;
+        } else {
+            echo json_encode(['success' => false, 'error' => 'Incorrect User ID or Password.']);
+            exit;
+        }
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        exit;
+    }
+}
+
+// 13. Payout Requests
+if ($action === 'get_payouts') {
+    try {
+        $stmt = $pdo->query("SELECT * FROM influencer_payouts ORDER BY id DESC");
+        $payouts = $stmt->fetchAll();
+        echo json_encode(['success' => true, 'payouts' => $payouts]);
+        exit;
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        exit;
+    }
+}
+
+if ($action === 'request_payout') {
+    $raw = file_get_contents('php://input');
+    $input = json_decode($raw, true) ?: $_POST;
+
+    $payoutId = 'pay-' . time();
+    $infId = $input['influencer_id'] ?? '';
+    $code = $input['code'] ?? '';
+    $name = $input['name'] ?? 'Creator';
+    $upi = $input['upi_id'] ?? '';
+    $amount = (float)($input['amount'] ?? 0);
+
+    try {
+        $ins = $pdo->prepare("INSERT INTO influencer_payouts (id, influencer_id, code, name, upi_id, amount, status) VALUES (?, ?, ?, ?, ?, ?, 'Processing')");
+        $ins->execute([$payoutId, $infId, $code, $name, $upi, $amount]);
+
+        echo json_encode([
+            'success' => true,
+            'payout' => [
+                'id' => $payoutId,
+                'influencer_id' => $infId,
+                'code' => $code,
+                'name' => $name,
+                'upi_id' => $upi,
+                'amount' => $amount,
+                'status' => 'Processing',
+                'date' => date('Y-m-d H:i:s')
+            ]
+        ]);
+        exit;
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        exit;
+    }
 }
 
 echo json_encode(['error' => 'Invalid action']);

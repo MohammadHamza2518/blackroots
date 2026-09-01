@@ -89,7 +89,48 @@ try {
             city TEXT,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
+
+        CREATE TABLE IF NOT EXISTS influencers (
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            username TEXT NOT NULL,
+            phone TEXT,
+            handle TEXT,
+            code TEXT NOT NULL UNIQUE,
+            password TEXT NOT NULL,
+            comm_rate INTEGER DEFAULT 10,
+            clicks INTEGER DEFAULT 0,
+            total_orders INTEGER DEFAULT 0,
+            total_sales REAL DEFAULT 0,
+            total_earned REAL DEFAULT 0,
+            unpaid_balance REAL DEFAULT 0,
+            upi_id TEXT,
+            status TEXT DEFAULT 'Active',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS influencer_payouts (
+            id TEXT PRIMARY KEY,
+            influencer_id TEXT,
+            code TEXT,
+            name TEXT,
+            upi_id TEXT,
+            amount REAL,
+            status TEXT DEFAULT 'Processing',
+            utr TEXT,
+            date DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
     ");
+
+    // Seed default influencers if empty
+    $stInf = $pdo->query("SELECT COUNT(*) as cnt FROM influencers");
+    $rInf = $stInf->fetch();
+    if ($rInf && $rInf['cnt'] == 0) {
+        $insInf = $pdo->prepare("INSERT OR IGNORE INTO influencers (id, name, username, phone, handle, code, password, comm_rate, clicks, total_orders, total_sales, total_earned, unpaid_balance, upi_id, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $insInf->execute(['inf-103', 'Mohd Faiz', 'LEDUBHAIYA', '9580835179', 'faiz_cawnpore78', 'LEDUBHAI', 'ledubhaiya', 10, 14, 0, 0, 0, 0, '', 'Active']);
+        $insInf->execute(['inf-101', 'Priya Sharma', 'PRIYA10', '9876543210', '@priya_haircare', 'PRIYA10', 'blackroots', 10, 342, 18, 14382, 1438, 1438, 'priya@okaxis', 'Active']);
+        $insInf->execute(['inf-102', 'Rohit Verma', 'ROHIT15', '9811223344', '@rohit_grooming', 'ROHIT15', 'blackroots', 15, 189, 9, 7191, 1078, 1078, 'rohit@paytm', 'Active']);
+    }
 
     // Seed initial default settings if empty
     $stmt = $pdo->query("SELECT COUNT(*) as cnt FROM settings");

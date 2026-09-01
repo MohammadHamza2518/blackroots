@@ -423,7 +423,11 @@ module.exports = async (req, res) => {
     if (inf.unpaid_balance === undefined) inf.unpaid_balance = 0;
     if (!inf.status) inf.status = 'Active';
 
-    const existingIdx = memoryStore.influencers.findIndex(u => u.id === inf.id || (u.code && inf.code && u.code.toUpperCase() === inf.code.toUpperCase()));
+    const existingIdx = memoryStore.influencers.findIndex(u => 
+      (u.id && inf.id && u.id === inf.id) || 
+      (u.code && inf.code && u.code.toUpperCase() === inf.code.toUpperCase()) ||
+      (u.username && inf.username && u.username.toUpperCase() === inf.username.toUpperCase())
+    );
     if (existingIdx !== -1) {
       memoryStore.influencers[existingIdx] = Object.assign(memoryStore.influencers[existingIdx], inf);
     } else {
@@ -482,7 +486,7 @@ module.exports = async (req, res) => {
     const cleanHandle = rawLogin.replace('@', '');
 
     const infList = memoryStore.influencers || [];
-    const user = infList.find(u => {
+    const candidateUsers = infList.filter(u => {
       const uName = String(u.name || '').trim().toLowerCase();
       const uUser = String(u.username || '').trim().toLowerCase();
       const uCode = String(u.code || '').trim().toLowerCase();
@@ -490,18 +494,17 @@ module.exports = async (req, res) => {
       const uHandle = String(u.handle || '').trim().toLowerCase().replace('@', '');
       const uPhone = String(u.phone || '').replace(/[^0-9]/g, '');
 
-      const phoneMatch = cleanPhone.length >= 10 && (uPhone.endsWith(cleanPhone.slice(-10)) || cleanPhone.endsWith(uPhone.slice(-10)));
-      const nameMatch = cleanHandle.length >= 3 && (uName === cleanHandle || uName.includes(cleanHandle));
+      const isExactId = (uUser === rawLogin || uCode === rawLogin || uId === rawLogin);
+      const isHandleMatch = (cleanHandle.length >= 2 && uHandle === cleanHandle);
+      const isPhoneMatch = (cleanPhone.length >= 10 && uPhone.length >= 10 && uPhone.slice(-10) === cleanPhone.slice(-10));
+      const isNameMatch = (cleanHandle.length >= 3 && !Number(cleanHandle) && (uName === cleanHandle || uName.includes(cleanHandle)));
 
-      return (
-        uUser === rawLogin ||
-        uCode === rawLogin ||
-        uId === rawLogin ||
-        (cleanHandle.length >= 2 && uHandle === cleanHandle) ||
-        nameMatch ||
-        phoneMatch
-      );
+      return isExactId || isHandleMatch || isPhoneMatch || isNameMatch;
     });
+
+    const user = candidateUsers.find(u => 
+      u && u.password && String(u.password).trim().toLowerCase() === pass.toLowerCase()
+    );
 
     if (user && user.password && String(user.password).trim().toLowerCase() === pass.toLowerCase()) {
       if (!memoryStore.active_influencer_sessions) memoryStore.active_influencer_sessions = {};

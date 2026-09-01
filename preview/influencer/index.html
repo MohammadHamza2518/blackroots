@@ -1001,6 +1001,30 @@
       }
     }
 
+    async function multiEndpointFetch(action, options = {}) {
+      const isSubdir = window.location.pathname.includes('/influencer/') || window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
+      const prefix = isSubdir ? '../' : '';
+      const endpoints = [
+        '/api/admin?action=' + action,
+        prefix + 'api/admin?action=' + action,
+        prefix + 'api/admin.js?action=' + action,
+        prefix + 'backend_hostinger/admin.php?action=' + action,
+        prefix + 'api/admin.php?action=' + action
+      ];
+      for (const ep of endpoints) {
+        try {
+          const res = await fetch(ep, options);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && (data.success || data.influencers || data.orders || data.payouts || data.user)) {
+              return data;
+            }
+          }
+        } catch(e) {}
+      }
+      return null;
+    }
+
     async function syncInfluencersFromServer() {
       const deletedList = getDeletedInfluencerIds();
       const currentToken = sessionStorage.getItem('br_active_inf_token') || localStorage.getItem('br_active_inf_token') || '';
@@ -1008,36 +1032,30 @@
       // Heartbeat verify creator single-device session
       if (currentInfluencer && currentToken) {
         try {
-          const chk = await fetch(`/api/admin?action=check_influencer_session&user_id=${encodeURIComponent(currentInfluencer.id)}&token=${encodeURIComponent(currentToken)}`);
-          if (chk.ok) {
-            const chkData = await chk.json();
-            if (chkData && chkData.session_expired) {
-              handleInfluencerKicked(chkData.error);
-              return;
-            }
+          const chk = await multiEndpointFetch(`check_influencer_session&user_id=${encodeURIComponent(currentInfluencer.id)}&token=${encodeURIComponent(currentToken)}`);
+          if (chk && chk.session_expired) {
+            handleInfluencerKicked(chk.error);
+            return;
           }
         } catch(e) {}
       }
 
       try {
-        const [res, ordRes, payRes] = await Promise.all([
-          fetch('/api/admin?action=get_influencers'),
-          fetch('/api/admin?action=get_orders'),
-          fetch('/api/admin?action=get_payouts' + (currentInfluencer ? '&influencer_id=' + encodeURIComponent(currentInfluencer.id) : ''))
-        ]);
-        
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.deleted_influencers && Array.isArray(data.deleted_influencers)) {
-            const merged = [...new Set([...deletedList, ...data.deleted_influencers.map(s => String(s).toLowerCase())])];
+        const infData = await multiEndpointFetch('get_influencers');
+        const ordData = await multiEndpointFetch('get_orders');
+        const payData = await multiEndpointFetch('get_payouts' + (currentInfluencer ? '&influencer_id=' + encodeURIComponent(currentInfluencer.id) : ''));
+
+        if (infData) {
+          if (infData.deleted_influencers && Array.isArray(infData.deleted_influencers)) {
+            const merged = [...new Set([...deletedList, ...infData.deleted_influencers.map(s => String(s).toLowerCase())])];
             localStorage.setItem('br_deleted_influencers', JSON.stringify(merged));
           }
 
           const activeDeleted = getDeletedInfluencerIds();
 
-          if (data && data.influencers && Array.isArray(data.influencers)) {
+          if (infData.influencers && Array.isArray(infData.influencers)) {
             const localList = getInfluencersDb();
-            const cleanList = mergeInfluencerDbs(localList, data.influencers, activeDeleted);
+            const cleanList = mergeInfluencerDbs(localList, infData.influencers, activeDeleted);
             localStorage.setItem('br_influencers_db', JSON.stringify(cleanList));
             if (currentInfluencer) {
               if (isInfluencerDeleted(currentInfluencer, activeDeleted)) {
@@ -1054,18 +1072,12 @@
           }
         }
 
-        if (ordRes.ok) {
-          const ordData = await ordRes.json();
-          if (ordData && ordData.orders && Array.isArray(ordData.orders)) {
-            localStorage.setItem('br_local_orders', JSON.stringify(ordData.orders));
-          }
+        if (ordData && ordData.orders && Array.isArray(ordData.orders)) {
+          localStorage.setItem('br_local_orders', JSON.stringify(ordData.orders));
         }
 
-        if (payRes.ok) {
-          const payData = await payRes.json();
-          if (payData && payData.payouts && Array.isArray(payData.payouts)) {
-            localStorage.setItem('br_influencer_payouts', JSON.stringify(payData.payouts));
-          }
+        if (payData && payData.payouts && Array.isArray(payData.payouts)) {
+          localStorage.setItem('br_influencer_payouts', JSON.stringify(payData.payouts));
         }
 
         if (currentInfluencer) {
@@ -1101,9 +1113,9 @@
       let user = null;
       let sessionToken = null;
 
-      // 1. Try server API login first with device identifier
+      // 1. Try server API login across all endpoints
       try {
-        const res = await fetch('/api/admin?action=influencer_login', {
+        const loginData = await multiEndpointFetch('influencer_login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1112,14 +1124,24 @@
             device: navigator.userAgent || 'Mobile Device'
           })
         });
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.success && data.user) {
-            user = data.user;
-            sessionToken = data.token;
-            if (data.orders) localStorage.setItem('br_local_orders', JSON.stringify(data.orders));
-            if (data.payouts) localStorage.setItem('br_influencer_payouts', JSON.stringify(data.payouts));
-          }
+
+        if (loginData && loginData.success && loginData.user) {
+          user = loginData.user;
+          sessionToken = loginData.token;
+          if (loginData.orders) localStorage.setItem('br_local_orders', JSON.stringify(loginData.orders));
+          if (loginData.payouts) localStorage.setItem('br_influencer_payouts', JSON.stringify(loginData.payouts));
+
+          // Save to local influencers db so offline cache works
+          try {
+            const localDb = getInfluencersDb();
+            const exIdx = localDb.findIndex(u => u.id === user.id || u.code === user.code || u.username === user.username);
+            if (exIdx !== -1) {
+              localDb[exIdx] = Object.assign(localDb[exIdx], user);
+            } else {
+              localDb.push(user);
+            }
+            localStorage.setItem('br_influencers_db', JSON.stringify(localDb));
+          } catch(e) {}
         }
       } catch(err) {}
       finally {
@@ -1132,7 +1154,7 @@
       // 2. Fallback to local DB (100% Case-Insensitive User & Password Match)
       if (!user) {
         const db = getInfluencersDb();
-        user = db.find(u => {
+        const candidateUsers = db.filter(u => {
           const uName = String(u.name || '').trim().toLowerCase();
           const uUser = String(u.username || '').trim().toLowerCase();
           const uCode = String(u.code || '').trim().toLowerCase();
@@ -1140,23 +1162,17 @@
           const uHandle = String(u.handle || '').trim().toLowerCase().replace('@', '');
           const uPhone = String(u.phone || '').replace(/[^0-9]/g, '');
 
-          const phoneMatch = cleanPhone.length >= 10 && (uPhone.endsWith(cleanPhone.slice(-10)) || cleanPhone.endsWith(uPhone.slice(-10)));
-          const nameMatch = cleanHandle.length >= 3 && (uName === cleanHandle || uName.includes(cleanHandle));
+          const isExactId = (uUser === rawLogin || uCode === rawLogin || uId === rawLogin);
+          const isHandleMatch = (cleanHandle.length >= 2 && uHandle === cleanHandle);
+          const isPhoneMatch = (cleanPhone.length >= 10 && uPhone.length >= 10 && uPhone.slice(-10) === cleanPhone.slice(-10));
+          const isNameMatch = (cleanHandle.length >= 3 && !Number(cleanHandle) && (uName === cleanHandle || uName.includes(cleanHandle)));
 
-          return (
-            uUser === rawLogin ||
-            uCode === rawLogin ||
-            uId === rawLogin ||
-            (cleanHandle.length >= 2 && uHandle === cleanHandle) ||
-            nameMatch ||
-            phoneMatch
-          );
+          return isExactId || isHandleMatch || isPhoneMatch || isNameMatch;
         });
 
-        // Case-insensitive & trimmed password verification
-        if (user && user.password && String(user.password).trim().toLowerCase() !== pass.toLowerCase()) {
-          user = null;
-        }
+        user = candidateUsers.find(u => 
+          u && u.password && String(u.password).trim().toLowerCase() === pass.toLowerCase()
+        );
       }
 
       if (user) {
@@ -1170,10 +1186,10 @@
         
         document.getElementById('InfluencerAuthScreen').classList.add('hidden');
         document.getElementById('InfluencerDashboardApp').classList.remove('hidden');
-        renderDashboard();
-        showToast('Welcome back, ' + user.name + '!');
         
-        // Start Live Polling & Single-Device Heartbeat every 10s
+        renderDashboard();
+        showToast(`Welcome back, ${user.name}! Accessing VIP Dashboard...`, 'success');
+        
         if (!liveInfPollingInterval) {
           liveInfPollingInterval = setInterval(syncInfluencersFromServer, 10000);
         }
@@ -1493,8 +1509,36 @@
       }
     }
 
+    // 1-Tap URL Direct Authentication Support
+    function checkUrlAuth() {
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const uParam = params.get('u') || params.get('user') || params.get('username') || params.get('code') || params.get('login');
+        const pParam = params.get('p') || params.get('pass') || params.get('password');
+        const autoParam = params.get('auth') || params.get('auto');
+
+        if (uParam) {
+          const idInput = document.getElementById('inf-login-id');
+          if (idInput) idInput.value = uParam;
+        }
+        if (pParam) {
+          const passInput = document.getElementById('inf-login-pass');
+          if (passInput) passInput.value = pParam;
+        }
+        if (uParam && pParam && (autoParam === '1' || autoParam === 'true')) {
+          setTimeout(() => {
+            const form = document.getElementById('InfluencerLoginForm');
+            if (form) {
+              form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+            }
+          }, 300);
+        }
+      } catch(e) {}
+    }
+
     // Auto-login if session exists
     (function init() {
+      checkUrlAuth();
       const activeId = sessionStorage.getItem('br_active_inf_id');
       if (activeId) {
         const db = getInfluencersDb();
