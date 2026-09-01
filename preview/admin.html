@@ -2066,8 +2066,9 @@
         let payType = isCod ? 'COD' : 'Prepaid';
         let price = Number(o.price) || 499;
         let bundleName = o.product_bundle || 'BlackRoots Ayurvedic Shampoo (250ml)';
-        let sku = bundleName.includes('2') ? 'BR-SHAMPOO-2PK' : 'BR-SHAMPOO-1PK';
-        let weight = bundleName.includes('2') ? '0.6' : '0.35';
+        let isTwo = bundleName.toLowerCase().includes('2 bottle') || bundleName.toLowerCase().includes('2 pack') || bundleName.startsWith('2');
+        let sku = isTwo ? 'BR-SHAMPOO-2PK' : 'BR-SHAMPOO-1PK';
+        let weight = isTwo ? '0.6' : '0.35';
 
         let row = [
           `"${o.order_id || ''}"`,

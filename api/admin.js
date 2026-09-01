@@ -379,8 +379,8 @@ module.exports = async (req, res) => {
                 order_items: [
                   {
                     name: 'BlackRoots Herbal Hair Dye Shampoo (250ml)',
-                    sku: 'BR-SHAMPOO-250ML',
-                    units: String(newOrd.product_bundle || '').includes('2') ? 2 : 1,
+                    sku: (String(newOrd.product_bundle || '').toLowerCase().includes('2 bottle') || String(newOrd.product_bundle || '').toLowerCase().includes('2 pack') || String(newOrd.product_bundle || '').startsWith('2')) ? 'BR-SHAMPOO-500ML' : 'BR-SHAMPOO-250ML',
+                    units: (String(newOrd.product_bundle || '').toLowerCase().includes('3 bottle') || String(newOrd.product_bundle || '').toLowerCase().includes('3 pack') || String(newOrd.product_bundle || '').startsWith('3')) ? 3 : ((String(newOrd.product_bundle || '').toLowerCase().includes('2 bottle') || String(newOrd.product_bundle || '').toLowerCase().includes('2 pack') || String(newOrd.product_bundle || '').startsWith('2')) ? 2 : 1),
                     selling_price: Number(newOrd.price) || 499,
                     discount: 0,
                     tax: 0
@@ -391,7 +391,7 @@ module.exports = async (req, res) => {
                 length: 15,
                 breadth: 10,
                 height: 8,
-                weight: String(newOrd.product_bundle || '').includes('2') ? 0.6 : 0.35
+                weight: (String(newOrd.product_bundle || '').toLowerCase().includes('3 bottle') || String(newOrd.product_bundle || '').toLowerCase().includes('3 pack') || String(newOrd.product_bundle || '').startsWith('3')) ? 0.85 : ((String(newOrd.product_bundle || '').toLowerCase().includes('2 bottle') || String(newOrd.product_bundle || '').toLowerCase().includes('2 pack') || String(newOrd.product_bundle || '').startsWith('2')) ? 0.6 : 0.35)
               })
             });
           }
@@ -522,8 +522,8 @@ module.exports = async (req, res) => {
           order_items: [
             {
               name: 'BlackRoots Herbal Hair Dye Shampoo (250ml)',
-              sku: 'BR-SHAMPOO-250ML',
-              units: String(ord.product_bundle || '').includes('2') ? 2 : 1,
+              sku: (String(ord.product_bundle || '').toLowerCase().includes('2 bottle') || String(ord.product_bundle || '').toLowerCase().includes('2 pack') || String(ord.product_bundle || '').startsWith('2')) ? 'BR-SHAMPOO-500ML' : 'BR-SHAMPOO-250ML',
+              units: (String(ord.product_bundle || '').toLowerCase().includes('3 bottle') || String(ord.product_bundle || '').toLowerCase().includes('3 pack') || String(ord.product_bundle || '').startsWith('3')) ? 3 : ((String(ord.product_bundle || '').toLowerCase().includes('2 bottle') || String(ord.product_bundle || '').toLowerCase().includes('2 pack') || String(ord.product_bundle || '').startsWith('2')) ? 2 : 1),
               selling_price: Number(ord.price) || 499,
               discount: 0,
               tax: 0
@@ -534,7 +534,7 @@ module.exports = async (req, res) => {
           length: 15,
           breadth: 10,
           height: 8,
-          weight: String(ord.product_bundle || '').includes('2') ? 0.6 : 0.35
+          weight: (String(ord.product_bundle || '').toLowerCase().includes('3 bottle') || String(ord.product_bundle || '').toLowerCase().includes('3 pack') || String(ord.product_bundle || '').startsWith('3')) ? 0.85 : ((String(ord.product_bundle || '').toLowerCase().includes('2 bottle') || String(ord.product_bundle || '').toLowerCase().includes('2 pack') || String(ord.product_bundle || '').startsWith('2')) ? 0.6 : 0.35)
         })
       });
 
