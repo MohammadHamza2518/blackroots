@@ -811,18 +811,38 @@ window.closeQuickOrderModal = function() {
       };
 
       if (note) {
-        note.textContent = '✓ Creator Code "' + promoCode + '" applied (' + commRate + '% OFF)!';
+        note.textContent = '✓ Coupon "' + promoCode + '" applied (' + commRate + '% OFF)!';
         note.className = 'text-xs text-emerald-400 font-bold mt-1.5 flex items-center gap-1';
         note.classList.remove('hidden');
       }
+      const remBtn = document.getElementById('OrderRemoveCouponBtn');
+      if (remBtn) remBtn.classList.remove('hidden');
     } else {
       window.appliedCouponData = null;
       if (note) {
-        note.textContent = '✕ Invalid creator code: "' + rawCode + '". Only active creator codes from Admin are accepted.';
+        note.textContent = '✕ Invalid code';
         note.className = 'text-xs text-red-400 font-bold mt-1.5 flex items-center gap-1';
         note.classList.remove('hidden');
       }
+      const remBtn = document.getElementById('OrderRemoveCouponBtn');
+      if (remBtn) remBtn.classList.add('hidden');
     }
+
+    window.recalculateCheckoutPrice();
+  };
+
+  window.removeCheckoutCoupon = function() {
+    window.appliedCouponData = null;
+    const input = document.getElementById('OrderCouponInput');
+    const note = document.getElementById('CouponDiscountNote');
+    const remBtn = document.getElementById('OrderRemoveCouponBtn');
+
+    if (input) input.value = '';
+    if (note) {
+      note.textContent = '';
+      note.classList.add('hidden');
+    }
+    if (remBtn) remBtn.classList.add('hidden');
 
     window.recalculateCheckoutPrice();
   };

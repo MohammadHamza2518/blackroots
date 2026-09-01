@@ -457,14 +457,21 @@
           </div>
 
           <!-- Coupon Strip -->
-          <div class="bg-[#0e111a] border border-white/[0.08] rounded-2xl p-3.5 sm:p-4 flex flex-col sm:flex-row items-center gap-2.5">
-            <div class="flex-1 w-full">
-              <input type="text" id="CheckoutCouponInput" placeholder="Enter Promo Code" class="w-full bg-[#141824] border border-white/[0.12] focus:border-[#d4af37] rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-gray-500 placeholder:normal-case uppercase font-medium transition-all outline-none">
-              <p id="CheckoutCouponNote" class="text-[11px] text-emerald-400 font-semibold mt-1 hidden"></p>
+          <div class="bg-[#0e111a] border border-white/[0.08] rounded-2xl p-3.5 sm:p-4">
+            <div class="flex flex-col sm:flex-row items-center gap-2.5">
+              <div class="flex-1 w-full relative">
+                <input type="text" id="CheckoutCouponInput" placeholder="Enter Promo Code" class="w-full bg-[#141824] border border-white/[0.12] focus:border-[#d4af37] rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-gray-500 placeholder:normal-case uppercase font-medium transition-all outline-none">
+              </div>
+              <div class="flex items-center gap-2 w-full sm:w-auto">
+                <button type="button" id="CheckoutApplyCouponBtn" onclick="applyCheckoutCouponCode()" class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-amber-300 font-bold text-xs border border-white/15 transition-all cursor-pointer whitespace-nowrap">
+                  Apply Code
+                </button>
+                <button type="button" id="CheckoutRemoveCouponBtn" onclick="removeCheckoutCouponCode()" class="hidden px-4 py-2.5 rounded-xl bg-red-500/15 hover:bg-red-500/25 text-red-400 font-bold text-xs border border-red-500/25 transition-all cursor-pointer whitespace-nowrap">
+                  ✕ Remove
+                </button>
+              </div>
             </div>
-            <button type="button" onclick="applyCheckoutCouponCode()" class="w-full sm:w-auto px-5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-amber-300 font-bold text-xs border border-white/15 transition-all cursor-pointer whitespace-nowrap">
-              Apply Code
-            </button>
+            <p id="CheckoutCouponNote" class="text-xs font-semibold mt-2 hidden"></p>
           </div>
 
         </form>
@@ -899,17 +906,41 @@
         };
 
         if (note) {
-          note.textContent = '✓ Creator Code "' + promoCode + '" applied (' + commRate + '% OFF)!';
+          note.textContent = '✓ Coupon "' + promoCode + '" applied (' + commRate + '% OFF)!';
           note.className = 'text-xs text-emerald-400 font-bold mt-1.5 flex items-center gap-1';
           note.classList.remove('hidden');
         }
+        var remBtn = document.getElementById('CheckoutRemoveCouponBtn');
+        if (remBtn) remBtn.classList.remove('hidden');
       } else {
         appliedCoupon = null;
         if (note) {
-          note.textContent = '✕ Invalid creator code: "' + rawCode + '". Only valid creator codes from Admin are accepted.';
+          note.textContent = '✕ Invalid code';
           note.className = 'text-xs text-red-400 font-bold mt-1.5 flex items-center gap-1';
           note.classList.remove('hidden');
         }
+        var remBtn = document.getElementById('CheckoutRemoveCouponBtn');
+        if (remBtn) remBtn.classList.add('hidden');
+      }
+
+      recalculateCheckout();
+    }
+
+    function removeCheckoutCouponCode() {
+      appliedCoupon = null;
+      var input = document.getElementById('CheckoutCouponInput');
+      var note = document.getElementById('CheckoutCouponNote');
+      var remBtn = document.getElementById('CheckoutRemoveCouponBtn');
+
+      if (input) {
+        input.value = '';
+      }
+      if (note) {
+        note.textContent = '';
+        note.classList.add('hidden');
+      }
+      if (remBtn) {
+        remBtn.classList.add('hidden');
       }
 
       recalculateCheckout();
