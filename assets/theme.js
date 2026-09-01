@@ -751,18 +751,9 @@ window.closeQuickOrderModal = function() {
     } catch(e) {}
 
     function findCreatorInDb(dbList) {
-      let deletedList = [];
-      try {
-        deletedList = (JSON.parse(localStorage.getItem('br_deleted_influencers') || '[]')).map(d => String(d).toLowerCase());
-      } catch(e) {}
-
       return (dbList || []).find(u => {
         if (!u) return false;
-        const uId = String(u.id || '').toLowerCase();
-        const uCode = String(u.code || '').toLowerCase();
-        const uUser = String(u.username || '').toLowerCase();
-        if (deletedList.includes(uId) || deletedList.includes(uCode) || deletedList.includes(uUser)) return false;
-        if (u.status === 'Inactive' || u.status === 'Blocked') return false;
+        if (u.status === 'Inactive' || u.status === 'Blocked' || u.status === 'Suspended') return false;
 
         return (u.code && u.code.toUpperCase() === rawCode) || 
                (u.username && u.username.toUpperCase() === rawCode) ||

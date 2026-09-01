@@ -347,7 +347,9 @@ if ($action === 'delete_influencer') {
 
     try {
         $pdo->prepare("DELETE FROM influencers WHERE id = :id OR code = :id OR username = :id")->execute([':id' => $id]);
-        echo json_encode(['success' => true, 'message' => 'Influencer deleted successfully!']);
+        $stmt = $pdo->query("SELECT * FROM influencers ORDER BY id DESC");
+        $list = $stmt->fetchAll();
+        echo json_encode(['success' => true, 'message' => 'Influencer deleted successfully!', 'influencers' => $list]);
         exit;
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);

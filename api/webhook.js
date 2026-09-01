@@ -4,7 +4,7 @@ const path = require('path');
 
 const tmpFile = path.join(require('os').tmpdir(), 'blackroots_db.json');
 function getDb() {
-  let db = { orders: [], influencers: [], deleted_influencers: [], abandoned: [], settings: {} };
+  let db = { orders: [], influencers: [], abandoned: [], settings: {} };
   try {
     if (fs.existsSync(tmpFile)) db = Object.assign(db, JSON.parse(fs.readFileSync(tmpFile, 'utf8')));
   } catch (e) {}

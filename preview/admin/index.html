@@ -1442,107 +1442,59 @@
       loadOrders();
     }
 
-    // 8. Influencers & Payouts Hub (with Resilient Sync & Deletion Engine)
-    function getDeletedInfluencerIds() {
-      try {
-        const raw = JSON.parse(localStorage.getItem('br_deleted_influencers') || '[]');
-        return (Array.isArray(raw) ? raw : []).filter(d => typeof d === 'string' && d.trim().length > 0).map(d => d.trim().toLowerCase());
-      } catch(e) {
-        return [];
-      }
-    }
-
-    function isInfluencerDeleted(inf, deletedList) {
-      if (!inf) return true;
-      const list = (deletedList || getDeletedInfluencerIds());
-      if (!list || !list.length) return false;
-      const id = String(inf.id || '').trim().toLowerCase();
-      const code = String(inf.code || '').trim().toLowerCase();
-      const username = String(inf.username || '').trim().toLowerCase();
-      return (id && list.includes(id)) || (code && list.includes(code)) || (username && list.includes(username));
-    }
-
-    function mergeInfluencerDbs(localList, serverList, deletedList) {
-      const map = new Map();
-      const delSet = new Set((deletedList || []).filter(d => d && d.trim().length > 0).map(d => String(d).toLowerCase().trim()));
-
-      // 1. Add server list first
-      (serverList || []).forEach(u => {
-        if (u && (u.id || u.code)) {
-          const uId = String(u.id || '').toLowerCase().trim();
-          const uCode = String(u.code || '').toLowerCase().trim();
-          const uUser = String(u.username || '').toLowerCase().trim();
-          if ((!uId || !delSet.has(uId)) && (!uCode || !delSet.has(uCode)) && (!uUser || !delSet.has(uUser))) {
-            const key = String(u.id || u.code).toLowerCase().trim();
-            map.set(key, u);
-          }
-        }
-      });
-
-      // 2. Merge local list (local overrides so new additions are never wiped)
-      (localList || []).forEach(u => {
-        if (u && (u.id || u.code)) {
-          const uId = String(u.id || '').toLowerCase().trim();
-          const uCode = String(u.code || '').toLowerCase().trim();
-          const uUser = String(u.username || '').toLowerCase().trim();
-          if ((!uId || !delSet.has(uId)) && (!uCode || !delSet.has(uCode)) && (!uUser || !delSet.has(uUser))) {
-            const key = String(u.id || u.code).toLowerCase().trim();
-            if (map.has(key)) {
-              map.set(key, Object.assign({}, map.get(key), u));
-            } else {
-              map.set(key, u);
-            }
-          }
-        }
-      });
-
-      return Array.from(map.values());
-    }
-
+    // 8. Influencers & Payouts Hub (Direct Universal Database Persistence)
     function getInfluencersAdminDb() {
-      const deletedList = getDeletedInfluencerIds();
       try {
-        let initialized = localStorage.getItem('br_influencers_initialized');
         let stored = localStorage.getItem('br_influencers_db');
-        if (!initialized && stored === null) {
-          localStorage.setItem('br_influencers_initialized', 'true');
-          const cleanDefault = DEFAULT_INFLUENCERS_ADMIN.filter(u => !isInfluencerDeleted(u, deletedList));
-          localStorage.setItem('br_influencers_db', JSON.stringify(cleanDefault));
-          return cleanDefault;
+        if (stored) {
+          let list = JSON.parse(stored);
+          if (Array.isArray(list) && list.length > 0) return list;
         }
-        if (stored !== null) {
-          let list = JSON.parse(stored) || [];
-          return list.filter(u => !isInfluencerDeleted(u, deletedList));
-        }
-        return [];
+        localStorage.setItem('br_influencers_db', JSON.stringify(DEFAULT_INFLUENCERS_ADMIN));
+        return DEFAULT_INFLUENCERS_ADMIN.slice();
       } catch(e) {
-        return [];
+        return DEFAULT_INFLUENCERS_ADMIN.slice();
       }
     }
 
     function saveInfluencersAdminDb(db) {
       try {
-        localStorage.setItem('br_influencers_initialized', 'true');
         localStorage.setItem('br_influencers_db', JSON.stringify(db || []));
       } catch(e) {}
     }
 
+    function mergeInfluencerDbs(localList, serverList) {
+      const map = new Map();
+      (serverList || []).forEach(u => {
+        if (u && (u.id || u.code)) {
+          const key = String(u.code || u.id).toLowerCase().trim();
+          map.set(key, u);
+        }
+      });
+      (localList || []).forEach(u => {
+        if (u && (u.id || u.code)) {
+          const key = String(u.code || u.id).toLowerCase().trim();
+          if (map.has(key)) {
+            map.set(key, Object.assign({}, map.get(key), u));
+          } else {
+            map.set(key, u);
+          }
+        }
+      });
+      return Array.from(map.values());
+    }
+
     async function loadInfluencers() {
-      const deletedList = getDeletedInfluencerIds();
       let res = await apiFetch('get_influencers');
       let payRes = await apiFetch('get_payouts');
 
-      // Merge server's deleted list if available
-      if (res && res.deleted_influencers && Array.isArray(res.deleted_influencers)) {
-        const merged = [...new Set([...deletedList, ...res.deleted_influencers.map(s => String(s).toLowerCase())])];
-        localStorage.setItem('br_deleted_influencers', JSON.stringify(merged));
-      }
-
-      const activeDeleted = getDeletedInfluencerIds();
       const localDb = getInfluencersAdminDb();
       const serverList = (res && res.influencers && Array.isArray(res.influencers)) ? res.influencers : [];
 
-      const db = mergeInfluencerDbs(localDb, serverList, activeDeleted);
+      let db = localDb;
+      if (serverList.length > 0) {
+        db = mergeInfluencerDbs(localDb, serverList);
+      }
       saveInfluencersAdminDb(db);
 
       let payouts = (payRes && payRes.payouts && Array.isArray(payRes.payouts)) ? payRes.payouts : [];
@@ -1816,14 +1768,6 @@
 
       const newId = 'inf-' + Date.now();
 
-      // 1. Remove this code / username from deleted blacklist permanently
-      let deletedList = getDeletedInfluencerIds();
-      deletedList = deletedList.filter(d => {
-        const item = String(d).toLowerCase();
-        return item !== code.toLowerCase() && item !== username.toLowerCase() && item !== newId.toLowerCase();
-      });
-      localStorage.setItem('br_deleted_influencers', JSON.stringify(deletedList));
-
       const newCreator = {
         id: newId,
         name: name,
@@ -1843,8 +1787,13 @@
         created_at: new Date().toISOString().slice(0, 10)
       };
 
-      // 2. Add to local DB and render table immediately (0ms instant display)
-      db.push(newCreator);
+      // 1. Add to local DB and render table immediately (0ms instant display)
+      let exIdx = db.findIndex(u => (u.id && u.id === newId) || (u.code && u.code.toUpperCase() === code));
+      if (exIdx !== -1) {
+        db[exIdx] = Object.assign({}, db[exIdx], newCreator);
+      } else {
+        db.unshift(newCreator);
+      }
       saveInfluencersAdminDb(db);
       renderInfluencersTable(db);
 
@@ -1852,7 +1801,7 @@
       closeAddInfluencerModal();
       document.getElementById('NewInfluencerForm').reset();
 
-      // 3. Persist to backend across all endpoints
+      // 2. Persist to backend across all endpoints
       try {
         await apiFetch('save_influencer', {
           method: 'POST',
@@ -1861,7 +1810,7 @@
         });
       } catch(err) {}
 
-      // 4. Safe sync
+      // 3. Re-sync with backend
       await loadInfluencers();
       alert(`✓ Influencer "${name}" (Code: ${code}, ${comm}% commission) created and activated successfully!`);
     }
@@ -1888,40 +1837,25 @@
       if (!confirm('Are you sure you want to delete this influencer account?')) return;
 
       let db = getInfluencersAdminDb();
-      const target = db.find(u => u.id === id || u.code === id || u.username === id);
-      
-      // 1. Immediately record in permanent deleted blacklist
-      let deletedList = getDeletedInfluencerIds();
-      if (target) {
-        if (target.id) deletedList.push(String(target.id).toLowerCase());
-        if (target.code) deletedList.push(String(target.code).toLowerCase());
-        if (target.username) deletedList.push(String(target.username).toLowerCase());
-      }
-      deletedList.push(String(id).toLowerCase());
-      deletedList = [...new Set(deletedList.filter(d => d && d.trim().length > 0))];
-      localStorage.setItem('br_deleted_influencers', JSON.stringify(deletedList));
-
-      // 2. Immediately filter local state & storage and re-render table in 0ms
-      db = db.filter(u => !isInfluencerDeleted(u, deletedList));
+      db = db.filter(u => u.id !== id && u.code !== id);
       saveInfluencersAdminDb(db);
       renderInfluencersTable(db);
 
-      // 3. Call backend to delete permanently across all endpoints
+      // Call backend to delete permanently across all endpoints
       try {
         let res = await apiFetch('delete_influencer', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: id, deleted_list: deletedList })
+          body: JSON.stringify({ id: id })
         });
-        if (res && res.deleted_influencers && Array.isArray(res.deleted_influencers)) {
-          const merged = [...new Set([...deletedList, ...res.deleted_influencers.map(s => String(s).toLowerCase())])];
-          localStorage.setItem('br_deleted_influencers', JSON.stringify(merged));
+        if (res && res.influencers && Array.isArray(res.influencers)) {
+          saveInfluencersAdminDb(res.influencers);
+          renderInfluencersTable(res.influencers);
         }
       } catch(err) {
         console.error('Delete influencer error:', err);
       }
 
-      // 4. Re-render with full metrics updated
       await loadInfluencers();
     }
 
