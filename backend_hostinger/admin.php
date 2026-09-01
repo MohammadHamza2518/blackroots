@@ -344,10 +344,13 @@ if ($action === 'save_influencer') {
 if ($action === 'delete_influencer') {
     $raw = file_get_contents('php://input');
     $input = json_decode($raw, true) ?: $_POST;
-    $id = trim($input['id'] ?? '');
+    $id = trim($input['id'] ?? ($_GET['id'] ?? ''));
 
     try {
-        $pdo->prepare("DELETE FROM influencers WHERE id = :id OR code = :id OR username = :id")->execute([':id' => $id]);
+        if (!empty($id)) {
+            $del = $pdo->prepare("DELETE FROM influencers WHERE id = ? OR code = ? OR username = ? OR LOWER(code) = LOWER(?) OR LOWER(username) = LOWER(?)");
+            $del->execute([$id, $id, $id, $id, $id]);
+        }
         $stmt = $pdo->query("SELECT * FROM influencers ORDER BY id DESC");
         $list = $stmt->fetchAll();
         echo json_encode(['success' => true, 'message' => 'Influencer deleted successfully!', 'influencers' => $list]);
