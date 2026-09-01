@@ -1195,27 +1195,37 @@
       }
     }
 
+    let currentAudioSource = null;
+    let playCtx = null;
+
     function enqueueAndPlayAudio(buffer) {
+      if (callState !== 'connected') return;
       audioQueue.push(buffer);
       if (!isPlayingAudio) playNextInQueue();
     }
 
     function playNextInQueue() {
-      if (audioQueue.length === 0) {
+      if (callState !== 'connected' || audioQueue.length === 0) {
         isPlayingAudio = false;
+        currentAudioSource = null;
         setTimeout(() => {
           if (callState === 'connected') setCallState('Listening to you...', false);
-        }, 150);
+        }, 120);
         return;
       }
 
       isPlayingAudio = true;
-      setCallState('Dr. Pooja speaking...', true);
+      setCallState('Doctor Pooja speaking...', true);
 
       const buffer = audioQueue.shift();
-      const playCtx = new (window.AudioContext || window.webkitAudioContext)();
-
       try {
+        if (!playCtx || playCtx.state === 'closed') {
+          playCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (playCtx.state === 'suspended') {
+          playCtx.resume();
+        }
+
         const samples = buffer.byteLength / 2;
         const pcmData = new Int16Array(buffer);
         const float32 = new Float32Array(samples);
@@ -1227,22 +1237,20 @@
         const source = playCtx.createBufferSource();
         source.buffer = audioBuffer;
         source.connect(playCtx.destination);
+        currentAudioSource = source;
+
         source.onended = function() {
-          try { playCtx.close(); } catch(e) {}
-          playNextInQueue();
+          if (currentAudioSource === source) {
+            currentAudioSource = null;
+          }
+          if (callState === 'connected') {
+            playNextInQueue();
+          }
         };
         source.start();
       } catch(e) {
-        playCtx.decodeAudioData(buffer.slice(0), (decoded) => {
-          const source = playCtx.createBufferSource();
-          source.buffer = decoded;
-          source.connect(playCtx.destination);
-          source.onended = () => { try { playCtx.close(); } catch(e) {} playNextInQueue(); };
-          source.start();
-        }, () => {
-          try { playCtx.close(); } catch(e) {}
-          playNextInQueue();
-        });
+        currentAudioSource = null;
+        if (callState === 'connected') playNextInQueue();
       }
     }
 
@@ -1274,7 +1282,7 @@
       if (!convWs || convWs.readyState !== WebSocket.OPEN) return;
       const transcript = document.getElementById('VoiceTranscript');
       if (transcript) transcript.textContent = 'You: ' + text;
-      setCallState('Dr. Pooja thinking...', false);
+      setCallState('Doctor Pooja thinking...', false);
       try {
         convWs.send(JSON.stringify({
           user_audio_chunk: null,
@@ -1288,10 +1296,24 @@
       stopRingtone();
       stopTimer();
 
+      // Instantly kill any currently playing audio
+      if (currentAudioSource) {
+        try { currentAudioSource.stop(); } catch(e) {}
+        currentAudioSource = null;
+      }
+      if (playCtx) {
+        try { playCtx.close(); } catch(e) {}
+        playCtx = null;
+      }
+      audioQueue = [];
+      isPlayingAudio = false;
+
+      // Kill WebSocket connection
       if (convWs) {
         try { convWs.close(); } catch(e) {}
         convWs = null;
       }
+      // Kill microphone stream & processor
       if (scriptProcessor) {
         try { scriptProcessor.disconnect(); } catch(e) {}
         scriptProcessor = null;
@@ -1304,8 +1326,6 @@
         micStream.getTracks().forEach(t => t.stop());
         micStream = null;
       }
-      audioQueue = [];
-      isPlayingAudio = false;
 
       showScreen('Ended');
     }
@@ -1316,6 +1336,10 @@
       isSpeaker = false;
       audioQueue = [];
       isPlayingAudio = false;
+      if (currentAudioSource) {
+        try { currentAudioSource.stop(); } catch(e) {}
+        currentAudioSource = null;
+      }
       showScreen('Ringing');
       startRingtone();
     }
