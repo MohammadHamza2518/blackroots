@@ -41,7 +41,7 @@ if ($action === 'login') {
 }
 
 // 2. Auth Check (Only for admin-restricted mutating actions if session strictly required)
-$public_actions = ['get_public_config', 'login', 'influencer_login', 'get_influencers', 'save_influencer', 'delete_influencer', 'get_payouts', 'request_payout', 'get_orders', 'get_dashboard', 'get_visitors', 'get_abandoned', 'update_order', 'verify_coupon'];
+$public_actions = ['get_public_config', 'login', 'influencer_login', 'get_influencers', 'save_influencer', 'delete_influencer', 'get_payouts', 'request_payout', 'get_orders', 'get_dashboard', 'get_visitors', 'get_abandoned', 'update_order', 'verify_coupon', 'save_order'];
 if (!in_array($action, $public_actions) && empty($_SESSION['blackroots_admin_logged'])) {
     echo json_encode(['success' => false, 'auth_required' => true, 'error' => 'Unauthorized']);
     exit;
@@ -53,6 +53,81 @@ if ($action === 'logout') {
     session_destroy();
     echo json_encode(['success' => true]);
     exit;
+}
+
+// 3b. Universal Save Order Endpoint (Zero-Loss Dispatch)
+if ($action === 'save_order') {
+    $raw = file_get_contents('php://input');
+    $input = json_decode($raw, true) ?: $_POST;
+
+    $order_id = trim($input['order_id'] ?? ('#BR-' . rand(1000, 9999)));
+    $name = trim($input['name'] ?? 'Customer');
+    $phone = trim($input['phone'] ?? '');
+    $email = trim($input['email'] ?? '');
+    $address = trim($input['address'] ?? '');
+    $city = trim($input['city'] ?? 'India');
+    $state = trim($input['state'] ?? 'Uttar Pradesh');
+    $pincode = trim($input['pincode'] ?? '000000');
+    $bundle = trim($input['product_bundle'] ?? ($input['bundle'] ?? '1 Bottle (250ml)'));
+    $price = floatval($input['price'] ?? 499);
+    $payment_method = trim($input['payment_method'] ?? 'COD');
+    $status = trim($input['status'] ?? ((stripos($payment_method, 'online') !== false || stripos($payment_method, 'paid') !== false) ? 'Paid' : 'New'));
+    $awb = trim($input['tracking_awb'] ?? ('8839' . rand(100000, 999999)));
+    $courier = trim($input['courier'] ?? 'Delhivery Express Air');
+    $coupon = trim($input['coupon'] ?? ($input['coupon_code'] ?? ''));
+
+    try {
+        $st = $pdo->prepare("SELECT id FROM orders WHERE order_id = ?");
+        $st->execute([$order_id]);
+        $existing = $st->fetch();
+
+        if ($existing) {
+            $up = $pdo->prepare("
+                UPDATE orders SET 
+                    name = ?, phone = ?, email = ?, address = ?, city = ?, state = ?, pincode = ?, 
+                    product_bundle = ?, price = ?, payment_method = ?, status = ?, tracking_awb = ?, courier = ?
+                WHERE order_id = ?
+            ");
+            $up->execute([$name, $phone, $email, $address, $city, $state, $pincode, $bundle, $price, $payment_method, $status, $awb, $courier, $order_id]);
+        } else {
+            $ins = $pdo->prepare("
+                INSERT INTO orders (order_id, name, phone, email, address, city, state, pincode, product_bundle, price, payment_method, status, tracking_awb, courier, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, datetime('now'))
+            ");
+            $ins->execute([$order_id, $name, $phone, $email, $address, $city, $state, $pincode, $bundle, $price, $payment_method, $status, $awb, $courier]);
+        }
+
+        // Real-time Influencer Attribution
+        if (!empty($coupon)) {
+            $cClean = strtoupper($coupon);
+            $infSt = $pdo->prepare("SELECT * FROM influencers WHERE UPPER(code) = ? OR UPPER(username) = ? OR UPPER(code) = ? OR UPPER(username) = ? LIMIT 1");
+            $infSt->execute([$cClean, $cClean, $cClean . '10', $cClean . '10']);
+            $inf = $infSt->fetch();
+            if ($inf) {
+                $comm = round($price * (($inf['comm_rate'] ?? 10) / 100));
+                $upInf = $pdo->prepare("
+                    UPDATE influencers 
+                    SET total_orders = COALESCE(total_orders, 0) + 1,
+                        total_sales = COALESCE(total_sales, 0) + ?,
+                        total_earned = COALESCE(total_earned, 0) + ?,
+                        unpaid_balance = COALESCE(unpaid_balance, 0) + ?
+                    WHERE id = ?
+                ");
+                $upInf->execute([$price, $comm, $comm, $inf['id']]);
+            }
+        }
+
+        // Recover abandoned checkout
+        try {
+            $pdo->prepare("UPDATE abandoned_checkouts SET recovered = 1 WHERE phone = ?")->execute([$phone]);
+        } catch (Exception $e) {}
+
+        echo json_encode(['success' => true, 'order_id' => $order_id, 'message' => 'Order tracked and saved successfully!']);
+        exit;
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        exit;
+    }
 }
 
 // 4. Get Dashboard Statistics

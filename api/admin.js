@@ -298,6 +298,52 @@ module.exports = async (req, res) => {
     });
   }
 
+  // 5b. Save Order API
+  if (action === 'save_order') {
+    let body = req.body || {};
+    if (typeof body === 'string') {
+      try { body = JSON.parse(body); } catch(e) { body = {}; }
+    }
+    const order_id = body.order_id || ('#BR-' + (1025 + (memoryStore.orders || []).length));
+    const newOrd = Object.assign({
+      id: (memoryStore.orders || []).length + 1,
+      order_id: order_id,
+      created_at: new Date().toISOString().replace('T', ' ').slice(0, 19),
+      status: (body.payment_method && (body.payment_method.toLowerCase().includes('online') || body.payment_method.toLowerCase().includes('paid'))) ? 'Paid' : 'New',
+      tracking_awb: body.tracking_awb || ('8839' + Math.floor(100000 + Math.random() * 900000)),
+      courier: 'Delhivery Express Air'
+    }, body);
+
+    if (!memoryStore.orders) memoryStore.orders = [];
+    const exIdx = memoryStore.orders.findIndex(o => o && o.order_id === order_id);
+    if (exIdx !== -1) {
+      memoryStore.orders[exIdx] = Object.assign({}, memoryStore.orders[exIdx], newOrd);
+    } else {
+      memoryStore.orders.unshift(newOrd);
+    }
+
+    // Influencer attribution
+    const couponUsed = String(newOrd.coupon || newOrd.influencer || '').trim().toUpperCase();
+    if (couponUsed && memoryStore.influencers) {
+      const inf = memoryStore.influencers.find(u =>
+        (u.code && u.code.toUpperCase() === couponUsed) ||
+        (u.username && u.username.toUpperCase() === couponUsed) ||
+        (u.code && u.code.toUpperCase() === couponUsed + '10') ||
+        (u.id && u.id.toUpperCase() === couponUsed)
+      );
+      if (inf) {
+        inf.total_orders = (Number(inf.total_orders) || 0) + 1;
+        inf.total_sales = (Number(inf.total_sales) || 0) + (Number(newOrd.price) || 499);
+        const commAmt = Math.round((Number(newOrd.price) || 499) * ((inf.comm_rate || 10) / 100));
+        inf.total_earned = (Number(inf.total_earned) || 0) + commAmt;
+        inf.unpaid_balance = (Number(inf.unpaid_balance) || 0) + commAmt;
+      }
+    }
+
+    saveDb();
+    return res.status(200).json({ success: true, order_id: order_id, order: newOrd });
+  }
+
   // 6. Get Orders
   if (action === 'get_orders') {
     const search = (req.query.search || '').toLowerCase();

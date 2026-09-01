@@ -1164,8 +1164,22 @@
           }
         } catch(e) {}
 
-        // 2. Dispatch to Server Endpoints
-        var endpoints = ['api/order', 'api/order.js', 'api/order.php', 'backend_hostinger/order.php'];
+        // 2. Dispatch to Server Endpoints (Universal High-Availability Multi-Tier)
+        var isSubdir = window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
+        var prefix = isSubdir ? '../' : '';
+        var endpoints = [
+          prefix + 'backend_hostinger/admin.php?action=save_order',
+          '/backend_hostinger/admin.php?action=save_order',
+          '/api/admin?action=save_order',
+          prefix + 'api/admin?action=save_order',
+          prefix + 'api/admin.js?action=save_order',
+          prefix + 'backend_hostinger/order.php',
+          '/backend_hostinger/order.php',
+          '/api/order',
+          prefix + 'api/order',
+          prefix + 'api/order.js',
+          prefix + 'api/order.php'
+        ];
         for (var i = 0; i < endpoints.length; i++) {
           try {
             fetch(endpoints[i], {

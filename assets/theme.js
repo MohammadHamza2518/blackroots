@@ -635,8 +635,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /* 📦 Quick Order Modal Global Controls (Bulletproof & Immediate) */
-// Fixed: Cleaned conflicting quick order invoker
-window.closeQuickOrderModal = function() {
+(function() {
+  window.closeQuickOrderModal = function() {
     const modal = document.getElementById('QuickOrderModal');
     if (modal) {
       modal.style.display = 'none';
@@ -730,7 +730,7 @@ window.closeQuickOrderModal = function() {
   };
 
   // Apply Coupon Function (Strict Validation)
-  window.applyCheckoutCoupon = function() {
+  window.applyCheckoutCoupon = async function() {
     const input = document.getElementById('OrderCouponInput');
     const note = document.getElementById('CouponDiscountNote');
     if (!input) return;
@@ -989,7 +989,21 @@ window.closeQuickOrderModal = function() {
 
         try {
           let orderData = null;
-          const endpoints = ['api/order', 'api/order.js', 'api/order.php', 'backend_hostinger/order.php'];
+          const isSubdir = window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
+          const prefix = isSubdir ? '../' : '';
+          const endpoints = [
+            prefix + 'backend_hostinger/admin.php?action=save_order',
+            '/backend_hostinger/admin.php?action=save_order',
+            '/api/admin?action=save_order',
+            prefix + 'api/admin?action=save_order',
+            prefix + 'api/admin.js?action=save_order',
+            prefix + 'backend_hostinger/order.php',
+            '/backend_hostinger/order.php',
+            '/api/order',
+            prefix + 'api/order',
+            prefix + 'api/order.js',
+            prefix + 'api/order.php'
+          ];
           for (let ep of endpoints) {
             try {
               let res = await fetch(ep, {
@@ -1745,7 +1759,21 @@ window.closeIngredientModal = closeIngredientModal;
 
         try {
           let orderData = null;
-          const endpoints = ['api/order', 'api/order.js', 'api/order.php', 'backend_hostinger/order.php'];
+          const isSubdir = window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
+          const prefix = isSubdir ? '../' : '';
+          const endpoints = [
+            prefix + 'backend_hostinger/admin.php?action=save_order',
+            '/backend_hostinger/admin.php?action=save_order',
+            '/api/admin?action=save_order',
+            prefix + 'api/admin?action=save_order',
+            prefix + 'api/admin.js?action=save_order',
+            prefix + 'backend_hostinger/order.php',
+            '/backend_hostinger/order.php',
+            '/api/order',
+            prefix + 'api/order',
+            prefix + 'api/order.js',
+            prefix + 'api/order.php'
+          ];
           for (let ep of endpoints) {
             try {
               let res = await fetch(ep, {
