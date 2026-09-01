@@ -1191,6 +1191,12 @@
           } catch(err) {}
         }
 
+        // Broadcast to all open tabs (Admin Panel, Influencer Portal)
+        try {
+          var liveChannel = new BroadcastChannel('blackroots_live_stream');
+          liveChannel.postMessage({ type: 'NEW_ORDER', order: payload });
+        } catch(e) {}
+
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.innerHTML = originalBtnHtml;

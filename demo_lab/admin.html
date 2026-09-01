@@ -1139,6 +1139,26 @@
       else if (currentTab === 'settings') loadSettings();
     }
 
+    // Real-Time Cross-Tab Live Stream Listener
+    try {
+      const liveChannel = new BroadcastChannel('blackroots_live_stream');
+      liveChannel.onmessage = function(e) {
+        if (e.data && (e.data.type === 'NEW_ORDER' || e.data.type === 'SAVE_ORDER')) {
+          loadDashboard();
+          if (currentTab === 'orders') loadOrders();
+          if (currentTab === 'influencers') loadInfluencers();
+        }
+      };
+    } catch(e) {}
+
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'br_local_orders' || e.key === 'br_influencers_db') {
+        loadDashboard();
+        if (currentTab === 'orders') loadOrders();
+        if (currentTab === 'influencers') loadInfluencers();
+      }
+    });
+
     // 5. Load Overview Dashboard
     async function loadDashboard() {
       let data = await apiFetch('get_dashboard');
@@ -1146,6 +1166,19 @@
       let serverOrders = (ordRes && ordRes.orders && Array.isArray(ordRes.orders)) ? ordRes.orders : [];
       let localOrders = [];
       try { localOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]'); } catch(e) {}
+
+      // Zero-Loss Background Cloud Sync
+      if (localOrders.length > 0) {
+        localOrders.forEach(function(lo) {
+          if (lo && lo.order_id && !serverOrders.some(function(so) { return so.order_id === lo.order_id; })) {
+            apiFetch('save_order', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(lo)
+            }).catch(function() {});
+          }
+        });
+      }
 
       let orderMap = new Map();
       serverOrders.forEach(o => { if (o && o.order_id) orderMap.set(o.order_id, o); });
