@@ -1473,13 +1473,35 @@
       let res = await apiFetch('get_influencers');
       let payRes = await apiFetch('get_payouts');
 
-      let db = [];
-      if (res && res.influencers && Array.isArray(res.influencers)) {
-        db = res.influencers;
-        saveInfluencersAdminDb(db);
-      } else {
-        db = getInfluencersAdminDb();
-      }
+      let serverList = (res && res.influencers && Array.isArray(res.influencers)) ? res.influencers : [];
+      let localList = getInfluencersAdminDb();
+
+      let infMap = new Map();
+      serverList.forEach(u => {
+        if (u && (u.id || u.code)) infMap.set(String(u.id || u.code).toUpperCase(), u);
+      });
+      localList.forEach(u => {
+        if (u && (u.id || u.code)) {
+          let key = String(u.id || u.code).toUpperCase();
+          let existing = infMap.get(key) || {};
+          infMap.set(key, Object.assign({}, existing, u));
+        }
+      });
+
+      let db = Array.from(infMap.values());
+      if (db.length === 0) db = DEFAULT_INFLUENCERS_ADMIN.slice();
+      saveInfluencersAdminDb(db);
+
+      // Background cloud sync for any local-first creators
+      localList.forEach(function(u) {
+        if (u && u.id && !serverList.some(function(su) { return su.id === u.id || (su.code && su.code.toUpperCase() === u.code.toUpperCase()); })) {
+          apiFetch('save_influencer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(u)
+          }).catch(function() {});
+        }
+      });
 
       let payouts = (payRes && payRes.payouts && Array.isArray(payRes.payouts)) ? payRes.payouts : [];
       if (payouts.length > 0) {

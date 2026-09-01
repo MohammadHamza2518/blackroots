@@ -4,58 +4,40 @@ const path = require('path');
 
 const defaultInfluencers = [
   {
-    id: 'inf-103',
-    name: 'Mohd Faiz',
-    username: 'LEDUBHAIYA',
-    phone: '9580835179',
-    handle: 'faiz_cawnpore78',
-    code: 'LEDUBHAI',
-    password: 'ledubhaiya',
+    id: 'inf-104',
+    name: 'Airam',
+    username: 'airam',
+    phone: '9876543210',
+    handle: '@airam_beauty',
+    code: 'AIRAM10',
+    password: 'airam',
     comm_rate: 10,
-    clicks: 14,
+    clicks: 0,
     total_orders: 0,
     total_sales: 0,
     total_earned: 0,
     unpaid_balance: 0,
     upi_id: '',
     status: 'Active',
-    created_at: '2026-08-28'
+    created_at: '2026-09-01'
   },
   {
-    id: 'inf-101',
-    name: 'Priya Sharma',
-    username: 'PRIYA10',
-    phone: '9876543210',
-    handle: '@priya_haircare',
-    code: 'PRIYA10',
-    password: 'blackroots',
+    id: 'inf-105',
+    name: 'Ilma',
+    username: 'ilma',
+    phone: '9876543211',
+    handle: '@ilma_care',
+    code: 'ILMA10',
+    password: 'ilma',
     comm_rate: 10,
-    clicks: 342,
-    total_orders: 18,
-    total_sales: 14382,
-    total_earned: 1438,
-    unpaid_balance: 1438,
-    upi_id: 'priya@okaxis',
+    clicks: 0,
+    total_orders: 0,
+    total_sales: 0,
+    total_earned: 0,
+    unpaid_balance: 0,
+    upi_id: '',
     status: 'Active',
-    created_at: '2026-08-01'
-  },
-  {
-    id: 'inf-102',
-    name: 'Rohit Verma',
-    username: 'ROHIT15',
-    phone: '9811223344',
-    handle: '@rohit_grooming',
-    code: 'ROHIT15',
-    password: 'blackroots',
-    comm_rate: 15,
-    clicks: 189,
-    total_orders: 9,
-    total_sales: 7191,
-    total_earned: 1078,
-    unpaid_balance: 1078,
-    upi_id: 'rohit@paytm',
-    status: 'Active',
-    created_at: '2026-08-10'
+    created_at: '2026-09-01'
   }
 ];
 
@@ -112,9 +94,8 @@ module.exports = async (req, res) => {
   const db = getDb();
   if (!db.orders) db.orders = [];
 
-  const orderNum = 1025 + db.orders.length;
-  const orderId = '#BR-' + orderNum;
-  const awb = '8839' + Math.floor(100000 + Math.random() * 900000);
+  const orderId = input.order_id || ('#BR-' + (1025 + db.orders.length));
+  const awb = input.tracking_awb || ('8839' + Math.floor(100000 + Math.random() * 900000));
 
   const newOrder = {
     id: db.orders.length + 1,
@@ -139,24 +120,28 @@ module.exports = async (req, res) => {
     created_at: new Date().toISOString().replace('T', ' ').slice(0, 19)
   };
 
-  db.orders.push(newOrder);
+  const exIdx = db.orders.findIndex(o => o.order_id === orderId);
+  if (exIdx !== -1) {
+    db.orders[exIdx] = Object.assign({}, db.orders[exIdx], newOrder);
+  } else {
+    db.orders.unshift(newOrder);
+  }
 
   // If coupon was used, attribute to creator on server (case-insensitive on code, username, or id)
-  const couponUsed = (newOrder.coupon || newOrder.influencer || '').trim().toUpperCase();
+  const couponUsed = String(newOrder.coupon || newOrder.influencer || '').trim().toUpperCase();
   if (couponUsed && db.influencers) {
     const inf = db.influencers.find(u => 
       (u.code && u.code.toUpperCase() === couponUsed) ||
       (u.username && u.username.toUpperCase() === couponUsed) ||
+      (u.code && u.code.toUpperCase() === couponUsed + '10') ||
       (u.id && u.id.toUpperCase() === couponUsed)
     );
     if (inf) {
       inf.total_orders = (Number(inf.total_orders) || 0) + 1;
       inf.total_sales = (Number(inf.total_sales) || 0) + price;
-      if (newOrder.status === 'Paid') {
-        const commAmt = Math.round(price * ((inf.comm_rate || 10) / 100));
-        inf.total_earned = (Number(inf.total_earned) || 0) + commAmt;
-        inf.unpaid_balance = (Number(inf.unpaid_balance) || 0) + commAmt;
-      }
+      const commAmt = Math.round(price * ((inf.comm_rate || 10) / 100));
+      inf.total_earned = (Number(inf.total_earned) || 0) + commAmt;
+      inf.unpaid_balance = (Number(inf.unpaid_balance) || 0) + commAmt;
     }
   }
 

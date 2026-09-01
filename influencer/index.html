@@ -1000,9 +1000,21 @@
         const payData = await multiEndpointFetch('get_payouts' + (currentInfluencer ? '&influencer_id=' + encodeURIComponent(currentInfluencer.id) : ''));
 
         if (infData && infData.influencers && Array.isArray(infData.influencers)) {
-          localStorage.setItem('br_influencers_db', JSON.stringify(infData.influencers));
+          let localDb = [];
+          try { localDb = JSON.parse(localStorage.getItem('br_influencers_db') || '[]'); } catch(e) {}
+          let infMap = new Map();
+          infData.influencers.forEach(u => { if (u && (u.id || u.code)) infMap.set(String(u.id || u.code).toUpperCase(), u); });
+          localDb.forEach(u => {
+            if (u && (u.id || u.code)) {
+              let key = String(u.id || u.code).toUpperCase();
+              let existing = infMap.get(key) || {};
+              infMap.set(key, Object.assign({}, existing, u));
+            }
+          });
+          const mergedInfs = Array.from(infMap.values());
+          localStorage.setItem('br_influencers_db', JSON.stringify(mergedInfs));
           if (currentInfluencer) {
-            const refreshed = infData.influencers.find(u => u.id === currentInfluencer.id || u.code === currentInfluencer.code || (u.username && u.username.toUpperCase() === currentInfluencer.username.toUpperCase()));
+            const refreshed = mergedInfs.find(u => u.id === currentInfluencer.id || u.code === currentInfluencer.code || (u.username && u.username.toUpperCase() === currentInfluencer.username.toUpperCase()));
             if (refreshed) {
               currentInfluencer = refreshed;
             }
@@ -1010,7 +1022,17 @@
         }
 
         if (ordData && ordData.orders && Array.isArray(ordData.orders)) {
-          localStorage.setItem('br_local_orders', JSON.stringify(ordData.orders));
+          let localOrds = [];
+          try { localOrds = JSON.parse(localStorage.getItem('br_local_orders') || '[]'); } catch(e) {}
+          let ordMap = new Map();
+          ordData.orders.forEach(o => { if (o && o.order_id) ordMap.set(o.order_id, o); });
+          localOrds.forEach(o => {
+            if (o && o.order_id) {
+              let existing = ordMap.get(o.order_id) || {};
+              ordMap.set(o.order_id, Object.assign({}, existing, o));
+            }
+          });
+          localStorage.setItem('br_local_orders', JSON.stringify(Array.from(ordMap.values())));
         }
 
         if (payData && payData.payouts && Array.isArray(payData.payouts)) {

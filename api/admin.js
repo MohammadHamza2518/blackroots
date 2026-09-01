@@ -340,6 +340,65 @@ module.exports = async (req, res) => {
       }
     }
 
+    // Shiprocket Auto-Push on Vercel
+    const srEmail = (memoryStore.settings && memoryStore.settings.shiprocket_email) || 'api@blackroots.in';
+    const srPass = (memoryStore.settings && memoryStore.settings.shiprocket_password) || '';
+    if (srEmail && srPass) {
+      try {
+        const authRes = await fetch('https://apiv2.shiprocket.in/v1/external/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: srEmail, password: srPass })
+        });
+        if (authRes.ok) {
+          const authData = await authRes.json();
+          if (authData.token) {
+            const firstName = (newOrd.name || 'Customer').split(' ')[0];
+            const lastName = (newOrd.name || 'Customer').replace(firstName, '').trim() || 'Customer';
+            await fetch('https://apiv2.shiprocket.in/v1/external/orders/create/adhoc', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authData.token}`
+              },
+              body: JSON.stringify({
+                order_id: String(newOrd.order_id || '').replace('#', ''),
+                order_date: new Date().toISOString().replace('T', ' ').slice(0, 16),
+                pickup_location: 'Home',
+                channel_id: '',
+                billing_customer_name: firstName,
+                billing_last_name: lastName,
+                billing_address: newOrd.address || 'Address',
+                billing_city: newOrd.city || 'India',
+                billing_pincode: newOrd.pincode || '208001',
+                billing_state: newOrd.state || 'Uttar Pradesh',
+                billing_country: 'India',
+                billing_email: newOrd.email || 'blackroots.in@gmail.com',
+                billing_phone: newOrd.phone || '9580835179',
+                shipping_is_billing: true,
+                order_items: [
+                  {
+                    name: 'BlackRoots Herbal Hair Dye Shampoo (250ml)',
+                    sku: 'BR-SHAMPOO-250ML',
+                    units: String(newOrd.product_bundle || '').includes('2') ? 2 : 1,
+                    selling_price: Number(newOrd.price) || 499,
+                    discount: 0,
+                    tax: 0
+                  }
+                ],
+                payment_method: String(newOrd.payment_method || '').toLowerCase().includes('online') ? 'Prepaid' : 'COD',
+                sub_total: Number(newOrd.price) || 499,
+                length: 15,
+                breadth: 10,
+                height: 8,
+                weight: String(newOrd.product_bundle || '').includes('2') ? 0.6 : 0.35
+              })
+            });
+          }
+        }
+      } catch (srErr) {}
+    }
+
     saveDb();
     return res.status(200).json({ success: true, order_id: order_id, order: newOrd });
   }
