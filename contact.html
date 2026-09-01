@@ -282,7 +282,42 @@
       
       <span class="text-[#d4af37] font-serif text-sm font-bold uppercase tracking-widest block mb-2">Customer Care & Support</span>
       <h1 class="font-serif text-4xl sm:text-6xl font-bold text-white mb-4">Contact <span class="gold-gradient-text">BlackRoots</span></h1>
-      <p class="text-gray-300 text-sm max-w-lg mx-auto mb-12">Have questions about your order or botanical hair care? We're here to help.</p>
+      <p class="text-gray-300 text-sm max-w-lg mx-auto mb-8">Have questions about your order or botanical hair care? We're here to help.</p>
+
+      <!-- 🎙️ Live AI Voice Calling Card (Urban Company / ChatGPT Voice Grade) -->
+      <div class="mb-10 p-6 sm:p-8 rounded-3xl bg-gradient-to-b from-[#151922] via-[#10131a] to-[#0c0e14] border-2 border-[#d4af37]/60 shadow-[0_20px_60px_rgba(0,0,0,0.85)] relative overflow-hidden text-left group">
+        <div class="absolute -right-10 -top-10 w-56 h-56 bg-emerald-500/15 rounded-full blur-3xl pointer-events-none group-hover:bg-emerald-500/25 transition-all"></div>
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+          
+          <div class="flex items-center gap-4 sm:gap-5">
+            <div class="relative shrink-0">
+              <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-[#123824] via-[#1a4a30] to-[#d4af37] border-2 border-[#d4af37] flex items-center justify-center text-3xl sm:text-4xl shadow-2xl">
+                👩‍⚕️
+              </div>
+              <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-400 border-2 border-black rounded-full animate-ping"></span>
+              <span class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-400 border-2 border-black rounded-full"></span>
+            </div>
+            <div class="space-y-1">
+              <div class="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-[10px] sm:text-xs font-bold uppercase tracking-wider">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Live AI Voice Calling • Instant Connect</span>
+              </div>
+              <h2 class="font-serif text-xl sm:text-2xl font-bold text-white">Talk to Dr. Pooja (AI Hair Specialist)</h2>
+              <p class="text-xs text-gray-300 font-light max-w-xl leading-relaxed">
+                Direct in-browser human-like voice call in <strong class="text-amber-300 font-semibold">Hindi, Hinglish & English</strong>. Ask about grey hair reversal, 10-minute application, COD payment, or order dispatch.
+              </p>
+            </div>
+          </div>
+
+          <button type="button" onclick="startAIVoiceCall()" class="w-full md:w-auto px-7 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-600 hover:from-emerald-400 hover:to-teal-500 text-black font-black text-xs sm:text-sm uppercase tracking-wider shadow-[0_10px_35px_rgba(16,185,129,0.4)] flex items-center justify-center gap-2.5 transition-all active:scale-95 shrink-0 cursor-pointer hover:brightness-110">
+            <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+            </svg>
+            <span>📞 Call Dr. Pooja Now (Free)</span>
+          </button>
+
+        </div>
+      </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
         
@@ -484,6 +519,312 @@
     </div>
 
   </div>
+
+  <!-- 📞 In-Browser Live AI Voice Calling Modal (ChatGPT Voice / Urban Company Grade) -->
+  <div id="AIVoiceCallModal" class="hidden fixed inset-0 z-[999999] bg-black/90 backdrop-blur-xl flex items-center justify-center p-4">
+    <div class="w-full max-w-lg rounded-3xl bg-gradient-to-b from-[#151922] via-[#0f1218] to-[#08090d] border-2 border-[#d4af37]/60 shadow-[0_25px_80px_rgba(0,0,0,0.95)] overflow-hidden flex flex-col relative text-center">
+      
+      <!-- Top Call Header -->
+      <div class="p-4 border-b border-white/10 flex items-center justify-between bg-black/40">
+        <div class="flex items-center gap-2 text-left">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Encrypted HD Voice Call</span>
+        </div>
+        <div id="AIVoiceTimer" class="font-mono text-xs font-bold text-amber-300 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/30">
+          00:00
+        </div>
+        <button type="button" onclick="endAIVoiceCall()" class="text-gray-400 hover:text-white text-lg font-bold p-1">&times;</button>
+      </div>
+
+      <!-- Main In-Call Body -->
+      <div class="p-6 sm:p-8 space-y-6 flex flex-col items-center">
+        
+        <!-- Animated Voice Pulsing Rings & Doctor Avatar -->
+        <div class="relative flex items-center justify-center my-2">
+          <div id="AIVoiceRipple1" class="absolute w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-[#d4af37]/15 animate-ping pointer-events-none"></div>
+          <div id="AIVoiceRipple2" class="absolute w-28 h-28 sm:w-32 sm:h-32 rounded-full bg-emerald-500/20 animate-pulse pointer-events-none"></div>
+          <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-tr from-[#123824] via-[#1a4a30] to-[#d4af37] border-4 border-[#d4af37] flex items-center justify-center text-4xl sm:text-5xl shadow-2xl relative z-10">
+            👩‍⚕️
+          </div>
+        </div>
+
+        <!-- Doctor Info & Live Speaking State -->
+        <div class="space-y-1 text-center">
+          <h3 class="font-serif text-2xl font-bold text-white">Dr. Pooja</h3>
+          <p class="text-xs text-[#d4af37] font-semibold uppercase tracking-widest">Senior Ayurvedic Consultant &bull; BlackRoots</p>
+          <div id="AIVoiceStatusBadge" class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs font-bold mt-2 shadow-sm">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="AIVoiceStatusText">Connecting call...</span>
+          </div>
+        </div>
+
+        <!-- Live Audio Waveform Animation -->
+        <div id="AIVoiceWaveform" class="flex items-center justify-center gap-1.5 h-8">
+          <span class="w-1 bg-[#d4af37] rounded-full animate-[bounce_1s_infinite_100ms] h-4"></span>
+          <span class="w-1 bg-[#d4af37] rounded-full animate-[bounce_1s_infinite_200ms] h-7"></span>
+          <span class="w-1 bg-emerald-400 rounded-full animate-[bounce_1s_infinite_300ms] h-6"></span>
+          <span class="w-1 bg-emerald-400 rounded-full animate-[bounce_1s_infinite_150ms] h-8"></span>
+          <span class="w-1 bg-[#d4af37] rounded-full animate-[bounce_1s_infinite_250ms] h-5"></span>
+          <span class="w-1 bg-[#d4af37] rounded-full animate-[bounce_1s_infinite_350ms] h-3"></span>
+        </div>
+
+        <!-- Live Transcript / Speech Dialogue Box -->
+        <div class="w-full p-4 rounded-2xl bg-black/60 border border-white/10 text-left space-y-2 min-h-[90px] max-h-[140px] overflow-y-auto text-xs">
+          <div class="text-[10px] uppercase font-bold text-gray-400 flex items-center justify-between">
+            <span>Live Subtitles (Hindi & English)</span>
+            <span class="text-emerald-400 font-mono text-[9px]">● Live Audio Stream</span>
+          </div>
+          <p id="AIVoiceSubtitle" class="text-gray-200 leading-relaxed font-light">
+            Namaste! Main Dr. Pooja hoon, BlackRoots Hair Care Specialist. Main aapki kya help kar sakti hoon?
+          </p>
+        </div>
+
+        <!-- Quick Voice Question Chips (1-Click Speak Prompts) -->
+        <div class="w-full space-y-1.5 text-left">
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider block">Tap to ask directly:</span>
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button type="button" onclick="askAIVoiceDirect('Bhai ye shampoo safed baalo ke liye kaisa hai aur kitne din me asar dikhega?')" class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[11px] text-amber-200 hover:bg-[#d4af37] hover:text-black font-medium transition-all cursor-pointer">
+              💬 Safed Baalo Ka Asar?
+            </button>
+            <button type="button" onclick="askAIVoiceDirect('Isko lagane ka sahi tareeqa kya hai aur kitni der lagana hai?')" class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[11px] text-amber-200 hover:bg-[#d4af37] hover:text-black font-medium transition-all cursor-pointer">
+              🧴 Kaise Lagana Hai?
+            </button>
+            <button type="button" onclick="askAIVoiceDirect('Kya isme Cash On Delivery available hai aur delivery kitne din me hogi?')" class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[11px] text-amber-200 hover:bg-[#d4af37] hover:text-black font-medium transition-all cursor-pointer">
+              🚚 COD & Delivery Time?
+            </button>
+            <button type="button" onclick="askAIVoiceDirect('Kya iska koi side effect ya ammonia hai?')" class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[11px] text-amber-200 hover:bg-[#d4af37] hover:text-black font-medium transition-all cursor-pointer">
+              🌿 100% Chemical Free?
+            </button>
+          </div>
+        </div>
+
+        <!-- Bottom Call Action Buttons -->
+        <div class="w-full pt-2 border-t border-white/10 flex items-center justify-center gap-4">
+          <button type="button" id="AIVoiceMicBtn" onclick="toggleAIVoiceMic()" class="px-5 py-3 rounded-2xl bg-white/10 border border-white/20 text-white font-bold text-xs flex items-center gap-2 hover:bg-white/20 transition-all cursor-pointer">
+            <span id="AIVoiceMicIcon">🎙️</span>
+            <span id="AIVoiceMicText">Tap to Speak</span>
+          </button>
+
+          <button type="button" onclick="endAIVoiceCall()" class="px-6 py-3 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-black text-xs uppercase tracking-wider flex items-center gap-2 shadow-[0_5px_20px_rgba(239,68,68,0.4)] transition-all active:scale-95 cursor-pointer">
+            <span>🔴 End Call</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT: Dr. Pooja AI Voice Calling Engine -->
+  <script>
+    let aiCallActive = false;
+    let aiCallTimerInterval = null;
+    let aiCallSeconds = 0;
+    let aiRecognition = null;
+    let isAiSpeaking = false;
+    let isMicListening = false;
+
+    // Comprehensive BlackRoots Brain & FAQ Engine
+    const BLACKROOTS_BRAIN = [
+      {
+        keys: ['safed', 'white', 'grey', 'gray', 'kaala', 'black', 'hair dye', 'colour', 'color', 'reversal', 'natural'],
+        reply: "Namaste ji! BlackRoots 100% natural Ayurvedic Hair Dye Shampoo hai. Isme Amla aur Bhringraj hai jo pehli hi wash me aapke safed baalon ko bina kisi chemical ke natural black shiny look dete hain. Iska rang 3 se 4 hafte tak tikta hai."
+      },
+      {
+        keys: ['kaise lagana', 'use kaise', 'ritual', 'routine', 'how to use', 'apply', 'instruction', 'kitni der'],
+        reply: "Isko use karna bilkul aasan hai: Apne halke geele baalon me shampoo lagayein, achhi tarah jhaag banayein, sirf 10 minute chhod dein, aur fir taaza paani se dho lein. Koi alag se brush ya bowl ki zaroorat nahi hai!"
+      },
+      {
+        keys: ['price', 'kitne ka', 'cost', 'daam', 'rupaye', 'cod', 'cash on delivery', 'delivery', 'kab tak', 'shuklaganj', 'delhivery'],
+        reply: "BlackRoots 1 Bottle (250ml) sirf ₹449 me Cash On Delivery par available hai, aur 2 Bottles ka Family Pack ₹899 me aata hai. Delivery hamare Shuklaganj warehouse se Delhivery Express Air ke zariye 3 se 4 din me ho jati hai."
+      },
+      {
+        keys: ['side effect', 'chemical', 'ammonia', 'paraben', 'safe', 'natural', 'ayurvedic', 'ingredient'],
+        reply: "BlackRoots 100% Ammonia Free aur Paraben Free hai. Isme Shuddh Amla, Shikakai, Bhringraj, Onion Seed Oil aur Hibiscus dala gaya hai. Iska koi bhi side effect nahi hai aur ye scalp ke liye 100% safe hai."
+      },
+      {
+        keys: ['order', 'track', 'kahan hai', 'dispatch', 'status', 'awb', 'whatsapp'],
+        reply: "Aap apna order hamare 'Track Order' page par apna Order ID daal kar live track kar sakte hain. Saath hi hamari official WhatsApp team +91 9580835179 par 24 ghante live support deti hai."
+      },
+      {
+        keys: ['namaste', 'hello', 'hi', 'kaun ho', 'who are you', 'help'],
+        reply: "Namaste! Main Dr. Pooja hoon, BlackRoots Hair Care Specialist. Main aapko baalon ki safedi, shampoo lagane ke tareeqe aur online order me poori help kar sakti hoon. Aap kya poochna chahte hain?"
+      }
+    ];
+
+    function getAIBrainResponse(query) {
+      const q = (query || '').toLowerCase().trim();
+      for (const item of BLACKROOTS_BRAIN) {
+        if (item.keys.some(k => q.includes(k))) {
+          return item.reply;
+        }
+      }
+      return "Ji, main samajh gayi. BlackRoots 100% Ayurvedic Hair Dye Shampoo aapke baalon ko natural black aur majboot banata hai. Isme Ammonia nahi hai aur ye 10 minute me apna asar dikhata hai. Aap ₹449 me Cash on Delivery par order kar sakte hain!";
+    }
+
+    function startAIVoiceCall() {
+      const modal = document.getElementById('AIVoiceCallModal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      aiCallActive = true;
+      aiCallSeconds = 0;
+      updateCallTimer();
+
+      aiCallTimerInterval = setInterval(() => {
+        aiCallSeconds++;
+        updateCallTimer();
+      }, 1000);
+
+      const statusText = document.getElementById('AIVoiceStatusText');
+      const subtitle = document.getElementById('AIVoiceSubtitle');
+      if (statusText) statusText.textContent = "Dr. Pooja is Speaking...";
+
+      const welcomeGreeting = "Namaste! Main Dr. Pooja hoon, BlackRoots Hair Specialist. Main aapki kya help kar sakti hoon?";
+      if (subtitle) subtitle.textContent = welcomeGreeting;
+
+      speakText(welcomeGreeting, () => {
+        initSpeechRecognition();
+      });
+    }
+
+    function updateCallTimer() {
+      const timerEl = document.getElementById('AIVoiceTimer');
+      if (!timerEl) return;
+      const mins = String(Math.floor(aiCallSeconds / 60)).padStart(2, '0');
+      const secs = String(aiCallSeconds % 60).padStart(2, '0');
+      timerEl.textContent = `${mins}:${secs}`;
+    }
+
+    function endAIVoiceCall() {
+      aiCallActive = false;
+      if (aiCallTimerInterval) clearInterval(aiCallTimerInterval);
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+      if (aiRecognition) {
+        try { aiRecognition.stop(); } catch(e) {}
+      }
+      const modal = document.getElementById('AIVoiceCallModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function speakText(text, onComplete) {
+      if (!('speechSynthesis' in window)) {
+        if (onComplete) onComplete();
+        return;
+      }
+      window.speechSynthesis.cancel();
+      isAiSpeaking = true;
+
+      const statusText = document.getElementById('AIVoiceStatusText');
+      if (statusText) statusText.textContent = "🔊 Dr. Pooja is speaking...";
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = 0.95;
+      utterance.pitch = 1.05;
+      utterance.lang = 'hi-IN';
+
+      // Pick Indian voice if available
+      const voices = window.speechSynthesis.getVoices();
+      const hindiVoice = voices.find(v => v.lang.includes('hi') || v.name.includes('India') || v.name.includes('Hindi') || v.lang.includes('en-IN'));
+      if (hindiVoice) utterance.voice = hindiVoice;
+
+      utterance.onend = function() {
+        isAiSpeaking = false;
+        if (statusText) statusText.textContent = "🎙️ Listening to you... (Speak now)";
+        if (onComplete) onComplete();
+      };
+
+      utterance.onerror = function() {
+        isAiSpeaking = false;
+        if (statusText) statusText.textContent = "🎙️ Listening to you... (Speak now)";
+        if (onComplete) onComplete();
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function initSpeechRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        const subtitle = document.getElementById('AIVoiceSubtitle');
+        if (subtitle) subtitle.innerHTML += "<br><span class='text-amber-400 font-bold'>[Mic access not supported in this browser. Please tap the quick question chips below!]</span>";
+        return;
+      }
+
+      if (aiRecognition) {
+        try { aiRecognition.stop(); } catch(e) {}
+      }
+
+      aiRecognition = new SpeechRecognition();
+      aiRecognition.continuous = false;
+      aiRecognition.interimResults = false;
+      aiRecognition.lang = 'hi-IN';
+
+      aiRecognition.onstart = function() {
+        isMicListening = true;
+        const micText = document.getElementById('AIVoiceMicText');
+        const statusText = document.getElementById('AIVoiceStatusText');
+        if (micText) micText.textContent = "Listening...";
+        if (statusText && !isAiSpeaking) statusText.textContent = "🎙️ Listening to you... (Speak now)";
+      };
+
+      aiRecognition.onresult = function(event) {
+        const spokenText = event.results[0][0].transcript;
+        handleUserSpokenQuery(spokenText);
+      };
+
+      aiRecognition.onerror = function(event) {
+        isMicListening = false;
+      };
+
+      aiRecognition.onend = function() {
+        isMicListening = false;
+        const micText = document.getElementById('AIVoiceMicText');
+        if (micText) micText.textContent = "Tap to Speak";
+      };
+
+      try {
+        aiRecognition.start();
+      } catch(e) {}
+    }
+
+    function toggleAIVoiceMic() {
+      if (isAiSpeaking) {
+        window.speechSynthesis.cancel();
+        isAiSpeaking = false;
+      }
+      initSpeechRecognition();
+    }
+
+    function askAIVoiceDirect(questionText) {
+      handleUserSpokenQuery(questionText);
+    }
+
+    function handleUserSpokenQuery(queryText) {
+      if (!queryText) return;
+      const subtitle = document.getElementById('AIVoiceSubtitle');
+      const statusText = document.getElementById('AIVoiceStatusText');
+
+      if (subtitle) {
+        subtitle.innerHTML = `<span class="text-amber-300 font-bold">You:</span> "${queryText}"<br><br><span class="text-emerald-400 font-bold">Dr. Pooja:</span> Thinking...`;
+      }
+      if (statusText) statusText.textContent = "🧠 Dr. Pooja is thinking...";
+
+      setTimeout(() => {
+        const answer = getAIBrainResponse(queryText);
+        if (subtitle) {
+          subtitle.innerHTML = `<span class="text-amber-300 font-bold">You:</span> "${queryText}"<br><br><span class="text-emerald-400 font-bold">Dr. Pooja:</span> ${answer}`;
+        }
+        speakText(answer, () => {
+          setTimeout(initSpeechRecognition, 800);
+        });
+      }, 600);
+    }
+
+    window.startAIVoiceCall = startAIVoiceCall;
+    window.endAIVoiceCall = endAIVoiceCall;
+    window.toggleAIVoiceMic = toggleAIVoiceMic;
+    window.askAIVoiceDirect = askAIVoiceDirect;
+  </script>
 
   <input type="hidden" value="blackroots.in" id="sellerDomain"/>
 <!-- ??? BlackRoots Ultra-Luxury Master D2C Checkout Drawer / Modal -->
