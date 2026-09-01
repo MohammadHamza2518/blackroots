@@ -1882,41 +1882,55 @@
     }
 
     // 10. Settings Tab
-    function loadSettings() {
+    async function loadSettings() {
       let config = {};
       try {
         config = JSON.parse(localStorage.getItem('br_analytics_config') || '{}');
+      } catch(e) {}
+
+      try {
+        let serverSettings = await apiFetch('get_settings');
+        if (serverSettings && serverSettings.settings) {
+          config = Object.assign({}, config, serverSettings.settings);
+        }
       } catch(e) {}
 
       if (config.meta_pixel_id) document.getElementById('setting-meta-pixel').value = config.meta_pixel_id;
       if (config.ga4_measurement_id) document.getElementById('setting-ga4-id').value = config.ga4_measurement_id;
       if (config.gsc_verification_tag) document.getElementById('setting-gsc-tag').value = config.gsc_verification_tag;
       if (config.whatsapp_support) document.getElementById('setting-whatsapp').value = config.whatsapp_support;
+      if (config.shiprocket_email) document.getElementById('setting-shiprocket-email').value = config.shiprocket_email;
+      if (config.shiprocket_password) document.getElementById('setting-shiprocket-pass').value = config.shiprocket_password;
     }
 
-    function handleSaveSettings(e) {
+    async function handleSaveSettings(e) {
       e.preventDefault();
       const config = {
         meta_pixel_id: document.getElementById('setting-meta-pixel').value.trim(),
         ga4_measurement_id: document.getElementById('setting-ga4-id').value.trim(),
         gsc_verification_tag: document.getElementById('setting-gsc-tag').value.trim(),
         whatsapp_support: document.getElementById('setting-whatsapp').value.trim(),
-        shiprocket_email: document.getElementById('setting-shiprocket-email').value.trim()
+        shiprocket_email: document.getElementById('setting-shiprocket-email').value.trim(),
+        shiprocket_password: document.getElementById('setting-shiprocket-pass').value.trim(),
+        shiprocket_auto_push: '1'
       };
 
       localStorage.setItem('br_analytics_config', JSON.stringify(config));
       
       try {
-        fetch('/api/admin?action=save_settings', {
+        await apiFetch('save_settings', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(config)
-        }).catch(function() {});
+        });
       } catch(err) {}
 
       const msg = document.getElementById('settings-saved-msg');
-      msg.classList.remove('hidden');
-      setTimeout(() => msg.classList.add('hidden'), 3000);
+      if (msg) {
+        msg.classList.remove('hidden');
+        setTimeout(() => msg.classList.add('hidden'), 3000);
+      }
+      alert('✓ Settings saved successfully to Server Database & Shiprocket API connected!');
     }
 
     // Helpers

@@ -41,7 +41,7 @@ if ($action === 'login') {
 }
 
 // 2. Auth Check (Only for admin-restricted mutating actions if session strictly required)
-$public_actions = ['get_public_config', 'login', 'influencer_login', 'get_influencers', 'save_influencer', 'delete_influencer', 'get_payouts', 'request_payout', 'get_orders', 'get_dashboard', 'get_visitors', 'get_abandoned', 'update_order', 'verify_coupon', 'save_order'];
+$public_actions = ['get_public_config', 'login', 'influencer_login', 'get_influencers', 'save_influencer', 'delete_influencer', 'get_payouts', 'request_payout', 'get_orders', 'get_dashboard', 'get_visitors', 'get_abandoned', 'update_order', 'verify_coupon', 'save_order', 'get_settings', 'save_settings'];
 if (!in_array($action, $public_actions) && empty($_SESSION['blackroots_admin_logged'])) {
     echo json_encode(['success' => false, 'auth_required' => true, 'error' => 'Unauthorized']);
     exit;
