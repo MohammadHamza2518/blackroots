@@ -836,9 +836,21 @@
           if (!u) return false;
           if (u.status === 'Inactive' || u.status === 'Blocked' || u.status === 'Suspended') return false;
 
-          return (u.code && u.code.toUpperCase() === rawCode) || 
-                 (u.username && u.username.toUpperCase() === rawCode) ||
-                 (u.id && u.id.toUpperCase() === rawCode); 
+          var uCode = String(u.code || '').trim().toUpperCase();
+          var uUser = String(u.username || '').trim().toUpperCase();
+          var uName = String(u.name || '').trim().toUpperCase();
+          var uId = String(u.id || '').trim().toUpperCase();
+          var uHandle = String(u.handle || '').trim().toUpperCase().replace('@', '');
+
+          return uCode === rawCode || 
+                 uUser === rawCode || 
+                 uName === rawCode ||
+                 uId === rawCode ||
+                 uHandle === rawCode ||
+                 (uCode && uCode === rawCode + '10') ||
+                 (rawCode && rawCode === uCode + '10') ||
+                 (uUser && uUser === rawCode + '10') ||
+                 (rawCode && rawCode === uUser + '10');
         });
       }
 
@@ -860,6 +872,11 @@
         var isSubdir = window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
         var prefix = isSubdir ? '../' : '';
         var endpoints = [
+          '/api/admin?action=verify_coupon&code=' + encodeURIComponent(rawCode),
+          prefix + 'api/admin?action=verify_coupon&code=' + encodeURIComponent(rawCode),
+          prefix + 'api/admin.js?action=verify_coupon&code=' + encodeURIComponent(rawCode),
+          prefix + 'backend_hostinger/admin.php?action=verify_coupon&code=' + encodeURIComponent(rawCode),
+          prefix + 'api/admin.php?action=verify_coupon&code=' + encodeURIComponent(rawCode),
           '/api/admin?action=get_influencers',
           prefix + 'api/admin?action=get_influencers',
           prefix + 'api/admin.js?action=get_influencers',
@@ -872,11 +889,12 @@
             var res = await fetch(endpoints[i]);
             if (res.ok) {
               var data = await res.json();
+              if (data && data.valid && data.influencer) {
+                creator = data.influencer;
+                break;
+              }
               if (data && data.influencers && Array.isArray(data.influencers)) {
-                var map = new Map();
-                db.forEach(function(u) { if (u && (u.id || u.code)) map.set(u.id || u.code, u); });
-                data.influencers.forEach(function(u) { if (u && (u.id || u.code)) map.set(u.id || u.code, Object.assign({}, map.get(u.id || u.code) || {}, u)); });
-                db = Array.from(map.values());
+                db = data.influencers;
                 localStorage.setItem('br_influencers_db', JSON.stringify(db));
                 creator = findCreatorInDb(db);
                 if (creator) break;

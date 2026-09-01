@@ -41,7 +41,7 @@ if ($action === 'login') {
 }
 
 // 2. Auth Check (Only for admin-restricted mutating actions if session strictly required)
-$public_actions = ['get_public_config', 'login', 'influencer_login', 'get_influencers', 'save_influencer', 'delete_influencer', 'get_payouts', 'request_payout', 'get_orders', 'get_dashboard', 'get_visitors', 'get_abandoned', 'update_order'];
+$public_actions = ['get_public_config', 'login', 'influencer_login', 'get_influencers', 'save_influencer', 'delete_influencer', 'get_payouts', 'request_payout', 'get_orders', 'get_dashboard', 'get_visitors', 'get_abandoned', 'update_order', 'verify_coupon'];
 if (!in_array($action, $public_actions) && empty($_SESSION['blackroots_admin_logged'])) {
     echo json_encode(['success' => false, 'auth_required' => true, 'error' => 'Unauthorized']);
     exit;
@@ -246,6 +246,48 @@ if ($action === 'push_shiprocket') {
         echo json_encode(['success' => false, 'error' => 'Order not found']);
     }
     exit;
+}
+
+// 10b. Real-Time Coupon Verification Endpoint
+if ($action === 'verify_coupon') {
+    $code = strtoupper(trim($_GET['code'] ?? ($_POST['code'] ?? '')));
+
+    if (empty($code)) {
+        echo json_encode(['success' => false, 'valid' => false, 'error' => 'Please provide a coupon code.']);
+        exit;
+    }
+
+    try {
+        $st = $pdo->prepare("
+            SELECT * FROM influencers 
+            WHERE (
+                UPPER(code) = ? OR 
+                UPPER(username) = ? OR 
+                UPPER(name) = ? OR 
+                UPPER(code) = ? OR 
+                UPPER(username) = ? OR
+                UPPER(REPLACE(handle, '@', '')) = ?
+            ) AND status = 'Active' LIMIT 1
+        ");
+        $st->execute([$code, $code, $code, $code . '10', $code . '10', $code]);
+        $creator = $st->fetch();
+
+        if ($creator) {
+            echo json_encode([
+                'success' => true,
+                'valid' => true,
+                'influencer' => $creator,
+                'code' => $creator['code'],
+                'comm_rate' => (int)($creator['comm_rate'] ?? 10)
+            ]);
+        } else {
+            echo json_encode(['success' => false, 'valid' => false, 'error' => 'Invalid code']);
+        }
+        exit;
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        exit;
+    }
 }
 
 // 11. Influencer Management Endpoints (PHP SQLite & MySQL)

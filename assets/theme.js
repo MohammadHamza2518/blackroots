@@ -755,9 +755,21 @@ window.closeQuickOrderModal = function() {
         if (!u) return false;
         if (u.status === 'Inactive' || u.status === 'Blocked' || u.status === 'Suspended') return false;
 
-        return (u.code && u.code.toUpperCase() === rawCode) || 
-               (u.username && u.username.toUpperCase() === rawCode) ||
-               (u.id && u.id.toUpperCase() === rawCode);
+        const uCode = String(u.code || '').trim().toUpperCase();
+        const uUser = String(u.username || '').trim().toUpperCase();
+        const uName = String(u.name || '').trim().toUpperCase();
+        const uId = String(u.id || '').trim().toUpperCase();
+        const uHandle = String(u.handle || '').trim().toUpperCase().replace('@', '');
+
+        return uCode === rawCode || 
+               uUser === rawCode || 
+               uName === rawCode ||
+               uId === rawCode ||
+               uHandle === rawCode ||
+               (uCode && uCode === rawCode + '10') ||
+               (rawCode && rawCode === uCode + '10') ||
+               (uUser && uUser === rawCode + '10') ||
+               (rawCode && rawCode === uUser + '10');
       });
     }
 
@@ -771,17 +783,28 @@ window.closeQuickOrderModal = function() {
         note.classList.remove('hidden');
       }
 
-      const endpoints = ['/api/admin?action=get_influencers', 'api/admin?action=get_influencers', 'backend_hostinger/admin.php?action=get_influencers', 'api/admin.php?action=get_influencers'];
+      const endpoints = [
+        '/api/admin?action=verify_coupon&code=' + encodeURIComponent(rawCode),
+        'api/admin?action=verify_coupon&code=' + encodeURIComponent(rawCode),
+        'backend_hostinger/admin.php?action=verify_coupon&code=' + encodeURIComponent(rawCode),
+        'api/admin.php?action=verify_coupon&code=' + encodeURIComponent(rawCode),
+        '/api/admin?action=get_influencers',
+        'api/admin?action=get_influencers',
+        'backend_hostinger/admin.php?action=get_influencers',
+        'api/admin.php?action=get_influencers'
+      ];
+
       for (const ep of endpoints) {
         try {
           const res = await fetch(ep);
           if (res.ok) {
             const data = await res.json();
+            if (data && data.valid && data.influencer) {
+              creator = data.influencer;
+              break;
+            }
             if (data && data.influencers && Array.isArray(data.influencers)) {
-              const map = new Map();
-              db.forEach(u => { if (u && (u.id || u.code)) map.set(u.id || u.code, u); });
-              data.influencers.forEach(u => { if (u && (u.id || u.code)) map.set(u.id || u.code, Object.assign({}, map.get(u.id || u.code) || {}, u)); });
-              db = Array.from(map.values());
+              db = data.influencers;
               localStorage.setItem('br_influencers_db', JSON.stringify(db));
               creator = findCreatorInDb(db);
               if (creator) break;

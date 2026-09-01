@@ -430,6 +430,43 @@ module.exports = async (req, res) => {
     return res.status(200).json({ success: true, settings: memoryStore.settings });
   }
 
+  // 9b. Verify Coupon API
+  if (action === 'verify_coupon') {
+    const rawCode = String(req.query.code || (req.body && req.body.code) || '').trim().toUpperCase();
+    if (!rawCode) {
+      return res.status(200).json({ success: false, valid: false, error: 'Please provide a coupon code.' });
+    }
+    const creator = (memoryStore.influencers || []).find(u => {
+      if (!u || u.status === 'Inactive' || u.status === 'Blocked' || u.status === 'Suspended') return false;
+      const uCode = String(u.code || '').trim().toUpperCase();
+      const uUser = String(u.username || '').trim().toUpperCase();
+      const uName = String(u.name || '').trim().toUpperCase();
+      const uId = String(u.id || '').trim().toUpperCase();
+      const uHandle = String(u.handle || '').trim().toUpperCase().replace('@', '');
+
+      return uCode === rawCode || 
+             uUser === rawCode || 
+             uName === rawCode ||
+             uId === rawCode ||
+             uHandle === rawCode ||
+             (uCode && uCode === rawCode + '10') ||
+             (rawCode && rawCode === uCode + '10') ||
+             (uUser && uUser === rawCode + '10') ||
+             (rawCode && rawCode === uUser + '10');
+    });
+
+    if (creator) {
+      return res.status(200).json({
+        success: true,
+        valid: true,
+        influencer: creator,
+        code: creator.code,
+        comm_rate: Number(creator.comm_rate) || 10
+      });
+    }
+    return res.status(200).json({ success: false, valid: false, error: 'Invalid code' });
+  }
+
   // 10. Influencers API
   if (action === 'get_influencers') {
     return res.status(200).json({ success: true, influencers: memoryStore.influencers || [] });
