@@ -808,17 +808,22 @@
         db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
       } catch(e) {}
 
-      var creator = db.find(function(u) { return u.code && u.code.toUpperCase() === rawCode; });
+      var creator = db.find(function(u) { 
+        return (u.code && u.code.toUpperCase() === rawCode) || 
+               (u.username && u.username.toUpperCase() === rawCode) ||
+               (u.id && u.id.toUpperCase() === rawCode); 
+      });
+      var promoCode = creator ? (creator.code || rawCode) : rawCode;
       var commRate = creator ? (creator.comm_rate || 10) : 10;
 
       appliedCoupon = {
-        code: rawCode,
+        code: promoCode,
         comm_rate: commRate,
         influencer_id: creator ? creator.id : null
       };
 
       if (note) {
-        note.textContent = '✓ Coupon "' + rawCode + '" applied (' + commRate + '% OFF)!';
+        note.textContent = '✓ Coupon "' + promoCode + '" applied (' + commRate + '% OFF)!';
         note.classList.remove('hidden');
       }
 
@@ -1020,7 +1025,8 @@
             var infDb = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
             var infIdx = infDb.findIndex(function(u) {
               return (u.code && u.code.toUpperCase() === payload.coupon.toUpperCase()) ||
-                     (u.id && u.id === payload.influencer_id);
+                     (u.username && u.username.toUpperCase() === payload.coupon.toUpperCase()) ||
+                     (u.id && (u.id === payload.influencer_id || u.id.toUpperCase() === payload.coupon.toUpperCase()));
             });
             if (infIdx !== -1) {
               infDb[infIdx].total_orders = (infDb[infIdx].total_orders || 0) + 1;

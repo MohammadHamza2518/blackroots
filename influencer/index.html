@@ -19,7 +19,7 @@
   <link rel="manifest" href="../site.webmanifest">
   <meta name="theme-color" content="#0a0b0e">
   <meta name="msapplication-TileColor" content="#0a0b0e">
-  <meta name="msapplication-TileImage" content="../assets/favicon-144x144.png">
+  <meta name="msapplication-TileImage" content="./assets/favicon-144x144.png">
 
   <!-- Primary Meta & Search Snippet Image -->
   <link rel="image_src" href="https://www.blackroots.in/assets/blackroots-botanical-pedestal-1x1.jpg">
@@ -28,8 +28,8 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="BlackRoots">
   <meta property="og:url" content="https://www.blackroots.in/">
-  <meta property="og:title" content="BlackRoots &mdash; Revive Your Roots | Japanese Inspired Herbal Hair Dye Shampoo">
-  <meta property="og:description" content="Turn grey hair naturally black in 10 minutes. 100% natural Japanese botanical formula with Indigo Leaf, Camellia Oil, Amla & Bhringraj. Stops hair fall and ends dandruff.">
+  <meta property="og:title" content="BlackRoots Creator & Influencer Partner Portal">
+  <meta property="og:description" content="Official partner affiliate portal for BlackRoots creators and brand ambassadors.">
   <meta property="og:image" content="https://www.blackroots.in/assets/blackroots-botanical-pedestal-1x1.jpg">
   <meta property="og:image:secure_url" content="https://www.blackroots.in/assets/blackroots-botanical-pedestal-1x1.jpg">
   <meta property="og:image:type" content="image/jpeg">
@@ -40,73 +40,10 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://www.blackroots.in/">
-  <meta name="twitter:title" content="BlackRoots &mdash; Revive Your Roots | Japanese Inspired Herbal Hair Dye Shampoo">
-  <meta name="twitter:description" content="Turn grey hair naturally black in 10 minutes. 100% natural Japanese botanical formula with Indigo Leaf, Camellia Oil, Amla & Bhringraj. Stops hair fall and ends dandruff.">
+  <meta name="twitter:title" content="BlackRoots Creator & Influencer Partner Portal">
+  <meta name="twitter:description" content="Official partner affiliate portal for BlackRoots creators and brand ambassadors.">
   <meta name="twitter:image" content="https://www.blackroots.in/assets/blackroots-botanical-pedestal-1x1.jpg">
   <meta name="twitter:image:alt" content="BlackRoots Japanese Herbal Hair Dye Shampoo Bottle">
-  <!-- Google Search Rich Snippet & Structured Data (Schema.org JSON-LD) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://www.blackroots.in/#organization",
-        "name": "BlackRoots",
-        "url": "https://www.blackroots.in",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://www.blackroots.in/assets/blackroots-logo-circle-black.jpg",
-          "caption": "BlackRoots Logo"
-        },
-        "sameAs": [
-          "https://www.instagram.com/blackroots.official"
-        ]
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://www.blackroots.in/#website",
-        "url": "https://www.blackroots.in",
-        "name": "BlackRoots",
-        "publisher": {
-          "@id": "https://www.blackroots.in/#organization"
-        }
-      },
-      {
-        "@type": "Product",
-        "@id": "https://www.blackroots.in/#product",
-        "name": "BlackRoots Japanese Inspired Herbal Hair Dye Shampoo (250ml)",
-        "image": [
-          "https://www.blackroots.in/assets/blackroots-botanical-pedestal-1x1.jpg",
-          "https://www.blackroots.in/assets/blackroots-botanical-hero-16x9.jpg",
-          "https://www.blackroots.in/assets/blackroots-flatlay-herbs-1x1.jpg",
-          "https://www.blackroots.in/assets/blackroots-lifestyle-couple-1x1.jpg"
-        ],
-        "description": "BlackRoots Herbal Hair Dye Shampoo (250ml) naturally turns grey hair into rich dark black hair with 100% botanical Japanese Indigo Leaf, Camellia Oil, Amla, and Bhringraj.",
-        "brand": {
-          "@type": "Brand",
-          "name": "BlackRoots"
-        },
-        "offers": {
-          "@type": "Offer",
-          "url": "https://www.blackroots.in/product.html",
-          "priceCurrency": "INR",
-          "price": "499",
-          "priceValidUntil": "2027-12-31",
-          "availability": "https://schema.org/InStock",
-          "itemCondition": "https://schema.org/NewCondition"
-        },
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.9",
-          "reviewCount": "1342",
-          "bestRating": "5",
-          "worstRating": "1"
-        }
-      }
-    ]
-  }
-  </script>
   <meta name="robots" content="noindex, nofollow">
   
   <script src="https://cdn.tailwindcss.com"></script>
@@ -498,13 +435,13 @@
       <form id="InfluencerLoginForm" onsubmit="handleInfluencerLogin(event)" class="space-y-4 text-left">
         <div>
           <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">User ID / Promo Code / Phone</label>
-          <input type="text" id="inf-login-id" required placeholder="e.g. LEDUBHAIYA or 9580835179" class="w-full px-4 py-3.5 rounded-xl bg-black border border-white/20 text-white text-sm focus:outline-none focus:border-[#d4af37] transition-all font-mono">
+          <input type="text" id="inf-login-id" required placeholder="e.g. LEDUBHAIYA or 9580835179" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="username" class="w-full px-4 py-3.5 rounded-xl bg-black border border-white/20 text-white text-sm focus:outline-none focus:border-[#d4af37] transition-all font-mono">
         </div>
         
         <div>
           <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">Password</label>
           <div class="relative">
-            <input type="password" id="inf-login-pass" required placeholder="Enter Your Password" class="w-full pl-4 pr-11 py-3.5 rounded-xl bg-black border border-white/20 text-white text-sm focus:outline-none focus:border-[#d4af37] transition-all font-mono">
+            <input type="password" id="inf-login-pass" required placeholder="Enter Your Password" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="current-password" class="w-full pl-4 pr-11 py-3.5 rounded-xl bg-black border border-white/20 text-white text-sm focus:outline-none focus:border-[#d4af37] transition-all font-mono">
             <button type="button" onclick="togglePass('inf-login-pass', 'inf-eye-svg')" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white p-1 cursor-pointer transition-colors" title="Show / Hide Password">
               <svg id="inf-eye-svg" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -1137,24 +1074,34 @@
       } catch(e) {}
     }
 
-    // 2. Auth Flow (Enforces 1 Device per Creator)
+    // 2. Auth Flow (Enforces 1 Device per Creator, 100% Case-Insensitive & Tolerant)
     async function handleInfluencerLogin(e) {
       e.preventDefault();
       const rawInput = document.getElementById('inf-login-id').value.trim();
-      const loginId = rawInput.toUpperCase();
+      const rawLogin = rawInput.toLowerCase();
       const pass = document.getElementById('inf-login-pass').value.trim();
+      const cleanPhone = rawInput.replace(/[^0-9]/g, '');
+      const cleanHandle = rawLogin.replace('@', '');
       const errorMsg = document.getElementById('login-error-msg');
       const submitBtn = document.getElementById('login-submit-btn');
 
+      if (!rawInput || !pass) {
+        if (errorMsg) {
+          errorMsg.textContent = 'Please enter both your User ID and Password.';
+          errorMsg.classList.remove('hidden');
+        }
+        return;
+      }
+
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Verifying Device & Session...';
+        submitBtn.textContent = 'Verifying Session & Access...';
       }
 
       let user = null;
       let sessionToken = null;
 
-      // 1. Try server API login with device identifier
+      // 1. Try server API login first with device identifier
       try {
         const res = await fetch('/api/admin?action=influencer_login', {
           method: 'POST',
@@ -1182,25 +1129,32 @@
         }
       }
 
-      // 2. Fallback to local DB if offline
+      // 2. Fallback to local DB (100% Case-Insensitive User & Password Match)
       if (!user) {
         const db = getInfluencersDb();
         user = db.find(u => {
-          const uName = (u.username || '').toUpperCase();
-          const uCode = (u.code || '').toUpperCase();
-          const uPhone = (u.phone || '').replace(/[^0-9]/g, '');
-          const uHandle = (u.handle || '').toUpperCase().replace('@', '');
-          const cleanLogin = loginId.replace('@', '');
-          const cleanPhone = rawInput.replace(/[^0-9]/g, '');
+          const uName = String(u.name || '').trim().toLowerCase();
+          const uUser = String(u.username || '').trim().toLowerCase();
+          const uCode = String(u.code || '').trim().toLowerCase();
+          const uId = String(u.id || '').trim().toLowerCase();
+          const uHandle = String(u.handle || '').trim().toLowerCase().replace('@', '');
+          const uPhone = String(u.phone || '').replace(/[^0-9]/g, '');
+
+          const phoneMatch = cleanPhone.length >= 10 && (uPhone.endsWith(cleanPhone.slice(-10)) || cleanPhone.endsWith(uPhone.slice(-10)));
+          const nameMatch = cleanHandle.length >= 3 && (uName === cleanHandle || uName.includes(cleanHandle));
 
           return (
-            uName === loginId ||
-            uCode === loginId ||
-            (cleanPhone.length >= 10 && uPhone.includes(cleanPhone)) ||
-            (cleanLogin.length > 2 && uHandle === cleanLogin)
+            uUser === rawLogin ||
+            uCode === rawLogin ||
+            uId === rawLogin ||
+            (cleanHandle.length >= 2 && uHandle === cleanHandle) ||
+            nameMatch ||
+            phoneMatch
           );
         });
-        if (user && user.password && user.password.trim() !== pass) {
+
+        // Case-insensitive & trimmed password verification
+        if (user && user.password && String(user.password).trim().toLowerCase() !== pass.toLowerCase()) {
           user = null;
         }
       }
@@ -1212,7 +1166,7 @@
           sessionStorage.setItem('br_active_inf_token', sessionToken);
           localStorage.setItem('br_active_inf_token', sessionToken);
         }
-        errorMsg.classList.add('hidden');
+        if (errorMsg) errorMsg.classList.add('hidden');
         
         document.getElementById('InfluencerAuthScreen').classList.add('hidden');
         document.getElementById('InfluencerDashboardApp').classList.remove('hidden');
@@ -1224,8 +1178,10 @@
           liveInfPollingInterval = setInterval(syncInfluencersFromServer, 10000);
         }
       } else {
-        errorMsg.textContent = 'Incorrect User ID or Password. Please check with BlackRoots Admin.';
-        errorMsg.classList.remove('hidden');
+        if (errorMsg) {
+          errorMsg.textContent = 'Incorrect User ID or Password. Please check your credentials or contact Admin.';
+          errorMsg.classList.remove('hidden');
+        }
       }
     }
 
@@ -1264,10 +1220,18 @@
         allOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
       } catch(e) {}
 
-      let matchedOrders = allOrders.filter(o => 
-        (o.coupon && o.coupon.toUpperCase() === currentInfluencer.code.toUpperCase()) ||
-        (o.influencer && o.influencer.toUpperCase() === currentInfluencer.code.toUpperCase())
-      );
+      const uCodeUp = String(currentInfluencer.code || '').toUpperCase();
+      const uUserUp = String(currentInfluencer.username || '').toUpperCase();
+      const uIdUp = String(currentInfluencer.id || '').toUpperCase();
+
+      let matchedOrders = allOrders.filter(o => {
+        const oCoupon = String(o.coupon || '').toUpperCase();
+        const oInf = String(o.influencer || '').toUpperCase();
+        return (
+          (oCoupon && (oCoupon === uCodeUp || oCoupon === uUserUp || oCoupon === uIdUp)) ||
+          (oInf && (oInf === uCodeUp || oInf === uUserUp || oInf === uIdUp))
+        );
+      });
 
       let totalSales = matchedOrders.reduce((sum, o) => {
         if (o.status === 'Cancelled' || o.status === 'RTO') return sum;

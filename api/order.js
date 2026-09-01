@@ -59,7 +59,7 @@ const defaultInfluencers = [
   }
 ];
 
-const tmpFile = path.join('/tmp', 'blackroots_db.json');
+const tmpFile = path.join(require('os').tmpdir(), 'blackroots_db.json');
 function getDb() {
   let db = { orders: [], abandoned: [], settings: {}, influencers: defaultInfluencers, deleted_influencers: [], visitors: [], unique_sessions: {} };
   try {
@@ -151,9 +151,14 @@ module.exports = async (req, res) => {
 
   db.orders.push(newOrder);
 
-  // If coupon was used, attribute to creator on server
-  if (newOrder.coupon && db.influencers) {
-    const inf = db.influencers.find(u => u.code && u.code.toUpperCase() === newOrder.coupon.toUpperCase());
+  // If coupon was used, attribute to creator on server (case-insensitive on code, username, or id)
+  const couponUsed = (newOrder.coupon || newOrder.influencer || '').trim().toUpperCase();
+  if (couponUsed && db.influencers) {
+    const inf = db.influencers.find(u => 
+      (u.code && u.code.toUpperCase() === couponUsed) ||
+      (u.username && u.username.toUpperCase() === couponUsed) ||
+      (u.id && u.id.toUpperCase() === couponUsed)
+    );
     if (inf) {
       inf.total_orders = (Number(inf.total_orders) || 0) + 1;
       inf.total_sales = (Number(inf.total_sales) || 0) + price;

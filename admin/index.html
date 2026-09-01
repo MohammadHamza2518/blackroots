@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>BlackRoots &mdash; Shopify-Grade D2C Command Center & Admin Dashboard</title>
   <!-- Favicon & Touch Icons (Google & Browser Compliant) -->
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
@@ -18,7 +18,7 @@
   <link rel="manifest" href="../site.webmanifest">
   <meta name="theme-color" content="#0a0b0e">
   <meta name="msapplication-TileColor" content="#0a0b0e">
-  <meta name="msapplication-TileImage" content="../assets/favicon-144x144.png">
+  <meta name="msapplication-TileImage" content="./assets/favicon-144x144.png">
 
   <!-- Primary Meta & Search Snippet Image -->
   <link rel="image_src" href="https://www.blackroots.in/assets/blackroots-botanical-pedestal-1x1.jpg">
@@ -27,8 +27,8 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="BlackRoots">
   <meta property="og:url" content="https://www.blackroots.in/">
-  <meta property="og:title" content="BlackRoots &mdash; Revive Your Roots | Japanese Inspired Herbal Hair Dye Shampoo">
-  <meta property="og:description" content="Turn grey hair naturally black in 10 minutes. 100% natural Japanese botanical formula with Indigo Leaf, Camellia Oil, Amla & Bhringraj. Stops hair fall and ends dandruff.">
+  <meta property="og:title" content="BlackRoots Executive Admin Portal">
+  <meta property="og:description" content="Official BlackRoots management dashboard.">
   <meta property="og:image" content="https://www.blackroots.in/assets/blackroots-botanical-pedestal-1x1.jpg">
   <meta property="og:image:secure_url" content="https://www.blackroots.in/assets/blackroots-botanical-pedestal-1x1.jpg">
   <meta property="og:image:type" content="image/jpeg">
@@ -39,73 +39,10 @@
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://www.blackroots.in/">
-  <meta name="twitter:title" content="BlackRoots &mdash; Revive Your Roots | Japanese Inspired Herbal Hair Dye Shampoo">
-  <meta name="twitter:description" content="Turn grey hair naturally black in 10 minutes. 100% natural Japanese botanical formula with Indigo Leaf, Camellia Oil, Amla & Bhringraj. Stops hair fall and ends dandruff.">
+  <meta name="twitter:title" content="BlackRoots Executive Admin Portal">
+  <meta name="twitter:description" content="Official BlackRoots management dashboard.">
   <meta name="twitter:image" content="https://www.blackroots.in/assets/blackroots-botanical-pedestal-1x1.jpg">
   <meta name="twitter:image:alt" content="BlackRoots Japanese Herbal Hair Dye Shampoo Bottle">
-  <!-- Google Search Rich Snippet & Structured Data (Schema.org JSON-LD) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://www.blackroots.in/#organization",
-        "name": "BlackRoots",
-        "url": "https://www.blackroots.in",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "https://www.blackroots.in/assets/blackroots-logo-circle-black.jpg",
-          "caption": "BlackRoots Logo"
-        },
-        "sameAs": [
-          "https://www.instagram.com/blackroots.official"
-        ]
-      },
-      {
-        "@type": "WebSite",
-        "@id": "https://www.blackroots.in/#website",
-        "url": "https://www.blackroots.in",
-        "name": "BlackRoots",
-        "publisher": {
-          "@id": "https://www.blackroots.in/#organization"
-        }
-      },
-      {
-        "@type": "Product",
-        "@id": "https://www.blackroots.in/#product",
-        "name": "BlackRoots Japanese Inspired Herbal Hair Dye Shampoo (250ml)",
-        "image": [
-          "https://www.blackroots.in/assets/blackroots-botanical-pedestal-1x1.jpg",
-          "https://www.blackroots.in/assets/blackroots-botanical-hero-16x9.jpg",
-          "https://www.blackroots.in/assets/blackroots-flatlay-herbs-1x1.jpg",
-          "https://www.blackroots.in/assets/blackroots-lifestyle-couple-1x1.jpg"
-        ],
-        "description": "BlackRoots Herbal Hair Dye Shampoo (250ml) naturally turns grey hair into rich dark black hair with 100% botanical Japanese Indigo Leaf, Camellia Oil, Amla, and Bhringraj.",
-        "brand": {
-          "@type": "Brand",
-          "name": "BlackRoots"
-        },
-        "offers": {
-          "@type": "Offer",
-          "url": "https://www.blackroots.in/product.html",
-          "priceCurrency": "INR",
-          "price": "499",
-          "priceValidUntil": "2027-12-31",
-          "availability": "https://schema.org/InStock",
-          "itemCondition": "https://schema.org/NewCondition"
-        },
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": "4.9",
-          "reviewCount": "1342",
-          "bestRating": "5",
-          "worstRating": "1"
-        }
-      }
-    ]
-  }
-  </script>
   <meta name="robots" content="noindex, nofollow">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
@@ -1624,6 +1561,9 @@
             </span>
           </td>
           <td class="py-3 px-3 text-right space-x-1 whitespace-nowrap">
+            <a href="https://wa.me/91${String(u.phone || '').replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Namaste ' + u.name + '! Your BlackRoots VIP Creator Account is active.\n\nPortal: https://blackroots.in/influencer\nUser ID: ' + (u.username || u.code) + '\nPassword: ' + (u.password || 'blackroots') + '\nPromo Code: ' + u.code + ' (' + (u.comm_rate || 10) + '% Commission)')}" target="_blank" class="px-2 py-1 rounded bg-[#25D366]/20 hover:bg-[#25D366] text-[10px] text-[#25D366] hover:text-black font-bold cursor-pointer transition-colors" title="Send Login Credentials to Creator on WhatsApp">
+              💬 WhatsApp
+            </a>
             <button onclick="openEditInfluencerModal('${u.id}')" class="px-2 py-1 rounded bg-amber-500/10 hover:bg-amber-500/20 text-[10px] text-amber-300 font-bold cursor-pointer">Edit</button>
             <button onclick="toggleInfStatus('${u.id}')" class="px-2 py-1 rounded bg-white/5 hover:bg-white/10 text-[10px] text-gray-300 font-bold cursor-pointer">Toggle</button>
             <button onclick="deleteInfluencer('${u.id}')" class="px-2 py-1 rounded bg-red-500/10 hover:bg-red-500/20 text-[10px] text-red-400 font-bold cursor-pointer">Delete</button>
@@ -1658,16 +1598,14 @@
           <td class="py-3 px-3 font-mono text-[11px] text-gray-400">
             ${p.utr && p.utr !== 'Pending Admin Transfer' ? `<span class="text-white">${p.utr}</span>` : '<span class="text-gray-500">Pending Transfer</span>'}
           </td>
-                    <td class="py-3 px-3 text-right whitespace-nowrap">
-            <button type="button" onclick="pushOrderToShiprocket('${o.order_id}')" class="inline-flex items-center gap-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold hover:brightness-110 cursor-pointer mr-1 shadow-sm">
-              <span>🚀 Push Shiprocket</span>
-            </button>
-            <button type="button" onclick="openShippingLabelModal('${o.order_id}')" class="inline-flex items-center gap-1 bg-[#d4af37] text-black px-2.5 py-1 rounded-lg text-[10px] font-bold hover:brightness-110 cursor-pointer mr-1">
-              <span>🏷️ Label</span>
-            </button>
-            <a href="https://wa.me/91${o.phone}?text=${encodeURIComponent('Namaste ' + (o.name || '') + ' ji! BlackRoots Herbal Care se aapka order ' + (o.order_id || '') + ' successfully confirm ho gaya hai.')}" target="_blank" class="inline-flex items-center gap-1 bg-[#25D366] text-black px-2.5 py-1 rounded-lg text-[10px] font-bold hover:brightness-110">
-              💬 WhatsApp
-            </a>
+          <td class="py-3 px-3 text-right whitespace-nowrap">
+            ${p.status !== 'Paid' ? `
+              <button type="button" onclick="openProcessPayoutModal('${p.id}')" class="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold text-[10px] cursor-pointer shadow-md">
+                💸 Transfer UPI &rarr;
+              </button>
+            ` : `
+              <span class="text-emerald-400 font-bold text-[10px]">✓ Settled</span>
+            `}
           </td>
         </tr>
       `).join('');
@@ -1716,7 +1654,7 @@
       if (idx === -1) return;
 
       db[idx].name = document.getElementById('edit-inf-name').value.trim();
-      db[idx].username = document.getElementById('edit-inf-username').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+      db[idx].username = document.getElementById('edit-inf-username').value.trim();
       db[idx].password = document.getElementById('edit-inf-pass').value.trim();
       db[idx].phone = document.getElementById('edit-inf-phone').value.trim();
       db[idx].handle = document.getElementById('edit-inf-handle').value.trim();
@@ -1813,7 +1751,7 @@
       let pass = document.getElementById('inf-pass-input').value.trim();
 
       const code = (rawCode || rawUsername || name.split(' ')[0] + '10').toUpperCase().replace(/[^A-Z0-9]/g, '');
-      const username = (rawUsername || code).toUpperCase().replace(/[^A-Z0-9]/g, '');
+      const username = (rawUsername || code).trim();
       if (!pass) pass = 'blackroots';
 
       if (!name || !code) {

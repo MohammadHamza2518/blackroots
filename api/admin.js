@@ -80,8 +80,8 @@ let memoryStore = {
   active_influencer_sessions: {}
 };
 
-// Persist in /tmp for Vercel serverless functions
-const tmpFile = path.join('/tmp', 'blackroots_db.json');
+// Persist in /tmp or os.tmpdir for universal node/serverless environments
+const tmpFile = path.join(require('os').tmpdir(), 'blackroots_db.json');
 function loadDb() {
   try {
     if (fs.existsSync(tmpFile)) {
@@ -468,30 +468,37 @@ module.exports = async (req, res) => {
     });
   }
 
-  // 11. Influencer Auth Login (Enforces 1 Device per Creator)
+  // 11. Influencer Auth Login (Enforces 1 Device per Creator, 100% Case-Insensitive & Whitespace-Tolerant)
   if (action === 'influencer_login') {
     const body = req.body || {};
-    const loginId = (body.login_id || body.username || body.code || '').trim().toUpperCase();
+    const rawLogin = (body.login_id || body.username || body.code || '').trim().toLowerCase();
     const pass = (body.password || '').trim();
-    const cleanPhone = loginId.replace(/[^0-9]/g, '');
-    const cleanHandle = loginId.replace('@', '');
+    const cleanPhone = rawLogin.replace(/[^0-9]/g, '');
+    const cleanHandle = rawLogin.replace('@', '');
 
     const infList = memoryStore.influencers || [];
     const user = infList.find(u => {
-      const uName = (u.username || '').toUpperCase();
-      const uCode = (u.code || '').toUpperCase();
-      const uPhone = (u.phone || '').replace(/[^0-9]/g, '');
-      const uHandle = (u.handle || '').toUpperCase().replace('@', '');
+      const uName = String(u.name || '').trim().toLowerCase();
+      const uUser = String(u.username || '').trim().toLowerCase();
+      const uCode = String(u.code || '').trim().toLowerCase();
+      const uId = String(u.id || '').trim().toLowerCase();
+      const uHandle = String(u.handle || '').trim().toLowerCase().replace('@', '');
+      const uPhone = String(u.phone || '').replace(/[^0-9]/g, '');
+
+      const phoneMatch = cleanPhone.length >= 10 && (uPhone.endsWith(cleanPhone.slice(-10)) || cleanPhone.endsWith(uPhone.slice(-10)));
+      const nameMatch = cleanHandle.length >= 3 && (uName === cleanHandle || uName.includes(cleanHandle));
 
       return (
-        uName === loginId ||
-        uCode === loginId ||
-        (cleanPhone.length >= 10 && uPhone.includes(cleanPhone)) ||
-        (cleanHandle.length > 2 && uHandle === cleanHandle)
+        uUser === rawLogin ||
+        uCode === rawLogin ||
+        uId === rawLogin ||
+        (cleanHandle.length >= 2 && uHandle === cleanHandle) ||
+        nameMatch ||
+        phoneMatch
       );
     });
 
-    if (user && user.password && user.password.trim() === pass) {
+    if (user && user.password && String(user.password).trim().toLowerCase() === pass.toLowerCase()) {
       if (!memoryStore.active_influencer_sessions) memoryStore.active_influencer_sessions = {};
 
       const headers = req.headers || {};
@@ -508,12 +515,20 @@ module.exports = async (req, res) => {
       };
       saveDb();
 
-      // Find orders referred by this user
-      const matchedOrders = (memoryStore.orders || []).filter(o => 
-        (o.coupon && o.coupon.toUpperCase() === user.code.toUpperCase()) ||
-        (o.influencer && o.influencer.toUpperCase() === user.code.toUpperCase())
-      );
-      const userPayouts = (memoryStore.payouts || []).filter(p => p.influencer_id === user.id || p.code === user.code);
+      // Find orders referred by this user (code, username, or id)
+      const uCodeUp = String(user.code || '').toUpperCase();
+      const uUserUp = String(user.username || '').toUpperCase();
+      const uIdUp = String(user.id || '').toUpperCase();
+
+      const matchedOrders = (memoryStore.orders || []).filter(o => {
+        const oCoupon = String(o.coupon || '').toUpperCase();
+        const oInf = String(o.influencer || '').toUpperCase();
+        return (
+          (oCoupon && (oCoupon === uCodeUp || oCoupon === uUserUp || oCoupon === uIdUp)) ||
+          (oInf && (oInf === uCodeUp || oInf === uUserUp || oInf === uIdUp))
+        );
+      });
+      const userPayouts = (memoryStore.payouts || []).filter(p => p.influencer_id === user.id || (p.code && p.code.toUpperCase() === uCodeUp));
 
       return res.status(200).json({
         success: true,
@@ -525,7 +540,7 @@ module.exports = async (req, res) => {
       });
     }
 
-    return res.status(200).json({ success: false, error: 'Invalid User ID or Password' });
+    return res.status(200).json({ success: false, error: 'Invalid User ID or Password. Please check credentials.' });
   }
 
   // 11b. Check Influencer Session Heartbeat (Single Device Verification)
