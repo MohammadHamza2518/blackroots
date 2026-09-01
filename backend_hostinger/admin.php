@@ -446,11 +446,15 @@ if ($action === 'save_influencer') {
             ]);
         }
 
-        $st = $pdo->prepare("SELECT * FROM influencers WHERE id = :id");
-        $st->execute([':id' => $id]);
-        $creator = $st->fetch();
+        $st = $pdo->query("SELECT * FROM influencers ORDER BY id DESC");
+        $allList = $st->fetchAll();
 
-        echo json_encode(['success' => true, 'influencer' => $creator]);
+        echo json_encode([
+            'success' => true, 
+            'influencer' => $existing ? $existing : $input, 
+            'influencers' => $allList, 
+            'message' => 'Influencer saved successfully!'
+        ]);
         exit;
     } catch (Exception $e) {
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);

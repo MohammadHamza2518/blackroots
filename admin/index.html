@@ -1745,6 +1745,8 @@
       }
       saveInfluencersAdminDb(db);
       renderInfluencersTable(db);
+      const metricEl = document.getElementById('metric-inf-count');
+      if (metricEl) metricEl.textContent = db.length;
 
       // Close modal and reset form
       closeAddInfluencerModal();
@@ -1752,15 +1754,20 @@
 
       // 2. Persist to backend across all endpoints
       try {
-        await apiFetch('save_influencer', {
+        let res = await apiFetch('save_influencer', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newCreator)
         });
-      } catch(err) {}
+        if (res && res.influencers && Array.isArray(res.influencers)) {
+          saveInfluencersAdminDb(res.influencers);
+          renderInfluencersTable(res.influencers);
+          if (metricEl) metricEl.textContent = res.influencers.length;
+        }
+      } catch(err) {
+        console.error('Save influencer error:', err);
+      }
 
-      // 3. Re-sync with backend
-      await loadInfluencers();
       alert(`✓ Influencer "${name}" (Code: ${code}, ${comm}% commission) created and activated successfully!`);
     }
 
