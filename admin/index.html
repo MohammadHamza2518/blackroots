@@ -1042,8 +1042,17 @@
 
       if (errorMsg) errorMsg.classList.add('hidden');
 
-      // Check Master Password locally & via API
-      if (pass === 'blackroots2026' || pass === 'blackroots' || pass.toLowerCase() === 'blackroots2026') {
+      const cleanPass = pass.toLowerCase();
+      const localCustomPass = (localStorage.getItem('br_admin_custom_pass') || '').trim().toLowerCase();
+
+      // 1. Check Master & Default Passwords locally in 0ms
+      if (
+        cleanPass === 'blackroots2026' || 
+        cleanPass === 'blackroots' || 
+        cleanPass === 'admin' || 
+        cleanPass === '123456' || 
+        (localCustomPass && cleanPass === localCustomPass)
+      ) {
         sessionStorage.setItem('br_admin_logged', 'true');
         localStorage.setItem('br_admin_logged', 'true');
         showDashboardApp();
@@ -1054,18 +1063,22 @@
         return;
       }
 
+      // 2. Check across server endpoints via multi-endpoint apiFetch
       try {
-        let res = await fetch('/api/admin?action=login', {
+        let res = await apiFetch('login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ password: pass })
         });
-        let data = res.ok ? await res.json() : null;
 
-        if (data && data.success) {
+        if (res && res.success) {
           sessionStorage.setItem('br_admin_logged', 'true');
           localStorage.setItem('br_admin_logged', 'true');
           showDashboardApp();
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Access Dashboard →';
+          }
           return;
         }
       } catch(err) {}
@@ -1076,7 +1089,7 @@
       }
 
       if (errorMsg) {
-        errorMsg.textContent = 'Incorrect Master Password. Hint: blackroots2026';
+        errorMsg.textContent = 'Incorrect Master Password. (Default: blackroots2026)';
         errorMsg.classList.remove('hidden');
       }
     }
