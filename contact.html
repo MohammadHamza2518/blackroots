@@ -521,188 +521,339 @@
   </div>
 
   <!-- ============================================================ -->
-  <!-- 📞 Dr. Pooja AI Voice Call — True Real-Time Phone Experience -->
-  <!-- ElevenLabs ConvAI WebSocket + Auto VAD + Full Phone UI        -->
+  <!-- 📞 Dr. Pooja AI Voice Call — True Mobile Caller App (Full UI) -->
+  <!-- ElevenLabs ConvAI WebSocket + Auto VAD + Mobile Phone OS UI   -->
   <!-- ============================================================ -->
 
-  <!-- SCREEN A: Pre-Call Entry Card (visible on page) is already above -->
+  <style>
+    /* Mobile Caller App Fullscreen Container */
+    .phone-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at 50% 20%, #132f22 0%, #0c1c15 45%, #070a0e 100%);
+      color: #ffffff;
+      overflow: hidden;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .phone-screen.active {
+      display: flex;
+    }
 
-  <!-- SCREEN B: RINGING STATE -->
-  <div id="VoiceScreen_Ringing" class="hidden fixed inset-0 z-[999999] bg-[#07090f] flex flex-col items-center justify-center">
-    <!-- Background glow -->
-    <div class="absolute inset-0 bg-gradient-radial from-emerald-900/30 via-transparent to-transparent pointer-events-none"></div>
+    /* Outer glowing pulse rings when AI speaks */
+    @keyframes speakRing1 {
+      0% { transform: scale(1); opacity: 0.7; }
+      100% { transform: scale(1.7); opacity: 0; }
+    }
+    @keyframes speakRing2 {
+      0% { transform: scale(1); opacity: 0.45; }
+      100% { transform: scale(2.1); opacity: 0; }
+    }
+    .ring-pulse-1 { animation: speakRing1 1.8s cubic-bezier(0.2, 0.8, 0.4, 1) infinite; }
+    .ring-pulse-2 { animation: speakRing2 1.8s cubic-bezier(0.2, 0.8, 0.4, 1) 0.35s infinite; }
+    .ring-idle { animation: none !important; opacity: 0 !important; }
 
-    <!-- Network / carrier strip -->
-    <div class="absolute top-5 left-0 right-0 flex items-center justify-between px-6 text-[11px] text-white/60 font-medium">
-      <span>BlackRoots Care</span>
-      <span id="VoiceRingTime" class="font-mono">Calling...</span>
-      <span>HD</span>
-    </div>
+    /* Ringing dots */
+    @keyframes callDot {
+      0%, 80%, 100% { opacity: 0.2; transform: translateY(0); }
+      40% { opacity: 1; transform: translateY(-2px); }
+    }
+    .call-dot { display: inline-block; animation: callDot 1.4s ease-in-out infinite; }
+    .call-dot:nth-child(2) { animation-delay: 0.2s; }
+    .call-dot:nth-child(3) { animation-delay: 0.4s; }
 
-    <!-- Avatar -->
-    <div class="relative mb-6">
-      <div id="RingRipple1" class="absolute inset-0 rounded-full border-2 border-emerald-400/40 scale-100 animate-[ping_2s_ease-out_infinite]"></div>
-      <div id="RingRipple2" class="absolute inset-0 rounded-full border border-emerald-400/20 scale-110 animate-[ping_2s_ease-out_0.5s_infinite]"></div>
-      <div class="w-32 h-32 rounded-full bg-gradient-to-br from-[#1a4a30] via-[#2a6040] to-[#d4af37] border-4 border-white/20 flex items-center justify-center text-6xl shadow-2xl relative z-10">
-        👩‍⚕️
+    /* Waveform visualizer bars */
+    @keyframes waveBarAnim {
+      0%, 100% { transform: scaleY(0.2); }
+      50% { transform: scaleY(1); }
+    }
+    .wbar {
+      width: 3.5px;
+      border-radius: 4px;
+      transform-origin: bottom;
+      display: inline-block;
+      transition: transform 0.15s ease;
+    }
+    .wbar.on {
+      animation: waveBarAnim 0.65s ease-in-out infinite;
+    }
+    .wbar:nth-child(1).on { animation-delay: 0.00s; }
+    .wbar:nth-child(2).on { animation-delay: 0.08s; }
+    .wbar:nth-child(3).on { animation-delay: 0.16s; }
+    .wbar:nth-child(4).on { animation-delay: 0.04s; }
+    .wbar:nth-child(5).on { animation-delay: 0.12s; }
+    .wbar:nth-child(6).on { animation-delay: 0.20s; }
+    .wbar:nth-child(7).on { animation-delay: 0.06s; }
+    .wbar:nth-child(8).on { animation-delay: 0.14s; }
+    .wbar:nth-child(9).on { animation-delay: 0.02s; }
+    .wbar:nth-child(10).on { animation-delay: 0.18s; }
+    .wbar:nth-child(11).on { animation-delay: 0.10s; }
+    .wbar:nth-child(12).on { animation-delay: 0.22s; }
+
+    /* Status dot pulse */
+    @keyframes statusBlink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+    .status-blink { animation: statusBlink 1.8s ease-in-out infinite; }
+
+    /* Real dialer button */
+    .dial-btn {
+      width: 66px;
+      height: 66px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+    }
+    .dial-btn:active { transform: scale(0.88); }
+    .dial-glass {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .dial-glass:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .dial-glass.muted {
+      background: rgba(239, 68, 68, 0.3) !important;
+      border-color: rgba(239, 68, 68, 0.6) !important;
+    }
+    .dial-glass.speaker-on {
+      background: rgba(52, 211, 153, 0.3) !important;
+      border-color: rgba(52, 211, 153, 0.6) !important;
+    }
+    .dial-end {
+      width: 74px;
+      height: 74px;
+      background: #ef4444;
+      box-shadow: 0 10px 35px rgba(239, 68, 68, 0.55);
+      border: none;
+    }
+    .dial-end:hover { background: #f87171; }
+    .dial-end:active { background: #dc2626; transform: scale(0.88); }
+
+    /* Frosted transcript card */
+    .tc-card {
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      padding: 14px 16px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+
+  <!-- ══════════════════════════════════════════════════ -->
+  <!--  SCREEN 1 — RINGING / CALLING SCREEN               -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <div id="VoiceScreen_Ringing" class="phone-screen">
+    <!-- Top Status Bar -->
+    <div class="flex items-center justify-between px-6 pt-7 text-white/60 text-xs font-medium">
+      <span class="tracking-wider font-semibold text-white/80">BlackRoots Healthcare</span>
+      <div class="flex items-center gap-1.5">
+        <div class="flex items-end gap-0.5 h-3.5">
+          <span style="width:3px;height:30%;background:rgba(255,255,255,0.7);border-radius:2px;display:inline-block"></span>
+          <span style="width:3px;height:50%;background:rgba(255,255,255,0.7);border-radius:2px;display:inline-block"></span>
+          <span style="width:3px;height:70%;background:rgba(255,255,255,0.7);border-radius:2px;display:inline-block"></span>
+          <span style="width:3px;height:90%;background:rgba(255,255,255,0.7);border-radius:2px;display:inline-block"></span>
+          <span style="width:3px;height:100%;background:rgba(255,255,255,0.7);border-radius:2px;display:inline-block"></span>
+        </div>
+        <span class="text-[10px] font-bold text-emerald-400">HD VOICE</span>
       </div>
     </div>
 
-    <!-- Name & Designation -->
-    <h2 class="text-white text-2xl font-bold tracking-wide mb-1">Dr. Pooja</h2>
-    <p class="text-emerald-300 text-sm font-medium mb-1">BlackRoots Hair Specialist</p>
-    <p class="text-gray-400 text-xs font-light tracking-wider mb-12">Calling... Please wait</p>
+    <!-- Center Contact Profile -->
+    <div class="flex-1 flex flex-col items-center justify-center pb-6 px-6 relative">
+      <!-- Ambient Glow Blob -->
+      <div class="absolute w-72 h-72 rounded-full blur-3xl pointer-events-none" style="background:rgba(20,110,60,0.25)"></div>
 
-    <!-- End Call Button only -->
-    <button onclick="voiceCallEnd()" class="w-16 h-16 rounded-full bg-red-600 hover:bg-red-500 flex items-center justify-center shadow-[0_0_30px_rgba(239,68,68,0.5)] active:scale-90 transition-all cursor-pointer">
-      <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
-        <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
-      </svg>
-    </button>
+      <!-- Avatar with Rings -->
+      <div class="relative flex items-center justify-center mb-7 mt-2">
+        <div class="absolute w-40 h-40 rounded-full ring-pulse-1" style="background:rgba(52,211,153,0.12)"></div>
+        <div class="absolute w-40 h-40 rounded-full ring-pulse-2" style="background:rgba(52,211,153,0.08)"></div>
+        <div class="w-36 h-36 rounded-full relative z-10 flex items-center justify-center"
+          style="background:linear-gradient(135deg,#123824 0%,#1f5737 50%,#d4af37 100%);box-shadow:0 20px 60px rgba(0,0,0,0.7),0 0 0 4px rgba(255,255,255,0.12);">
+          <span class="text-6xl">👩‍⚕️</span>
+        </div>
+      </div>
+
+      <h1 class="text-white text-3xl sm:text-4xl font-bold tracking-tight mb-1 text-center">Dr. Pooja</h1>
+      <p class="text-emerald-300 text-sm font-semibold mb-4 tracking-wide text-center">Senior Ayurvedic Hair Specialist</p>
+
+      <!-- Calling Status Animation -->
+      <div class="flex items-center gap-1.5 px-4 py-1.5 rounded-full" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12)">
+        <span class="text-white/80 text-xs font-medium tracking-wider uppercase">Calling</span>
+        <span class="call-dot text-emerald-400 text-lg leading-none">•</span>
+        <span class="call-dot text-emerald-400 text-lg leading-none">•</span>
+        <span class="call-dot text-emerald-400 text-lg leading-none">•</span>
+      </div>
+    </div>
+
+    <!-- Bottom Actions -->
+    <div class="flex flex-col items-center pb-14 gap-2">
+      <button onclick="voiceCallEnd()" class="dial-btn dial-end shadow-2xl">
+        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+        </svg>
+      </button>
+      <span class="text-white/50 text-xs font-medium mt-1">Decline</span>
+    </div>
   </div>
 
-  <!-- SCREEN C: CONNECTED / IN-CALL STATE -->
-  <div id="VoiceScreen_Connected" class="hidden fixed inset-0 z-[999999] bg-[#07090f] flex flex-col">
-
+  <!-- ══════════════════════════════════════════════════ -->
+  <!--  SCREEN 2 — CONNECTED IN-CALL SCREEN               -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <div id="VoiceScreen_Connected" class="phone-screen">
     <!-- Top Status Bar -->
-    <div class="flex items-center justify-between px-5 pt-5 pb-3">
+    <div class="flex items-center justify-between px-6 pt-7 text-white/70 text-xs">
       <div class="flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span class="text-xs text-emerald-400 font-bold uppercase tracking-wider">Live Call · HD Voice</span>
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span id="VoiceCallTimer" class="font-mono text-white font-bold text-base tracking-wider">00:00</span>
       </div>
-      <div id="VoiceCallTimer" class="font-mono text-sm font-bold text-white bg-white/10 px-3 py-1 rounded-full">00:00</div>
-      <div id="VoiceNetBadge" class="text-xs text-gray-400 font-medium">ElevenLabs AI</div>
+      <div class="flex items-center gap-2">
+        <span class="text-[10px] font-bold text-emerald-300 bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-500/30">ENCRYPTED HD</span>
+      </div>
     </div>
 
-    <!-- Doctor Avatar Area -->
-    <div class="flex-1 flex flex-col items-center justify-center px-6 space-y-5">
-      
-      <!-- Avatar with Dynamic Waveform Rings -->
-      <div class="relative flex items-center justify-center">
-        <!-- Outer ring - pulses when AI speaking -->
-        <div id="VoiceRingAI" class="absolute w-44 h-44 rounded-full border-2 border-emerald-400/0 transition-all duration-300"></div>
-        <!-- Mid ring -->
-        <div id="VoiceRingMid" class="absolute w-36 h-36 rounded-full border border-[#d4af37]/0 transition-all duration-300"></div>
-        <!-- Avatar -->
-        <div class="w-28 h-28 rounded-full bg-gradient-to-br from-[#1a4a30] via-[#2a6040] to-[#d4af37] border-3 border-white/20 flex items-center justify-center text-5xl shadow-2xl relative z-10">
-          👩‍⚕️
+    <!-- Main In-Call Body -->
+    <div class="flex-1 flex flex-col items-center justify-start pt-4 pb-2 px-5 relative">
+      <!-- Reactive Glow -->
+      <div id="VoiceGlow" class="absolute w-80 h-80 rounded-full blur-3xl pointer-events-none transition-all duration-500"
+        style="background:rgba(16,80,45,0.2);top:40px;"></div>
+
+      <!-- Avatar + Dynamic Wave Rings -->
+      <div class="relative flex items-center justify-center mb-3 mt-1">
+        <div id="VSR1" class="absolute w-36 h-36 rounded-full ring-idle" style="border:2px solid rgba(52,211,153,0.5)"></div>
+        <div id="VSR2" class="absolute w-36 h-36 rounded-full ring-idle" style="border:1.5px solid rgba(52,211,153,0.3)"></div>
+        <div class="w-28 h-28 rounded-full relative z-10 flex items-center justify-center"
+          style="background:linear-gradient(135deg,#123824 0%,#1f5737 55%,#d4af37 100%);box-shadow:0 16px 48px rgba(0,0,0,0.6),0 0 0 3px rgba(255,255,255,0.1);">
+          <span class="text-5xl">👩‍⚕️</span>
         </div>
       </div>
 
-      <!-- Name -->
-      <div class="text-center">
-        <h2 class="text-white text-2xl font-bold">Dr. Pooja</h2>
-        <p class="text-[#d4af37] text-xs font-semibold uppercase tracking-widest mt-0.5">BlackRoots · Senior Hair Specialist</p>
+      <!-- Doctor Name & Title -->
+      <h1 class="text-white text-2xl font-bold tracking-tight mb-0.5">Dr. Pooja</h1>
+      <p class="text-[#d4af37] text-xs font-semibold uppercase tracking-widest mb-3">BlackRoots Hair Consultant</p>
+
+      <!-- Live Speaking State Badge -->
+      <div id="VoiceStatePill" class="flex items-center gap-2 px-4 py-1.5 rounded-full mb-3.5 transition-all duration-300"
+        style="background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.28)">
+        <span id="VoiceStateDot" class="w-2 h-2 rounded-full bg-emerald-400 status-blink"></span>
+        <span id="VoiceStateText" class="text-emerald-300 text-xs font-bold tracking-wide">Connecting...</span>
       </div>
 
-      <!-- Speaking State Badge -->
-      <div id="VoiceStateBadge" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
-        <span id="VoiceStateDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span id="VoiceStateText">Connecting...</span>
+      <!-- Equalizer Waveform (animates when speaking) -->
+      <div id="VoiceWaveform" class="flex items-end justify-center gap-1 mb-4 transition-opacity duration-300" style="height:32px;opacity:0.2;">
+        <span class="wbar bg-emerald-400" style="height:8px"></span>
+        <span class="wbar bg-emerald-300" style="height:14px"></span>
+        <span class="wbar bg-emerald-400" style="height:22px"></span>
+        <span class="wbar bg-[#d4af37]" style="height:28px"></span>
+        <span class="wbar bg-emerald-400" style="height:32px"></span>
+        <span class="wbar bg-emerald-300" style="height:26px"></span>
+        <span class="wbar bg-[#d4af37]" style="height:30px"></span>
+        <span class="wbar bg-emerald-400" style="height:24px"></span>
+        <span class="wbar bg-emerald-300" style="height:18px"></span>
+        <span class="wbar bg-[#d4af37]" style="height:28px"></span>
+        <span class="wbar bg-emerald-400" style="height:14px"></span>
+        <span class="wbar bg-emerald-300" style="height:9px"></span>
       </div>
 
-      <!-- Live Audio Waveform Bars (animated when speaking) -->
-      <div id="VoiceWaveform" class="flex items-center justify-center gap-1 h-10 opacity-30 transition-opacity duration-300">
-        <span class="voice-bar w-1.5 rounded-full bg-emerald-400" style="height:8px"></span>
-        <span class="voice-bar w-1.5 rounded-full bg-emerald-400" style="height:18px"></span>
-        <span class="voice-bar w-1.5 rounded-full bg-[#d4af37]" style="height:25px"></span>
-        <span class="voice-bar w-1.5 rounded-full bg-emerald-400" style="height:32px"></span>
-        <span class="voice-bar w-1.5 rounded-full bg-[#d4af37]" style="height:20px"></span>
-        <span class="voice-bar w-1.5 rounded-full bg-emerald-400" style="height:14px"></span>
-        <span class="voice-bar w-1.5 rounded-full bg-[#d4af37]" style="height:28px"></span>
-        <span class="voice-bar w-1.5 rounded-full bg-emerald-400" style="height:16px"></span>
-        <span class="voice-bar w-1.5 rounded-full bg-[#d4af37]" style="height:22px"></span>
-        <span class="voice-bar w-1.5 rounded-full bg-emerald-400" style="height:10px"></span>
-      </div>
-
-      <!-- Live Transcript -->
-      <div class="w-full max-w-sm bg-white/5 border border-white/10 rounded-2xl p-3 min-h-[70px] max-h-[120px] overflow-y-auto">
+      <!-- Live Transcript Dialogue Box -->
+      <div class="tc-card w-full max-w-sm">
         <div class="flex items-center justify-between mb-1.5">
-          <span class="text-[10px] text-gray-500 uppercase font-bold tracking-wider">Live Transcript</span>
-          <span class="text-[9px] text-emerald-400 font-mono">● Live</span>
+          <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Live Speech Audio</span>
+          <span class="text-[10px] text-emerald-400 font-mono flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block status-blink"></span>
+            Streaming
+          </span>
         </div>
-        <p id="VoiceTranscript" class="text-gray-200 text-xs leading-relaxed">
+        <p id="VoiceTranscript" class="text-gray-100 text-xs sm:text-[13px] leading-relaxed font-normal" style="min-height:48px">
           Connecting to Dr. Pooja...
         </p>
       </div>
     </div>
 
-    <!-- Bottom Controls (Phone Call Style) -->
-    <div class="pb-10 pt-4 px-8">
-      <div class="flex items-center justify-around max-w-xs mx-auto">
-
+    <!-- Phone Call Bottom Controls -->
+    <div class="pb-12 pt-2">
+      <div class="flex items-center justify-around px-8 max-w-xs mx-auto">
         <!-- Mute Button -->
-        <div class="flex flex-col items-center gap-1.5">
-          <button id="VoiceMuteBtn" onclick="voiceToggleMute()" class="w-14 h-14 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white transition-all active:scale-90 hover:bg-white/20 cursor-pointer">
-            <svg id="VoiceMuteIcon" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <div class="flex flex-col items-center gap-2">
+          <button id="VoiceMuteBtn" type="button" onclick="voiceToggleMute()" class="dial-btn dial-glass">
+            <svg id="VoiceMuteIcon" class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/>
             </svg>
           </button>
-          <span class="text-[11px] text-gray-400" id="VoiceMuteLabel">Mute</span>
+          <span id="VoiceMuteLabel" class="text-white/60 text-xs font-medium">Mute</span>
         </div>
 
-        <!-- END CALL (Center, Big Red) -->
-        <div class="flex flex-col items-center gap-1.5">
-          <button onclick="voiceCallEnd()" class="w-20 h-20 rounded-full bg-red-600 hover:bg-red-500 flex items-center justify-center shadow-[0_0_40px_rgba(239,68,68,0.6)] active:scale-90 transition-all cursor-pointer">
-            <svg class="w-9 h-9 text-white" fill="currentColor" viewBox="0 0 24 24">
+        <!-- End Call Button (Big Red) -->
+        <div class="flex flex-col items-center gap-2">
+          <button type="button" onclick="voiceCallEnd()" class="dial-btn dial-end shadow-2xl">
+            <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
               <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
             </svg>
           </button>
-          <span class="text-[11px] text-red-400 font-bold">End Call</span>
+          <span class="text-red-400 text-xs font-bold">End Call</span>
         </div>
 
         <!-- Speaker Button -->
-        <div class="flex flex-col items-center gap-1.5">
-          <button onclick="voiceToggleSpeaker()" id="VoiceSpeakerBtn" class="w-14 h-14 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-white transition-all active:scale-90 hover:bg-white/20 cursor-pointer">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <div class="flex flex-col items-center gap-2">
+          <button id="VoiceSpeakerBtn" type="button" onclick="voiceToggleSpeaker()" class="dial-btn dial-glass">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"/>
             </svg>
           </button>
-          <span class="text-[11px] text-gray-400">Speaker</span>
+          <span id="VoiceSpeakerLabel" class="text-white/60 text-xs font-medium">Speaker</span>
         </div>
-
       </div>
     </div>
   </div>
 
-  <!-- SCREEN D: CALL ENDED -->
-  <div id="VoiceScreen_Ended" class="hidden fixed inset-0 z-[999999] bg-[#07090f] flex flex-col items-center justify-center">
-    <div class="w-20 h-20 rounded-full bg-white/10 flex items-center justify-center text-4xl mb-5">👩‍⚕️</div>
-    <h2 class="text-white text-xl font-bold mb-1">Call Ended</h2>
-    <p class="text-gray-400 text-sm mb-2">Dr. Pooja · BlackRoots</p>
-    <p id="VoiceEndedDuration" class="text-[#d4af37] text-xs font-mono bg-[#d4af37]/10 px-3 py-1 rounded-full mb-8">Duration: 00:00</p>
-    <button onclick="voiceScreenHideAll()" class="px-8 py-3 rounded-2xl bg-white/10 border border-white/20 text-white text-sm font-bold hover:bg-white/20 transition-all cursor-pointer">
-      Close
-    </button>
+  <!-- ══════════════════════════════════════════════════ -->
+  <!--  SCREEN 3 — CALL ENDED SUMMARY                     -->
+  <!-- ══════════════════════════════════════════════════ -->
+  <div id="VoiceScreen_Ended" class="phone-screen items-center justify-center">
+    <div class="flex flex-col items-center gap-4 px-8 text-center">
+      <div class="w-24 h-24 rounded-full flex items-center justify-center shadow-2xl"
+        style="background:linear-gradient(135deg,#123824 0%,#1f5737 100%);border:2px solid #d4af37">
+        <span class="text-5xl">👩‍⚕️</span>
+      </div>
+      <div>
+        <h2 class="text-white text-2xl font-bold">Dr. Pooja</h2>
+        <p class="text-gray-300 text-xs mt-0.5">BlackRoots Ayurvedic Consultant</p>
+      </div>
+      <div class="px-5 py-2 rounded-full text-xs font-bold text-emerald-300"
+        style="background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3)">
+        Call Completed
+      </div>
+      <p id="VoiceEndedDuration" class="text-[#d4af37] text-sm font-mono font-bold">Duration: 00:00</p>
+      <button onclick="voiceScreenHideAll()"
+        class="mt-4 px-10 py-3.5 rounded-2xl text-white text-xs font-bold uppercase tracking-wider cursor-pointer active:scale-95 transition-all shadow-lg"
+        style="background:linear-gradient(to right,#1f5737,#123824);border:1px solid rgba(212,175,55,0.4)">
+        Return to Page
+      </button>
+    </div>
   </div>
 
-  <style>
-    @keyframes voiceBarPulse {
-      0%, 100% { transform: scaleY(0.4); }
-      50% { transform: scaleY(1); }
-    }
-    .voice-bar-active {
-      animation: voiceBarPulse 0.6s ease-in-out infinite;
-    }
-    .voice-bar-active:nth-child(2) { animation-delay: 0.1s; }
-    .voice-bar-active:nth-child(3) { animation-delay: 0.2s; }
-    .voice-bar-active:nth-child(4) { animation-delay: 0.0s; }
-    .voice-bar-active:nth-child(5) { animation-delay: 0.15s; }
-    .voice-bar-active:nth-child(6) { animation-delay: 0.3s; }
-    .voice-bar-active:nth-child(7) { animation-delay: 0.05s; }
-    .voice-bar-active:nth-child(8) { animation-delay: 0.25s; }
-    .voice-bar-active:nth-child(9) { animation-delay: 0.1s; }
-    .voice-bar-active:nth-child(10) { animation-delay: 0.2s; }
-  </style>
-
   <!-- ===================================================== -->
-  <!-- JAVASCRIPT: True Real-Time ElevenLabs ConvAI Engine   -->
+  <!-- JAVASCRIPT: Real-Time ElevenLabs ConvAI Engine        -->
   <!-- ===================================================== -->
   <script>
   (function() {
     'use strict';
 
-    // ── State ────────────────────────────────────────────────
     let convWs = null;
     let micStream = null;
     let audioCtx = null;
@@ -710,42 +861,40 @@
     let audioQueue = [];
     let isPlayingAudio = false;
     let isMuted = false;
+    let isSpeaker = false;
     let callTimerInterval = null;
     let callSeconds = 0;
     let callState = 'idle'; // idle | ringing | connected | ended
     let ringAudioCtx = null;
     let ringTimeout = null;
-    let waveformActive = false;
 
-    // ── Screen Management ────────────────────────────────────
     function showScreen(name) {
       ['Ringing', 'Connected', 'Ended'].forEach(s => {
         const el = document.getElementById('VoiceScreen_' + s);
-        if (el) el.classList.add('hidden');
+        if (el) el.classList.remove('active');
       });
       const target = document.getElementById('VoiceScreen_' + name);
-      if (target) target.classList.remove('hidden');
+      if (target) target.classList.add('active');
     }
 
     function voiceScreenHideAll() {
       ['Ringing', 'Connected', 'Ended'].forEach(s => {
         const el = document.getElementById('VoiceScreen_' + s);
-        if (el) el.classList.add('hidden');
+        if (el) el.classList.remove('active');
       });
       callState = 'idle';
     }
 
-    // ── Ringtone (Web Audio - Authentic Indian phone ring) ───
+    // Realistic Phone Ringtone via Web Audio API
     function startRingtone() {
       try {
         const AC = window.AudioContext || window.webkitAudioContext;
         ringAudioCtx = new AC();
         let ringIndex = 0;
 
-        function ring() {
+        function playSingleRing() {
           if (callState !== 'ringing') return;
-          if (ringIndex >= 3) {
-            // Auto connect after 3 rings
+          if (ringIndex >= 2) {
             callState = 'connected';
             stopRingtone();
             connectToAgent();
@@ -760,31 +909,29 @@
           o1.type = 'sine'; o1.frequency.value = 420;
           o2.type = 'sine'; o2.frequency.value = 480;
           g.gain.setValueAtTime(0, t);
-          g.gain.linearRampToValueAtTime(0.12, t + 0.05);
-          g.gain.setValueAtTime(0.12, t + 0.4);
+          g.gain.linearRampToValueAtTime(0.15, t + 0.05);
+          g.gain.setValueAtTime(0.15, t + 0.4);
           g.gain.linearRampToValueAtTime(0, t + 0.45);
 
-          // Double-ring pattern
           const g2 = ringAudioCtx.createGain();
           const o3 = ringAudioCtx.createOscillator();
           const o4 = ringAudioCtx.createOscillator();
           o3.type = 'sine'; o3.frequency.value = 420;
           o4.type = 'sine'; o4.frequency.value = 480;
           g2.gain.setValueAtTime(0, t + 0.55);
-          g2.gain.linearRampToValueAtTime(0.12, t + 0.6);
-          g2.gain.setValueAtTime(0.12, t + 1.0);
+          g2.gain.linearRampToValueAtTime(0.15, t + 0.6);
+          g2.gain.setValueAtTime(0.15, t + 1.0);
           g2.gain.linearRampToValueAtTime(0, t + 1.05);
 
           [o1, o2].forEach(o => { o.connect(g); g.connect(ringAudioCtx.destination); o.start(t); o.stop(t + 0.5); });
           [o3, o4].forEach(o => { o.connect(g2); g2.connect(ringAudioCtx.destination); o.start(t + 0.55); o.stop(t + 1.1); });
 
-          ringTimeout = setTimeout(ring, 2500);
+          ringTimeout = setTimeout(playSingleRing, 2400);
         }
 
-        ring();
+        playSingleRing();
       } catch (e) {
-        // If audio fails, just connect directly
-        setTimeout(() => { callState = 'connected'; connectToAgent(); }, 1500);
+        setTimeout(() => { callState = 'connected'; connectToAgent(); }, 1200);
       }
     }
 
@@ -796,7 +943,6 @@
       }
     }
 
-    // ── Connect Beep ─────────────────────────────────────────
     function playConnectBeep() {
       try {
         const AC = window.AudioContext || window.webkitAudioContext;
@@ -804,17 +950,17 @@
         const o = ac.createOscillator();
         const g = ac.createGain();
         o.type = 'sine'; o.frequency.value = 880;
-        g.gain.setValueAtTime(0.12, ac.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.3);
+        g.gain.setValueAtTime(0.15, ac.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.25);
         o.connect(g); g.connect(ac.destination);
-        o.start(); o.stop(ac.currentTime + 0.3);
-        setTimeout(() => { try { ac.close(); } catch(e) {} }, 500);
+        o.start(); o.stop(ac.currentTime + 0.25);
+        setTimeout(() => { try { ac.close(); } catch(e) {} }, 400);
       } catch(e) {}
     }
 
-    // ── Timer ────────────────────────────────────────────────
     function startTimer() {
       callSeconds = 0;
+      if (callTimerInterval) clearInterval(callTimerInterval);
       callTimerInterval = setInterval(() => {
         callSeconds++;
         const m = String(Math.floor(callSeconds / 60)).padStart(2, '0');
@@ -834,52 +980,46 @@
       }
     }
 
-    // ── State Display ────────────────────────────────────────
     function setCallState(text, isAI) {
       const dot = document.getElementById('VoiceStateDot');
       const label = document.getElementById('VoiceStateText');
       const waveform = document.getElementById('VoiceWaveform');
-      const ring1 = document.getElementById('VoiceRingAI');
-      const ring2 = document.getElementById('VoiceRingMid');
+      const r1 = document.getElementById('VSR1');
+      const r2 = document.getElementById('VSR2');
+      const glow = document.getElementById('VoiceGlow');
 
       if (label) label.textContent = text;
 
       if (isAI) {
-        // AI Speaking - activate waveform
-        if (dot) { dot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-ping'; }
+        if (dot) dot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-ping';
         if (waveform) {
-          waveform.classList.remove('opacity-30');
-          waveform.classList.add('opacity-100');
-          waveform.querySelectorAll('.voice-bar').forEach(b => b.classList.add('voice-bar-active'));
+          waveform.style.opacity = '1';
+          waveform.querySelectorAll('.wbar').forEach(b => b.classList.add('on'));
         }
-        if (ring1) ring1.style.border = '2px solid rgba(52,211,153,0.5)';
-        if (ring2) ring2.style.border = '1px solid rgba(212,175,55,0.4)';
-        waveformActive = true;
+        if (r1) r1.className = 'absolute w-36 h-36 rounded-full ring-pulse-1';
+        if (r2) r2.className = 'absolute w-36 h-36 rounded-full ring-pulse-2';
+        if (glow) glow.style.background = 'rgba(16,185,129,0.35)';
       } else {
-        // Listening / thinking
-        if (dot) { dot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse'; }
+        if (dot) dot.className = 'w-2 h-2 rounded-full bg-amber-400 status-blink';
         if (waveform) {
-          waveform.classList.add('opacity-30');
-          waveform.classList.remove('opacity-100');
-          waveform.querySelectorAll('.voice-bar').forEach(b => b.classList.remove('voice-bar-active'));
+          waveform.style.opacity = '0.2';
+          waveform.querySelectorAll('.wbar').forEach(b => b.classList.remove('on'));
         }
-        if (ring1) ring1.style.border = '2px solid rgba(52,211,153,0)';
-        if (ring2) ring2.style.border = '1px solid rgba(212,175,55,0)';
-        waveformActive = false;
+        if (r1) r1.className = 'absolute w-36 h-36 rounded-full ring-idle';
+        if (r2) r2.className = 'absolute w-36 h-36 rounded-full ring-idle';
+        if (glow) glow.style.background = 'rgba(16,80,45,0.2)';
       }
     }
 
-    // ── ElevenLabs ConvAI WebSocket Connection ────────────────
     async function connectToAgent() {
       showScreen('Connected');
-      setCallState('Connecting...', false);
+      setCallState('Connecting call...', false);
       playConnectBeep();
       startTimer();
 
       const transcript = document.getElementById('VoiceTranscript');
-      if (transcript) transcript.textContent = 'Connecting to Dr. Pooja...';
+      if (transcript) transcript.textContent = 'Connecting with Dr. Pooja...';
 
-      // Get signed URL from our backend
       let signedUrl;
       try {
         const resp = await fetch('/api/ai-voice');
@@ -887,7 +1027,7 @@
         signedUrl = data.signed_url;
       } catch (e) {
         setCallState('Connection failed', false);
-        if (transcript) transcript.textContent = 'Could not connect. Please try again.';
+        if (transcript) transcript.textContent = 'Could not reach server. Please try again.';
         return;
       }
 
@@ -896,7 +1036,6 @@
         return;
       }
 
-      // Setup microphone
       try {
         micStream = await navigator.mediaDevices.getUserMedia({
           audio: {
@@ -908,17 +1047,16 @@
           }
         });
       } catch (e) {
-        setCallState('Mic access denied', false);
-        if (transcript) transcript.textContent = 'Please allow microphone access to talk to Dr. Pooja.';
+        setCallState('Microphone blocked', false);
+        if (transcript) transcript.textContent = 'Please allow microphone access in your browser to speak with Dr. Pooja.';
         return;
       }
 
-      // Open WebSocket
       convWs = new WebSocket(signedUrl);
       convWs.binaryType = 'arraybuffer';
 
       convWs.onopen = function() {
-        setCallState('Dr. Pooja connected!', false);
+        setCallState('Dr. Pooja Connected', false);
         if (transcript) transcript.textContent = 'Dr. Pooja is ready...';
         setupMicrophoneStreaming();
       };
@@ -930,14 +1068,12 @@
             handleConvAIMessage(msg);
           } catch(e) {}
         } else if (event.data instanceof ArrayBuffer) {
-          // Raw PCM audio from agent
           enqueueAndPlayAudio(event.data);
         }
       };
 
-      convWs.onerror = function(e) {
-        setCallState('Connection error', false);
-        if (transcript) transcript.textContent = 'Connection issue. Please try again.';
+      convWs.onerror = function() {
+        setCallState('Network issue', false);
       };
 
       convWs.onclose = function() {
@@ -951,10 +1087,9 @@
       const transcript = document.getElementById('VoiceTranscript');
 
       if (msg.type === 'conversation_initiation_metadata') {
-        setCallState('Dr. Pooja is speaking...', true);
+        setCallState('Dr. Pooja speaking...', true);
 
       } else if (msg.type === 'audio') {
-        // Base64 audio chunk from ElevenLabs
         const b64 = msg.audio_event && msg.audio_event.audio_base_64;
         if (b64) {
           const binary = atob(b64);
@@ -962,14 +1097,14 @@
           for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
           enqueueAndPlayAudio(bytes.buffer);
         }
-        setCallState('Dr. Pooja is speaking...', true);
+        setCallState('Dr. Pooja speaking...', true);
 
       } else if (msg.type === 'agent_response') {
         const text = msg.agent_response_event && msg.agent_response_event.agent_response;
         if (text && transcript) {
           transcript.textContent = 'Dr. Pooja: ' + text;
         }
-        setCallState('Dr. Pooja is speaking...', true);
+        setCallState('Dr. Pooja speaking...', true);
 
       } else if (msg.type === 'user_transcript') {
         const text = msg.user_transcription_event && msg.user_transcription_event.user_transcript;
@@ -979,20 +1114,17 @@
         }
 
       } else if (msg.type === 'interruption') {
-        // User interrupted AI
         audioQueue = [];
         isPlayingAudio = false;
         setCallState('Listening to you...', false);
 
       } else if (msg.type === 'ping') {
-        // Keep-alive
         if (convWs && convWs.readyState === WebSocket.OPEN) {
           convWs.send(JSON.stringify({ type: 'pong', event_id: msg.ping_event && msg.ping_event.event_id }));
         }
       }
     }
 
-    // ── Microphone → WebSocket Streaming ─────────────────────
     function setupMicrophoneStreaming() {
       try {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
@@ -1002,13 +1134,11 @@
         scriptProcessor.onaudioprocess = function(e) {
           if (!convWs || convWs.readyState !== WebSocket.OPEN || isMuted) return;
           const input = e.inputBuffer.getChannelData(0);
-          // Convert Float32 to Int16 PCM
           const pcm = new Int16Array(input.length);
           for (let i = 0; i < input.length; i++) {
             const s = Math.max(-1, Math.min(1, input[i]));
             pcm[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
           }
-          // Base64 encode and send
           const b64 = btoa(String.fromCharCode(...new Uint8Array(pcm.buffer)));
           convWs.send(JSON.stringify({
             user_audio_chunk: b64
@@ -1019,11 +1149,10 @@
         scriptProcessor.connect(audioCtx.destination);
         setCallState('Listening to you...', false);
       } catch(e) {
-        setCallState('Audio error', false);
+        setCallState('Audio input error', false);
       }
     }
 
-    // ── Audio Playback Queue ──────────────────────────────────
     function enqueueAndPlayAudio(buffer) {
       audioQueue.push(buffer);
       if (!isPlayingAudio) playNextInQueue();
@@ -1032,22 +1161,19 @@
     function playNextInQueue() {
       if (audioQueue.length === 0) {
         isPlayingAudio = false;
-        // After AI finishes speaking, show listening state
         setTimeout(() => {
           if (callState === 'connected') setCallState('Listening to you...', false);
-        }, 200);
+        }, 150);
         return;
       }
 
       isPlayingAudio = true;
-      setCallState('Dr. Pooja is speaking...', true);
+      setCallState('Dr. Pooja speaking...', true);
 
       const buffer = audioQueue.shift();
       const playCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-      // ElevenLabs sends PCM - decode it
       try {
-        // Try as PCM 44100 16-bit mono first
         const samples = buffer.byteLength / 2;
         const pcmData = new Int16Array(buffer);
         const float32 = new Float32Array(samples);
@@ -1065,7 +1191,6 @@
         };
         source.start();
       } catch(e) {
-        // Try decodeAudioData as fallback
         playCtx.decodeAudioData(buffer.slice(0), (decoded) => {
           const source = playCtx.createBufferSource();
           source.buffer = decoded;
@@ -1079,40 +1204,39 @@
       }
     }
 
-    // ── Mute / Speaker ────────────────────────────────────────
     function voiceToggleMute() {
       isMuted = !isMuted;
       const label = document.getElementById('VoiceMuteLabel');
       const btn = document.getElementById('VoiceMuteBtn');
       if (isMuted) {
         if (label) label.textContent = 'Unmute';
-        if (btn) btn.classList.add('bg-red-900/60', 'border-red-500/50');
+        if (btn) btn.classList.add('muted');
         if (micStream) micStream.getAudioTracks().forEach(t => t.enabled = false);
       } else {
         if (label) label.textContent = 'Mute';
-        if (btn) btn.classList.remove('bg-red-900/60', 'border-red-500/50');
+        if (btn) btn.classList.remove('muted');
         if (micStream) micStream.getAudioTracks().forEach(t => t.enabled = true);
       }
     }
 
     function voiceToggleSpeaker() {
-      // On mobile, this would toggle speaker - browser limitation, just visual for now
+      isSpeaker = !isSpeaker;
       const btn = document.getElementById('VoiceSpeakerBtn');
-      if (btn) btn.classList.toggle('bg-emerald-900/60');
+      if (btn) {
+        if (isSpeaker) btn.classList.add('speaker-on');
+        else btn.classList.remove('speaker-on');
+      }
     }
 
-    // ── End Call ──────────────────────────────────────────────
     function voiceCallEnd() {
       callState = 'ended';
       stopRingtone();
       stopTimer();
 
-      // Close WebSocket
       if (convWs) {
         try { convWs.close(); } catch(e) {}
         convWs = null;
       }
-      // Stop mic
       if (scriptProcessor) {
         try { scriptProcessor.disconnect(); } catch(e) {}
         scriptProcessor = null;
@@ -1131,17 +1255,16 @@
       showScreen('Ended');
     }
 
-    // ── Main Entry Point ──────────────────────────────────────
     function startAIVoiceCall() {
       callState = 'ringing';
       isMuted = false;
+      isSpeaker = false;
       audioQueue = [];
       isPlayingAudio = false;
       showScreen('Ringing');
       startRingtone();
     }
 
-    // Expose globals
     window.startAIVoiceCall = startAIVoiceCall;
     window.voiceCallEnd = voiceCallEnd;
     window.voiceToggleMute = voiceToggleMute;
