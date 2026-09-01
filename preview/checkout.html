@@ -829,43 +829,43 @@
         db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
       } catch(e) {}
 
-      // Official Store Promo Codes
-      var officialCoupons = {
-        'BLACKROOTS': 10,
-        'ROOTS50': 10,
-        'LAUNCH50': 10,
-        'VIP50': 10,
-        'SAVE10': 10,
-        'OFFER50': 10
-      };
+      var deletedList = [];
+      try {
+        deletedList = (JSON.parse(localStorage.getItem('br_deleted_influencers') || '[]')).map(function(d) { return String(d).toLowerCase(); });
+      } catch(e) {}
 
       var creator = db.find(function(u) { 
+        if (!u) return false;
+        var uId = String(u.id || '').toLowerCase();
+        var uCode = String(u.code || '').toLowerCase();
+        var uUser = String(u.username || '').toLowerCase();
+        if (deletedList.indexOf(uId) !== -1 || deletedList.indexOf(uCode) !== -1 || deletedList.indexOf(uUser) !== -1) return false;
+        if (u.status === 'Inactive' || u.status === 'Blocked') return false;
+
         return (u.code && u.code.toUpperCase() === rawCode) || 
                (u.username && u.username.toUpperCase() === rawCode) ||
                (u.id && u.id.toUpperCase() === rawCode); 
       });
 
-      var isValidOfficial = officialCoupons.hasOwnProperty(rawCode);
-
-      if (creator || isValidOfficial) {
-        var promoCode = creator ? (creator.code || rawCode) : rawCode;
-        var commRate = creator ? (creator.comm_rate || 10) : officialCoupons[rawCode];
+      if (creator) {
+        var promoCode = creator.code || rawCode;
+        var commRate = creator.comm_rate || 10;
 
         appliedCoupon = {
           code: promoCode,
           comm_rate: commRate,
-          influencer_id: creator ? creator.id : null
+          influencer_id: creator.id || null
         };
 
         if (note) {
-          note.textContent = '✓ Coupon "' + promoCode + '" applied (' + commRate + '% OFF)!';
+          note.textContent = '✓ Creator Code "' + promoCode + '" applied (' + commRate + '% OFF)!';
           note.className = 'text-xs text-emerald-400 font-bold mt-1.5 flex items-center gap-1';
           note.classList.remove('hidden');
         }
       } else {
         appliedCoupon = null;
         if (note) {
-          note.textContent = '✕ Invalid or expired coupon code: "' + rawCode + '"';
+          note.textContent = '✕ Invalid creator code: "' + rawCode + '". Only valid creator codes from Admin are accepted.';
           note.className = 'text-xs text-red-400 font-bold mt-1.5 flex items-center gap-1';
           note.classList.remove('hidden');
         }

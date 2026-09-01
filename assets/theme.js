@@ -750,42 +750,43 @@ window.closeQuickOrderModal = function() {
       db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
     } catch(e) {}
 
-    const officialCoupons = {
-      'BLACKROOTS': 10,
-      'ROOTS50': 10,
-      'LAUNCH50': 10,
-      'VIP50': 10,
-      'SAVE10': 10,
-      'OFFER50': 10
-    };
+    let deletedList = [];
+    try {
+      deletedList = (JSON.parse(localStorage.getItem('br_deleted_influencers') || '[]')).map(d => String(d).toLowerCase());
+    } catch(e) {}
 
-    let creator = db.find(u => 
-      (u.code && u.code.toUpperCase() === rawCode) ||
-      (u.username && u.username.toUpperCase() === rawCode) ||
-      (u.id && u.id.toUpperCase() === rawCode)
-    );
+    let creator = db.find(u => {
+      if (!u) return false;
+      const uId = String(u.id || '').toLowerCase();
+      const uCode = String(u.code || '').toLowerCase();
+      const uUser = String(u.username || '').toLowerCase();
+      if (deletedList.includes(uId) || deletedList.includes(uCode) || deletedList.includes(uUser)) return false;
+      if (u.status === 'Inactive' || u.status === 'Blocked') return false;
 
-    const isValidOfficial = officialCoupons.hasOwnProperty(rawCode);
+      return (u.code && u.code.toUpperCase() === rawCode) || 
+             (u.username && u.username.toUpperCase() === rawCode) ||
+             (u.id && u.id.toUpperCase() === rawCode);
+    });
 
-    if (creator || isValidOfficial) {
-      const promoCode = creator ? (creator.code || rawCode) : rawCode;
-      const commRate = creator ? (creator.comm_rate || 10) : officialCoupons[rawCode];
+    if (creator) {
+      const promoCode = creator.code || rawCode;
+      const commRate = creator.comm_rate || 10;
 
       window.appliedCouponData = {
         code: promoCode,
         comm_rate: commRate,
-        influencer_id: creator ? creator.id : null
+        influencer_id: creator.id || null
       };
 
       if (note) {
-        note.textContent = '✓ Coupon "' + promoCode + '" applied (' + commRate + '% OFF)!';
+        note.textContent = '✓ Creator Code "' + promoCode + '" applied (' + commRate + '% OFF)!';
         note.className = 'text-xs text-emerald-400 font-bold mt-1.5 flex items-center gap-1';
         note.classList.remove('hidden');
       }
     } else {
       window.appliedCouponData = null;
       if (note) {
-        note.textContent = '✕ Invalid or expired coupon code: "' + rawCode + '"';
+        note.textContent = '✕ Invalid creator code: "' + rawCode + '". Only active creator codes from Admin are accepted.';
         note.className = 'text-xs text-red-400 font-bold mt-1.5 flex items-center gap-1';
         note.classList.remove('hidden');
       }
