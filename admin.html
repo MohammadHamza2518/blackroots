@@ -1104,16 +1104,18 @@
       if (tab === 'settings') loadSettings();
     }
 
-        // 4. API Communication
     // 4. API Communication (Multi-Tier Resilient Architecture)
     async function apiFetch(action, options = {}) {
-      const isSubdir = window.location.pathname.includes('/admin/') || window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
+      const isSubdir = window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
       const prefix = isSubdir ? '../' : '';
       const endpoints = [
+        '/backend_hostinger/admin.php?action=' + action,
+        'backend_hostinger/admin.php?action=' + action,
+        prefix + 'backend_hostinger/admin.php?action=' + action,
         '/api/admin?action=' + action,
+        'api/admin?action=' + action,
         prefix + 'api/admin?action=' + action,
         prefix + 'api/admin.js?action=' + action,
-        prefix + 'backend_hostinger/admin.php?action=' + action,
         prefix + 'api/admin.php?action=' + action
       ];
       for (const ep of endpoints) {

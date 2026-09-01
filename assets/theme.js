@@ -783,15 +783,17 @@ document.addEventListener('DOMContentLoaded', function() {
         note.classList.remove('hidden');
       }
 
+      const isSubdir = window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
+      const prefix = isSubdir ? '../' : '';
       const endpoints = [
+        '/backend_hostinger/admin.php?action=verify_coupon&code=' + encodeURIComponent(rawCode),
+        prefix + 'backend_hostinger/admin.php?action=verify_coupon&code=' + encodeURIComponent(rawCode),
+        '/backend_hostinger/admin.php?action=get_influencers',
+        prefix + 'backend_hostinger/admin.php?action=get_influencers',
         '/api/admin?action=verify_coupon&code=' + encodeURIComponent(rawCode),
-        'api/admin?action=verify_coupon&code=' + encodeURIComponent(rawCode),
-        'backend_hostinger/admin.php?action=verify_coupon&code=' + encodeURIComponent(rawCode),
-        'api/admin.php?action=verify_coupon&code=' + encodeURIComponent(rawCode),
+        prefix + 'api/admin?action=verify_coupon&code=' + encodeURIComponent(rawCode),
         '/api/admin?action=get_influencers',
-        'api/admin?action=get_influencers',
-        'backend_hostinger/admin.php?action=get_influencers',
-        'api/admin.php?action=get_influencers'
+        prefix + 'api/admin?action=get_influencers'
       ];
 
       for (const ep of endpoints) {
