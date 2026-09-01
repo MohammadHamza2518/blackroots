@@ -1670,7 +1670,7 @@
       document.getElementById('EditInfluencerModal').classList.remove('flex');
     }
 
-    function handleSaveEditInfluencer(e) {
+    async function handleSaveEditInfluencer(e) {
       e.preventDefault();
       const id = document.getElementById('edit-inf-id').value;
       const db = getInfluencersAdminDb();
