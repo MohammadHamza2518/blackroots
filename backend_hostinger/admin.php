@@ -117,6 +117,28 @@ if ($action === 'save_order') {
             }
         }
 
+        // Shiprocket Auto-Push
+        try {
+            require_once __DIR__ . '/shiprocket.php';
+            $srEmail = get_setting('shiprocket_email', '');
+            $srPass = get_setting('shiprocket_password', '');
+            if (!empty($srEmail) && !empty($srPass)) {
+                shiprocket_create_order([
+                    'order_id' => $order_id,
+                    'name' => $name,
+                    'phone' => $phone,
+                    'email' => $email,
+                    'address' => $address,
+                    'city' => $city,
+                    'state' => $state,
+                    'pincode' => $pincode,
+                    'price' => $price,
+                    'payment_method' => $payment_method,
+                    'bundle' => $bundle
+                ]);
+            }
+        } catch (Exception $e) {}
+
         // Recover abandoned checkout
         try {
             $pdo->prepare("UPDATE abandoned_checkouts SET recovered = 1 WHERE phone = ?")->execute([$phone]);
