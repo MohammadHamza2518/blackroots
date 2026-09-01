@@ -1244,16 +1244,11 @@
             ${v.campaign ? `<span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold text-[10px]">${v.campaign}</span>` : '<span class="text-gray-600">&mdash;</span>'}
           </td>
           <td class="py-3 px-3 text-gray-300">${v.device === 'Mobile' ? '📱 Mobile' : '💻 Desktop'}</td>
-                    <td class="py-3 px-3 text-right whitespace-nowrap">
-            <button type="button" onclick="pushOrderToShiprocket('${o.order_id}')" class="inline-flex items-center gap-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold hover:brightness-110 cursor-pointer mr-1 shadow-sm">
-              <span>🚀 Push Shiprocket</span>
-            </button>
-            <button type="button" onclick="openShippingLabelModal('${o.order_id}')" class="inline-flex items-center gap-1 bg-[#d4af37] text-black px-2.5 py-1 rounded-lg text-[10px] font-bold hover:brightness-110 cursor-pointer mr-1">
-              <span>🏷️ Label</span>
-            </button>
-            <a href="https://wa.me/91${o.phone}?text=${encodeURIComponent('Namaste ' + (o.name || '') + ' ji! BlackRoots Herbal Care se aapka order ' + (o.order_id || '') + ' successfully confirm ho gaya hai.')}" target="_blank" class="inline-flex items-center gap-1 bg-[#25D366] text-black px-2.5 py-1 rounded-lg text-[10px] font-bold hover:brightness-110">
-              💬 WhatsApp
-            </a>
+          <td class="py-3 px-3 text-right whitespace-nowrap">
+            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-end gap-1.5 ml-auto w-fit">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              Live Browsing
+            </span>
           </td>
         </tr>
       `).join('');
@@ -1370,10 +1365,15 @@
         ord.status = newStatus;
         localStorage.setItem('br_local_orders', JSON.stringify(orders));
 
-        // If Delivered and had coupon, credit creator
-        if (newStatus === 'Delivered' && ord.coupon) {
+        // If Delivered and had coupon/tag, credit creator
+        const couponTag = (ord.coupon || ord.influencer || '').trim().toUpperCase();
+        if (newStatus === 'Delivered' && couponTag) {
           let infDb = getInfluencersAdminDb();
-          let inf = infDb.find(u => u.code && u.code.toUpperCase() === ord.coupon.toUpperCase());
+          let inf = infDb.find(u => 
+            (u.code && u.code.toUpperCase() === couponTag) ||
+            (u.username && u.username.toUpperCase() === couponTag) ||
+            (u.id && u.id.toUpperCase() === couponTag)
+          );
           if (inf) {
             let comm = Math.round((Number(ord.price) || 499) * ((inf.comm_rate || 10) / 100));
             inf.total_earned = (Number(inf.total_earned) || 0) + comm;
@@ -1899,15 +1899,9 @@
           <td class="py-3 px-3 text-amber-400 font-mono">${lead.phone || ''}</td>
           <td class="py-3 px-3 text-gray-300">${lead.bundle || '1 Bottle'}</td>
           <td class="py-3 px-3 font-bold text-emerald-400">₹${lead.price || 499}</td>
-                    <td class="py-3 px-3 text-right whitespace-nowrap">
-            <button type="button" onclick="pushOrderToShiprocket('${o.order_id}')" class="inline-flex items-center gap-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold hover:brightness-110 cursor-pointer mr-1 shadow-sm">
-              <span>🚀 Push Shiprocket</span>
-            </button>
-            <button type="button" onclick="openShippingLabelModal('${o.order_id}')" class="inline-flex items-center gap-1 bg-[#d4af37] text-black px-2.5 py-1 rounded-lg text-[10px] font-bold hover:brightness-110 cursor-pointer mr-1">
-              <span>🏷️ Label</span>
-            </button>
-            <a href="https://wa.me/91${o.phone}?text=${encodeURIComponent('Namaste ' + (o.name || '') + ' ji! BlackRoots Herbal Care se aapka order ' + (o.order_id || '') + ' successfully confirm ho gaya hai.')}" target="_blank" class="inline-flex items-center gap-1 bg-[#25D366] text-black px-2.5 py-1 rounded-lg text-[10px] font-bold hover:brightness-110">
-              💬 WhatsApp
+          <td class="py-3 px-3 text-right whitespace-nowrap">
+            <a href="https://wa.me/91${String(lead.phone || '').replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Namaste ' + (lead.name || '') + ' ji! BlackRoots Herbal Hair Dye Shampoo ka aapka order incomplete reh gaya tha. Aaj complete karein aur payein FLAT ₹50 Instant Discount + Free Express Shipping: https://blackroots.in/checkout.html')}" target="_blank" class="inline-flex items-center gap-1.5 bg-[#25D366] text-black px-3 py-1.5 rounded-lg text-xs font-bold hover:brightness-110 shadow-md">
+              <span>💬 Recover on WhatsApp</span>
             </a>
           </td>
         </tr>

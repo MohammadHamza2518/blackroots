@@ -347,9 +347,14 @@ module.exports = async (req, res) => {
       if (newStatus) ord.status = newStatus;
       if (awb) ord.tracking_awb = awb;
 
-      // If status changed to Delivered and order had an influencer coupon, credit the influencer!
-      if (newStatus === 'Delivered' && prevStatus !== 'Delivered' && ord.coupon && memoryStore.influencers) {
-        const inf = memoryStore.influencers.find(u => u.code && u.code.toUpperCase() === ord.coupon.toUpperCase());
+      // If status changed to Delivered and order had an influencer coupon/tag, credit the influencer!
+      const couponTag = (ord.coupon || ord.influencer || '').trim().toUpperCase();
+      if (newStatus === 'Delivered' && prevStatus !== 'Delivered' && couponTag && memoryStore.influencers) {
+        const inf = memoryStore.influencers.find(u => 
+          (u.code && u.code.toUpperCase() === couponTag) ||
+          (u.username && u.username.toUpperCase() === couponTag) ||
+          (u.id && u.id.toUpperCase() === couponTag)
+        );
         if (inf) {
           const commAmt = Math.round((Number(ord.price) || 499) * ((inf.comm_rate || 10) / 100));
           inf.total_earned = (Number(inf.total_earned) || 0) + commAmt;

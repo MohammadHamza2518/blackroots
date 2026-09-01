@@ -919,7 +919,25 @@ window.closeQuickOrderModal = function() {
           try {
             let curOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
             curOrders.unshift(payload);
-            localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 100)));
+            localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 200)));
+
+            // Real-time Influencer DB Commission & Sales Sync
+            if (payload.coupon) {
+              let infDb = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
+              let infIdx = infDb.findIndex(function(u) {
+                return (u.code && u.code.toUpperCase() === payload.coupon.toUpperCase()) ||
+                       (u.username && u.username.toUpperCase() === payload.coupon.toUpperCase()) ||
+                       (u.id && u.id === payload.influencer_id);
+              });
+              if (infIdx !== -1) {
+                infDb[infIdx].total_orders = (infDb[infIdx].total_orders || 0) + 1;
+                infDb[infIdx].total_sales = (infDb[infIdx].total_sales || 0) + payload.price;
+                let earned = Math.round(payload.price * (infDb[infIdx].comm_rate || 10) / 100);
+                infDb[infIdx].total_earned = (infDb[infIdx].total_earned || 0) + earned;
+                infDb[infIdx].unpaid_balance = (infDb[infIdx].unpaid_balance || 0) + earned;
+                localStorage.setItem('br_influencers_db', JSON.stringify(infDb));
+              }
+            }
           } catch(e) {}
 
           // Show Success View

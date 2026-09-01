@@ -2,7 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const tmpFile = path.join('/tmp', 'blackroots_db.json');
+const tmpFile = path.join(require('os').tmpdir(), 'blackroots_db.json');
 function getDb() {
   let db = { orders: [] };
   try {
