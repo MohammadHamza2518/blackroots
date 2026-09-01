@@ -908,6 +908,8 @@
     let callState = 'idle'; // idle | ringing | connected | ended
     let ringAudioCtx = null;
     let ringTimeout = null;
+    let currentAudioSource = null;
+    let playCtx = null;
 
     function showScreen(name) {
       document.documentElement.classList.add('call-active');
@@ -971,12 +973,12 @@
           [o1, o2].forEach(o => { o.connect(g); g.connect(ringAudioCtx.destination); o.start(t); o.stop(t + 0.5); });
           [o3, o4].forEach(o => { o.connect(g2); g2.connect(ringAudioCtx.destination); o.start(t + 0.55); o.stop(t + 1.1); });
 
-          ringTimeout = setTimeout(playSingleRing, 2400);
+          ringTimeout = setTimeout(playSingleRing, 2200);
         }
 
         playSingleRing();
       } catch (e) {
-        setTimeout(() => { callState = 'connected'; connectToAgent(); }, 1200);
+        setTimeout(() => { callState = 'connected'; connectToAgent(); }, 1000);
       }
     }
 
@@ -999,7 +1001,7 @@
         g.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + 0.25);
         o.connect(g); g.connect(ac.destination);
         o.start(); o.stop(ac.currentTime + 0.25);
-        setTimeout(() => { try { ac.close(); } catch(e) {} }, 400);
+        setTimeout(() => { try { ac.close(); } catch(e) {} }, 350);
       } catch(e) {}
     }
 
@@ -1053,6 +1055,33 @@
       }
     }
 
+    // High quality audio downsampler to convert any hardware mic rate (44.1k/48k) to 16kHz for ElevenLabs
+    function downsampleBuffer(buffer, sampleRate, outSampleRate) {
+      if (outSampleRate === sampleRate) {
+        return buffer;
+      }
+      if (outSampleRate > sampleRate) {
+        throw new Error('Downsampling rate must be smaller than input');
+      }
+      const sampleRateRatio = sampleRate / outSampleRate;
+      const newLength = Math.round(buffer.length / sampleRateRatio);
+      const result = new Float32Array(newLength);
+      let offsetResult = 0;
+      let offsetBuffer = 0;
+      while (offsetResult < result.length) {
+        const nextOffsetBuffer = Math.round((offsetResult + 1) * sampleRateRatio);
+        let accum = 0, count = 0;
+        for (let i = offsetBuffer; i < nextOffsetBuffer && i < buffer.length; i++) {
+          accum += buffer[i];
+          count++;
+        }
+        result[offsetResult] = count > 0 ? accum / count : buffer[offsetBuffer];
+        offsetResult++;
+        offsetBuffer = nextOffsetBuffer;
+      }
+      return result;
+    }
+
     async function connectToAgent() {
       showScreen('Connected');
       setCallState('Connecting with Dr. Pooja...', false);
@@ -1060,7 +1089,7 @@
       startTimer();
 
       const transcript = document.getElementById('VoiceTranscript');
-      if (transcript) transcript.textContent = 'Connecting with Dr. Pooja Sharma...';
+      if (transcript) transcript.textContent = 'Connecting with Doctor Pooja Sharma...';
 
       let signedUrl;
       try {
@@ -1078,28 +1107,24 @@
         return;
       }
 
-      try {
-        micStream = await navigator.mediaDevices.getUserMedia({
-          audio: {
-            sampleRate: 16000,
-            channelCount: 1,
-            echoCancellation: true,
-            noiseSuppression: true,
-            autoGainControl: true
-          }
-        });
-      } catch (e) {
-        setCallState('Microphone blocked', false);
-        if (transcript) transcript.textContent = 'Please allow microphone access in your browser to talk directly to Dr. Pooja.';
-        return;
+      if (!micStream) {
+        try {
+          micStream = await navigator.mediaDevices.getUserMedia({
+            audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+          });
+        } catch (e) {
+          setCallState('Microphone required', false);
+          if (transcript) transcript.textContent = 'Please allow microphone access to talk with Doctor Pooja.';
+          return;
+        }
       }
 
       convWs = new WebSocket(signedUrl);
       convWs.binaryType = 'arraybuffer';
 
       convWs.onopen = function() {
-        setCallState('Dr. Pooja Connected', false);
-        if (transcript) transcript.textContent = 'Dr. Pooja is listening to you...';
+        setCallState('Doctor Pooja Connected', false);
+        if (transcript) transcript.textContent = 'Doctor Pooja is listening...';
         setupMicrophoneStreaming();
       };
 
@@ -1118,7 +1143,7 @@
         setCallState('Network issue', false);
       };
 
-      convWs.onclose = function() {
+      convWs.onclose = function(e) {
         if (callState === 'connected') {
           voiceCallEnd();
         }
@@ -1129,7 +1154,7 @@
       const transcript = document.getElementById('VoiceTranscript');
 
       if (msg.type === 'conversation_initiation_metadata') {
-        setCallState('Dr. Pooja speaking...', true);
+        setCallState('Doctor Pooja speaking...', true);
 
       } else if (msg.type === 'audio') {
         const b64 = msg.audio_event && msg.audio_event.audio_base_64;
@@ -1139,14 +1164,14 @@
           for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
           enqueueAndPlayAudio(bytes.buffer);
         }
-        setCallState('Dr. Pooja speaking...', true);
+        setCallState('Doctor Pooja speaking...', true);
 
       } else if (msg.type === 'agent_response') {
         const text = msg.agent_response_event && msg.agent_response_event.agent_response;
         if (text && transcript) {
-          transcript.textContent = 'Dr. Pooja: ' + text;
+          transcript.textContent = 'Doctor Pooja: ' + text;
         }
-        setCallState('Dr. Pooja speaking...', true);
+        setCallState('Doctor Pooja speaking...', true);
 
       } else if (msg.type === 'user_transcript') {
         const text = msg.user_transcription_event && msg.user_transcription_event.user_transcript;
@@ -1156,6 +1181,10 @@
         }
 
       } else if (msg.type === 'interruption') {
+        if (currentAudioSource) {
+          try { currentAudioSource.stop(); } catch(e) {}
+          currentAudioSource = null;
+        }
         audioQueue = [];
         isPlayingAudio = false;
         setCallState('Listening to you...', false);
@@ -1169,16 +1198,23 @@
 
     function setupMicrophoneStreaming() {
       try {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)({ sampleRate: 16000 });
+        const AC = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AC();
         const source = audioCtx.createMediaStreamSource(micStream);
         scriptProcessor = audioCtx.createScriptProcessor(4096, 1, 1);
+
+        const nativeSampleRate = audioCtx.sampleRate || 44100;
 
         scriptProcessor.onaudioprocess = function(e) {
           if (!convWs || convWs.readyState !== WebSocket.OPEN || isMuted) return;
           const input = e.inputBuffer.getChannelData(0);
-          const pcm = new Int16Array(input.length);
-          for (let i = 0; i < input.length; i++) {
-            const s = Math.max(-1, Math.min(1, input[i]));
+          
+          // Downsample to 16000Hz for ElevenLabs
+          const downsampled = nativeSampleRate === 16000 ? input : downsampleBuffer(input, nativeSampleRate, 16000);
+          
+          const pcm = new Int16Array(downsampled.length);
+          for (let i = 0; i < downsampled.length; i++) {
+            const s = Math.max(-1, Math.min(1, downsampled[i]));
             pcm[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
           }
           const b64 = btoa(String.fromCharCode(...new Uint8Array(pcm.buffer)));
@@ -1194,9 +1230,6 @@
         setCallState('Audio input error', false);
       }
     }
-
-    let currentAudioSource = null;
-    let playCtx = null;
 
     function enqueueAndPlayAudio(buffer) {
       if (callState !== 'connected') return;
@@ -1330,7 +1363,7 @@
       showScreen('Ended');
     }
 
-    function startAIVoiceCall() {
+    async function startAIVoiceCall() {
       callState = 'ringing';
       isMuted = false;
       isSpeaker = false;
@@ -1340,6 +1373,14 @@
         try { currentAudioSource.stop(); } catch(e) {}
         currentAudioSource = null;
       }
+
+      // Request mic permission immediately during user tap gesture
+      try {
+        micStream = await navigator.mediaDevices.getUserMedia({
+          audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+        });
+      } catch(e) {}
+
       showScreen('Ringing');
       startRingtone();
     }
