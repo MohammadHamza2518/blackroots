@@ -721,6 +721,23 @@
       
       switchCheckoutPack(packParam >= 2 ? 2 : 1);
       
+      // Background sync influencers DB from server
+      try {
+        var endpoints = ['/api/admin?action=get_influencers', 'api/admin?action=get_influencers', 'backend_hostinger/admin.php?action=get_influencers'];
+        for (var i = 0; i < endpoints.length; i++) {
+          fetch(endpoints[i]).then(function(r) { return r.json(); }).then(function(data) {
+            if (data && data.influencers && Array.isArray(data.influencers)) {
+              var cur = [];
+              try { cur = JSON.parse(localStorage.getItem('br_influencers_db') || '[]'); } catch(e) {}
+              var map = new Map();
+              cur.forEach(function(u) { if (u && (u.id || u.code)) map.set(u.id || u.code, u); });
+              data.influencers.forEach(function(u) { if (u && (u.id || u.code)) map.set(u.id || u.code, Object.assign({}, map.get(u.id || u.code) || {}, u)); });
+              localStorage.setItem('br_influencers_db', JSON.stringify(Array.from(map.values())));
+            }
+          }).catch(function(){});
+        }
+      } catch(e) {}
+
       if (couponParam) {
         var input = document.getElementById('CheckoutCouponInput');
         if (input) input.value = couponParam;
@@ -799,7 +816,11 @@
 
       var rawCode = input.value.trim().toUpperCase();
       if (!rawCode) {
-        alert('Please enter a coupon code.');
+        if (note) {
+          note.textContent = 'Please enter a coupon code.';
+          note.className = 'text-xs text-red-400 font-bold mt-1.5 flex items-center gap-1';
+          note.classList.remove('hidden');
+        }
         return;
       }
 
@@ -808,23 +829,46 @@
         db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
       } catch(e) {}
 
+      // Official Store Promo Codes
+      var officialCoupons = {
+        'BLACKROOTS': 10,
+        'ROOTS50': 10,
+        'LAUNCH50': 10,
+        'VIP50': 10,
+        'SAVE10': 10,
+        'OFFER50': 10
+      };
+
       var creator = db.find(function(u) { 
         return (u.code && u.code.toUpperCase() === rawCode) || 
                (u.username && u.username.toUpperCase() === rawCode) ||
                (u.id && u.id.toUpperCase() === rawCode); 
       });
-      var promoCode = creator ? (creator.code || rawCode) : rawCode;
-      var commRate = creator ? (creator.comm_rate || 10) : 10;
 
-      appliedCoupon = {
-        code: promoCode,
-        comm_rate: commRate,
-        influencer_id: creator ? creator.id : null
-      };
+      var isValidOfficial = officialCoupons.hasOwnProperty(rawCode);
 
-      if (note) {
-        note.textContent = '✓ Coupon "' + promoCode + '" applied (' + commRate + '% OFF)!';
-        note.classList.remove('hidden');
+      if (creator || isValidOfficial) {
+        var promoCode = creator ? (creator.code || rawCode) : rawCode;
+        var commRate = creator ? (creator.comm_rate || 10) : officialCoupons[rawCode];
+
+        appliedCoupon = {
+          code: promoCode,
+          comm_rate: commRate,
+          influencer_id: creator ? creator.id : null
+        };
+
+        if (note) {
+          note.textContent = '✓ Coupon "' + promoCode + '" applied (' + commRate + '% OFF)!';
+          note.className = 'text-xs text-emerald-400 font-bold mt-1.5 flex items-center gap-1';
+          note.classList.remove('hidden');
+        }
+      } else {
+        appliedCoupon = null;
+        if (note) {
+          note.textContent = '✕ Invalid or expired coupon code: "' + rawCode + '"';
+          note.className = 'text-xs text-red-400 font-bold mt-1.5 flex items-center gap-1';
+          note.classList.remove('hidden');
+        }
       }
 
       recalculateCheckout();

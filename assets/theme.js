@@ -729,7 +729,7 @@ window.closeQuickOrderModal = function() {
     window.recalculateCheckoutPrice();
   };
 
-  // Apply Coupon Function
+  // Apply Coupon Function (Strict Validation)
   window.applyCheckoutCoupon = function() {
     const input = document.getElementById('OrderCouponInput');
     const note = document.getElementById('CouponDiscountNote');
@@ -737,7 +737,11 @@ window.closeQuickOrderModal = function() {
 
     const rawCode = input.value.trim().toUpperCase();
     if (!rawCode) {
-      alert('Please enter a coupon code.');
+      if (note) {
+        note.textContent = 'Please enter a coupon code.';
+        note.className = 'text-xs text-red-400 font-bold mt-1.5 flex items-center gap-1';
+        note.classList.remove('hidden');
+      }
       return;
     }
 
@@ -746,18 +750,45 @@ window.closeQuickOrderModal = function() {
       db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
     } catch(e) {}
 
-    let creator = db.find(u => u.code && u.code.toUpperCase() === rawCode);
-    let commRate = creator ? (creator.comm_rate || 10) : 10;
-
-    window.appliedCouponData = {
-      code: rawCode,
-      comm_rate: commRate,
-      influencer_id: creator ? creator.id : null
+    const officialCoupons = {
+      'BLACKROOTS': 10,
+      'ROOTS50': 10,
+      'LAUNCH50': 10,
+      'VIP50': 10,
+      'SAVE10': 10,
+      'OFFER50': 10
     };
 
-    if (note) {
-      note.textContent = '? Coupon "' + rawCode + '" applied successfully!';
-      note.classList.remove('hidden');
+    let creator = db.find(u => 
+      (u.code && u.code.toUpperCase() === rawCode) ||
+      (u.username && u.username.toUpperCase() === rawCode) ||
+      (u.id && u.id.toUpperCase() === rawCode)
+    );
+
+    const isValidOfficial = officialCoupons.hasOwnProperty(rawCode);
+
+    if (creator || isValidOfficial) {
+      const promoCode = creator ? (creator.code || rawCode) : rawCode;
+      const commRate = creator ? (creator.comm_rate || 10) : officialCoupons[rawCode];
+
+      window.appliedCouponData = {
+        code: promoCode,
+        comm_rate: commRate,
+        influencer_id: creator ? creator.id : null
+      };
+
+      if (note) {
+        note.textContent = '✓ Coupon "' + promoCode + '" applied (' + commRate + '% OFF)!';
+        note.className = 'text-xs text-emerald-400 font-bold mt-1.5 flex items-center gap-1';
+        note.classList.remove('hidden');
+      }
+    } else {
+      window.appliedCouponData = null;
+      if (note) {
+        note.textContent = '✕ Invalid or expired coupon code: "' + rawCode + '"';
+        note.className = 'text-xs text-red-400 font-bold mt-1.5 flex items-center gap-1';
+        note.classList.remove('hidden');
+      }
     }
 
     window.recalculateCheckoutPrice();
@@ -1393,49 +1424,7 @@ window.closeIngredientModal = closeIngredientModal;
     document.body.appendChild(banner);
   }
 
-  // 2. Global Coupon Validator & Applicator
-  window.applyCheckoutCoupon = function() {
-    const input = document.getElementById('OrderCouponInput');
-    const note = document.getElementById('CouponDiscountNote');
-    const priceDisplay = document.getElementById('OrderModalPriceDisplay');
-    if (!input) return;
 
-    const rawCode = input.value.trim().toUpperCase();
-    if (!rawCode) {
-      alert('Please enter a coupon code.');
-      return;
-    }
-
-    let db = [];
-    try {
-      db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
-    } catch(e) {}
-
-    let creator = db.find(u => u.code && u.code.toUpperCase() === rawCode);
-    let commRate = creator ? (creator.comm_rate || 10) : 10;
-    let basePrice = window.selectedPack ? window.selectedPack.price : 499;
-
-    // Calculate 10% discount
-    let discount = Math.round(basePrice * 0.10);
-    let finalPrice = basePrice - discount;
-
-    window.appliedCouponData = {
-      code: rawCode,
-      discount: discount,
-      finalPrice: finalPrice,
-      influencer_id: creator ? creator.id : null,
-      comm_rate: commRate
-    };
-
-    if (note) {
-      note.textContent = `✓ Code ${rawCode} Applied (-₹${discount})`;
-      note.classList.remove('hidden');
-    }
-
-    if (priceDisplay) {
-      priceDisplay.innerHTML = `<span class="line-through text-gray-400 text-sm font-normal">₹${basePrice}</span> <span class="text-emerald-400 font-black">₹${finalPrice}</span>`;
-    }
-  };
 
   // Run on DOM ready
   if (document.readyState === 'loading') {
@@ -1557,39 +1546,7 @@ window.closeIngredientModal = closeIngredientModal;
     window.recalculateCheckoutPrice();
   };
 
-  // Apply Coupon Function
-  window.applyCheckoutCoupon = function() {
-    const input = document.getElementById('OrderCouponInput');
-    const note = document.getElementById('CouponDiscountNote');
-    if (!input) return;
 
-    const rawCode = input.value.trim().toUpperCase();
-    if (!rawCode) {
-      alert('Please enter a coupon code.');
-      return;
-    }
-
-    let db = [];
-    try {
-      db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
-    } catch(e) {}
-
-    let creator = db.find(u => u.code && u.code.toUpperCase() === rawCode);
-    let commRate = creator ? (creator.comm_rate || 10) : 10;
-
-    window.appliedCouponData = {
-      code: rawCode,
-      comm_rate: commRate,
-      influencer_id: creator ? creator.id : null
-    };
-
-    if (note) {
-      note.textContent = '? Coupon "' + rawCode + '" applied successfully!';
-      note.style.display = 'block';
-    }
-
-    window.recalculateCheckoutPrice();
-  };
 
   // Real-time Pricing Calculator
   window.recalculateCheckoutPrice = function() {
