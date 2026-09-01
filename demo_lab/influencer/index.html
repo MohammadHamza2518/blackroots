@@ -942,7 +942,9 @@
         let stored = localStorage.getItem('br_influencers_db');
         if (stored) {
           let list = JSON.parse(stored);
-          if (Array.isArray(list) && list.length > 0) return list;
+          if (Array.isArray(list) && list.length > 0) {
+            return list.filter(u => u && u.id !== 'inf-103' && u.id !== 'inf-101' && u.id !== 'inf-102' && u.code !== 'LEDUBHAI' && u.code !== 'PRIYA10' && u.code !== 'ROHIT15');
+          }
         }
         localStorage.setItem('br_influencers_db', JSON.stringify(DEFAULT_INFLUENCERS));
         return DEFAULT_INFLUENCERS.slice();

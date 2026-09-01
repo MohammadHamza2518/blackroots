@@ -1419,11 +1419,12 @@
       try {
         let stored = localStorage.getItem('br_influencers_db');
         if (stored !== null) {
-          return JSON.parse(stored) || [];
+          let list = JSON.parse(stored) || [];
+          return list.filter(u => u && u.id !== 'inf-103' && u.id !== 'inf-101' && u.id !== 'inf-102' && u.code !== 'LEDUBHAI' && u.code !== 'PRIYA10' && u.code !== 'ROHIT15');
         }
         return DEFAULT_INFLUENCERS_ADMIN.slice();
       } catch(e) {
-        return [];
+        return DEFAULT_INFLUENCERS_ADMIN.slice();
       }
     }
 
