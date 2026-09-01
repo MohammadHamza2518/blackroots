@@ -1465,18 +1465,16 @@
       loadOrders();
     }
 
-    // 8. Influencers & Payouts Hub (Direct Universal Database Persistence)
+    // 8. Influencers & Payouts Hub (Authoritative Server Database Persistence)
     function getInfluencersAdminDb() {
       try {
         let stored = localStorage.getItem('br_influencers_db');
-        if (stored) {
-          let list = JSON.parse(stored);
-          if (Array.isArray(list) && list.length > 0) return list;
+        if (stored !== null) {
+          return JSON.parse(stored) || [];
         }
-        localStorage.setItem('br_influencers_db', JSON.stringify(DEFAULT_INFLUENCERS_ADMIN));
         return DEFAULT_INFLUENCERS_ADMIN.slice();
       } catch(e) {
-        return DEFAULT_INFLUENCERS_ADMIN.slice();
+        return [];
       }
     }
 
@@ -1486,39 +1484,17 @@
       } catch(e) {}
     }
 
-    function mergeInfluencerDbs(localList, serverList) {
-      const map = new Map();
-      (serverList || []).forEach(u => {
-        if (u && (u.id || u.code)) {
-          const key = String(u.code || u.id).toLowerCase().trim();
-          map.set(key, u);
-        }
-      });
-      (localList || []).forEach(u => {
-        if (u && (u.id || u.code)) {
-          const key = String(u.code || u.id).toLowerCase().trim();
-          if (map.has(key)) {
-            map.set(key, Object.assign({}, map.get(key), u));
-          } else {
-            map.set(key, u);
-          }
-        }
-      });
-      return Array.from(map.values());
-    }
-
     async function loadInfluencers() {
       let res = await apiFetch('get_influencers');
       let payRes = await apiFetch('get_payouts');
 
-      const localDb = getInfluencersAdminDb();
-      const serverList = (res && res.influencers && Array.isArray(res.influencers)) ? res.influencers : [];
-
-      let db = localDb;
-      if (serverList.length > 0) {
-        db = mergeInfluencerDbs(localDb, serverList);
+      let db = [];
+      if (res && res.influencers && Array.isArray(res.influencers)) {
+        db = res.influencers;
+        saveInfluencersAdminDb(db);
+      } else {
+        db = getInfluencersAdminDb();
       }
-      saveInfluencersAdminDb(db);
 
       let payouts = (payRes && payRes.payouts && Array.isArray(payRes.payouts)) ? payRes.payouts : [];
       if (payouts.length > 0) {

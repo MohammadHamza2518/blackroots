@@ -126,20 +126,14 @@ function loadDb() {
     if (fs.existsSync(tmpFile)) {
       const data = JSON.parse(fs.readFileSync(tmpFile, 'utf8'));
       memoryStore = Object.assign(memoryStore, data);
+    } else {
+      memoryStore.initialized = true;
+      memoryStore.influencers = DEFAULT_INITIAL_INFLUENCERS.slice();
+      saveDb();
     }
   } catch (e) {}
 
   if (!memoryStore.influencers) memoryStore.influencers = [];
-  DEFAULT_INITIAL_INFLUENCERS.forEach(def => {
-    const exists = memoryStore.influencers.some(u => 
-      (u.id && u.id === def.id) || 
-      (u.code && u.code.toUpperCase() === def.code.toUpperCase()) || 
-      (u.username && u.username.toUpperCase() === def.username.toUpperCase())
-    );
-    if (!exists) {
-      memoryStore.influencers.push(Object.assign({}, def));
-    }
-  });
 }
 function saveDb() {
   try {

@@ -1030,7 +1030,6 @@
     }
 
     async function syncInfluencersFromServer() {
-      const deletedList = getDeletedInfluencerIds();
       const currentToken = sessionStorage.getItem('br_active_inf_token') || localStorage.getItem('br_active_inf_token') || '';
 
       // Heartbeat verify creator single-device session
@@ -1049,16 +1048,12 @@
         const ordData = await multiEndpointFetch('get_orders');
         const payData = await multiEndpointFetch('get_payouts' + (currentInfluencer ? '&influencer_id=' + encodeURIComponent(currentInfluencer.id) : ''));
 
-        if (infData) {
-          if (infData.influencers && Array.isArray(infData.influencers)) {
-            const localList = getInfluencersDb();
-            const cleanList = mergeInfluencerDbs(localList, infData.influencers);
-            localStorage.setItem('br_influencers_db', JSON.stringify(cleanList));
-            if (currentInfluencer) {
-              const refreshed = cleanList.find(u => u.id === currentInfluencer.id || u.code === currentInfluencer.code || (u.username && u.username.toUpperCase() === currentInfluencer.username.toUpperCase()));
-              if (refreshed) {
-                currentInfluencer = refreshed;
-              }
+        if (infData && infData.influencers && Array.isArray(infData.influencers)) {
+          localStorage.setItem('br_influencers_db', JSON.stringify(infData.influencers));
+          if (currentInfluencer) {
+            const refreshed = infData.influencers.find(u => u.id === currentInfluencer.id || u.code === currentInfluencer.code || (u.username && u.username.toUpperCase() === currentInfluencer.username.toUpperCase()));
+            if (refreshed) {
+              currentInfluencer = refreshed;
             }
           }
         }
