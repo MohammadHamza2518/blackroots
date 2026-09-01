@@ -464,6 +464,87 @@ module.exports = async (req, res) => {
     return res.status(200).json({ success: true, leads: (memoryStore.abandoned || []).slice().reverse() });
   }
 
+  // 8b. Push Order to Shiprocket
+  if (action === 'push_shiprocket') {
+    let body = req.body || {};
+    if (typeof body === 'string') {
+      try { body = JSON.parse(body); } catch(e) { body = {}; }
+    }
+    const order_id = body.order_id || (body.order ? body.order.order_id : '');
+    const ord = body.order || (memoryStore.orders || []).find(o => o.order_id === order_id);
+
+    if (!ord) {
+      return res.status(200).json({ success: false, error: 'Order not found' });
+    }
+
+    const srEmail = (memoryStore.settings && memoryStore.settings.shiprocket_email) || 'api@blackroots.in';
+    const srPass = (memoryStore.settings && memoryStore.settings.shiprocket_password) || '';
+
+    if (!srEmail || !srPass) {
+      return res.status(200).json({ success: false, error: 'Shiprocket email or password not configured in Settings.' });
+    }
+
+    try {
+      const authRes = await fetch('https://apiv2.shiprocket.in/v1/external/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: srEmail, password: srPass })
+      });
+      const authData = await authRes.json();
+      if (!authData.token) {
+        return res.status(200).json({ success: false, error: 'Shiprocket authentication failed. Check credentials in Settings.' });
+      }
+
+      const firstName = (ord.name || 'Customer').split(' ')[0];
+      const lastName = (ord.name || 'Customer').replace(firstName, '').trim() || 'Customer';
+
+      const srRes = await fetch('https://apiv2.shiprocket.in/v1/external/orders/create/adhoc', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authData.token}`
+        },
+        body: JSON.stringify({
+          order_id: String(ord.order_id || '').replace('#', ''),
+          order_date: new Date().toISOString().replace('T', ' ').slice(0, 16),
+          pickup_location: 'Home',
+          channel_id: '',
+          billing_customer_name: firstName,
+          billing_last_name: lastName,
+          billing_address: ord.address || 'Address',
+          billing_city: ord.city || 'India',
+          billing_pincode: ord.pincode || '208001',
+          billing_state: ord.state || 'Uttar Pradesh',
+          billing_country: 'India',
+          billing_email: ord.email || 'blackroots.in@gmail.com',
+          billing_phone: ord.phone || '9580835179',
+          shipping_is_billing: true,
+          order_items: [
+            {
+              name: 'BlackRoots Herbal Hair Dye Shampoo (250ml)',
+              sku: 'BR-SHAMPOO-250ML',
+              units: String(ord.product_bundle || '').includes('2') ? 2 : 1,
+              selling_price: Number(ord.price) || 499,
+              discount: 0,
+              tax: 0
+            }
+          ],
+          payment_method: String(ord.payment_method || '').toLowerCase().includes('online') ? 'Prepaid' : 'COD',
+          sub_total: Number(ord.price) || 499,
+          length: 15,
+          breadth: 10,
+          height: 8,
+          weight: String(ord.product_bundle || '').includes('2') ? 0.6 : 0.35
+        })
+      });
+
+      const srData = await srRes.json();
+      return res.status(200).json({ success: true, shiprocket_order_id: srData.order_id, shipment_id: srData.shipment_id, raw: srData });
+    } catch (e) {
+      return res.status(200).json({ success: false, error: e.message });
+    }
+  }
+
   // 9. Save & Get Settings
   if (action === 'save_settings') {
     const body = req.body || {};
