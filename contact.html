@@ -615,51 +615,88 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT: Dr. Pooja AI Voice Calling Engine -->
+  <!-- JAVASCRIPT: Dr. Pooja AI Voice Calling Engine (Gemini 3.6 Flash + ElevenLabs Neural Audio) -->
   <script>
     let aiCallActive = false;
     let aiCallTimerInterval = null;
     let aiCallSeconds = 0;
     let aiRecognition = null;
+    let currentAudioPlayer = null;
     let isAiSpeaking = false;
     let isMicListening = false;
+    let audioCtx = null;
 
-    // Comprehensive BlackRoots Brain & FAQ Engine
-    const BLACKROOTS_BRAIN = [
-      {
-        keys: ['safed', 'white', 'grey', 'gray', 'kaala', 'black', 'hair dye', 'colour', 'color', 'reversal', 'natural'],
-        reply: "Namaste ji! BlackRoots 100% natural Ayurvedic Hair Dye Shampoo hai. Isme Amla aur Bhringraj hai jo pehli hi wash me aapke safed baalon ko bina kisi chemical ke natural black shiny look dete hain. Iska rang 3 se 4 hafte tak tikta hai."
-      },
-      {
-        keys: ['kaise lagana', 'use kaise', 'ritual', 'routine', 'how to use', 'apply', 'instruction', 'kitni der'],
-        reply: "Isko use karna bilkul aasan hai: Apne halke geele baalon me shampoo lagayein, achhi tarah jhaag banayein, sirf 10 minute chhod dein, aur fir taaza paani se dho lein. Koi alag se brush ya bowl ki zaroorat nahi hai!"
-      },
-      {
-        keys: ['price', 'kitne ka', 'cost', 'daam', 'rupaye', 'cod', 'cash on delivery', 'delivery', 'kab tak', 'shuklaganj', 'delhivery'],
-        reply: "BlackRoots 1 Bottle (250ml) sirf ₹449 me Cash On Delivery par available hai, aur 2 Bottles ka Family Pack ₹899 me aata hai. Delivery hamare Shuklaganj warehouse se Delhivery Express Air ke zariye 3 se 4 din me ho jati hai."
-      },
-      {
-        keys: ['side effect', 'chemical', 'ammonia', 'paraben', 'safe', 'natural', 'ayurvedic', 'ingredient'],
-        reply: "BlackRoots 100% Ammonia Free aur Paraben Free hai. Isme Shuddh Amla, Shikakai, Bhringraj, Onion Seed Oil aur Hibiscus dala gaya hai. Iska koi bhi side effect nahi hai aur ye scalp ke liye 100% safe hai."
-      },
-      {
-        keys: ['order', 'track', 'kahan hai', 'dispatch', 'status', 'awb', 'whatsapp'],
-        reply: "Aap apna order hamare 'Track Order' page par apna Order ID daal kar live track kar sakte hain. Saath hi hamari official WhatsApp team +91 9580835179 par 24 ghante live support deti hai."
-      },
-      {
-        keys: ['namaste', 'hello', 'hi', 'kaun ho', 'who are you', 'help'],
-        reply: "Namaste! Main Dr. Pooja hoon, BlackRoots Hair Care Specialist. Main aapko baalon ki safedi, shampoo lagane ke tareeqe aur online order me poori help kar sakti hoon. Aap kya poochna chahte hain?"
-      }
-    ];
+    // Realistic Calling Ringtone Synthesizer (Web Audio API)
+    function playTelephoneRingtone(onConnect) {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+        
+        let ringCount = 0;
+        const statusText = document.getElementById('AIVoiceStatusText');
+        const subtitle = document.getElementById('AIVoiceSubtitle');
+        if (statusText) statusText.textContent = "📞 Ringing Dr. Pooja (Connecting...)";
+        if (subtitle) subtitle.innerHTML = "<em>Ringing Dr. Pooja's Ayurvedic Clinic... (Kanpur Central)</em>";
 
-    function getAIBrainResponse(query) {
-      const q = (query || '').toLowerCase().trim();
-      for (const item of BLACKROOTS_BRAIN) {
-        if (item.keys.some(k => q.includes(k))) {
-          return item.reply;
+        function doRing() {
+          if (!aiCallActive) return;
+          if (ringCount >= 2) {
+            // Connected Beep
+            playConnectBeep(onConnect);
+            return;
+          }
+          ringCount++;
+          
+          const osc1 = audioCtx.createOscillator();
+          const osc2 = audioCtx.createOscillator();
+          const gainNode = audioCtx.createGain();
+
+          osc1.type = 'sine';
+          osc2.type = 'sine';
+          osc1.frequency.setValueAtTime(400, audioCtx.currentTime); // Standard phone ringtone
+          osc2.frequency.setValueAtTime(450, audioCtx.currentTime);
+
+          gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
+
+          osc1.connect(gainNode);
+          osc2.connect(gainNode);
+          gainNode.connect(audioCtx.destination);
+
+          osc1.start();
+          osc2.start();
+          osc1.stop(audioCtx.currentTime + 1.2);
+          osc2.stop(audioCtx.currentTime + 1.2);
+
+          setTimeout(() => {
+            if (aiCallActive) doRing();
+          }, 2000);
         }
+
+        doRing();
+      } catch (e) {
+        if (onConnect) onConnect();
       }
-      return "Ji, main samajh gayi. BlackRoots 100% Ayurvedic Hair Dye Shampoo aapke baalon ko natural black aur majboot banata hai. Isme Ammonia nahi hai aur ye 10 minute me apna asar dikhata hai. Aap ₹449 me Cash on Delivery par order kar sakte hain!";
+    }
+
+    function playConnectBeep(onConnect) {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.25);
+      } catch(e) {}
+      
+      const statusText = document.getElementById('AIVoiceStatusText');
+      if (statusText) statusText.textContent = "🟢 Call Connected &bull; Live Audio";
+      if (onConnect) onConnect();
     }
 
     function startAIVoiceCall() {
@@ -670,20 +707,14 @@
       aiCallSeconds = 0;
       updateCallTimer();
 
-      aiCallTimerInterval = setInterval(() => {
-        aiCallSeconds++;
-        updateCallTimer();
-      }, 1000);
+      playTelephoneRingtone(() => {
+        aiCallTimerInterval = setInterval(() => {
+          aiCallSeconds++;
+          updateCallTimer();
+        }, 1000);
 
-      const statusText = document.getElementById('AIVoiceStatusText');
-      const subtitle = document.getElementById('AIVoiceSubtitle');
-      if (statusText) statusText.textContent = "Dr. Pooja is Speaking...";
-
-      const welcomeGreeting = "Namaste! Main Dr. Pooja hoon, BlackRoots Hair Specialist. Main aapki kya help kar sakti hoon?";
-      if (subtitle) subtitle.textContent = welcomeGreeting;
-
-      speakText(welcomeGreeting, () => {
-        initSpeechRecognition();
+        // Fetch live human greeting from Gemini + ElevenLabs
+        queryAIVoiceEngine('Namaste Dr. Pooja, customer call connect hui hai, greet karein.');
       });
     }
 
@@ -698,6 +729,9 @@
     function endAIVoiceCall() {
       aiCallActive = false;
       if (aiCallTimerInterval) clearInterval(aiCallTimerInterval);
+      if (currentAudioPlayer) {
+        try { currentAudioPlayer.pause(); currentAudioPlayer = null; } catch(e) {}
+      }
       if (window.speechSynthesis) window.speechSynthesis.cancel();
       if (aiRecognition) {
         try { aiRecognition.stop(); } catch(e) {}
@@ -706,7 +740,84 @@
       if (modal) modal.classList.add('hidden');
     }
 
-    function speakText(text, onComplete) {
+    async function queryAIVoiceEngine(userPrompt) {
+      if (!aiCallActive) return;
+      const statusText = document.getElementById('AIVoiceStatusText');
+      const subtitle = document.getElementById('AIVoiceSubtitle');
+
+      if (statusText) statusText.textContent = "🧠 Dr. Pooja is thinking (Gemini 3.6 Flash)...";
+
+      try {
+        const res = await fetch('/api/ai-voice', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: userPrompt })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.reply) {
+            if (subtitle) {
+              subtitle.innerHTML = `<span class="text-emerald-400 font-bold">Dr. Pooja:</span> ${data.reply}`;
+            }
+
+            if (data.audio_base64) {
+              playElevenLabsAudio(data.audio_base64, () => {
+                if (aiCallActive) setTimeout(initSpeechRecognition, 600);
+              });
+              return;
+            } else {
+              // Fallback TTS
+              speakFallbackTTS(data.reply, () => {
+                if (aiCallActive) setTimeout(initSpeechRecognition, 600);
+              });
+              return;
+            }
+          }
+        }
+      } catch (err) {
+        console.error('AI Voice API Error:', err);
+      }
+
+      // Emergency Fallback
+      const fallbackReply = "Namaste ji! BlackRoots 100% Ayurvedic Hair Dye Shampoo aapke safed baalon ko sirf 10 minute me natural black banata hai. Aap ise ₹449 me Cash on Delivery par order kar sakte hain.";
+      if (subtitle) subtitle.innerHTML = `<span class="text-emerald-400 font-bold">Dr. Pooja:</span> ${fallbackReply}`;
+      speakFallbackTTS(fallbackReply, () => {
+        if (aiCallActive) setTimeout(initSpeechRecognition, 600);
+      });
+    }
+
+    function playElevenLabsAudio(base64Audio, onComplete) {
+      if (!aiCallActive) return;
+      if (currentAudioPlayer) {
+        try { currentAudioPlayer.pause(); } catch(e) {}
+      }
+
+      isAiSpeaking = true;
+      const statusText = document.getElementById('AIVoiceStatusText');
+      const waveform = document.getElementById('AIVoiceWaveform');
+      if (statusText) statusText.textContent = "🔊 Dr. Pooja speaking (ElevenLabs HD Voice)...";
+      if (waveform) waveform.classList.remove('opacity-40');
+
+      currentAudioPlayer = new Audio('data:audio/mp3;base64,' + base64Audio);
+      currentAudioPlayer.onended = function() {
+        isAiSpeaking = false;
+        if (statusText) statusText.textContent = "🎙️ Listening to you... (Speak now)";
+        if (onComplete) onComplete();
+      };
+      currentAudioPlayer.onerror = function() {
+        isAiSpeaking = false;
+        if (statusText) statusText.textContent = "🎙️ Listening to you... (Speak now)";
+        if (onComplete) onComplete();
+      };
+
+      currentAudioPlayer.play().catch(function() {
+        isAiSpeaking = false;
+        if (onComplete) onComplete();
+      });
+    }
+
+    function speakFallbackTTS(text, onComplete) {
       if (!('speechSynthesis' in window)) {
         if (onComplete) onComplete();
         return;
@@ -715,14 +826,13 @@
       isAiSpeaking = true;
 
       const statusText = document.getElementById('AIVoiceStatusText');
-      if (statusText) statusText.textContent = "🔊 Dr. Pooja is speaking...";
+      if (statusText) statusText.textContent = "🔊 Dr. Pooja speaking...";
 
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.rate = 0.95;
       utterance.pitch = 1.05;
       utterance.lang = 'hi-IN';
 
-      // Pick Indian voice if available
       const voices = window.speechSynthesis.getVoices();
       const hindiVoice = voices.find(v => v.lang.includes('hi') || v.name.includes('India') || v.name.includes('Hindi') || v.lang.includes('en-IN'));
       if (hindiVoice) utterance.voice = hindiVoice;
@@ -732,7 +842,6 @@
         if (statusText) statusText.textContent = "🎙️ Listening to you... (Speak now)";
         if (onComplete) onComplete();
       };
-
       utterance.onerror = function() {
         isAiSpeaking = false;
         if (statusText) statusText.textContent = "🎙️ Listening to you... (Speak now)";
@@ -743,12 +852,9 @@
     }
 
     function initSpeechRecognition() {
+      if (!aiCallActive || isAiSpeaking) return;
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        const subtitle = document.getElementById('AIVoiceSubtitle');
-        if (subtitle) subtitle.innerHTML += "<br><span class='text-amber-400 font-bold'>[Mic access not supported in this browser. Please tap the quick question chips below!]</span>";
-        return;
-      }
+      if (!SpeechRecognition) return;
 
       if (aiRecognition) {
         try { aiRecognition.stop(); } catch(e) {}
@@ -788,8 +894,8 @@
     }
 
     function toggleAIVoiceMic() {
-      if (isAiSpeaking) {
-        window.speechSynthesis.cancel();
+      if (isAiSpeaking && currentAudioPlayer) {
+        try { currentAudioPlayer.pause(); } catch(e) {}
         isAiSpeaking = false;
       }
       initSpeechRecognition();
@@ -800,24 +906,20 @@
     }
 
     function handleUserSpokenQuery(queryText) {
-      if (!queryText) return;
+      if (!queryText || !aiCallActive) return;
       const subtitle = document.getElementById('AIVoiceSubtitle');
       const statusText = document.getElementById('AIVoiceStatusText');
 
       if (subtitle) {
         subtitle.innerHTML = `<span class="text-amber-300 font-bold">You:</span> "${queryText}"<br><br><span class="text-emerald-400 font-bold">Dr. Pooja:</span> Thinking...`;
       }
-      if (statusText) statusText.textContent = "🧠 Dr. Pooja is thinking...";
+      if (statusText) statusText.textContent = "🧠 Dr. Pooja is thinking (Gemini 3.6 Flash)...";
 
-      setTimeout(() => {
-        const answer = getAIBrainResponse(queryText);
-        if (subtitle) {
-          subtitle.innerHTML = `<span class="text-amber-300 font-bold">You:</span> "${queryText}"<br><br><span class="text-emerald-400 font-bold">Dr. Pooja:</span> ${answer}`;
-        }
-        speakText(answer, () => {
-          setTimeout(initSpeechRecognition, 800);
-        });
-      }, 600);
+      if (currentAudioPlayer) {
+        try { currentAudioPlayer.pause(); } catch(e) {}
+      }
+
+      queryAIVoiceEngine(queryText);
     }
 
     window.startAIVoiceCall = startAIVoiceCall;

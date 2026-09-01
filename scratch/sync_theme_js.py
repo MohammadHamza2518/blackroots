@@ -9,3 +9,4 @@ targets = [
 for t in targets:
     shutil.copy2(src, t)
     print("Synced theme.js to", t)
+
