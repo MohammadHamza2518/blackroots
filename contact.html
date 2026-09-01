@@ -1120,7 +1120,6 @@
       }
 
       convWs = new WebSocket(signedUrl);
-      convWs.binaryType = 'arraybuffer';
 
       convWs.onopen = function() {
         setCallState('Doctor Pooja Connected', false);
@@ -1128,14 +1127,28 @@
         setupMicrophoneStreaming();
       };
 
-      convWs.onmessage = function(event) {
+      convWs.onmessage = async function(event) {
+        let msg = null;
         if (typeof event.data === 'string') {
+          try { msg = JSON.parse(event.data); } catch(e) {}
+        } else if (event.data instanceof Blob) {
           try {
-            const msg = JSON.parse(event.data);
-            handleConvAIMessage(msg);
+            const text = await event.data.text();
+            msg = JSON.parse(text);
           } catch(e) {}
         } else if (event.data instanceof ArrayBuffer) {
-          enqueueAndPlayAudio(event.data);
+          try {
+            const decoder = new TextDecoder('utf-8');
+            const text = decoder.decode(event.data);
+            msg = JSON.parse(text);
+          } catch(e) {
+            enqueueAndPlayAudio(event.data);
+            return;
+          }
+        }
+
+        if (msg) {
+          handleConvAIMessage(msg);
         }
       };
 
@@ -1190,8 +1203,9 @@
         setCallState('Listening to you...', false);
 
       } else if (msg.type === 'ping') {
+        const eventId = (msg.ping_event && msg.ping_event.event_id) != null ? msg.ping_event.event_id : (msg.event_id || 0);
         if (convWs && convWs.readyState === WebSocket.OPEN) {
-          convWs.send(JSON.stringify({ type: 'pong', event_id: msg.ping_event && msg.ping_event.event_id }));
+          convWs.send(JSON.stringify({ type: 'pong', event_id: eventId }));
         }
       }
     }
