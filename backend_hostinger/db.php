@@ -130,6 +130,8 @@ try {
         $insInf->execute(['inf-103', 'Mohd Faiz', 'LEDUBHAIYA', '9580835179', 'faiz_cawnpore78', 'LEDUBHAI', 'ledubhaiya', 10, 14, 0, 0, 0, 0, '', 'Active']);
         $insInf->execute(['inf-101', 'Priya Sharma', 'PRIYA10', '9876543210', '@priya_haircare', 'PRIYA10', 'blackroots', 10, 342, 18, 14382, 1438, 1438, 'priya@okaxis', 'Active']);
         $insInf->execute(['inf-102', 'Rohit Verma', 'ROHIT15', '9811223344', '@rohit_grooming', 'ROHIT15', 'blackroots', 15, 189, 9, 7191, 1078, 1078, 'rohit@paytm', 'Active']);
+        $insInf->execute(['inf-104', 'Airam', 'airam', '9876543210', '@airam_beauty', 'AIRAM10', 'airam', 10, 0, 0, 0, 0, 0, '', 'Active']);
+        $insInf->execute(['inf-105', 'Ilma', 'ilma', '9876543211', '@ilma_care', 'ILMA10', 'ilma', 10, 0, 0, 0, 0, 0, '', 'Active']);
     }
 
     // Seed initial default settings if empty

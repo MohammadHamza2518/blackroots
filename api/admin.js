@@ -2,6 +2,99 @@
 const fs = require('fs');
 const path = require('path');
 
+const DEFAULT_INITIAL_INFLUENCERS = [
+  {
+    id: 'inf-103',
+    name: 'Mohd Faiz',
+    username: 'LEDUBHAIYA',
+    phone: '9580835179',
+    handle: 'faiz_cawnpore78',
+    code: 'LEDUBHAI',
+    password: 'ledubhaiya',
+    comm_rate: 10,
+    clicks: 14,
+    total_orders: 0,
+    total_sales: 0,
+    total_earned: 0,
+    unpaid_balance: 0,
+    upi_id: '',
+    status: 'Active',
+    created_at: '2026-08-28'
+  },
+  {
+    id: 'inf-101',
+    name: 'Priya Sharma',
+    username: 'PRIYA10',
+    phone: '9876543210',
+    handle: '@priya_haircare',
+    code: 'PRIYA10',
+    password: 'blackroots',
+    comm_rate: 10,
+    clicks: 342,
+    total_orders: 18,
+    total_sales: 14382,
+    total_earned: 1438,
+    unpaid_balance: 1438,
+    upi_id: 'priya@okaxis',
+    status: 'Active',
+    created_at: '2026-08-01'
+  },
+  {
+    id: 'inf-102',
+    name: 'Rohit Verma',
+    username: 'ROHIT15',
+    phone: '9811223344',
+    handle: '@rohit_grooming',
+    code: 'ROHIT15',
+    password: 'blackroots',
+    comm_rate: 15,
+    clicks: 189,
+    total_orders: 9,
+    total_sales: 7191,
+    total_earned: 1078,
+    unpaid_balance: 1078,
+    upi_id: 'rohit@paytm',
+    status: 'Active',
+    created_at: '2026-08-10'
+  },
+  {
+    id: 'inf-104',
+    name: 'Airam',
+    username: 'airam',
+    phone: '9876543210',
+    handle: '@airam_beauty',
+    code: 'AIRAM10',
+    password: 'airam',
+    comm_rate: 10,
+    clicks: 0,
+    total_orders: 0,
+    total_sales: 0,
+    total_earned: 0,
+    unpaid_balance: 0,
+    upi_id: '',
+    status: 'Active',
+    created_at: '2026-09-01'
+  },
+  {
+    id: 'inf-105',
+    name: 'Ilma',
+    username: 'ilma',
+    phone: '9876543211',
+    handle: '@ilma_care',
+    code: 'ILMA10',
+    password: 'ilma',
+    comm_rate: 10,
+    clicks: 0,
+    total_orders: 0,
+    total_sales: 0,
+    total_earned: 0,
+    unpaid_balance: 0,
+    upi_id: '',
+    status: 'Active',
+    created_at: '2026-09-01'
+  }
+];
+
 let memoryStore = {
   settings: {
     admin_password: 'blackroots2026',
@@ -18,67 +111,13 @@ let memoryStore = {
   abandoned: [],
   visitors: [],
   unique_sessions: {},
-  influencers: [
-    {
-      id: 'inf-103',
-      name: 'Mohd Faiz',
-      username: 'LEDUBHAIYA',
-      phone: '9580835179',
-      handle: 'faiz_cawnpore78',
-      code: 'LEDUBHAI',
-      password: 'ledubhaiya',
-      comm_rate: 10,
-      clicks: 14,
-      total_orders: 0,
-      total_sales: 0,
-      total_earned: 0,
-      unpaid_balance: 0,
-      upi_id: '',
-      status: 'Active',
-      created_at: '2026-08-28'
-    },
-    {
-      id: 'inf-101',
-      name: 'Priya Sharma',
-      username: 'PRIYA10',
-      phone: '9876543210',
-      handle: '@priya_haircare',
-      code: 'PRIYA10',
-      password: 'blackroots',
-      comm_rate: 10,
-      clicks: 342,
-      total_orders: 18,
-      total_sales: 14382,
-      total_earned: 1438,
-      unpaid_balance: 1438,
-      upi_id: 'priya@okaxis',
-      status: 'Active',
-      created_at: '2026-08-01'
-    },
-    {
-      id: 'inf-102',
-      name: 'Rohit Verma',
-      username: 'ROHIT15',
-      phone: '9811223344',
-      handle: '@rohit_grooming',
-      code: 'ROHIT15',
-      password: 'blackroots',
-      comm_rate: 15,
-      clicks: 189,
-      total_orders: 9,
-      total_sales: 7191,
-      total_earned: 1078,
-      unpaid_balance: 1078,
-      upi_id: 'rohit@paytm',
-      status: 'Active',
-      created_at: '2026-08-10'
-    }
-  ],
+  influencers: DEFAULT_INITIAL_INFLUENCERS.slice(),
   deleted_influencers: [],
   payouts: [],
   active_admin_session: null,
   active_influencer_sessions: {}
 };
+
 
 // Persist in /tmp or os.tmpdir for universal node/serverless environments
 const tmpFile = path.join(require('os').tmpdir(), 'blackroots_db.json');
@@ -89,6 +128,18 @@ function loadDb() {
       memoryStore = Object.assign(memoryStore, data);
     }
   } catch (e) {}
+
+  if (!memoryStore.influencers) memoryStore.influencers = [];
+  DEFAULT_INITIAL_INFLUENCERS.forEach(def => {
+    const exists = memoryStore.influencers.some(u => 
+      (u.id && u.id === def.id) || 
+      (u.code && u.code.toUpperCase() === def.code.toUpperCase()) || 
+      (u.username && u.username.toUpperCase() === def.username.toUpperCase())
+    );
+    if (!exists) {
+      memoryStore.influencers.push(Object.assign({}, def));
+    }
+  });
 
   // Always enforce deleted influencers filter
   if (memoryStore.deleted_influencers && Array.isArray(memoryStore.deleted_influencers) && memoryStore.influencers) {

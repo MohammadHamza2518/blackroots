@@ -750,23 +750,55 @@ window.closeQuickOrderModal = function() {
       db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
     } catch(e) {}
 
-    let deletedList = [];
-    try {
-      deletedList = (JSON.parse(localStorage.getItem('br_deleted_influencers') || '[]')).map(d => String(d).toLowerCase());
-    } catch(e) {}
+    function findCreatorInDb(dbList) {
+      let deletedList = [];
+      try {
+        deletedList = (JSON.parse(localStorage.getItem('br_deleted_influencers') || '[]')).map(d => String(d).toLowerCase());
+      } catch(e) {}
 
-    let creator = db.find(u => {
-      if (!u) return false;
-      const uId = String(u.id || '').toLowerCase();
-      const uCode = String(u.code || '').toLowerCase();
-      const uUser = String(u.username || '').toLowerCase();
-      if (deletedList.includes(uId) || deletedList.includes(uCode) || deletedList.includes(uUser)) return false;
-      if (u.status === 'Inactive' || u.status === 'Blocked') return false;
+      return (dbList || []).find(u => {
+        if (!u) return false;
+        const uId = String(u.id || '').toLowerCase();
+        const uCode = String(u.code || '').toLowerCase();
+        const uUser = String(u.username || '').toLowerCase();
+        if (deletedList.includes(uId) || deletedList.includes(uCode) || deletedList.includes(uUser)) return false;
+        if (u.status === 'Inactive' || u.status === 'Blocked') return false;
 
-      return (u.code && u.code.toUpperCase() === rawCode) || 
-             (u.username && u.username.toUpperCase() === rawCode) ||
-             (u.id && u.id.toUpperCase() === rawCode);
-    });
+        return (u.code && u.code.toUpperCase() === rawCode) || 
+               (u.username && u.username.toUpperCase() === rawCode) ||
+               (u.id && u.id.toUpperCase() === rawCode);
+      });
+    }
+
+    let creator = findCreatorInDb(db);
+
+    // If not found in local cache, query server API in real-time!
+    if (!creator) {
+      if (note) {
+        note.textContent = 'Verifying creator promo code...';
+        note.className = 'text-xs text-amber-400 font-bold mt-1.5 flex items-center gap-1';
+        note.classList.remove('hidden');
+      }
+
+      const endpoints = ['/api/admin?action=get_influencers', 'api/admin?action=get_influencers', 'backend_hostinger/admin.php?action=get_influencers', 'api/admin.php?action=get_influencers'];
+      for (const ep of endpoints) {
+        try {
+          const res = await fetch(ep);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.influencers && Array.isArray(data.influencers)) {
+              const map = new Map();
+              db.forEach(u => { if (u && (u.id || u.code)) map.set(u.id || u.code, u); });
+              data.influencers.forEach(u => { if (u && (u.id || u.code)) map.set(u.id || u.code, Object.assign({}, map.get(u.id || u.code) || {}, u)); });
+              db = Array.from(map.values());
+              localStorage.setItem('br_influencers_db', JSON.stringify(db));
+              creator = findCreatorInDb(db);
+              if (creator) break;
+            }
+          }
+        } catch(err) {}
+      }
+    }
 
     if (creator) {
       const promoCode = creator.code || rawCode;
