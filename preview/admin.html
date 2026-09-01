@@ -236,7 +236,7 @@
         </div>
       </div>
 
-      <form id="LoginForm" onsubmit="handleAdminLogin(event)" class="space-y-4 text-left">
+      <form id="LoginForm" onsubmit="event.preventDefault(); handleAdminLogin(event); return false;" class="space-y-4 text-left">
         <div>
           <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider mb-1.5">Master Password</label>
           <div class="relative">
@@ -249,7 +249,7 @@
             </button>
           </div>
         </div>
-        <button type="submit" id="login-btn" class="w-full bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-sm py-4 rounded-xl shadow-xl hover:brightness-110 active:scale-95 transition-all uppercase tracking-wider cursor-pointer">
+        <button type="submit" id="login-btn" onclick="event.preventDefault(); handleAdminLogin(event);" class="w-full bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-sm py-4 rounded-xl shadow-xl hover:brightness-110 active:scale-95 transition-all uppercase tracking-wider cursor-pointer">
           Access Dashboard &rarr;
         </button>
         <p id="login-error" class="hidden text-xs text-red-400 font-bold text-center mt-2"></p>
@@ -1021,7 +1021,10 @@
 
     // 2. Auth Flow (Instant & 100% Reliable Login)
     async function handleAdminLogin(e) {
-      if (e && e.preventDefault) e.preventDefault();
+      if (e) {
+        if (e.preventDefault) e.preventDefault();
+        if (e.stopPropagation) e.stopPropagation();
+      }
       const passEl = document.getElementById('admin-pass-input');
       const pass = passEl ? passEl.value.trim() : '';
       const errorMsg = document.getElementById('login-error');
@@ -1032,7 +1035,7 @@
           errorMsg.textContent = 'Please enter the admin password.';
           errorMsg.classList.remove('hidden');
         }
-        return;
+        return false;
       }
 
       if (submitBtn) {
@@ -1060,7 +1063,7 @@
           submitBtn.disabled = false;
           submitBtn.textContent = 'Access Dashboard →';
         }
-        return;
+        return false;
       }
 
       // 2. Check across server endpoints via multi-endpoint apiFetch
@@ -1079,7 +1082,7 @@
             submitBtn.disabled = false;
             submitBtn.textContent = 'Access Dashboard →';
           }
-          return;
+          return false;
         }
       } catch(err) {}
 
@@ -1092,13 +1095,20 @@
         errorMsg.textContent = 'Incorrect Master Password. (Default: blackroots2026)';
         errorMsg.classList.remove('hidden');
       }
+      return false;
     }
 
     function showDashboardApp() {
       const loginScreen = document.getElementById('AdminLoginScreen');
       const appScreen = document.getElementById('AdminDashboardApp');
-      if (loginScreen) loginScreen.classList.add('hidden');
-      if (appScreen) appScreen.classList.remove('hidden');
+      if (loginScreen) {
+        loginScreen.classList.add('hidden');
+        loginScreen.style.setProperty('display', 'none', 'important');
+      }
+      if (appScreen) {
+        appScreen.classList.remove('hidden');
+        appScreen.style.setProperty('display', 'flex', 'important');
+      }
       refreshAllData();
       startLiveClock();
       
