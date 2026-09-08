@@ -5,17 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>BlackRoots &mdash; Shopify-Grade D2C Command Center & Admin Dashboard</title>
   <!-- Favicon & Touch Icons (Google & Browser Compliant) -->
-  <link rel="icon" type="image/x-icon" href="../favicon.ico">
-  <link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
-  <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="48x48" href="../assets/favicon-48x48.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="../assets/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="144x144" href="../assets/favicon-144x144.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192x192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="../assets/favicon-512x512.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
-  <link rel="manifest" href="../site.webmanifest">
+  <link rel="icon" type="image/x-icon" href="./favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="./assets/favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="./assets/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="144x144" href="./assets/favicon-144x144.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./assets/favicon-512x512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
+  <link rel="manifest" href="./site.webmanifest">
   <meta name="theme-color" content="#0a0b0e">
   <meta name="msapplication-TileColor" content="#0a0b0e">
   <meta name="msapplication-TileImage" content="./assets/favicon-144x144.png">
@@ -73,7 +73,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="./assets/theme.css">
 
   <style>
     *, *::before, *::after, html, body {
@@ -229,7 +229,7 @@
     <div class="w-full max-w-md p-8 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-[0_20px_60px_rgba(0,0,0,0.9)] text-center space-y-6">
       
       <div class="flex flex-col items-center gap-3">
-        <img src="../assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-16 h-16 rounded-full border-2 border-[#d4af37] shadow-xl">
+        <img src="./assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-16 h-16 rounded-full border-2 border-[#d4af37] shadow-xl">
         <div>
           <h2 class="font-serif text-2xl font-bold text-white uppercase tracking-wider">BlackRoots Admin</h2>
           <p class="text-xs text-[#d4af37] font-bold uppercase tracking-widest">D2C Command Center</p>
@@ -265,7 +265,7 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         
         <div class="flex items-center gap-3">
-          <img src="../assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-9 h-9 rounded-full border border-[#d4af37]">
+          <img src="./assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-9 h-9 rounded-full border border-[#d4af37]">
           <div class="flex flex-col">
             <div class="flex items-center gap-2">
               <span class="font-serif text-lg font-bold text-white uppercase tracking-wider">BlackRoots</span>
@@ -281,7 +281,7 @@
         <!-- Navigation Tabs -->
         <nav class="hidden lg:flex items-center gap-1.5">
           <button onclick="switchTab('overview')" class="nav-tab whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold transition-all bg-[#d4af37] text-black" data-tab="overview">📊 Overview</button>
-          <button onclick="switchTab('traffic')" class="nav-tab whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="traffic">👥 Live Visitors</button>
+          <button onclick="switchTab('traffic')" class="nav-tab whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="traffic">📈 Daily Visits</button>
           <button onclick="switchTab('orders')" class="nav-tab whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="orders">🛍️ Orders</button>
           <button onclick="switchTab('influencers')" class="nav-tab whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="influencers">🤝 Creators &amp; Affiliates</button>
           <button onclick="switchTab('abandoned')" class="nav-tab whitespace-nowrap px-3.5 py-2 rounded-xl text-xs font-bold text-gray-300 hover:text-white transition-all" data-tab="abandoned">🛒 Leads</button>
@@ -310,7 +310,7 @@
       <!-- Mobile Tab Bar -->
       <div class="lg:hidden flex items-center justify-around border-t border-white/10 p-2 text-[11px] overflow-x-auto gap-1">
         <button onclick="switchTab('overview')" class="mob-tab whitespace-nowrap font-bold text-[#d4af37] px-2.5 py-1 rounded-lg" data-tab="overview">📊 Overview</button>
-        <button onclick="switchTab('traffic')" class="mob-tab whitespace-nowrap font-bold text-gray-400 px-2.5 py-1 rounded-lg" data-tab="traffic">👥 Visitors</button>
+        <button onclick="switchTab('traffic')" class="mob-tab whitespace-nowrap font-bold text-gray-400 px-2.5 py-1 rounded-lg" data-tab="traffic">📈 Visits</button>
         <button onclick="switchTab('orders')" class="mob-tab whitespace-nowrap font-bold text-gray-400 px-2.5 py-1 rounded-lg" data-tab="orders">🛍️ Orders</button>
         <button onclick="switchTab('influencers')" class="mob-tab whitespace-nowrap font-bold text-gray-400 px-2.5 py-1 rounded-lg" data-tab="influencers">🤝 Creators</button>
         <button onclick="switchTab('abandoned')" class="mob-tab whitespace-nowrap font-bold text-gray-400 px-2.5 py-1 rounded-lg" data-tab="abandoned">🛒 Leads</button>
@@ -328,78 +328,81 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
           
           <!-- Card 1: Total Revenue -->
-          <div class="p-4 sm:p-5 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-xl space-y-1.5 relative overflow-hidden">
+          <div class="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-[#12151e] to-[#18150f] border border-[#d4af37]/40 shadow-xl space-y-1.5 relative overflow-hidden group hover:border-[#d4af37]/80 hover:shadow-2xl transition-all">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Total Revenue</span>
-              <span class="text-xs text-amber-300 font-bold">₹</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-amber-200/80">Total Revenue</span>
+              <span class="text-xs text-amber-300 font-bold bg-amber-400/10 px-1.5 py-0.5 rounded">₹</span>
             </div>
-            <span id="metric-total-revenue" class="text-xl sm:text-2xl font-black text-white block">₹0</span>
-            <div class="text-[10px] text-gray-400 flex items-center justify-between pt-0.5 border-t border-white/5">
+            <span id="metric-total-revenue" class="text-xl sm:text-2xl font-black text-white block tracking-tight">₹0</span>
+            <div class="text-[10px] text-gray-400 flex items-center justify-between pt-1 border-t border-white/5">
               <span>Today: <strong id="metric-today-revenue" class="text-amber-300">₹0</strong></span>
               <span id="metric-today-orders" class="text-gray-400">(0 orders)</span>
             </div>
           </div>
 
-          <!-- Card 2: Total Visitors & Live Online -->
-          <div class="p-4 sm:p-5 rounded-3xl bg-[#11141b] border border-cyan-500/40 shadow-xl space-y-1.5 relative overflow-hidden">
+          <!-- Card 2: Today's Visits (Replaces Live Visitors) -->
+          <div class="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-[#12151e] to-[#0c1a24] border border-cyan-500/40 shadow-xl space-y-1.5 relative overflow-hidden group hover:border-cyan-400/80 hover:shadow-2xl transition-all">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Store Visitors</span>
-              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-cyan-300 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                Today's Visits
+              </span>
+              <span class="text-xs text-cyan-400 font-bold bg-cyan-400/10 px-1.5 py-0.5 rounded">📅</span>
             </div>
-            <span id="metric-total-visitors" class="text-xl sm:text-2xl font-black text-cyan-400 block">0</span>
-            <div class="text-[10px] text-cyan-300/90 flex items-center gap-1.5 pt-0.5 border-t border-white/5 font-semibold">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span id="metric-live-visitors-now">1 Active Now</span>
+            <span id="metric-today-visitors" class="text-xl sm:text-2xl font-black text-cyan-400 block tracking-tight">0</span>
+            <div class="text-[10px] text-gray-400 flex items-center justify-between pt-1 border-t border-white/5">
+              <span>All-Time: <strong id="metric-total-visitors" class="text-cyan-200">0</strong></span>
+              <span class="text-[9px] text-cyan-300 font-semibold bg-cyan-500/10 px-1.5 py-0.5 rounded">Live Today</span>
             </div>
           </div>
 
           <!-- Card 3: Total Orders -->
-          <div class="p-4 sm:p-5 rounded-3xl bg-[#11141b] border border-emerald-500/40 shadow-xl space-y-1.5 relative overflow-hidden">
+          <div class="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-[#12151e] to-[#0d1f16] border border-emerald-500/40 shadow-xl space-y-1.5 relative overflow-hidden group hover:border-emerald-400/80 hover:shadow-2xl transition-all">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Total Orders</span>
-              <span class="text-xs text-emerald-400 font-bold">📦</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-300">Total Orders</span>
+              <span class="text-xs text-emerald-400 font-bold bg-emerald-400/10 px-1.5 py-0.5 rounded">📦</span>
             </div>
-            <span id="metric-total-orders" class="text-xl sm:text-2xl font-black text-emerald-400 block">0</span>
-            <div class="text-[10px] text-gray-400 flex items-center justify-between pt-0.5 border-t border-white/5">
+            <span id="metric-total-orders" class="text-xl sm:text-2xl font-black text-emerald-400 block tracking-tight">0</span>
+            <div class="text-[10px] text-gray-400 flex items-center justify-between pt-1 border-t border-white/5">
               <span>Pending: <strong id="metric-pending-orders" class="text-amber-400">0</strong></span>
               <span id="metric-paid-orders" class="text-emerald-400">0 Paid</span>
             </div>
           </div>
 
           <!-- Card 4: Conversion Rate -->
-          <div class="p-4 sm:p-5 rounded-3xl bg-[#11141b] border border-purple-500/40 shadow-xl space-y-1.5 relative overflow-hidden">
+          <div class="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-[#12151e] to-[#1c1228] border border-purple-500/40 shadow-xl space-y-1.5 relative overflow-hidden group hover:border-purple-400/80 hover:shadow-2xl transition-all">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Conversion Rate</span>
-              <span class="text-xs text-purple-400 font-bold">🎯</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-purple-300">Conversion Rate</span>
+              <span class="text-xs text-purple-400 font-bold bg-purple-400/10 px-1.5 py-0.5 rounded">🎯</span>
             </div>
-            <span id="metric-conv-rate" class="text-xl sm:text-2xl font-black text-purple-400 block">0.0%</span>
-            <div class="text-[10px] text-purple-300/80 pt-0.5 border-t border-white/5 font-semibold">
-              <span>Benchmark: <strong>3.5% - 4.5%</strong></span>
+            <span id="metric-conv-rate" class="text-xl sm:text-2xl font-black text-purple-400 block tracking-tight">0.0%</span>
+            <div class="text-[10px] text-purple-300/80 pt-1 border-t border-white/5 font-semibold">
+              <span>Target: <strong class="text-purple-200">3.5% - 4.5%</strong></span>
             </div>
           </div>
 
           <!-- Card 5: Influencer Sales -->
-          <div class="p-4 sm:p-5 rounded-3xl bg-[#11141b] border border-amber-500/40 shadow-xl space-y-1.5 relative overflow-hidden">
+          <div class="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-[#12151e] to-[#221a0c] border border-amber-500/40 shadow-xl space-y-1.5 relative overflow-hidden group hover:border-amber-400/80 hover:shadow-2xl transition-all">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Creator Sales</span>
-              <span class="text-xs text-amber-300 font-bold">🤝</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-amber-200/90">Creator Sales</span>
+              <span class="text-xs text-amber-300 font-bold bg-amber-400/10 px-1.5 py-0.5 rounded">🤝</span>
             </div>
-            <span id="metric-inf-sales-overview" class="text-xl sm:text-2xl font-black text-amber-300 block">₹0</span>
-            <div class="text-[10px] text-gray-400 flex items-center justify-between pt-0.5 border-t border-white/5">
+            <span id="metric-inf-sales-overview" class="text-xl sm:text-2xl font-black text-amber-300 block tracking-tight">₹0</span>
+            <div class="text-[10px] text-gray-400 flex items-center justify-between pt-1 border-t border-white/5">
               <span><strong id="metric-inf-count-overview" class="text-white">0</strong> Creators</span>
-              <span id="metric-inf-owed-overview" class="text-amber-400">₹0 Unpaid</span>
+              <span id="metric-inf-owed-overview" class="text-amber-400 font-semibold">₹0 Unpaid</span>
             </div>
           </div>
 
           <!-- Card 6: Abandoned Leads -->
-          <div class="p-4 sm:p-5 rounded-3xl bg-[#11141b] border border-red-500/40 shadow-xl space-y-1.5 relative overflow-hidden col-span-2 sm:col-span-1">
+          <div class="p-4 sm:p-5 rounded-3xl bg-gradient-to-br from-[#12151e] to-[#241014] border border-red-500/40 shadow-xl space-y-1.5 relative overflow-hidden col-span-2 sm:col-span-1 group hover:border-red-400/80 hover:shadow-2xl transition-all">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] font-bold uppercase tracking-wider text-gray-400">Abandoned Leads</span>
-              <span class="text-xs text-red-400 font-bold">🛒</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider text-red-300">Abandoned Leads</span>
+              <span class="text-xs text-red-400 font-bold bg-red-400/10 px-1.5 py-0.5 rounded">🛒</span>
             </div>
-            <span id="metric-abandoned-leads" class="text-xl sm:text-2xl font-black text-red-400 block">0</span>
-            <div class="text-[10px] text-red-300/90 pt-0.5 border-t border-white/5 font-bold">
-              <button onclick="switchTab('abandoned')" class="hover:underline">📲 WhatsApp Recovery &rarr;</button>
+            <span id="metric-abandoned-leads" class="text-xl sm:text-2xl font-black text-red-400 block tracking-tight">0</span>
+            <div class="text-[10px] text-red-300/90 pt-1 border-t border-white/5 font-bold">
+              <button onclick="switchTab('abandoned')" class="hover:underline">📲 Recovery &rarr;</button>
             </div>
           </div>
 
@@ -438,12 +441,13 @@
             </div>
           </div>
 
-          <!-- Live Visitors & Traffic Activity (5 Cols) -->
-          <div class="lg:col-span-5 p-5 sm:p-6 rounded-3xl bg-[#11141b] border border-cyan-500/20 shadow-xl space-y-4">
+          <!-- Today's Visits & Traffic Activity (5 Cols) -->
+          <div class="lg:col-span-5 p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-[#11141b] to-[#0a151d] border border-cyan-500/30 shadow-xl space-y-4">
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
-                <h3 class="font-serif text-lg sm:text-xl font-bold text-white">Live Traffic Pulse</h3>
+                <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                <h3 class="font-serif text-lg sm:text-xl font-bold text-white">Today's Traffic Stream</h3>
+                <span class="text-[10px] text-cyan-300/80 bg-cyan-500/10 px-2 py-0.5 rounded-full font-bold">Today</span>
               </div>
               <button onclick="switchTab('traffic')" class="text-xs text-cyan-400 font-bold hover:underline">Full Log &rarr;</button>
             </div>
@@ -471,21 +475,21 @@
 
       </section>
 
-      <!-- TAB 2: LIVE TRAFFIC & VISITOR ANALYTICS -->
+      <!-- TAB 2: DAILY VISITOR & TRAFFIC ANALYTICS -->
       <section id="tab-traffic" class="tab-content hidden space-y-6">
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
           <div>
             <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white flex items-center gap-3">
-              <span>Store Visitor Analytics</span>
+              <span>Today's Store Visitor Traffic</span>
               <span class="px-2.5 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-bold border border-cyan-500/30 flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-                <span id="traffic-live-badge">1 Live Active</span>
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span id="traffic-live-badge">Today's Visits</span>
               </span>
             </h2>
-            <p class="text-xs text-gray-400">Real-time visitor logs, referral channel attribution, and customer journey tracking.</p>
+            <p class="text-xs text-gray-400">Accurate log of today's customer visits, referral traffic channels, and page views across the store.</p>
           </div>
-          <button onclick="loadVisitors()" class="px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500 hover:text-black text-xs font-bold transition-all">
-            🔄 Refresh Traffic Feed
+          <button onclick="loadVisitors()" class="px-4 py-2 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 hover:bg-cyan-500 hover:text-black text-xs font-bold transition-all cursor-pointer">
+            🔄 Refresh Visits Feed
           </button>
         </div>
 
@@ -1207,16 +1211,22 @@
 
       let visitors = Number(localStorage.getItem('br_visitor_count') || 0);
       let totalOrdersCnt = orders.length;
-      let uniqueVis = (data && data.total_visitors !== undefined) ? data.total_visitors : (visitors || 1);
+      let todayVis = (data && data.today_visitors !== undefined) ? data.today_visitors : 0;
+      let uniqueVis = (data && data.total_visitors !== undefined) ? data.total_visitors : (visitors || todayVis || 0);
       let convRate = uniqueVis > 0 ? ((totalOrdersCnt / uniqueVis) * 100).toFixed(1) : '0.0';
-      let liveActive = (data && data.live_visitors_now !== undefined) ? data.live_visitors_now : 1;
 
       // Update Dashboard Hero Cards
       document.getElementById('metric-total-revenue').textContent = '₹' + totalRev.toLocaleString();
       document.getElementById('metric-today-revenue').textContent = '₹' + todayRev.toLocaleString();
       document.getElementById('metric-today-orders').textContent = `(${todayOrders.length} orders)`;
-      document.getElementById('metric-total-visitors').textContent = uniqueVis.toLocaleString();
-      document.getElementById('metric-live-visitors-now').textContent = `${liveActive} Active Now`;
+      
+      const todayVisElem = document.getElementById('metric-today-visitors');
+      if (todayVisElem) todayVisElem.textContent = todayVis.toLocaleString();
+      const totalVisElem = document.getElementById('metric-total-visitors');
+      if (totalVisElem) totalVisElem.textContent = uniqueVis.toLocaleString();
+      const liveVisElem = document.getElementById('metric-live-visitors-now');
+      if (liveVisElem) liveVisElem.textContent = `${todayVis} Visits Today`;
+
       document.getElementById('metric-total-orders').textContent = totalOrdersCnt;
       document.getElementById('metric-pending-orders').textContent = pendingCnt;
       document.getElementById('metric-paid-orders').textContent = `${paidCnt} Paid`;
@@ -1278,7 +1288,7 @@
       let data = await apiFetch('get_visitors');
       const liveBadge = document.getElementById('traffic-live-badge');
       if (liveBadge && data) {
-        liveBadge.textContent = `${data.live_active_now || 1} Live Active`;
+        liveBadge.textContent = `${data.today_visitors || 0} Visits Today`;
       }
 
       const tbody = document.getElementById('all-traffic-table');

@@ -1,4 +1,4 @@
-﻿// Vercel Serverless Function for BlackRoots Executive Admin API & Real-Time Analytics with MongoDB Atlas
+// Vercel Serverless Function for BlackRoots Executive Admin API & Real-Time Analytics with MongoDB Atlas
 const { getCollections, DEFAULT_INITIAL_INFLUENCERS } = require('./lib/db');
 
 const DEFAULT_SETTINGS = {
@@ -82,6 +82,15 @@ module.exports = async (req, res) => {
       const totalUnique = await sessions.countDocuments();
       const totalPageviews = await visitors.countDocuments();
 
+      const todayPrefix = new Date().toISOString().slice(0, 10);
+      const todaySessions = await visitors.distinct('session_id', {
+        timestamp: { $regex: new RegExp('^' + todayPrefix) }
+      });
+      const todayVisitsLog = await visitors.countDocuments({
+        timestamp: { $regex: new RegExp('^' + todayPrefix) }
+      });
+      const todayVisitors = Math.max(todaySessions.length, todayVisitsLog);
+
       const recentVisitors = await visitors.find().sort({ _id: -1 }).limit(30).toArray();
 
       const sources = {};
@@ -93,6 +102,7 @@ module.exports = async (req, res) => {
 
       return res.status(200).json({
         success: true,
+        today_visitors: todayVisitors,
         live_active_now: Math.max(1, activeLiveCount),
         total_unique: totalUnique || 1,
         total_pageviews: totalPageviews || 1,
@@ -197,6 +207,15 @@ module.exports = async (req, res) => {
       const now = Date.now();
       const activeLive = await sessions.countDocuments({ last_active: { $gte: now - (3 * 60 * 1000) } });
 
+      const todayPrefix = today;
+      const todaySessions = await visitors.distinct('session_id', {
+        timestamp: { $regex: new RegExp('^' + todayPrefix) }
+      });
+      const todayVisitsLog = await visitors.countDocuments({
+        timestamp: { $regex: new RegExp('^' + todayPrefix) }
+      });
+      const todayVisitors = Math.max(todaySessions.length, todayVisitsLog);
+
       const allInfluencers = await influencers.find().toArray();
       const totalInfOrders = allInfluencers.reduce((sum, u) => sum + (Number(u.total_orders) || 0), 0);
       const totalInfSales = allInfluencers.reduce((sum, u) => sum + (Number(u.total_sales) || 0), 0);
@@ -214,7 +233,8 @@ module.exports = async (req, res) => {
         paid_orders_count: paidCnt,
         cod_orders_count: codCnt,
         pending_orders: pendingCnt,
-        total_visitors: totalUnique || 1,
+        today_visitors: todayVisitors,
+        total_visitors: totalUnique || todayVisitors || 1,
         live_visitors_now: Math.max(1, activeLive),
         conversion_rate: convRate,
         abandoned_leads: abandonedCount,
