@@ -1,18 +1,5 @@
-// Shiprocket Fastrr Order Webhook & Real-Time Sync Endpoint
-const fs = require('fs');
-const path = require('path');
-
-const tmpFile = path.join(require('os').tmpdir(), 'blackroots_db.json');
-function getDb() {
-  let db = { orders: [], influencers: [], abandoned: [], settings: {} };
-  try {
-    if (fs.existsSync(tmpFile)) db = Object.assign(db, JSON.parse(fs.readFileSync(tmpFile, 'utf8')));
-  } catch (e) {}
-  return db;
-}
-function saveDb(db) {
-  try { fs.writeFileSync(tmpFile, JSON.stringify(db)); } catch (e) {}
-}
+﻿// Shiprocket Fastrr Order Webhook & Real-Time Sync Endpoint with MongoDB Atlas
+const { getCollections } = require('./lib/db');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -27,10 +14,10 @@ module.exports = async (req, res) => {
   console.log("Received Shiprocket Fastrr Order Webhook:", payload);
 
   try {
-    const db = getDb();
-    if (!db.orders) db.orders = [];
+    const { orders, influencers } = await getCollections();
+    const totalCount = await orders.countDocuments();
 
-    const orderId = payload.order_id || payload.order_number || payload.id || ('#BR-' + (1025 + db.orders.length));
+    const orderId = payload.order_id || payload.order_number || payload.id || ('#BR-' + (1025 + totalCount));
     const customerName = payload.customer_name || (payload.billing_address && ((payload.billing_address.first_name || '') + ' ' + (payload.billing_address.last_name || '')).trim()) || payload.name || 'Valued Customer';
     const phone = (payload.phone || (payload.billing_address && payload.billing_address.phone) || payload.customer_phone || '').replace(/[^0-9]/g, '');
     const cleanPhone = (phone.length > 10 && phone.startsWith('91')) ? phone.slice(2) : phone;
@@ -43,9 +30,7 @@ module.exports = async (req, res) => {
     const paymentMethod = payload.payment_method || (isPaid ? 'Online Paid (Shiprocket Fastrr)' : 'Cash on Delivery (COD)');
     const awb = payload.awb || payload.tracking_number || ('8839' + Math.floor(100000 + Math.random() * 900000));
 
-    const existingIdx = db.orders.findIndex(o => o.order_id === orderId);
     const orderRecord = {
-      id: db.orders.length + 1,
       order_id: orderId,
       name: customerName,
       phone: cleanPhone,
@@ -62,35 +47,41 @@ module.exports = async (req, res) => {
       created_at: new Date().toISOString().replace('T', ' ').slice(0, 19)
     };
 
-    if (existingIdx !== -1) {
-      db.orders[existingIdx] = Object.assign(db.orders[existingIdx], orderRecord);
-    } else {
-      db.orders.push(orderRecord);
-    }
+    await orders.updateOne(
+      { order_id: orderId },
+      { $set: orderRecord },
+      { upsert: true }
+    );
 
     // Attribute to influencer if coupon applied
-    if (coupon && db.influencers) {
-      const inf = db.influencers.find(u => 
-        (u.code && u.code.toUpperCase() === coupon) ||
-        (u.username && u.username.toUpperCase() === coupon) ||
-        (u.id && u.id.toUpperCase() === coupon)
-      );
+    if (coupon) {
+      const inf = await influencers.findOne({
+        $or: [
+          { code: { $regex: new RegExp('^' + coupon + '$', 'i') } },
+          { username: { $regex: new RegExp('^' + coupon + '$', 'i') } },
+          { id: { $regex: new RegExp('^' + coupon + '$', 'i') } }
+        ]
+      });
+
       if (inf) {
-        inf.total_orders = (Number(inf.total_orders) || 0) + 1;
-        inf.total_sales = (Number(inf.total_sales) || 0) + price;
-        if (isPaid) {
-          const commAmt = Math.round(price * ((inf.comm_rate || 10) / 100));
-          inf.total_earned = (Number(inf.total_earned) || 0) + commAmt;
-          inf.unpaid_balance = (Number(inf.unpaid_balance) || 0) + commAmt;
-        }
+        const commAmt = Math.round(price * ((Number(inf.comm_rate) || 10) / 100));
+        await influencers.updateOne(
+          { _id: inf._id },
+          {
+            $inc: {
+              total_orders: 1,
+              total_sales: price,
+              total_earned: isPaid ? commAmt : 0,
+              unpaid_balance: isPaid ? commAmt : 0
+            }
+          }
+        );
       }
     }
 
-    saveDb(db);
-
     return res.status(200).json({
       success: true,
-      message: "Order successfully recorded and tracked",
+      message: "Order successfully recorded and tracked in MongoDB",
       order_id: orderId,
       awb: awb
     });
