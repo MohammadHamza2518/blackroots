@@ -1044,12 +1044,12 @@ document.addEventListener('DOMContentLoaded', function() {
                        (u.username && u.username.toUpperCase() === payload.coupon.toUpperCase()) ||
                        (u.id && u.id === payload.influencer_id);
               });
+              let earned = Math.round(payload.price * (infDb[infIdx].comm_rate || 10) / 100);
+              payload.comm = earned;
               if (infIdx !== -1) {
                 infDb[infIdx].total_orders = (infDb[infIdx].total_orders || 0) + 1;
                 infDb[infIdx].total_sales = (infDb[infIdx].total_sales || 0) + payload.price;
-                let earned = Math.round(payload.price * (infDb[infIdx].comm_rate || 10) / 100);
-                infDb[infIdx].total_earned = (infDb[infIdx].total_earned || 0) + earned;
-                infDb[infIdx].unpaid_balance = (infDb[infIdx].unpaid_balance || 0) + earned;
+                // Anti-Fraud Safeguard: Commission is credited to wallet ONLY upon verified customer delivery.
                 localStorage.setItem('br_influencers_db', JSON.stringify(infDb));
               }
             }

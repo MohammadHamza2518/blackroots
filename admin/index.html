@@ -7,14 +7,14 @@
   <!-- Favicon & Touch Icons (Google & Browser Compliant) -->
   <link rel="icon" type="image/x-icon" href="./favicon.ico">
   <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
-  <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="48x48" href="./assets/favicon-48x48.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="./assets/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="144x144" href="./assets/favicon-144x144.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicon-192x192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="./assets/favicon-512x512.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="144x144" href="../assets/favicon-144x144.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="../assets/favicon-512x512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
   <link rel="manifest" href="./site.webmanifest">
   <meta name="theme-color" content="#0a0b0e">
   <meta name="msapplication-TileColor" content="#0a0b0e">
@@ -73,7 +73,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/theme.css">
+  <link rel="stylesheet" href="../assets/theme.css">
 
   <style>
     *, *::before, *::after, html, body {
@@ -229,7 +229,7 @@
     <div class="w-full max-w-md p-8 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-[0_20px_60px_rgba(0,0,0,0.9)] text-center space-y-6">
       
       <div class="flex flex-col items-center gap-3">
-        <img src="./assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-16 h-16 rounded-full border-2 border-[#d4af37] shadow-xl">
+        <img src="../assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-16 h-16 rounded-full border-2 border-[#d4af37] shadow-xl">
         <div>
           <h2 class="font-serif text-2xl font-bold text-white uppercase tracking-wider">BlackRoots Admin</h2>
           <p class="text-xs text-[#d4af37] font-bold uppercase tracking-widest">D2C Command Center</p>
@@ -265,7 +265,7 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         
         <div class="flex items-center gap-3">
-          <img src="./assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-9 h-9 rounded-full border border-[#d4af37]">
+          <img src="../assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-9 h-9 rounded-full border border-[#d4af37]">
           <div class="flex flex-col">
             <div class="flex items-center gap-2">
               <span class="font-serif text-lg font-bold text-white uppercase tracking-wider">BlackRoots</span>
@@ -1390,7 +1390,18 @@
             <div class="font-bold text-emerald-400">₹${o.price || 499} (${o.payment_method || 'COD'})</div>
           </td>
           <td class="py-3 px-3">
-            ${o.coupon ? `<span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold text-[10px]">${o.coupon}</span>` : '<span class="text-gray-600">&mdash;</span>'}
+            ${o.coupon ? `
+              <div>
+                <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold text-[10px]">${o.coupon}</span>
+                ${o.status === 'Delivered' 
+                  ? `<div class="text-[9px] text-emerald-400 font-bold mt-1">✓ Comm Approved (+₹${o.comm || Math.round((Number(o.price)||499)*0.1)})</div>`
+                  : (o.status === 'Cancelled' || o.status === 'RTO'
+                    ? '<div class="text-[9px] text-red-400 font-bold mt-1">❌ Voided / RTO (₹0)</div>'
+                    : `<div class="text-[9px] text-amber-400 font-medium mt-1">⏳ Locked until Delivery (₹${o.comm || Math.round((Number(o.price)||499)*0.1)})</div>`
+                  )
+                }
+              </div>
+            ` : '<span class="text-gray-600">&mdash;</span>'}
           </td>
           <td class="py-3 px-3">
             <select onchange="updateOrderStatus('${o.order_id}', this.value)" class="px-2 py-1 rounded bg-black border border-white/20 text-[10px] font-bold text-white focus:outline-none focus:border-[#d4af37]">
@@ -1398,8 +1409,8 @@
               <option value="Paid" ${o.status === 'Paid' ? 'selected' : ''}>Paid Online</option>
               <option value="Confirmed" ${o.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
               <option value="Dispatched" ${o.status === 'Dispatched' ? 'selected' : ''}>Dispatched</option>
-              <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
-              <option value="Cancelled" ${o.status === 'Cancelled' ? 'selected' : ''}>Cancelled / RTO</option>
+              <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>Delivered (Approves Comm)</option>
+              <option value="Cancelled" ${o.status === 'Cancelled' ? 'selected' : ''}>Cancelled / RTO (Void Comm)</option>
             </select>
           </td>
           <td class="py-3 px-3 font-mono text-gray-400 text-[11px]">
@@ -1428,12 +1439,13 @@
 
       let ord = orders.find(o => o.order_id === orderId);
       if (ord) {
+        const prevStatus = ord.status;
         ord.status = newStatus;
         localStorage.setItem('br_local_orders', JSON.stringify(orders));
 
-        // If Delivered and had coupon/tag, credit creator
+        // If Delivered and had coupon/tag, credit creator; if Cancelled/RTO, revoke creator
         const couponTag = (ord.coupon || ord.influencer || '').trim().toUpperCase();
-        if (newStatus === 'Delivered' && couponTag) {
+        if (couponTag) {
           let infDb = getInfluencersAdminDb();
           let inf = infDb.find(u => 
             (u.code && u.code.toUpperCase() === couponTag) ||
@@ -1441,9 +1453,14 @@
             (u.id && u.id.toUpperCase() === couponTag)
           );
           if (inf) {
-            let comm = Math.round((Number(ord.price) || 499) * ((inf.comm_rate || 10) / 100));
-            inf.total_earned = (Number(inf.total_earned) || 0) + comm;
-            inf.unpaid_balance = (Number(inf.unpaid_balance) || 0) + comm;
+            let comm = ord.comm || Math.round((Number(ord.price) || 499) * ((inf.comm_rate || 10) / 100));
+            if (newStatus === 'Delivered' && prevStatus !== 'Delivered') {
+              inf.total_earned = (Number(inf.total_earned) || 0) + comm;
+              inf.unpaid_balance = (Number(inf.unpaid_balance) || 0) + comm;
+            } else if (prevStatus === 'Delivered' && (newStatus === 'Cancelled' || newStatus === 'RTO' || newStatus === 'New' || newStatus === 'Dispatched')) {
+              inf.total_earned = Math.max(0, (Number(inf.total_earned) || 0) - comm);
+              inf.unpaid_balance = Math.max(0, (Number(inf.unpaid_balance) || 0) - comm);
+            }
             saveInfluencersAdminDb(infDb);
           }
         }
@@ -1457,6 +1474,7 @@
         } catch(e) {}
       }
       loadOrders();
+      loadInfluencers();
     }
 
     // 8. Influencers & Payouts Hub (Authoritative Server Database Persistence)

@@ -1,4 +1,4 @@
-﻿// Shiprocket Fastrr Order Webhook & Real-Time Sync Endpoint with MongoDB Atlas
+// Shiprocket Fastrr Order Webhook & Real-Time Sync Endpoint with MongoDB Atlas
 const { getCollections } = require('./lib/db');
 
 module.exports = async (req, res) => {
@@ -47,13 +47,66 @@ module.exports = async (req, res) => {
       created_at: new Date().toISOString().replace('T', ' ').slice(0, 19)
     };
 
-    await orders.updateOne(
-      { order_id: orderId },
-      { $set: orderRecord },
-      { upsert: true }
-    );
+    // Check if this is a Tracking Status Event (e.g. from Shiprocket Tracking Webhook)
+    const rawStatus = (payload.current_status || payload.shipment_status || payload.order_status || '').toUpperCase();
+    if (rawStatus) {
+      const targetAwborId = payload.awb || payload.tracking_number || payload.order_id || payload.order_number;
+      if (targetAwborId) {
+        const ord = await orders.findOne({
+          $or: [{ order_id: targetAwborId }, { tracking_awb: targetAwborId }]
+        });
+        if (ord) {
+          const prevStatus = ord.status;
+          let newStatus = ord.status;
+          if (rawStatus.includes('DELIVERED') && !rawStatus.includes('RTO')) {
+            newStatus = 'Delivered';
+          } else if (rawStatus.includes('RTO') || rawStatus.includes('CANCEL') || rawStatus.includes('UNDELIVERED')) {
+            newStatus = 'Cancelled';
+          }
 
-    // Attribute to influencer if coupon applied
+          if (newStatus !== prevStatus) {
+            await orders.updateOne({ _id: ord._id }, { $set: { status: newStatus } });
+
+            const couponTag = (ord.coupon || ord.influencer || '').trim().toUpperCase();
+            if (couponTag) {
+              const inf = await influencers.findOne({
+                $or: [
+                  { code: { $regex: new RegExp('^' + couponTag + '$', 'i') } },
+                  { username: { $regex: new RegExp('^' + couponTag + '$', 'i') } },
+                  { id: { $regex: new RegExp('^' + couponTag + '$', 'i') } }
+                ]
+              });
+              if (inf) {
+                const commAmt = ord.comm || Math.round((Number(ord.price) || 499) * ((Number(inf.comm_rate) || 10) / 100));
+                if (newStatus === 'Delivered' && prevStatus !== 'Delivered') {
+                  await influencers.updateOne(
+                    { _id: inf._id },
+                    { $inc: { total_earned: commAmt, unpaid_balance: commAmt } }
+                  );
+                } else if (prevStatus === 'Delivered' && newStatus === 'Cancelled') {
+                  await influencers.updateOne(
+                    { _id: inf._id },
+                    { $inc: { total_earned: -commAmt, unpaid_balance: -commAmt } }
+                  );
+                  await influencers.updateOne(
+                    { _id: inf._id, unpaid_balance: { $lt: 0 } },
+                    { $set: { unpaid_balance: 0 } }
+                  );
+                }
+              }
+            }
+          }
+
+          return res.status(200).json({
+            success: true,
+            message: `Order status updated to ${newStatus} based on webhook`
+          });
+        }
+      }
+    }
+
+    // Otherwise, treat as new Order placement webhook
+    let calculatedComm = 0;
     if (coupon) {
       const inf = await influencers.findOne({
         $or: [
@@ -64,20 +117,28 @@ module.exports = async (req, res) => {
       });
 
       if (inf) {
-        const commAmt = Math.round(price * ((Number(inf.comm_rate) || 10) / 100));
+        calculatedComm = Math.round(price * ((Number(inf.comm_rate) || 10) / 100));
+        // Anti-Fraud Safeguard: Commission is locked until verified customer delivery.
+        // Record referral counts only.
         await influencers.updateOne(
           { _id: inf._id },
           {
             $inc: {
               total_orders: 1,
-              total_sales: price,
-              total_earned: isPaid ? commAmt : 0,
-              unpaid_balance: isPaid ? commAmt : 0
+              total_sales: price
             }
           }
         );
       }
     }
+
+    orderRecord.comm = calculatedComm;
+
+    await orders.updateOne(
+      { order_id: orderId },
+      { $set: orderRecord },
+      { upsert: true }
+    );
 
     return res.status(200).json({
       success: true,

@@ -97,12 +97,10 @@ try {
             $upInf = $pdo->prepare("
                 UPDATE influencers 
                 SET total_orders = COALESCE(total_orders, 0) + 1,
-                    total_sales = COALESCE(total_sales, 0) + ?,
-                    total_earned = COALESCE(total_earned, 0) + ?,
-                    unpaid_balance = COALESCE(unpaid_balance, 0) + ?
+                    total_sales = COALESCE(total_sales, 0) + ?
                 WHERE id = ?
             ");
-            $upInf->execute([$price, $comm, $comm, $inf['id']]);
+            $upInf->execute([$price, $inf['id']]);
         }
     }
 

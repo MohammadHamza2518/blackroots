@@ -552,31 +552,56 @@
       <!-- ===================================================================== -->
       <section id="tab-overview" class="inf-tab-content space-y-6">
         
+        <!-- Anti-Fraud Delivery-Verified Protection Notice -->
+        <div class="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-3 shadow-xl">
+          <div class="p-2 rounded-xl bg-amber-500/20 text-amber-300 shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+          </div>
+          <div class="text-xs text-gray-300 leading-relaxed">
+            <div class="font-bold text-amber-300 text-sm flex items-center gap-2 mb-0.5">
+              <span>Delivery-Verified Commission Protection</span>
+              <span class="px-2 py-0.5 rounded-full text-[9px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-mono font-bold">Active</span>
+            </div>
+            <p class="text-gray-400">
+              To prevent fraudulent spam and fake COD orders, commissions are unlocked into your <strong class="text-white">Withdrawable Wallet Balance</strong> once the parcel is successfully <span class="text-emerald-400 font-bold">Delivered</span> to the customer. While parcels are in transit, earnings appear under <span class="text-amber-300 font-bold">In-Transit Comm</span>. Cancelled or RTO (Return to Origin) orders do not qualify for commission.
+            </p>
+          </div>
+        </div>
+
         <!-- Live Metrics Grid -->
-        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-5">
+        <div class="grid grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4">
           
           <div class="p-4 sm:p-5 rounded-2xl bg-[#11141b] border border-white/10 shadow-xl space-y-1.5">
             <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">👁️ Link Clicks</span>
-            <span id="metric-clicks" class="text-xl sm:text-3xl font-black text-cyan-400 block">0</span>
-            <span class="text-[10px] text-gray-500 block font-medium">Audience link visits</span>
+            <span id="metric-clicks" class="text-xl sm:text-2xl font-black text-cyan-400 block">0</span>
+            <span class="text-[10px] text-gray-500 block font-medium">Audience visits</span>
           </div>
 
           <div class="p-4 sm:p-5 rounded-2xl bg-[#11141b] border border-white/10 shadow-xl space-y-1.5">
             <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">🛍️ Total Orders</span>
-            <span id="metric-orders" class="text-xl sm:text-3xl font-black text-amber-300 block">0</span>
-            <span class="text-[10px] text-emerald-400 block font-semibold">⚡ Verified sales</span>
+            <span id="metric-orders" class="text-xl sm:text-2xl font-black text-amber-300 block">0</span>
+            <span class="text-[10px] text-emerald-400 block font-semibold">⚡ Referred sales</span>
           </div>
 
           <div class="p-4 sm:p-5 rounded-2xl bg-[#11141b] border border-white/10 shadow-xl space-y-1.5">
             <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">💎 Sales Driven</span>
-            <span id="metric-revenue" class="text-xl sm:text-3xl font-black text-white block">₹0</span>
+            <span id="metric-revenue" class="text-xl sm:text-2xl font-black text-white block">₹0</span>
             <span class="text-[10px] text-gray-400 block font-medium">Gross revenue</span>
           </div>
 
+          <div class="p-4 sm:p-5 rounded-2xl bg-[#11141b] border border-amber-500/30 shadow-xl space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-amber-400 block">⏳ In-Transit Comm</span>
+              <span class="text-[8px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-bold">Pending</span>
+            </div>
+            <span id="metric-pending-comm" class="text-xl sm:text-2xl font-black text-amber-400 block">₹0</span>
+            <span class="text-[10px] text-gray-400 block font-medium">Unlocks on delivery</span>
+          </div>
+
           <div class="p-4 sm:p-5 rounded-2xl bg-[#11141b] border border-emerald-500/30 shadow-xl space-y-1.5">
-            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">💰 Total Commission</span>
-            <span id="metric-earned" class="text-xl sm:text-3xl font-black text-emerald-400 block">₹0</span>
-            <span class="text-[10px] text-emerald-400/80 block font-semibold">Lifetime earnings</span>
+            <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 block">💰 Delivered Comm</span>
+            <span id="metric-earned" class="text-xl sm:text-2xl font-black text-emerald-400 block">₹0</span>
+            <span class="text-[10px] text-emerald-400/80 block font-semibold">Verified earnings</span>
           </div>
 
           <div class="col-span-2 lg:col-span-1 p-4 sm:p-5 rounded-2xl bg-[#11141b] border border-[#d4af37]/60 shadow-xl space-y-1.5 gold-border-glow">
@@ -584,7 +609,7 @@
               <span class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-amber-300 block">💳 Wallet Balance</span>
               <span class="text-[9px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">Withdrawable</span>
             </div>
-            <span id="metric-unpaid" class="text-2xl sm:text-3xl font-black text-amber-300 block">₹0</span>
+            <span id="metric-unpaid" class="text-xl sm:text-2xl font-black text-amber-300 block">₹0</span>
             <button onclick="switchInfTab('wallet')" class="text-[10px] text-amber-400 hover:underline font-bold block pt-1">Request UPI Payout &rarr;</button>
           </div>
 
@@ -757,11 +782,23 @@
         <!-- Payout Request Form -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
-          <div class="lg:col-span-1 p-6 sm:p-8 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-xl space-y-6">
+          <div class="lg:col-span-1 p-6 sm:p-8 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-xl space-y-5">
             <div>
-              <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Available Balance</span>
+              <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest block">Withdrawable Balance</span>
               <span id="wallet-balance-display" class="text-3xl sm:text-4xl font-black text-amber-300 font-mono block">₹0</span>
-              <p class="text-[11px] text-emerald-400 font-semibold mt-1">✓ Instant UPI Transfer to Any Bank / App</p>
+              
+              <!-- In-Transit breakdown pill -->
+              <div class="mt-3 p-3 rounded-xl bg-black/50 border border-white/10 flex items-center justify-between text-xs">
+                <span class="text-gray-400 flex items-center gap-1.5">
+                  <span>⏳</span> In-Transit (Pending):
+                </span>
+                <span id="wallet-pending-display" class="text-amber-400 font-mono font-bold">₹0</span>
+              </div>
+
+              <div class="mt-2 text-[11px] text-gray-400 leading-normal flex items-start gap-1.5">
+                <span class="text-emerald-400">✓</span>
+                <span>Unlocked on Customer Delivery. Cancelled / RTO orders do not qualify.</span>
+              </div>
             </div>
 
             <form id="WithdrawForm" onsubmit="handleWithdrawRequest(event)" class="space-y-4 text-left">
@@ -1185,7 +1222,7 @@
       alert(reason || '⚠️ Your creator account was logged in from another device. For security, only 1 active device is permitted at a time.');
     }
 
-    // 3. Render Dashboard Data (Shopify-Grade Calculation)
+    // 3. Render Dashboard Data (Shopify-Grade Delivery Verification Calculation)
     function renderDashboard() {
       if (!currentInfluencer) return;
 
@@ -1213,8 +1250,16 @@
         return sum + (Number(o.price) || 499);
       }, 0);
 
-      let totalEarned = matchedOrders.reduce((sum, o) => {
-        if (o.status === 'Cancelled' || o.status === 'RTO') return sum;
+      // DELIVERED ORDERS ONLY: Commission officially unlocked & approved
+      let deliveredOrders = matchedOrders.filter(o => o.status === 'Delivered');
+      let deliveredEarned = deliveredOrders.reduce((sum, o) => {
+        const commAmt = o.comm || Math.round((Number(o.price) || 499) * ((currentInfluencer.comm_rate || 10) / 100));
+        return sum + commAmt;
+      }, 0);
+
+      // PENDING IN-TRANSIT ORDERS (COD / Prepaid in transit, not yet received by customer)
+      let pendingOrders = matchedOrders.filter(o => o.status !== 'Delivered' && o.status !== 'Cancelled' && o.status !== 'RTO');
+      let pendingEarned = pendingOrders.reduce((sum, o) => {
         const commAmt = o.comm || Math.round((Number(o.price) || 499) * ((currentInfluencer.comm_rate || 10) / 100));
         return sum + commAmt;
       }, 0);
@@ -1222,14 +1267,30 @@
       // Total orders count
       let totalOrdersCount = matchedOrders.length || Number(currentInfluencer.total_orders || 0);
       let grossSalesDriven = totalSales || Number(currentInfluencer.total_sales || 0);
-      let lifetimeEarned = totalEarned || Number(currentInfluencer.total_earned || 0);
-      let withdrawableBal = Number(currentInfluencer.unpaid_balance) !== undefined ? Number(currentInfluencer.unpaid_balance) : lifetimeEarned;
+
+      // Total paid payouts so far
+      let allPayouts = [];
+      try { allPayouts = JSON.parse(localStorage.getItem('br_influencer_payouts') || '[]'); } catch(e) {}
+      let myPaidPayouts = allPayouts.filter(p => (p.influencer_id === currentInfluencer.id || p.code === currentInfluencer.code) && p.status === 'Paid');
+      let totalWithdrawn = myPaidPayouts.reduce((sum, p) => sum + (Number(p.amount) || 0), 0);
+
+      // Lifetime verified delivered commission
+      let lifetimeEarned = (matchedOrders.length > 0) ? deliveredEarned : Number(currentInfluencer.total_earned || 0);
+
+      // Withdrawable Balance: STRICTLY from delivered orders only, minus already paid payouts
+      let withdrawableBal = Math.max(0, lifetimeEarned - totalWithdrawn);
+      if (matchedOrders.length === 0 && currentInfluencer.unpaid_balance !== undefined) {
+        withdrawableBal = Math.max(0, Number(currentInfluencer.unpaid_balance));
+      }
+
+      window._cachedWithdrawableBal = withdrawableBal;
+      window._cachedPendingBal = pendingEarned;
 
       // Update Header & Welcome Banner
       document.getElementById('header-creator-name').textContent = currentInfluencer.name;
       document.getElementById('creator-greeting-name').textContent = currentInfluencer.name.split(' ')[0];
       document.getElementById('banner-comm-rate').textContent = (currentInfluencer.comm_rate || 10) + '%';
-      document.getElementById('banner-comm-sub').textContent = (currentInfluencer.comm_rate || 10) + '% Instant Commission';
+      document.getElementById('banner-comm-sub').textContent = (currentInfluencer.comm_rate || 10) + '% Commission on Delivered Orders';
       document.getElementById('quick-promo-code').textContent = currentInfluencer.code;
       document.getElementById('share-code-pill').textContent = currentInfluencer.code;
       document.getElementById('tool-promo-code').textContent = currentInfluencer.code;
@@ -1238,9 +1299,13 @@
       document.getElementById('metric-clicks').textContent = Number(currentInfluencer.clicks || 0).toLocaleString();
       document.getElementById('metric-orders').textContent = totalOrdersCount.toLocaleString();
       document.getElementById('metric-revenue').textContent = '₹' + grossSalesDriven.toLocaleString();
+      const pendEl = document.getElementById('metric-pending-comm');
+      if (pendEl) pendEl.textContent = '₹' + pendingEarned.toLocaleString();
       document.getElementById('metric-earned').textContent = '₹' + lifetimeEarned.toLocaleString();
       document.getElementById('metric-unpaid').textContent = '₹' + withdrawableBal.toLocaleString();
       document.getElementById('wallet-balance-display').textContent = '₹' + withdrawableBal.toLocaleString();
+      const wallPendEl = document.getElementById('wallet-pending-display');
+      if (wallPendEl) wallPendEl.textContent = '₹' + pendingEarned.toLocaleString();
       document.getElementById('orders-tab-total-earned').textContent = '₹' + lifetimeEarned.toLocaleString();
 
       // Update Links Generator
@@ -1274,15 +1339,20 @@
 
       const rowsHtml = matchedOrders.map(o => {
         const commAmt = o.comm || Math.round((Number(o.price) || 499) * ((currentInfluencer.comm_rate || 10)/100));
-        let isDeliveredOrPaid = (o.status === 'Delivered' || (o.payment_method && o.payment_method.includes('Online')) || o.status === 'Paid');
+        let isDelivered = (o.status === 'Delivered');
+        let isCancelledOrRto = (o.status === 'Cancelled' || o.status === 'RTO');
         let statusBadge = '';
+        let commDisplay = '';
 
-        if (o.status === 'Cancelled' || o.status === 'RTO') {
+        if (isCancelledOrRto) {
           statusBadge = '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-red-500/20 text-red-400 border border-red-500/30">❌ Cancelled / RTO (₹0)</span>';
-        } else if (isDeliveredOrPaid) {
+          commDisplay = '<span class="text-gray-500 line-through">₹' + commAmt + '</span> <span class="text-red-400 text-[10px] font-mono font-bold block sm:inline">(₹0 Voided)</span>';
+        } else if (isDelivered) {
           statusBadge = '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">✓ Delivered &amp; Approved</span>';
+          commDisplay = '<span class="text-emerald-400 font-bold font-mono">+₹' + commAmt + '</span>';
         } else {
           statusBadge = '<span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">⏳ COD In Transit (Pending Delivery)</span>';
+          commDisplay = '<span class="text-amber-400 font-mono font-medium">₹' + commAmt + ' <span class="text-[10px] text-gray-400 font-sans block sm:inline">(Locked)</span></span>';
         }
 
         return `
@@ -1291,7 +1361,7 @@
             <td class="py-3 px-3 text-gray-400">${o.created_at || 'Recently'}</td>
             <td class="py-3 px-3">${o.product_bundle || '1 Bottle (250ml)'}</td>
             <td class="py-3 px-3 font-bold text-white">₹${o.price || 499}</td>
-            <td class="py-3 px-3 font-bold ${isDeliveredOrPaid ? 'text-emerald-400' : 'text-amber-400'}">${isDeliveredOrPaid ? '+₹' + commAmt : '₹' + commAmt + ' (Pending)'}</td>
+            <td class="py-3 px-3">${commDisplay}</td>
             <td class="py-3 px-3 text-right">
               ${statusBadge}
             </td>
@@ -1406,8 +1476,11 @@
         alert('Minimum withdrawal amount is ₹100.');
         return;
       }
-      if (amt > Number(currentInfluencer.unpaid_balance || 0) && Number(currentInfluencer.unpaid_balance || 0) > 0) {
-        alert('Requested amount exceeds your available unpaid balance.');
+      const currentWithdrawable = window._cachedWithdrawableBal !== undefined ? window._cachedWithdrawableBal : Number(currentInfluencer.unpaid_balance || 0);
+      const currentPending = window._cachedPendingBal !== undefined ? window._cachedPendingBal : 0;
+
+      if (amt > currentWithdrawable) {
+        alert(`⚠️ Withdrawal Request Exceeded!\n\n• Approved Withdrawable Balance: ₹${currentWithdrawable.toLocaleString()} (from Delivered orders only)\n• Pending In-Transit Commission: ₹${currentPending.toLocaleString()}\n\nAs per company anti-fraud policy, commissions unlock into your withdrawable wallet once parcels are successfully Delivered to customers. In-transit orders will unlock automatically upon delivery.`);
         return;
       }
 

@@ -285,14 +285,14 @@ module.exports = async (req, res) => {
         if (inf) {
           const commRate = Number(inf.comm_rate) || 10;
           const commAmt = Math.round(price * (commRate / 100));
+          await orders.updateOne({ order_id: order_id }, { $set: { comm: commAmt, influencer_id: inf.id || inf.code } });
+          // Anti-Fraud: Commission is credited to wallet ONLY upon verified customer delivery.
           await influencers.updateOne(
             { _id: inf._id },
             {
               $inc: {
                 total_orders: 1,
-                total_sales: price,
-                total_earned: commAmt,
-                unpaid_balance: commAmt
+                total_sales: price
               }
             }
           );
@@ -397,7 +397,7 @@ module.exports = async (req, res) => {
         await orders.updateOne({ _id: ord._id }, { $set: updateFields });
 
         const couponTag = (ord.coupon || ord.influencer || '').trim().toUpperCase();
-        if (newStatus === 'Delivered' && prevStatus !== 'Delivered' && couponTag) {
+        if (couponTag) {
           const inf = await influencers.findOne({
             $or: [
               { code: { $regex: new RegExp('^' + couponTag + '$', 'i') } },
@@ -407,11 +407,30 @@ module.exports = async (req, res) => {
           });
 
           if (inf) {
-            const commAmt = Math.round((Number(ord.price) || 499) * ((Number(inf.comm_rate) || 10) / 100));
-            await influencers.updateOne(
-              { _id: inf._id },
-              { $inc: { total_earned: commAmt, unpaid_balance: commAmt } }
-            );
+            const commAmt = ord.comm || Math.round((Number(ord.price) || 499) * ((Number(inf.comm_rate) || 10) / 100));
+            // 1. Unlocking commission when order is successfully DELIVERED
+            if (newStatus === 'Delivered' && prevStatus !== 'Delivered') {
+              await influencers.updateOne(
+                { _id: inf._id },
+                { $inc: { total_earned: commAmt, unpaid_balance: commAmt } }
+              );
+            }
+            // 2. Revoking / Voiding commission if previously delivered order was Cancelled or RTO
+            else if (prevStatus === 'Delivered' && (newStatus === 'Cancelled' || newStatus === 'RTO' || newStatus === 'New' || newStatus === 'Dispatched')) {
+              await influencers.updateOne(
+                { _id: inf._id },
+                { $inc: { total_earned: -commAmt, unpaid_balance: -commAmt } }
+              );
+              // Safeguard against negative balance
+              await influencers.updateOne(
+                { _id: inf._id, unpaid_balance: { $lt: 0 } },
+                { $set: { unpaid_balance: 0 } }
+              );
+              await influencers.updateOne(
+                { _id: inf._id, total_earned: { $lt: 0 } },
+                { $set: { total_earned: 0 } }
+              );
+            }
           }
         }
 

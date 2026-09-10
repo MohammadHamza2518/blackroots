@@ -1,4 +1,4 @@
-﻿// Vercel Serverless Function for Order Placement with MongoDB Atlas
+// Vercel Serverless Function for Order Placement with MongoDB Atlas
 const { getCollections } = require('./lib/db');
 
 module.exports = async (req, res) => {
@@ -85,14 +85,17 @@ module.exports = async (req, res) => {
       if (inf) {
         const commRate = Number(inf.comm_rate) || 10;
         const commAmt = Math.round(price * (commRate / 100));
+        // Attach comm amount to the order record for delivery verification
+        await orders.updateOne({ order_id: orderId }, { $set: { comm: commAmt, influencer_id: inf.id || inf.code } });
+
+        // Anti-Fraud Safeguard: Commission unlocks into withdrawable balance ONLY upon verified customer delivery.
+        // On placement, record referral sales count and volume without unlocking premature payouts.
         await influencers.updateOne(
           { _id: inf._id },
           {
             $inc: {
               total_orders: 1,
-              total_sales: price,
-              total_earned: commAmt,
-              unpaid_balance: commAmt
+              total_sales: price
             }
           }
         );

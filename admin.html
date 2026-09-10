@@ -1390,7 +1390,18 @@
             <div class="font-bold text-emerald-400">₹${o.price || 499} (${o.payment_method || 'COD'})</div>
           </td>
           <td class="py-3 px-3">
-            ${o.coupon ? `<span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold text-[10px]">${o.coupon}</span>` : '<span class="text-gray-600">&mdash;</span>'}
+            ${o.coupon ? `
+              <div>
+                <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono font-bold text-[10px]">${o.coupon}</span>
+                ${o.status === 'Delivered' 
+                  ? `<div class="text-[9px] text-emerald-400 font-bold mt-1">✓ Comm Approved (+₹${o.comm || Math.round((Number(o.price)||499)*0.1)})</div>`
+                  : (o.status === 'Cancelled' || o.status === 'RTO'
+                    ? '<div class="text-[9px] text-red-400 font-bold mt-1">❌ Voided / RTO (₹0)</div>'
+                    : `<div class="text-[9px] text-amber-400 font-medium mt-1">⏳ Locked until Delivery (₹${o.comm || Math.round((Number(o.price)||499)*0.1)})</div>`
+                  )
+                }
+              </div>
+            ` : '<span class="text-gray-600">&mdash;</span>'}
           </td>
           <td class="py-3 px-3">
             <select onchange="updateOrderStatus('${o.order_id}', this.value)" class="px-2 py-1 rounded bg-black border border-white/20 text-[10px] font-bold text-white focus:outline-none focus:border-[#d4af37]">
@@ -1398,8 +1409,8 @@
               <option value="Paid" ${o.status === 'Paid' ? 'selected' : ''}>Paid Online</option>
               <option value="Confirmed" ${o.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
               <option value="Dispatched" ${o.status === 'Dispatched' ? 'selected' : ''}>Dispatched</option>
-              <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
-              <option value="Cancelled" ${o.status === 'Cancelled' ? 'selected' : ''}>Cancelled / RTO</option>
+              <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>Delivered (Approves Comm)</option>
+              <option value="Cancelled" ${o.status === 'Cancelled' ? 'selected' : ''}>Cancelled / RTO (Void Comm)</option>
             </select>
           </td>
           <td class="py-3 px-3 font-mono text-gray-400 text-[11px]">
@@ -1428,12 +1439,13 @@
 
       let ord = orders.find(o => o.order_id === orderId);
       if (ord) {
+        const prevStatus = ord.status;
         ord.status = newStatus;
         localStorage.setItem('br_local_orders', JSON.stringify(orders));
 
-        // If Delivered and had coupon/tag, credit creator
+        // If Delivered and had coupon/tag, credit creator; if Cancelled/RTO, revoke creator
         const couponTag = (ord.coupon || ord.influencer || '').trim().toUpperCase();
-        if (newStatus === 'Delivered' && couponTag) {
+        if (couponTag) {
           let infDb = getInfluencersAdminDb();
           let inf = infDb.find(u => 
             (u.code && u.code.toUpperCase() === couponTag) ||
@@ -1441,9 +1453,14 @@
             (u.id && u.id.toUpperCase() === couponTag)
           );
           if (inf) {
-            let comm = Math.round((Number(ord.price) || 499) * ((inf.comm_rate || 10) / 100));
-            inf.total_earned = (Number(inf.total_earned) || 0) + comm;
-            inf.unpaid_balance = (Number(inf.unpaid_balance) || 0) + comm;
+            let comm = ord.comm || Math.round((Number(ord.price) || 499) * ((inf.comm_rate || 10) / 100));
+            if (newStatus === 'Delivered' && prevStatus !== 'Delivered') {
+              inf.total_earned = (Number(inf.total_earned) || 0) + comm;
+              inf.unpaid_balance = (Number(inf.unpaid_balance) || 0) + comm;
+            } else if (prevStatus === 'Delivered' && (newStatus === 'Cancelled' || newStatus === 'RTO' || newStatus === 'New' || newStatus === 'Dispatched')) {
+              inf.total_earned = Math.max(0, (Number(inf.total_earned) || 0) - comm);
+              inf.unpaid_balance = Math.max(0, (Number(inf.unpaid_balance) || 0) - comm);
+            }
             saveInfluencersAdminDb(infDb);
           }
         }
@@ -1457,6 +1474,7 @@
         } catch(e) {}
       }
       loadOrders();
+      loadInfluencers();
     }
 
     // 8. Influencers & Payouts Hub (Authoritative Server Database Persistence)

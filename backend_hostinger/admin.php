@@ -105,16 +105,13 @@ if ($action === 'save_order') {
             $infSt->execute([$cClean, $cClean, $cClean . '10', $cClean . '10']);
             $inf = $infSt->fetch();
             if ($inf) {
-                $comm = round($price * (($inf['comm_rate'] ?? 10) / 100));
                 $upInf = $pdo->prepare("
                     UPDATE influencers 
                     SET total_orders = COALESCE(total_orders, 0) + 1,
-                        total_sales = COALESCE(total_sales, 0) + ?,
-                        total_earned = COALESCE(total_earned, 0) + ?,
-                        unpaid_balance = COALESCE(unpaid_balance, 0) + ?
+                        total_sales = COALESCE(total_sales, 0) + ?
                     WHERE id = ?
                 ");
-                $upInf->execute([$price, $comm, $comm, $inf['id']]);
+                $upInf->execute([$price, $inf['id']]);
             }
         }
 
@@ -233,12 +230,41 @@ if ($action === 'update_order') {
     $raw = file_get_contents('php://input');
     $input = json_decode($raw, true) ?: $_POST;
     $id = (int)($input['id'] ?? 0);
+    $order_num = trim($input['order_id'] ?? '');
     $new_status = trim($input['status'] ?? 'Confirmed');
     $awb = trim($input['tracking_awb'] ?? '');
 
     try {
-        $stmt = $pdo->prepare("UPDATE orders SET status = :st, tracking_awb = COALESCE(NULLIF(:awb, ''), tracking_awb), updated_at = CURRENT_TIMESTAMP WHERE id = :id");
-        $stmt->execute([':st' => $new_status, ':awb' => $awb, ':id' => $id]);
+        // Fetch existing order to check transition
+        $chkSt = $pdo->prepare("SELECT * FROM orders WHERE id = :id OR order_id = :oid LIMIT 1");
+        $chkSt->execute([':id' => $id, ':oid' => $order_num]);
+        $existingOrd = $chkSt->fetch();
+
+        $stmt = $pdo->prepare("UPDATE orders SET status = :st, tracking_awb = COALESCE(NULLIF(:awb, ''), tracking_awb), updated_at = CURRENT_TIMESTAMP WHERE id = :id OR order_id = :oid");
+        $stmt->execute([':st' => $new_status, ':awb' => $awb, ':id' => $id, ':oid' => $order_num]);
+
+        if ($existingOrd && !empty($existingOrd['coupon'])) {
+            $prev_status = $existingOrd['status'];
+            $cClean = strtoupper(trim($existingOrd['coupon']));
+            $infSt = $pdo->prepare("SELECT * FROM influencers WHERE UPPER(code) = ? OR UPPER(username) = ? LIMIT 1");
+            $infSt->execute([$cClean, $cClean]);
+            $inf = $infSt->fetch();
+
+            if ($inf) {
+                $comm = round(($existingOrd['price'] ?? 499) * (($inf['comm_rate'] ?? 10) / 100));
+                // Unlock upon delivery
+                if ($new_status === 'Delivered' && $prev_status !== 'Delivered') {
+                    $upComm = $pdo->prepare("UPDATE influencers SET total_earned = COALESCE(total_earned, 0) + ?, unpaid_balance = COALESCE(unpaid_balance, 0) + ? WHERE id = ?");
+                    $upComm->execute([$comm, $comm, $inf['id']]);
+                }
+                // Revoke if cancelled or RTO
+                else if ($prev_status === 'Delivered' && ($new_status === 'Cancelled' || $new_status === 'RTO')) {
+                    $upComm = $pdo->prepare("UPDATE influencers SET total_earned = MAX(0, COALESCE(total_earned, 0) - ?), unpaid_balance = MAX(0, COALESCE(unpaid_balance, 0) - ?) WHERE id = ?");
+                    $upComm->execute([$comm, $comm, $inf['id']]);
+                }
+            }
+        }
+
         echo json_encode(['success' => true, 'message' => 'Order status updated!']);
         exit;
     } catch (Exception $e) {

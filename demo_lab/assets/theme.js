@@ -635,8 +635,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /* 📦 Quick Order Modal Global Controls (Bulletproof & Immediate) */
-// Fixed: Cleaned conflicting quick order invoker
-window.closeQuickOrderModal = function() {
+(function() {
+  window.closeQuickOrderModal = function() {
     const modal = document.getElementById('QuickOrderModal');
     if (modal) {
       modal.style.display = 'none';
@@ -729,15 +729,19 @@ window.closeQuickOrderModal = function() {
     window.recalculateCheckoutPrice();
   };
 
-  // Apply Coupon Function
-  window.applyCheckoutCoupon = function() {
+  // Apply Coupon Function (Strict Validation)
+  window.applyCheckoutCoupon = async function() {
     const input = document.getElementById('OrderCouponInput');
     const note = document.getElementById('CouponDiscountNote');
     if (!input) return;
 
     const rawCode = input.value.trim().toUpperCase();
     if (!rawCode) {
-      alert('Please enter a coupon code.');
+      if (note) {
+        note.textContent = 'Please enter a coupon code.';
+        note.className = 'text-xs text-red-400 font-bold mt-1.5 flex items-center gap-1';
+        note.classList.remove('hidden');
+      }
       return;
     }
 
@@ -746,19 +750,115 @@ window.closeQuickOrderModal = function() {
       db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
     } catch(e) {}
 
-    let creator = db.find(u => u.code && u.code.toUpperCase() === rawCode);
-    let commRate = creator ? (creator.comm_rate || 10) : 10;
+    function findCreatorInDb(dbList) {
+      return (dbList || []).find(u => {
+        if (!u) return false;
+        if (u.status === 'Inactive' || u.status === 'Blocked' || u.status === 'Suspended') return false;
 
-    window.appliedCouponData = {
-      code: rawCode,
-      comm_rate: commRate,
-      influencer_id: creator ? creator.id : null
-    };
+        const uCode = String(u.code || '').trim().toUpperCase();
+        const uUser = String(u.username || '').trim().toUpperCase();
+        const uName = String(u.name || '').trim().toUpperCase();
+        const uId = String(u.id || '').trim().toUpperCase();
+        const uHandle = String(u.handle || '').trim().toUpperCase().replace('@', '');
 
-    if (note) {
-      note.textContent = '? Coupon "' + rawCode + '" applied successfully!';
-      note.classList.remove('hidden');
+        return uCode === rawCode || 
+               uUser === rawCode || 
+               uName === rawCode ||
+               uId === rawCode ||
+               uHandle === rawCode ||
+               (uCode && uCode === rawCode + '10') ||
+               (rawCode && rawCode === uCode + '10') ||
+               (uUser && uUser === rawCode + '10') ||
+               (rawCode && rawCode === uUser + '10');
+      });
     }
+
+    let creator = findCreatorInDb(db);
+
+    // If not found in local cache, query server API in real-time!
+    if (!creator) {
+      if (note) {
+        note.textContent = 'Verifying creator promo code...';
+        note.className = 'text-xs text-amber-400 font-bold mt-1.5 flex items-center gap-1';
+        note.classList.remove('hidden');
+      }
+
+      const isSubdir = window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
+      const prefix = isSubdir ? '../' : '';
+      const endpoints = [
+        '/backend_hostinger/admin.php?action=verify_coupon&code=' + encodeURIComponent(rawCode),
+        prefix + 'backend_hostinger/admin.php?action=verify_coupon&code=' + encodeURIComponent(rawCode),
+        '/backend_hostinger/admin.php?action=get_influencers',
+        prefix + 'backend_hostinger/admin.php?action=get_influencers',
+        '/api/admin?action=verify_coupon&code=' + encodeURIComponent(rawCode),
+        prefix + 'api/admin?action=verify_coupon&code=' + encodeURIComponent(rawCode),
+        '/api/admin?action=get_influencers',
+        prefix + 'api/admin?action=get_influencers'
+      ];
+
+      for (const ep of endpoints) {
+        try {
+          const res = await fetch(ep);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.valid && data.influencer) {
+              creator = data.influencer;
+              break;
+            }
+            if (data && data.influencers && Array.isArray(data.influencers)) {
+              db = data.influencers;
+              localStorage.setItem('br_influencers_db', JSON.stringify(db));
+              creator = findCreatorInDb(db);
+              if (creator) break;
+            }
+          }
+        } catch(err) {}
+      }
+    }
+
+    if (creator) {
+      const promoCode = creator.code || rawCode;
+      const commRate = creator.comm_rate || 10;
+
+      window.appliedCouponData = {
+        code: promoCode,
+        comm_rate: commRate,
+        influencer_id: creator.id || null
+      };
+
+      if (note) {
+        note.textContent = '✓ Coupon "' + promoCode + '" applied (' + commRate + '% OFF)!';
+        note.className = 'text-xs text-emerald-400 font-bold mt-1.5 flex items-center gap-1';
+        note.classList.remove('hidden');
+      }
+      const remBtn = document.getElementById('OrderRemoveCouponBtn');
+      if (remBtn) remBtn.classList.remove('hidden');
+    } else {
+      window.appliedCouponData = null;
+      if (note) {
+        note.textContent = '✕ Invalid code';
+        note.className = 'text-xs text-red-400 font-bold mt-1.5 flex items-center gap-1';
+        note.classList.remove('hidden');
+      }
+      const remBtn = document.getElementById('OrderRemoveCouponBtn');
+      if (remBtn) remBtn.classList.add('hidden');
+    }
+
+    window.recalculateCheckoutPrice();
+  };
+
+  window.removeCheckoutCoupon = function() {
+    window.appliedCouponData = null;
+    const input = document.getElementById('OrderCouponInput');
+    const note = document.getElementById('CouponDiscountNote');
+    const remBtn = document.getElementById('OrderRemoveCouponBtn');
+
+    if (input) input.value = '';
+    if (note) {
+      note.textContent = '';
+      note.classList.add('hidden');
+    }
+    if (remBtn) remBtn.classList.add('hidden');
 
     window.recalculateCheckoutPrice();
   };
@@ -891,13 +991,28 @@ window.closeQuickOrderModal = function() {
 
         try {
           let orderData = null;
-          const endpoints = ['api/order', 'api/order.js', 'api/order.php', 'backend_hostinger/order.php'];
+          const isSubdir = window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
+          const prefix = isSubdir ? '../' : '';
+          const endpoints = [
+            '/backend_hostinger/admin.php?action=save_order',
+            '/backend_hostinger/order.php',
+            '/api/admin?action=save_order',
+            '/api/order',
+            prefix + 'backend_hostinger/admin.php?action=save_order',
+            prefix + 'backend_hostinger/order.php',
+            prefix + 'api/admin?action=save_order',
+            prefix + 'api/admin.js?action=save_order',
+            prefix + 'api/order',
+            prefix + 'api/order.js',
+            prefix + 'api/order.php'
+          ];
           for (let ep of endpoints) {
             try {
               let res = await fetch(ep, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(payload),
+                keepalive: true
               });
               if (res.ok) {
                 orderData = await res.json();
@@ -919,7 +1034,25 @@ window.closeQuickOrderModal = function() {
           try {
             let curOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
             curOrders.unshift(payload);
-            localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 100)));
+            localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 200)));
+
+            // Real-time Influencer DB Commission & Sales Sync
+            if (payload.coupon) {
+              let infDb = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
+              let infIdx = infDb.findIndex(function(u) {
+                return (u.code && u.code.toUpperCase() === payload.coupon.toUpperCase()) ||
+                       (u.username && u.username.toUpperCase() === payload.coupon.toUpperCase()) ||
+                       (u.id && u.id === payload.influencer_id);
+              });
+              let earned = Math.round(payload.price * (infDb[infIdx].comm_rate || 10) / 100);
+              payload.comm = earned;
+              if (infIdx !== -1) {
+                infDb[infIdx].total_orders = (infDb[infIdx].total_orders || 0) + 1;
+                infDb[infIdx].total_sales = (infDb[infIdx].total_sales || 0) + payload.price;
+                // Anti-Fraud Safeguard: Commission is credited to wallet ONLY upon verified customer delivery.
+                localStorage.setItem('br_influencers_db', JSON.stringify(infDb));
+              }
+            }
           } catch(e) {}
 
           // Show Success View
@@ -1375,49 +1508,7 @@ window.closeIngredientModal = closeIngredientModal;
     document.body.appendChild(banner);
   }
 
-  // 2. Global Coupon Validator & Applicator
-  window.applyCheckoutCoupon = function() {
-    const input = document.getElementById('OrderCouponInput');
-    const note = document.getElementById('CouponDiscountNote');
-    const priceDisplay = document.getElementById('OrderModalPriceDisplay');
-    if (!input) return;
 
-    const rawCode = input.value.trim().toUpperCase();
-    if (!rawCode) {
-      alert('Please enter a coupon code.');
-      return;
-    }
-
-    let db = [];
-    try {
-      db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
-    } catch(e) {}
-
-    let creator = db.find(u => u.code && u.code.toUpperCase() === rawCode);
-    let commRate = creator ? (creator.comm_rate || 10) : 10;
-    let basePrice = window.selectedPack ? window.selectedPack.price : 499;
-
-    // Calculate 10% discount
-    let discount = Math.round(basePrice * 0.10);
-    let finalPrice = basePrice - discount;
-
-    window.appliedCouponData = {
-      code: rawCode,
-      discount: discount,
-      finalPrice: finalPrice,
-      influencer_id: creator ? creator.id : null,
-      comm_rate: commRate
-    };
-
-    if (note) {
-      note.textContent = `✓ Code ${rawCode} Applied (-₹${discount})`;
-      note.classList.remove('hidden');
-    }
-
-    if (priceDisplay) {
-      priceDisplay.innerHTML = `<span class="line-through text-gray-400 text-sm font-normal">₹${basePrice}</span> <span class="text-emerald-400 font-black">₹${finalPrice}</span>`;
-    }
-  };
 
   // Run on DOM ready
   if (document.readyState === 'loading') {
@@ -1539,39 +1630,7 @@ window.closeIngredientModal = closeIngredientModal;
     window.recalculateCheckoutPrice();
   };
 
-  // Apply Coupon Function
-  window.applyCheckoutCoupon = function() {
-    const input = document.getElementById('OrderCouponInput');
-    const note = document.getElementById('CouponDiscountNote');
-    if (!input) return;
 
-    const rawCode = input.value.trim().toUpperCase();
-    if (!rawCode) {
-      alert('Please enter a coupon code.');
-      return;
-    }
-
-    let db = [];
-    try {
-      db = JSON.parse(localStorage.getItem('br_influencers_db') || '[]');
-    } catch(e) {}
-
-    let creator = db.find(u => u.code && u.code.toUpperCase() === rawCode);
-    let commRate = creator ? (creator.comm_rate || 10) : 10;
-
-    window.appliedCouponData = {
-      code: rawCode,
-      comm_rate: commRate,
-      influencer_id: creator ? creator.id : null
-    };
-
-    if (note) {
-      note.textContent = '? Coupon "' + rawCode + '" applied successfully!';
-      note.style.display = 'block';
-    }
-
-    window.recalculateCheckoutPrice();
-  };
 
   // Real-time Pricing Calculator
   window.recalculateCheckoutPrice = function() {
@@ -1703,13 +1762,28 @@ window.closeIngredientModal = closeIngredientModal;
 
         try {
           let orderData = null;
-          const endpoints = ['api/order', 'api/order.js', 'api/order.php', 'backend_hostinger/order.php'];
+          const isSubdir = window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
+          const prefix = isSubdir ? '../' : '';
+          const endpoints = [
+            '/backend_hostinger/admin.php?action=save_order',
+            '/backend_hostinger/order.php',
+            '/api/admin?action=save_order',
+            '/api/order',
+            prefix + 'backend_hostinger/admin.php?action=save_order',
+            prefix + 'backend_hostinger/order.php',
+            prefix + 'api/admin?action=save_order',
+            prefix + 'api/admin.js?action=save_order',
+            prefix + 'api/order',
+            prefix + 'api/order.js',
+            prefix + 'api/order.php'
+          ];
           for (let ep of endpoints) {
             try {
               let res = await fetch(ep, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+                body: JSON.stringify(payload),
+                keepalive: true
               });
               if (res.ok) {
                 orderData = await res.json();
