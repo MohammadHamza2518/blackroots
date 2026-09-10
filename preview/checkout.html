@@ -1168,16 +1168,16 @@
         var isSubdir = window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
         var prefix = isSubdir ? '../' : '';
         var endpoints = [
-          '/backend_hostinger/admin.php?action=save_order',
-          '/backend_hostinger/order.php',
           '/api/admin?action=save_order',
           '/api/order',
-          prefix + 'backend_hostinger/admin.php?action=save_order',
-          prefix + 'backend_hostinger/order.php',
           prefix + 'api/admin?action=save_order',
           prefix + 'api/admin.js?action=save_order',
           prefix + 'api/order',
           prefix + 'api/order.js',
+          '/backend_hostinger/admin.php?action=save_order',
+          '/backend_hostinger/order.php',
+          prefix + 'backend_hostinger/admin.php?action=save_order',
+          prefix + 'backend_hostinger/order.php',
           prefix + 'api/order.php'
         ];
         for (var i = 0; i < endpoints.length; i++) {

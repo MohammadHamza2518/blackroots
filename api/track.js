@@ -1,4 +1,4 @@
-﻿// Vercel Serverless Function for Order Tracking with MongoDB Atlas
+// Vercel Serverless Function for Order Tracking with MongoDB Atlas
 const { getCollections } = require('./lib/db');
 
 module.exports = async (req, res) => {
@@ -14,20 +14,28 @@ module.exports = async (req, res) => {
     return res.status(200).json({ success: false, error: 'Please provide Order ID or Phone number.' });
   }
 
-  const cleanQ = query.replace('#', '');
+  const cleanQ = query.replace('#', '').trim();
   const cleanPhone = query.replace(/[^0-9]/g, '');
+  const extraPhone = (req.query.phone || req.query.contact || '').replace(/[^0-9]/g, '');
 
   try {
     const { orders } = await getCollections();
     
-    // Search by order_id (with or without #), phone, or awb
-    const ord = await orders.findOne({
-      $or: [
-        { order_id: { $regex: new RegExp('^#?' + cleanQ + '$', 'i') } },
-        { phone: cleanPhone.length >= 10 ? { $regex: new RegExp(cleanPhone.slice(-10) + '$') } : query },
-        { tracking_awb: query }
-      ]
-    });
+    // Construct flexible search criteria
+    const searchConditions = [
+      { order_id: { $regex: new RegExp('^#?' + cleanQ + '$', 'i') } },
+      { order_id: { $regex: new RegExp(cleanQ, 'i') } },
+      { tracking_awb: { $regex: new RegExp('^' + cleanQ + '$', 'i') } }
+    ];
+
+    if (cleanPhone.length >= 7) {
+      searchConditions.push({ phone: { $regex: new RegExp(cleanPhone.slice(-10) + '$') } });
+    }
+    if (extraPhone.length >= 7) {
+      searchConditions.push({ phone: { $regex: new RegExp(extraPhone.slice(-10) + '$') } });
+    }
+
+    const ord = await orders.findOne({ $or: searchConditions });
 
     if (ord) {
       return res.status(200).json({
@@ -41,7 +49,7 @@ module.exports = async (req, res) => {
         bundle: ord.product_bundle,
         price: ord.price,
         order_date: ord.created_at,
-        estimated_delivery: 'Within 48 Hours'
+        estimated_delivery: ord.status === 'Delivered' ? 'Delivered' : 'Within 48 Hours'
       });
     }
 

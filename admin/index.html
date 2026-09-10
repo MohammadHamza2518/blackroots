@@ -1113,13 +1113,13 @@
       const isSubdir = window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
       const prefix = isSubdir ? '../' : '';
       const endpoints = [
-        '/backend_hostinger/admin.php?action=' + action,
-        'backend_hostinger/admin.php?action=' + action,
-        prefix + 'backend_hostinger/admin.php?action=' + action,
         '/api/admin?action=' + action,
         'api/admin?action=' + action,
         prefix + 'api/admin?action=' + action,
         prefix + 'api/admin.js?action=' + action,
+        '/backend_hostinger/admin.php?action=' + action,
+        'backend_hostinger/admin.php?action=' + action,
+        prefix + 'backend_hostinger/admin.php?action=' + action,
         prefix + 'api/admin.php?action=' + action
       ];
       for (const ep of endpoints) {
@@ -1326,6 +1326,19 @@
       let serverOrders = (res && res.orders && Array.isArray(res.orders)) ? res.orders : [];
       let localOrders = [];
       try { localOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]'); } catch(e) {}
+
+      // Zero-Loss Background Cloud Sync
+      if (localOrders.length > 0) {
+        localOrders.forEach(function(lo) {
+          if (lo && lo.order_id && !serverOrders.some(function(so) { return so.order_id === lo.order_id; })) {
+            apiFetch('save_order', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(lo)
+            }).catch(function() {});
+          }
+        });
+      }
 
       let orderMap = new Map();
       serverOrders.forEach(o => { if (o && o.order_id) orderMap.set(o.order_id, o); });

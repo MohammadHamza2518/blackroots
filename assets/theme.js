@@ -967,9 +967,9 @@ document.addEventListener('DOMContentLoaded', function() {
       const finalPrice = pricing.finalPayable;
       const selectedMethod = window.currentPaymentMethod || 'Online';
       const submitBtn = document.getElementById('SubmitOrderBtn');
-      const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
-
+      const preAssignedOrderId = '#BR-' + Math.floor(100000 + Math.random() * 900000);
       let orderPayload = {
+        order_id: preAssignedOrderId,
         name: name,
         phone: cleanPhone,
         pincode: pincode,
@@ -977,16 +977,17 @@ document.addEventListener('DOMContentLoaded', function() {
         address: address,
         bundle: window.selectedPack ? window.selectedPack.title : '1 Bottle (250ml)',
         price: finalPrice,
-        payment_method: selectedMethod === 'Online' ? 'Online (Prepaid UPI/Cards - ?50 OFF)' : 'Cash on Delivery (COD)',
+        payment_method: selectedMethod === 'Online' ? 'Online (Prepaid UPI/Cards - ₹50 OFF)' : 'Cash on Delivery (COD)',
         payment_id: '',
         coupon: window.appliedCouponData ? window.appliedCouponData.code : '',
-        discount: pricing.onlineDiscount + pricing.couponDiscount
+        discount: pricing.onlineDiscount + pricing.couponDiscount,
+        created_at: new Date().toISOString().replace('T', ' ').slice(0, 19)
       };
 
       const processOrderExecution = async (payload) => {
         if (submitBtn) {
           submitBtn.disabled = true;
-          submitBtn.innerHTML = '<span>? Confirming Logistics Order...</span>';
+          submitBtn.innerHTML = '<span>⏳ Confirming Logistics Order...</span>';
         }
 
         try {
@@ -994,17 +995,16 @@ document.addEventListener('DOMContentLoaded', function() {
           const isSubdir = window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
           const prefix = isSubdir ? '../' : '';
           const endpoints = [
-            '/backend_hostinger/admin.php?action=save_order',
-            '/backend_hostinger/order.php',
             '/api/admin?action=save_order',
             '/api/order',
+            prefix + 'api/admin?action=save_order',
+            prefix + 'api/order',
+            '/backend_hostinger/admin.php?action=save_order',
+            '/backend_hostinger/order.php',
             prefix + 'backend_hostinger/admin.php?action=save_order',
             prefix + 'backend_hostinger/order.php',
-            prefix + 'api/admin?action=save_order',
             prefix + 'api/admin.js?action=save_order',
-            prefix + 'api/order',
-            prefix + 'api/order.js',
-            prefix + 'api/order.php'
+            prefix + 'api/order.js'
           ];
           for (let ep of endpoints) {
             try {
@@ -1016,7 +1016,7 @@ document.addEventListener('DOMContentLoaded', function() {
               });
               if (res.ok) {
                 orderData = await res.json();
-                if (orderData && orderData.success) break;
+                if (orderData && (orderData.success || orderData.order_id)) break;
               }
             } catch(err) {}
           }
@@ -1026,15 +1026,21 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.innerHTML = originalBtnHtml;
           }
 
-          const orderId = (orderData && orderData.order_id) ? orderData.order_id : ('#BR-' + Math.floor(1000 + Math.random() * 9000));
+          const orderId = (orderData && orderData.order_id) ? orderData.order_id : (payload.order_id || ('#BR-' + Math.floor(100000 + Math.random() * 900000)));
           payload.order_id = orderId;
           payload.status = payload.payment_method.includes('Online') ? 'Paid' : 'New';
-          payload.created_at = new Date().toLocaleString();
+          if (!payload.created_at) payload.created_at = new Date().toISOString().replace('T', ' ').slice(0, 19);
 
           try {
             let curOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
+            curOrders = curOrders.filter(o => o.order_id !== payload.order_id);
             curOrders.unshift(payload);
             localStorage.setItem('br_local_orders', JSON.stringify(curOrders.slice(0, 200)));
+
+            try {
+              let liveChannel = new BroadcastChannel('blackroots_live_stream');
+              liveChannel.postMessage({ type: 'NEW_ORDER', order: payload });
+            } catch(bcErr) {}
 
             // Real-time Influencer DB Commission & Sales Sync
             if (payload.coupon) {
