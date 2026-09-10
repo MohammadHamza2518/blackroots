@@ -153,7 +153,7 @@ try {
     if ($res && $res['cnt'] == 0) {
         $defaults = [
             'admin_password' => password_hash('blackroots2026', PASSWORD_BCRYPT),
-            'meta_pixel_id' => '',
+            'meta_pixel_id' => '4485707268411631',
             'meta_capi_token' => '',
             'ga4_measurement_id' => '',
             'gsc_verification_tag' => '',

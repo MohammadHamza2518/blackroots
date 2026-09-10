@@ -50,8 +50,10 @@
   }
   captureAttribution();
 
+  var DEFAULT_PIXEL_ID = '4485707268411631';
+
   function initMarketingStack(config) {
-    if (!config) return;
+    if (!config) config = { meta_pixel_id: DEFAULT_PIXEL_ID };
 
     // A. Meta Domain Verification Tag
     if (config.meta_domain_verification) {
@@ -93,7 +95,8 @@
     }
 
     // D. Meta Pixel (Facebook & Instagram Ads)
-    if (config.meta_pixel_id && !window.fbq_script_loaded) {
+    var pixelId = (config && config.meta_pixel_id) || DEFAULT_PIXEL_ID;
+    if (pixelId && !window.fbq_script_loaded) {
       window.fbq_script_loaded = true;
       
       var script = document.createElement('script');
@@ -106,21 +109,29 @@
         document.head.appendChild(script);
       }
 
-      window.fbq('init', config.meta_pixel_id);
+      // Noscript image beacon
+      try {
+        var noscript = document.createElement('noscript');
+        noscript.innerHTML = '<img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=' + pixelId + '&ev=PageView&noscript=1" />';
+        (document.body || document.head).appendChild(noscript);
+      } catch(e) {}
+
+      window.fbq('init', pixelId);
       window.fbq('track', 'PageView');
-      console.log('🎯 [Meta Pixel Initialized] ID: ' + config.meta_pixel_id);
+      console.log('🎯 [Meta Pixel Initialized] ID: ' + pixelId);
     }
   }
 
   // Multi-tier config loader (localStorage -> Vercel API -> Hostinger PHP API)
   function loadConfig() {
+    var config = { meta_pixel_id: DEFAULT_PIXEL_ID };
     var cached = localStorage.getItem('br_analytics_config');
     if (cached) {
       try {
-        var parsed = JSON.parse(cached);
-        initMarketingStack(parsed);
+        config = Object.assign(config, JSON.parse(cached));
       } catch(e) {}
     }
+    initMarketingStack(config);
 
     var isSubdir = window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
     var prefix = isSubdir ? '../' : '';

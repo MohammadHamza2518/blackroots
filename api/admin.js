@@ -3,7 +3,7 @@ const { getCollections, DEFAULT_INITIAL_INFLUENCERS } = require('./lib/db');
 
 const DEFAULT_SETTINGS = {
   admin_password: 'blackroots2026',
-  meta_pixel_id: '',
+  meta_pixel_id: '4485707268411631',
   meta_capi_token: '',
   meta_domain_verification: '',
   meta_test_code: '',
@@ -117,7 +117,7 @@ module.exports = async (req, res) => {
     if (action === 'get_public_config') {
       const curSettings = await getStoredSettings(settings);
       return res.status(200).json({
-        meta_pixel_id: curSettings.meta_pixel_id || '',
+        meta_pixel_id: curSettings.meta_pixel_id || '4485707268411631',
         meta_domain_verification: curSettings.meta_domain_verification || '',
         ga4_measurement_id: curSettings.ga4_measurement_id || '',
         gsc_verification_tag: curSettings.gsc_verification_tag || '',
