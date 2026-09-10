@@ -316,7 +316,7 @@
     window.closeMobileNavDrawer = closeMobileNavDrawer;
   </script>
 
-      <!-- 🌟 Master BlackRoots Dedicated Checkout Routing Engine -->
+      <!-- 🌟 Master BlackRoots Dedicated Checkout Routing Engine & Meta Ads Tracking -->
   <script>
     window.selectedPack = window.selectedPack || { qty: 1, price: 499, basePrice: 499, title: '1 Bottle (250ml)' };
     
@@ -325,10 +325,26 @@
       if (e && e.stopPropagation) e.stopPropagation();
       var pack = customPack || window.selectedPack || { qty: 1, price: 499 };
       var qty = (pack.qty === 2 || Number(pack.price) >= 700) ? 2 : 1;
+      var price = (qty === 2) ? 799 : 499;
+
+      // Track Meta AddToCart
+      if (window.trackMetaEvent) {
+        window.trackMetaEvent('AddToCart', {
+          content_name: 'BlackRoots Herbal Hair Darkening Shampoo (' + qty + ' Bottle)',
+          content_type: 'product',
+          content_ids: [qty === 2 ? 'br_shampoo_500ml' : 'br_shampoo_250ml'],
+          value: price,
+          currency: 'INR',
+          num_items: qty
+        });
+      }
+
       var urlParams = new URLSearchParams(window.location.search);
       var coupon = urlParams.get('coupon') || urlParams.get('ref') || '';
       var target = 'checkout.html?pack=' + qty + (coupon ? '&coupon=' + encodeURIComponent(coupon) : '');
-      window.location.href = target;
+      setTimeout(function() {
+        window.location.href = target;
+      }, 150);
     };
 
     window.openQuickOrderModal = function(customPrice, customTitle, customQty) {

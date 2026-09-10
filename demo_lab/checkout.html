@@ -19,6 +19,8 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <!-- Razorpay SDK -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <!-- Unified Analytics & Meta Pixel Engine -->
+  <script src="./assets/analytics.js" defer></script>
 
   <style>
     :root {
@@ -727,6 +729,19 @@
       var couponParam = (urlParams.get('coupon') || urlParams.get('ref') || '').toUpperCase().trim();
       
       switchCheckoutPack(packParam >= 2 ? 2 : 1);
+
+      // Track Meta InitiateCheckout
+      if (window.trackMetaEvent) {
+        window.trackMetaEvent('InitiateCheckout', {
+          content_name: 'BlackRoots Herbal Hair Darkening Shampoo',
+          content_category: 'Hair Care',
+          content_ids: [packParam >= 2 ? 'br_shampoo_500ml' : 'br_shampoo_250ml'],
+          content_type: 'product',
+          value: packParam >= 2 ? 799 : 499,
+          currency: 'INR',
+          num_items: packParam >= 2 ? 2 : 1
+        });
+      }
       
       // Background sync influencers DB from server
       try {
@@ -1130,13 +1145,39 @@
 
         var orderId = '#BR-' + Math.floor(1000 + Math.random() * 9000);
         var awb = '8839' + Math.floor(100000 + Math.random() * 900000);
+        var metaEventId = 'order_' + orderId.replace(/[^a-zA-Z0-9]/g, '');
         
         payload.order_id = orderId;
+        payload.event_id = metaEventId;
         payload.product_bundle = payload.bundle || (currentPack === 2 ? '2 Bottles Pack (500ml)' : '1 Bottle (250ml)');
         payload.status = (payload.payment_method && payload.payment_method.includes('Online')) ? 'Paid' : 'New';
         payload.tracking_awb = awb;
         payload.courier = 'Delhivery Express Air';
         payload.created_at = new Date().toLocaleString();
+
+        // Attach Meta Ads Attribution (fbclid & UTMs)
+        try {
+          var metaAttr = JSON.parse(localStorage.getItem('br_meta_attr') || '{}');
+          if (metaAttr.fbclid) payload.fbclid = metaAttr.fbclid;
+          if (metaAttr.utm_source) payload.utm_source = metaAttr.utm_source;
+          if (metaAttr.utm_medium) payload.utm_medium = metaAttr.utm_medium;
+          if (metaAttr.utm_campaign) payload.utm_campaign = metaAttr.utm_campaign;
+          if (metaAttr.utm_content) payload.utm_content = metaAttr.utm_content;
+          if (metaAttr.utm_term) payload.utm_term = metaAttr.utm_term;
+        } catch(e) {}
+
+        // Fire Meta Purchase Event with exact deduplication Event ID
+        if (window.trackMetaEvent) {
+          window.trackMetaEvent('Purchase', {
+            content_name: 'BlackRoots Herbal Hair Darkening Shampoo',
+            content_type: 'product',
+            content_ids: [payload.product_bundle.includes('2') ? 'br_shampoo_500ml' : 'br_shampoo_250ml'],
+            value: Number(payload.price) || 499,
+            currency: 'INR',
+            order_id: orderId,
+            num_items: payload.product_bundle.includes('2') ? 2 : 1
+          }, metaEventId);
+        }
 
         // 1. Immediately Save to Local Database
         try {

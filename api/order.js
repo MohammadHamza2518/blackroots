@@ -1,5 +1,6 @@
 // Vercel Serverless Function for Order Placement with MongoDB Atlas
 const { getCollections } = require('./lib/db');
+const { triggerMetaCapiPurchase } = require('./lib/meta_capi');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -35,14 +36,16 @@ module.exports = async (req, res) => {
       return res.status(200).json({ success: false, error: 'Full Name and Address are required.' });
     }
 
-    const { orders, influencers } = await getCollections();
+    const { orders, influencers, settings } = await getCollections();
     const totalOrders = await orders.countDocuments();
 
     const orderId = input.order_id || ('#BR-' + (1025 + totalOrders));
     const awb = input.tracking_awb || ('8839' + Math.floor(100000 + Math.random() * 900000));
+    const eventId = input.event_id || ('order_' + String(orderId).replace(/[^a-zA-Z0-9]/g, ''));
 
     const newOrder = {
       order_id: orderId,
+      event_id: eventId,
       name: name,
       phone: cleanPhone,
       email: input.email || '',
@@ -57,6 +60,12 @@ module.exports = async (req, res) => {
       coupon: input.coupon || input.coupon_code || '',
       discount: input.discount || 0,
       influencer: input.influencer || '',
+      fbclid: input.fbclid || '',
+      utm_source: input.utm_source || '',
+      utm_medium: input.utm_medium || '',
+      utm_campaign: input.utm_campaign || '',
+      utm_content: input.utm_content || '',
+      utm_term: input.utm_term || '',
       status: (input.payment_method && (input.payment_method.toLowerCase().includes('online') || input.payment_method.toLowerCase().includes('razorpay') || input.payment_method.toLowerCase().includes('paid'))) ? 'Paid' : 'New',
       tracking_awb: awb,
       courier: 'Delhivery Express Air',
@@ -69,6 +78,14 @@ module.exports = async (req, res) => {
       { $set: newOrder },
       { upsert: true }
     );
+
+    // Trigger Meta Conversions API (CAPI) Server-Side Purchase Event
+    try {
+      const curSettings = (await settings.findOne({ id: 'main_settings' })) || {};
+      triggerMetaCapiPurchase(newOrder, curSettings, req).catch(() => {});
+    } catch(capiErr) {
+      console.warn('[Meta CAPI Dispatch Warning]', capiErr.message);
+    }
 
     // If coupon was used, atomically attribute to creator in MongoDB
     const couponUsed = String(newOrder.coupon || newOrder.influencer || '').trim().toUpperCase();

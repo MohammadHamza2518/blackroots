@@ -11,6 +11,7 @@ $action = $_GET['action'] ?? $_POST['action'] ?? '';
 if ($action === 'get_public_config') {
     echo json_encode([
         'meta_pixel_id' => get_setting('meta_pixel_id', ''),
+        'meta_domain_verification' => get_setting('meta_domain_verification', ''),
         'ga4_measurement_id' => get_setting('ga4_measurement_id', ''),
         'gsc_verification_tag' => get_setting('gsc_verification_tag', ''),
         'whatsapp_support' => get_setting('whatsapp_support', '+919580835179'),
@@ -339,7 +340,7 @@ if ($action === 'save_settings') {
     $raw = file_get_contents('php://input');
     $input = json_decode($raw, true) ?: $_POST;
 
-    $fields = ['meta_pixel_id', 'meta_capi_token', 'ga4_measurement_id', 'gsc_verification_tag', 'whatsapp_support', 'shiprocket_email', 'shiprocket_password', 'shiprocket_auto_push'];
+    $fields = ['meta_pixel_id', 'meta_capi_token', 'meta_domain_verification', 'meta_test_code', 'ga4_measurement_id', 'gsc_verification_tag', 'whatsapp_support', 'shiprocket_email', 'shiprocket_password', 'shiprocket_auto_push'];
 
     foreach ($fields as $f) {
         if (isset($input[$f])) {

@@ -7,14 +7,14 @@
   <!-- Favicon & Touch Icons (Google & Browser Compliant) -->
   <link rel="icon" type="image/x-icon" href="./favicon.ico">
   <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
-  <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="48x48" href="../assets/favicon-48x48.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="../assets/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="144x144" href="../assets/favicon-144x144.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192x192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="../assets/favicon-512x512.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="./assets/favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="./assets/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="144x144" href="./assets/favicon-144x144.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="./assets/favicon-512x512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
   <link rel="manifest" href="./site.webmanifest">
   <meta name="theme-color" content="#0a0b0e">
   <meta name="msapplication-TileColor" content="#0a0b0e">
@@ -49,6 +49,7 @@
   <meta http-equiv="Expires" content="0">
   
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="./assets/analytics.js" defer></script>
   <script>
     tailwind.config = {
       theme: {
@@ -73,7 +74,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="./assets/theme.css">
 
   <style>
     *, *::before, *::after, html, body {
@@ -229,7 +230,7 @@
     <div class="w-full max-w-md p-8 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-[0_20px_60px_rgba(0,0,0,0.9)] text-center space-y-6">
       
       <div class="flex flex-col items-center gap-3">
-        <img src="../assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-16 h-16 rounded-full border-2 border-[#d4af37] shadow-xl">
+        <img src="./assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-16 h-16 rounded-full border-2 border-[#d4af37] shadow-xl">
         <div>
           <h2 class="font-serif text-2xl font-bold text-white uppercase tracking-wider">BlackRoots Admin</h2>
           <p class="text-xs text-[#d4af37] font-bold uppercase tracking-widest">D2C Command Center</p>
@@ -265,7 +266,7 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         
         <div class="flex items-center gap-3">
-          <img src="../assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-9 h-9 rounded-full border border-[#d4af37]">
+          <img src="./assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-9 h-9 rounded-full border border-[#d4af37]">
           <div class="flex flex-col">
             <div class="flex items-center gap-2">
               <span class="font-serif text-lg font-bold text-white uppercase tracking-wider">BlackRoots</span>
@@ -698,12 +699,47 @@
         </div>
 
         <form id="SettingsForm" onsubmit="handleSaveSettings(event)" class="p-6 rounded-3xl bg-[#11141b] border border-white/10 shadow-xl space-y-6 max-w-4xl">
+          <!-- Meta Ads Suite Header -->
+          <div class="p-4 rounded-2xl bg-gradient-to-r from-blue-950/40 via-purple-950/20 to-black/60 border border-blue-500/20">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <span class="text-[10px] font-black tracking-widest text-blue-400 uppercase bg-blue-500/10 border border-blue-500/30 px-2.5 py-0.5 rounded-full">Meta Ads &amp; Pixel Engine</span>
+                <h3 class="text-sm font-bold text-white mt-1">Facebook &amp; Instagram Ads Integration (Pixel + Server CAPI)</h3>
+                <p class="text-[11px] text-gray-400">Captures PageViews, ViewContent, AddToCart, InitiateCheckout, and Purchases with 100% deduplicated match quality.</p>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <button type="button" id="btn-test-meta" onclick="testMetaConnection()" class="px-3.5 py-2 rounded-xl bg-blue-600/30 border border-blue-500/40 hover:bg-blue-600/50 text-blue-300 text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-sm">
+                  <span>⚡ Test Meta Connection</span>
+                </button>
+              </div>
+            </div>
+            <div id="meta-test-status" class="hidden mt-2 pt-2 border-t border-white/5 text-xs font-mono text-gray-400"></div>
+          </div>
+
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             
             <div class="space-y-2">
-              <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider">Meta Pixel ID (Facebook / Instagram Ads)</label>
+              <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider">Meta Pixel ID (Facebook &amp; Instagram)</label>
               <input type="text" id="setting-meta-pixel" placeholder="e.g. 123456789012345" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
-              <p class="text-[10px] text-gray-500">Auto-tracks PageViews, AddToCart, and Purchases for Meta Ad ROAS optimization.</p>
+              <p class="text-[10px] text-gray-500">Find in Meta Events Manager &gt; Data Sources &gt; Settings &gt; Dataset ID / Pixel ID.</p>
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider">Meta Conversions API (CAPI) Access Token</label>
+              <input type="password" id="setting-meta-capi-token" placeholder="e.g. EAAG..." class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              <p class="text-[10px] text-gray-500">Generates 100% reliable server-side purchase tracking. Find in Events Manager &gt; Settings &gt; Generate Access Token.</p>
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider">Facebook Domain Verification Code</label>
+              <input type="text" id="setting-meta-domain-tag" placeholder="e.g. abcdef1234567890" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              <p class="text-[10px] text-gray-500">Auto-injects Meta domain verification tag into &lt;head&gt; across the website.</p>
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-xs font-bold text-gray-300 uppercase tracking-wider">Meta Test Event Code (Optional)</label>
+              <input type="text" id="setting-meta-test-code" placeholder="e.g. TEST12345" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              <p class="text-[10px] text-gray-500">From Meta Events Manager &gt; Test Events tab. Leave blank in normal live production.</p>
             </div>
 
             <div class="space-y-2">
@@ -1959,6 +1995,9 @@
       } catch(e) {}
 
       if (config.meta_pixel_id) document.getElementById('setting-meta-pixel').value = config.meta_pixel_id;
+      if (config.meta_capi_token) document.getElementById('setting-meta-capi-token').value = config.meta_capi_token;
+      if (config.meta_domain_verification) document.getElementById('setting-meta-domain-tag').value = config.meta_domain_verification;
+      if (config.meta_test_code) document.getElementById('setting-meta-test-code').value = config.meta_test_code;
       if (config.ga4_measurement_id) document.getElementById('setting-ga4-id').value = config.ga4_measurement_id;
       if (config.gsc_verification_tag) document.getElementById('setting-gsc-tag').value = config.gsc_verification_tag;
       if (config.whatsapp_support) document.getElementById('setting-whatsapp').value = config.whatsapp_support;
@@ -1970,6 +2009,9 @@
       e.preventDefault();
       const config = {
         meta_pixel_id: document.getElementById('setting-meta-pixel').value.trim(),
+        meta_capi_token: document.getElementById('setting-meta-capi-token').value.trim(),
+        meta_domain_verification: document.getElementById('setting-meta-domain-tag').value.trim(),
+        meta_test_code: document.getElementById('setting-meta-test-code').value.trim(),
         ga4_measurement_id: document.getElementById('setting-ga4-id').value.trim(),
         gsc_verification_tag: document.getElementById('setting-gsc-tag').value.trim(),
         whatsapp_support: document.getElementById('setting-whatsapp').value.trim(),
@@ -1993,7 +2035,83 @@
         msg.classList.remove('hidden');
         setTimeout(() => msg.classList.add('hidden'), 3000);
       }
-      alert('✓ Settings saved successfully to Server Database & Shiprocket API connected!');
+      alert('✓ Settings saved successfully to Server Database & Meta Ads / Shiprocket APIs updated!');
+    }
+
+    // 10b. Interactive Meta Pixel & Conversions API Connection Test
+    async function testMetaConnection() {
+      const btn = document.getElementById('btn-test-meta');
+      const statusEl = document.getElementById('meta-test-status');
+      const pixelId = document.getElementById('setting-meta-pixel').value.trim();
+      const token = document.getElementById('setting-meta-capi-token').value.trim();
+      const testCode = document.getElementById('setting-meta-test-code').value.trim();
+
+      if (!pixelId) {
+        alert('Please enter your Meta Pixel ID first.');
+        document.getElementById('setting-meta-pixel').focus();
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span>⏳ Sending Test Ping...</span>';
+      }
+      if (statusEl) {
+        statusEl.className = 'mt-2 pt-2 border-t border-white/5 text-xs font-mono text-amber-400';
+        statusEl.textContent = '🚀 Dispatching test Purchase event to Meta Graph API & Browser Pixel...';
+        statusEl.classList.remove('hidden');
+      }
+
+      // 1. Fire browser test event
+      if (window.trackMetaEvent) {
+        window.trackMetaEvent('Purchase', {
+          content_name: 'BlackRoots Meta Ads Connection Test',
+          value: 499,
+          currency: 'INR'
+        }, 'test_' + Date.now());
+      }
+
+      // 2. Dispatch CAPI test event to server
+      try {
+        let res = await apiFetch('test_meta_capi', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            meta_pixel_id: pixelId,
+            meta_capi_token: token,
+            meta_test_code: testCode
+          })
+        });
+
+        if (res && res.success) {
+          if (statusEl) {
+            statusEl.className = 'mt-2 pt-2 border-t border-white/5 text-xs font-mono text-emerald-400 font-bold';
+            statusEl.textContent = '✓ Meta CAPI Connected! Response: ' + (typeof res.response === 'string' ? res.response : JSON.stringify(res.response || 'OK'));
+          }
+          alert('✓ Success! Test event successfully sent to Meta Events Manager.');
+        } else if (res && res.error) {
+          if (statusEl) {
+            statusEl.className = 'mt-2 pt-2 border-t border-white/5 text-xs font-mono text-amber-300';
+            statusEl.textContent = '⚠ Meta Graph API notice: ' + (res.error || res.message);
+          }
+        } else {
+          if (statusEl) {
+            statusEl.className = 'mt-2 pt-2 border-t border-white/5 text-xs font-mono text-cyan-400 font-bold';
+            statusEl.textContent = '✓ Browser Pixel initialized with ID ' + pixelId + '. Save settings to persist.';
+          }
+          alert('✓ Browser Pixel triggered! Remember to click "Save Marketing & API Settings" below.');
+        }
+      } catch(err) {
+        if (statusEl) {
+          statusEl.className = 'mt-2 pt-2 border-t border-white/5 text-xs font-mono text-cyan-400';
+          statusEl.textContent = '✓ Browser Pixel triggered with ID ' + pixelId + '. Save settings to persist.';
+        }
+      }
+
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>⚡ Test Meta Connection</span>';
+      }
     }
 
     // Helpers

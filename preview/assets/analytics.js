@@ -1,16 +1,72 @@
 /**
  * BlackRoots Unified Analytics & Marketing Pixel Engine
- * Auto-injects Google Analytics 4 (GA4), Search Console, and Meta Pixel
+ * Auto-injects Google Analytics 4 (GA4), Search Console, Meta Pixel & Conversions API
  */
 (function() {
   'use strict';
 
+  // 1. Initialize Meta Pixel queue stub immediately so calls never fail
+  if (!window.fbq) {
+    var fbq = function() {
+      if (fbq.callMethod) {
+        fbq.callMethod.apply(fbq, arguments);
+      } else {
+        fbq.queue.push(arguments);
+      }
+    };
+    if (!window._fbq) window._fbq = fbq;
+    fbq.push = fbq;
+    fbq.loaded = false;
+    fbq.version = '2.0';
+    fbq.queue = [];
+    window.fbq = fbq;
+  }
+
+  // 2. Capture & Persist Meta Ads Attribution (fbclid & UTMs)
+  function captureAttribution() {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var fbclid = params.get('fbclid');
+      var utmSource = params.get('utm_source');
+      var utmMedium = params.get('utm_medium');
+      var utmCampaign = params.get('utm_campaign');
+      var utmContent = params.get('utm_content');
+      var utmTerm = params.get('utm_term');
+
+      var attr = JSON.parse(localStorage.getItem('br_meta_attr') || '{}');
+      if (fbclid) attr.fbclid = fbclid;
+      if (utmSource) attr.utm_source = utmSource;
+      if (utmMedium) attr.utm_medium = utmMedium;
+      if (utmCampaign) attr.utm_campaign = utmCampaign;
+      if (utmContent) attr.utm_content = utmContent;
+      if (utmTerm) attr.utm_term = utmTerm;
+      attr.last_touch = new Date().toISOString();
+
+      if (Object.keys(attr).length > 1) {
+        localStorage.setItem('br_meta_attr', JSON.stringify(attr));
+        sessionStorage.setItem('br_meta_attr', JSON.stringify(attr));
+      }
+    } catch(e) {}
+  }
+  captureAttribution();
+
   function initMarketingStack(config) {
     if (!config) return;
 
-    // 1. Google Search Console Meta Verification Tag
+    // A. Meta Domain Verification Tag
+    if (config.meta_domain_verification) {
+      var metaTag = document.querySelector('meta[name="facebook-domain-verification"]');
+      if (!metaTag) {
+        metaTag = document.createElement('meta');
+        metaTag.name = 'facebook-domain-verification';
+        document.head.appendChild(metaTag);
+      }
+      metaTag.content = config.meta_domain_verification;
+    }
+
+    // B. Google Search Console Verification Tag
     if (config.gsc_verification_tag) {
-      let gscTag = document.querySelector('meta[name="google-site-verification"]');
+      var gscTag = document.querySelector('meta[name="google-site-verification"]');
       if (!gscTag) {
         gscTag = document.createElement('meta');
         gscTag.name = 'google-site-verification';
@@ -19,10 +75,10 @@
       gscTag.content = config.gsc_verification_tag;
     }
 
-    // 2. Google Analytics 4 (GA4)
+    // C. Google Analytics 4 (GA4)
     if (config.ga4_measurement_id && !window.gtag_loaded) {
       window.gtag_loaded = true;
-      const gaScript = document.createElement('script');
+      var gaScript = document.createElement('script');
       gaScript.async = true;
       gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + config.ga4_measurement_id;
       document.head.appendChild(gaScript);
@@ -36,95 +92,139 @@
       });
     }
 
-    // 3. Meta Pixel (Facebook & Instagram Ads)
-    if (config.meta_pixel_id && !window.fbq_loaded) {
-      window.fbq_loaded = true;
-      !function(f,b,e,v,n,t,s)
-      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)}(window, document,'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
+    // D. Meta Pixel (Facebook & Instagram Ads)
+    if (config.meta_pixel_id && !window.fbq_script_loaded) {
+      window.fbq_script_loaded = true;
       
-      fbq('init', config.meta_pixel_id);
-      fbq('track', 'PageView');
+      var script = document.createElement('script');
+      script.async = true;
+      script.src = 'https://connect.facebook.net/en_US/fbevents.js';
+      var firstScript = document.getElementsByTagName('script')[0];
+      if (firstScript && firstScript.parentNode) {
+        firstScript.parentNode.insertBefore(script, firstScript);
+      } else {
+        document.head.appendChild(script);
+      }
+
+      window.fbq('init', config.meta_pixel_id);
+      window.fbq('track', 'PageView');
+      console.log('🎯 [Meta Pixel Initialized] ID: ' + config.meta_pixel_id);
     }
   }
 
-  // Fetch public config from API or local cache
+  // Multi-tier config loader (localStorage -> Vercel API -> Hostinger PHP API)
   function loadConfig() {
-    fetch('/api/admin?action=get_public_config')
-      .then(res => res.json())
-      .then(config => {
-        if (config) {
-          localStorage.setItem('br_analytics_config', JSON.stringify(config));
-          initMarketingStack(config);
-        }
-      })
-      .catch(() => {
-        const cached = localStorage.getItem('br_analytics_config');
-        if (cached) {
-          try { initMarketingStack(JSON.parse(cached)); } catch(e) {}
-        }
-      });
+    var cached = localStorage.getItem('br_analytics_config');
+    if (cached) {
+      try {
+        var parsed = JSON.parse(cached);
+        initMarketingStack(parsed);
+      } catch(e) {}
+    }
+
+    var isSubdir = window.location.pathname.includes('/preview/') || window.location.pathname.includes('/demo_lab/');
+    var prefix = isSubdir ? '../' : '';
+    var endpoints = [
+      '/api/admin?action=get_public_config',
+      prefix + 'api/admin?action=get_public_config',
+      '/backend_hostinger/admin.php?action=get_public_config',
+      prefix + 'backend_hostinger/admin.php?action=get_public_config'
+    ];
+
+    function fetchNext(idx) {
+      if (idx >= endpoints.length) return;
+      fetch(endpoints[idx])
+        .then(function(res) {
+          if (!res.ok) throw new Error('Not ok');
+          return res.json();
+        })
+        .then(function(config) {
+          if (config && (config.meta_pixel_id || config.ga4_measurement_id || config.meta_domain_verification)) {
+            var existing = {};
+            try { existing = JSON.parse(localStorage.getItem('br_analytics_config') || '{}'); } catch(e) {}
+            var merged = Object.assign({}, existing, config);
+            localStorage.setItem('br_analytics_config', JSON.stringify(merged));
+            initMarketingStack(merged);
+          }
+        })
+        .catch(function() {
+          fetchNext(idx + 1);
+        });
+    }
+
+    fetchNext(0);
   }
 
-  // Track standard E-Commerce Events Helper
-  window.trackD2CEvent = function(eventName, data) {
-    // GA4
-    if (window.gtag) {
-      window.gtag('event', eventName, data || {});
-    }
-    // Meta Pixel
+  // Track Meta Pixel Event with CAPI Deduplication event_id support
+  window.trackMetaEvent = function(eventName, data, eventId) {
     if (window.fbq) {
-      window.fbq('track', eventName, data || {});
+      if (eventId) {
+        window.fbq('track', eventName, data || {}, { eventID: eventId });
+      } else {
+        window.fbq('track', eventName, data || {});
+      }
+      console.log('🎯 [Meta Pixel Tracked]', eventName, data, eventId ? ('(EventID: ' + eventId + ')') : '');
     }
   };
 
-  // Automatic Real-Time Live Visitor Logger (Ultra Light-Speed sendBeacon & keepalive)
+  // Unified D2C Event Tracker (Meta + GA4)
+  window.trackD2CEvent = function(eventName, data, eventId) {
+    if (window.gtag) {
+      window.gtag('event', eventName, data || {});
+    }
+    window.trackMetaEvent(eventName, data, eventId);
+  };
+
+  // Automatic Real-Time Live Visitor Logger
   function logLiveVisitor() {
-    let sessionId = localStorage.getItem('br_session_id');
+    var sessionId = localStorage.getItem('br_session_id');
     if (!sessionId) {
       sessionId = 'br_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
       localStorage.setItem('br_session_id', sessionId);
       
-      // Increment local total unique visitors
-      let count = Number(localStorage.getItem('br_visitor_count') || 0) + 1;
+      var count = Number(localStorage.getItem('br_visitor_count') || 0) + 1;
       localStorage.setItem('br_visitor_count', count);
     }
 
-    // Detect referrer or campaign
-    const urlParams = new URLSearchParams(window.location.search);
-    const refCode = urlParams.get('ref') || urlParams.get('coupon') || urlParams.get('utm_source') || '';
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    let pageName = 'Home';
-    if (window.location.pathname.includes('product')) pageName = 'Product Page';
-    else if (window.location.pathname.includes('reviews')) pageName = 'Customer Reviews';
-    else if (window.location.pathname.includes('influencer')) pageName = 'Creator Portal';
-    else if (window.location.pathname.includes('track')) pageName = 'Track Order';
-    else if (window.location.pathname.includes('ingredients')) pageName = 'Ingredients';
+    var urlParams = new URLSearchParams(window.location.search);
+    var refCode = urlParams.get('ref') || urlParams.get('coupon') || urlParams.get('utm_source') || '';
+    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    var pageName = 'Home';
+    var path = window.location.pathname;
+    if (path.includes('product')) pageName = 'Product Page';
+    else if (path.includes('checkout')) pageName = 'Checkout Page';
+    else if (path.includes('reviews')) pageName = 'Customer Reviews';
+    else if (path.includes('influencer')) pageName = 'Creator Portal';
+    else if (path.includes('track')) pageName = 'Track Order';
+    else if (path.includes('ingredients')) pageName = 'Ingredients';
 
-    const payload = {
+    var referrer = 'Direct Store Visit';
+    if (document.referrer) {
+      if (document.referrer.includes('instagram')) referrer = 'Instagram';
+      else if (document.referrer.includes('facebook')) referrer = 'Facebook';
+      else if (document.referrer.includes('google')) referrer = 'Google Search';
+      else {
+        try { referrer = new URL(document.referrer).hostname; } catch(e) { referrer = 'Referral'; }
+      }
+    }
+
+    var payload = {
       session_id: sessionId,
       page: pageName,
-      referrer: document.referrer ? (document.referrer.includes('instagram') ? 'Instagram' : (document.referrer.includes('google') ? 'Google Search' : document.referrer.split('/')[2])) : 'Direct Store Visit',
+      referrer: referrer,
       campaign: refCode,
       device: isMobile ? 'Mobile' : 'Desktop',
       timestamp: new Date().toISOString()
     };
 
-    const payloadStr = JSON.stringify(payload);
+    var payloadStr = JSON.stringify(payload);
 
-    // 1. Try Navigator sendBeacon (0ms main thread blocking)
     if (navigator.sendBeacon) {
-      const blob = new Blob([payloadStr], { type: 'application/json' });
+      var blob = new Blob([payloadStr], { type: 'application/json' });
       navigator.sendBeacon('/api/admin?action=log_visitor', blob);
       return;
     }
 
-    // 2. Fetch fallback with keepalive
     try {
       fetch('/api/admin?action=log_visitor', {
         method: 'POST',
@@ -135,9 +235,9 @@
     } catch(e) {}
   }
 
-  // Periodic lightweight heartbeat (every 20 seconds) for accurate live active traffic
+  // Periodic heartbeat (every 20s)
   setInterval(function() {
-    let sessionId = localStorage.getItem('br_session_id');
+    var sessionId = localStorage.getItem('br_session_id');
     if (sessionId && document.visibilityState === 'visible') {
       try {
         fetch('/api/admin?action=log_visitor', {

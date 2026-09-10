@@ -5,6 +5,8 @@ const DEFAULT_SETTINGS = {
   admin_password: 'blackroots2026',
   meta_pixel_id: '',
   meta_capi_token: '',
+  meta_domain_verification: '',
+  meta_test_code: '',
   ga4_measurement_id: '',
   gsc_verification_tag: 'google38ea945a664b564d',
   whatsapp_support: '+919580835179',
@@ -116,10 +118,28 @@ module.exports = async (req, res) => {
       const curSettings = await getStoredSettings(settings);
       return res.status(200).json({
         meta_pixel_id: curSettings.meta_pixel_id || '',
+        meta_domain_verification: curSettings.meta_domain_verification || '',
         ga4_measurement_id: curSettings.ga4_measurement_id || '',
         gsc_verification_tag: curSettings.gsc_verification_tag || '',
         whatsapp_support: curSettings.whatsapp_support || '+919580835179',
       });
+    }
+
+    // 3b. Test Meta Conversions API (CAPI) Connection
+    if (action === 'test_meta_capi') {
+      const curSettings = await getStoredSettings(settings);
+      const { triggerMetaCapiPurchase } = require('./lib/meta_capi');
+      const testOrder = {
+        order_id: '#TEST-' + Math.floor(1000 + Math.random() * 9000),
+        price: 499,
+        phone: '9999999999',
+        name: 'BlackRoots Test Customer',
+        city: 'Mumbai',
+        pincode: '400001',
+        product_bundle: '1 Bottle (250ml) - Test Ping'
+      };
+      const result = await triggerMetaCapiPurchase(testOrder, curSettings, req);
+      return res.status(200).json(result);
     }
 
     // 4. Admin Login

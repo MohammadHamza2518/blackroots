@@ -23,22 +23,30 @@ function trigger_meta_capi_purchase($order_id, $amount, $customer_data = []) {
     $hashed_zip = !empty($customer_data['pincode']) ? hash('sha256', trim($customer_data['pincode'])) : null;
     $hashed_country = hash('sha256', 'in');
 
+    $test_code = $customer_data['test_event_code'] ?? get_setting('meta_test_code', '');
+    $fbclid = $customer_data['fbclid'] ?? '';
+
+    $user_data = array_filter([
+        'ph' => $hashed_phone ? [$hashed_phone] : null,
+        'em' => $hashed_email ? [$hashed_email] : null,
+        'fn' => $hashed_fn ? [$hashed_fn] : null,
+        'ct' => $hashed_city ? [$hashed_city] : null,
+        'zp' => $hashed_zip ? [$hashed_zip] : null,
+        'country' => [$hashed_country],
+        'client_ip_address' => $client_ip,
+        'client_user_agent' => $user_agent,
+        'fbc' => !empty($fbclid) ? 'fb.1.' . time() . '.' . $fbclid : null,
+    ]);
+
+    $event_id = $customer_data['event_id'] ?? ('order_' . preg_replace('/[^a-zA-Z0-9]/', '', $order_id));
+
     $event_data = [
         'event_name' => 'Purchase',
         'event_time' => time(),
-        'event_id' => 'order_' . str_replace('#', '', $order_id),
-        'event_source_url' => $_SERVER['HTTP_REFERER'] ?? 'https://' . ($_SERVER['HTTP_HOST'] ?? 'blackroots.in') . '/product.html',
+        'event_id' => $event_id,
+        'event_source_url' => $_SERVER['HTTP_REFERER'] ?? 'https://' . ($_SERVER['HTTP_HOST'] ?? 'blackroots.in') . '/checkout.html',
         'action_source' => 'website',
-        'user_data' => array_filter([
-            'ph' => $hashed_phone ? [$hashed_phone] : null,
-            'em' => $hashed_email ? [$hashed_email] : null,
-            'fn' => $hashed_fn ? [$hashed_fn] : null,
-            'ct' => $hashed_city ? [$hashed_city] : null,
-            'zp' => $hashed_zip ? [$hashed_zip] : null,
-            'country' => [$hashed_country],
-            'client_ip_address' => $client_ip,
-            'client_user_agent' => $user_agent,
-        ]),
+        'user_data' => $user_data,
         'custom_data' => [
             'currency' => 'INR',
             'value' => (float)$amount,
@@ -48,7 +56,12 @@ function trigger_meta_capi_purchase($order_id, $amount, $customer_data = []) {
         ]
     ];
 
-    $payload = json_encode(['data' => [$event_data]]);
+    $payload_arr = ['data' => [$event_data]];
+    if (!empty($test_code)) {
+        $payload_arr['test_event_code'] = $test_code;
+    }
+
+    $payload = json_encode($payload_arr);
 
     $ch = curl_init("https://graph.facebook.com/v19.0/{$pixel_id}/events?access_token={$access_token}");
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

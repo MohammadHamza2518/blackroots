@@ -16,6 +16,10 @@
       "destination": "/product.html"
     },
     {
+      "source": "/checkout",
+      "destination": "/checkout.html"
+    },
+    {
       "source": "/track",
       "destination": "/track-order.html"
     },
