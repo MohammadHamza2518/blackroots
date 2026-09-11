@@ -459,6 +459,24 @@ module.exports = async (req, res) => {
       return res.status(200).json({ success: false, error: 'Order not found' });
     }
 
+    // 7b. Delete Order Permanently
+    if (action === 'delete_order') {
+      let body = req.body || {};
+      if (typeof body === 'string') {
+        try { body = JSON.parse(body); } catch(e) { body = {}; }
+      }
+      const order_id = (body.order_id || req.query.order_id || '').trim();
+      if (!order_id) {
+        return res.status(200).json({ success: false, error: 'order_id is required' });
+      }
+
+      await orders.deleteMany({
+        $or: [{ order_id: order_id }, { tracking_awb: order_id }]
+      });
+
+      return res.status(200).json({ success: true, message: 'Order permanently deleted', order_id });
+    }
+
     // 8. Get Abandoned
     if (action === 'get_abandoned') {
       const leads = await abandoned.find().sort({ created_at: -1 }).toArray();

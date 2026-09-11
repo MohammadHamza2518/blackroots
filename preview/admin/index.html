@@ -7,14 +7,14 @@
   <!-- Favicon & Touch Icons (Google & Browser Compliant) -->
   <link rel="icon" type="image/x-icon" href="./favicon.ico">
   <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico">
-  <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16x16.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="48x48" href="./assets/favicon-48x48.png">
-  <link rel="icon" type="image/png" sizes="96x96" href="./assets/favicon-96x96.png">
-  <link rel="icon" type="image/png" sizes="144x144" href="./assets/favicon-144x144.png">
-  <link rel="icon" type="image/png" sizes="192x192" href="./assets/favicon-192x192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="./assets/favicon-512x512.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="./assets/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="../assets/favicon-48x48.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="../assets/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="144x144" href="../assets/favicon-144x144.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../assets/favicon-192x192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="../assets/favicon-512x512.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/apple-touch-icon.png">
   <link rel="manifest" href="./site.webmanifest">
   <meta name="theme-color" content="#0a0b0e">
   <meta name="msapplication-TileColor" content="#0a0b0e">
@@ -49,7 +49,7 @@
   <meta http-equiv="Expires" content="0">
   
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="./assets/analytics.js" defer></script>
+  <script src="../assets/analytics.js" defer></script>
   <script>
     tailwind.config = {
       theme: {
@@ -74,7 +74,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./assets/theme.css">
+  <link rel="stylesheet" href="../assets/theme.css">
 
   <style>
     *, *::before, *::after, html, body {
@@ -230,7 +230,7 @@
     <div class="w-full max-w-md p-8 rounded-3xl bg-[#11141b] border border-[#d4af37]/40 shadow-[0_20px_60px_rgba(0,0,0,0.9)] text-center space-y-6">
       
       <div class="flex flex-col items-center gap-3">
-        <img src="./assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-16 h-16 rounded-full border-2 border-[#d4af37] shadow-xl">
+        <img src="../assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-16 h-16 rounded-full border-2 border-[#d4af37] shadow-xl">
         <div>
           <h2 class="font-serif text-2xl font-bold text-white uppercase tracking-wider">BlackRoots Admin</h2>
           <p class="text-xs text-[#d4af37] font-bold uppercase tracking-widest">D2C Command Center</p>
@@ -266,7 +266,7 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         
         <div class="flex items-center gap-3">
-          <img src="./assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-9 h-9 rounded-full border border-[#d4af37]">
+          <img src="../assets/blackroots-logo-circle-black.jpg" alt="Logo" class="w-9 h-9 rounded-full border border-[#d4af37]">
           <div class="flex flex-col">
             <div class="flex items-center gap-2">
               <span class="font-serif text-lg font-bold text-white uppercase tracking-wider">BlackRoots</span>
@@ -526,6 +526,7 @@
 
           <div class="flex items-center gap-3 flex-wrap">
             <button type="button" onclick="exportShiprocketCSV()" class="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:brightness-110 text-black font-extrabold text-xs shadow-md transition-all flex items-center gap-1.5 shrink-0 cursor-pointer"><span>📦 Export Shiprocket CSV</span></button>
+            <button type="button" onclick="clearAllTestOrdersPrompt()" class="px-3 py-2.5 rounded-xl bg-red-500/15 hover:bg-red-500/25 text-red-400 border border-red-500/30 hover:border-red-500 font-bold text-xs shadow-md transition-all flex items-center gap-1.5 shrink-0 cursor-pointer" title="Delete all test orders at once"><span>🗑️ Delete All Test Orders</span></button>
             <input type="text" id="order-search-input" oninput="debounceOrderSearch()" placeholder="Search Name, Phone, City, Order ID, Promo..." class="px-4 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-[#d4af37] w-full sm:w-64">
             <select id="order-status-filter" onchange="loadOrders()" class="px-3 py-2.5 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
               <option value="">All Statuses</option>
@@ -1208,11 +1209,13 @@
       let serverOrders = (ordRes && ordRes.orders && Array.isArray(ordRes.orders)) ? ordRes.orders : [];
       let localOrders = [];
       try { localOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]'); } catch(e) {}
+      let deletedSet = new Set();
+      try { deletedSet = new Set(JSON.parse(localStorage.getItem('br_deleted_orders') || '[]')); } catch(e) {}
 
-      // Zero-Loss Background Cloud Sync
+      // Zero-Loss Background Cloud Sync (Strictly skip deleted orders)
       if (localOrders.length > 0) {
         localOrders.forEach(function(lo) {
-          if (lo && lo.order_id && !serverOrders.some(function(so) { return so.order_id === lo.order_id; })) {
+          if (lo && lo.order_id && !deletedSet.has(lo.order_id) && !serverOrders.some(function(so) { return so.order_id === lo.order_id; })) {
             apiFetch('save_order', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -1223,9 +1226,13 @@
       }
 
       let orderMap = new Map();
-      serverOrders.forEach(o => { if (o && o.order_id) orderMap.set(o.order_id, o); });
+      serverOrders.forEach(o => { 
+        if (o && o.order_id && !deletedSet.has(o.order_id)) {
+          orderMap.set(o.order_id, o); 
+        }
+      });
       localOrders.forEach(o => {
-        if (o && o.order_id) {
+        if (o && o.order_id && !deletedSet.has(o.order_id)) {
           let existing = orderMap.get(o.order_id) || {};
           orderMap.set(o.order_id, Object.assign({}, existing, o));
         }
@@ -1362,11 +1369,13 @@
       let serverOrders = (res && res.orders && Array.isArray(res.orders)) ? res.orders : [];
       let localOrders = [];
       try { localOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]'); } catch(e) {}
+      let deletedSet = new Set();
+      try { deletedSet = new Set(JSON.parse(localStorage.getItem('br_deleted_orders') || '[]')); } catch(e) {}
 
-      // Zero-Loss Background Cloud Sync
+      // Zero-Loss Background Cloud Sync (Strictly skip deleted orders)
       if (localOrders.length > 0) {
         localOrders.forEach(function(lo) {
-          if (lo && lo.order_id && !serverOrders.some(function(so) { return so.order_id === lo.order_id; })) {
+          if (lo && lo.order_id && !deletedSet.has(lo.order_id) && !serverOrders.some(function(so) { return so.order_id === lo.order_id; })) {
             apiFetch('save_order', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -1377,9 +1386,13 @@
       }
 
       let orderMap = new Map();
-      serverOrders.forEach(o => { if (o && o.order_id) orderMap.set(o.order_id, o); });
+      serverOrders.forEach(o => { 
+        if (o && o.order_id && !deletedSet.has(o.order_id)) {
+          orderMap.set(o.order_id, o); 
+        }
+      });
       localOrders.forEach(o => {
-        if (o && o.order_id) {
+        if (o && o.order_id && !deletedSet.has(o.order_id)) {
           let existing = orderMap.get(o.order_id) || {};
           orderMap.set(o.order_id, Object.assign({}, existing, o));
         }
@@ -1472,9 +1485,12 @@
             <button type="button" onclick="openShippingLabelModal('${o.order_id}')" class="inline-flex items-center gap-1 bg-[#d4af37] text-black px-2.5 py-1 rounded-lg text-[10px] font-bold hover:brightness-110 cursor-pointer mr-1">
               <span>🏷️ Label</span>
             </button>
-            <a href="https://wa.me/91${o.phone}?text=${encodeURIComponent('Namaste ' + (o.name || '') + ' ji! BlackRoots Herbal Care se aapka order ' + (o.order_id || '') + ' successfully confirm ho gaya hai.')}" target="_blank" class="inline-flex items-center gap-1 bg-[#25D366] text-black px-2.5 py-1 rounded-lg text-[10px] font-bold hover:brightness-110">
+            <a href="https://wa.me/91${o.phone}?text=${encodeURIComponent('Namaste ' + (o.name || '') + ' ji! BlackRoots Herbal Care se aapka order ' + (o.order_id || '') + ' successfully confirm ho gaya hai.')}" target="_blank" class="inline-flex items-center gap-1 bg-[#25D366] text-black px-2.5 py-1 rounded-lg text-[10px] font-bold hover:brightness-110 mr-1">
               💬 WhatsApp
             </a>
+            <button type="button" onclick="deleteSingleOrder('${o.order_id}')" class="inline-flex items-center gap-1 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/30 px-2 py-1 rounded-lg text-[10px] font-bold hover:brightness-110 cursor-pointer shadow-sm transition-all" title="Permanently Delete Order">
+              <span>🗑️ Delete</span>
+            </button>
           </td>
         </tr>
       `).join('');
@@ -1524,6 +1540,91 @@
       }
       loadOrders();
       loadInfluencers();
+    }
+
+    async function deleteSingleOrderSilently(orderId) {
+      if (!orderId) return;
+
+      // 1. Mark in tombstone set so sync never resurrects it
+      let deletedList = [];
+      try { deletedList = JSON.parse(localStorage.getItem('br_deleted_orders') || '[]'); } catch(e) {}
+      if (!deletedList.includes(orderId)) {
+        deletedList.push(orderId);
+        localStorage.setItem('br_deleted_orders', JSON.stringify(deletedList));
+      }
+
+      // 2. Remove locally
+      try {
+        let localOrders = JSON.parse(localStorage.getItem('br_local_orders') || '[]');
+        let ord = localOrders.find(o => o && (o.order_id === orderId || o.tracking_awb === orderId));
+        if (ord && ord.coupon) {
+          let infDb = getInfluencersAdminDb();
+          let cTag = (ord.coupon || '').trim().toUpperCase();
+          let inf = infDb.find(u => (u.code && u.code.toUpperCase() === cTag) || (u.username && u.username.toUpperCase() === cTag) || (u.id && u.id.toUpperCase() === cTag));
+          if (inf) {
+            inf.total_orders = Math.max(0, (inf.total_orders || 1) - 1);
+            inf.total_sales = Math.max(0, (inf.total_sales || 0) - (Number(ord.price) || 0));
+            saveInfluencersAdminDb(infDb);
+          }
+        }
+        localOrders = localOrders.filter(o => o && o.order_id !== orderId && o.tracking_awb !== orderId);
+        localStorage.setItem('br_local_orders', JSON.stringify(localOrders));
+      } catch(e) {}
+
+      // 3. Dispatch permanent delete to backend servers (MongoDB Atlas & Hostinger MySQL)
+      const endpoints = [
+        '/api/admin?action=delete_order',
+        'api/admin?action=delete_order',
+        '../api/admin?action=delete_order',
+        '/backend_hostinger/admin.php?action=delete_order',
+        'backend_hostinger/admin.php?action=delete_order',
+        '../backend_hostinger/admin.php?action=delete_order'
+      ];
+
+      for (let i = 0; i < endpoints.length; i++) {
+        try {
+          fetch(endpoints[i], {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ order_id: orderId })
+          }).catch(function() {});
+        } catch(err) {}
+      }
+    }
+
+    async function deleteSingleOrder(orderId) {
+      if (!orderId) return;
+      if (!confirm('Kya aap sach me test order "' + orderId + '" ko permanently delete karna chahte hain? Delete hone ke baad ye kabhi wapas nahi aayega.')) {
+        return;
+      }
+      await deleteSingleOrderSilently(orderId);
+      await loadOrders();
+      await loadDashboard();
+      if (typeof loadInfluencers === 'function') loadInfluencers();
+    }
+
+    async function clearAllTestOrdersPrompt() {
+      let orders = [];
+      try { orders = JSON.parse(localStorage.getItem('br_local_orders') || '[]'); } catch(e) {}
+      if (!orders.length) {
+        alert('Table mein abhi koi orders nahi hain.');
+        return;
+      }
+
+      if (!confirm('Kya aap saare ' + orders.length + ' test orders ko ek sath permanently delete karna chahte hain? Delete hone ke baad ye kabhi wapas nahi aayenge.')) {
+        return;
+      }
+
+      for (let o of orders) {
+        if (o && o.order_id) {
+          await deleteSingleOrderSilently(o.order_id);
+        }
+      }
+
+      await loadOrders();
+      await loadDashboard();
+      if (typeof loadInfluencers === 'function') loadInfluencers();
+      alert('✓ Saare test orders successfully aur permanently delete ho gaye hain.');
     }
 
     // 8. Influencers & Payouts Hub (Authoritative Server Database Persistence)
