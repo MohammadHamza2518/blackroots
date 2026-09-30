@@ -69,14 +69,15 @@ function shiprocket_create_order($order) {
             [
                 'name' => 'BlackRoots Herbal Hair Dye Shampoo (250ml)',
                 'sku' => 'BR-SHAMPOO-250ML',
-                'units' => strpos($order['bundle'], '2') !== false ? 2 : 1,
-                'selling_price' => (float)$order['price'],
+                'units' => 1,
+                'selling_price' => (stripos($order['payment_method'], 'partial') !== false) ? (float)($order['cod_balance'] ?? max(0, (float)$order['price'] - 99)) : (float)$order['price'],
                 'discount' => 0,
                 'tax' => 0
             ]
         ],
-        'payment_method' => strtoupper($order['payment_method']) === 'PREPAID' ? 'Prepaid' : 'COD',
-        'sub_total' => (float)$order['price'],
+        'payment_method' => (stripos($order['payment_method'], 'partial') !== false) ? 'COD' : ((stripos($order['payment_method'], 'online') !== false || stripos($order['payment_method'], 'prepaid') !== false || ($order['status'] ?? '') === 'Paid') ? 'Prepaid' : 'Prepaid'),
+        'sub_total' => (stripos($order['payment_method'], 'partial') !== false) ? (float)($order['cod_balance'] ?? max(0, (float)$order['price'] - 99)) : (float)$order['price'],
+        'comment' => (stripos($order['payment_method'], 'partial') !== false) ? 'Partial COD: Rs.99 Paid via UPI. Collect balance at doorstep.' : 'Prepaid Order',
         'length' => 15,
         'breadth' => 10,
         'height' => 8,

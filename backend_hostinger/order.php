@@ -27,7 +27,7 @@ $bundle = trim($input['bundle'] ?? '1 Bottle (250ml)');
 $price = floatval($input['price'] ?? 499);
 $payment_method = trim($input['payment_method'] ?? 'COD');
 $payment_id = trim($input['payment_id'] ?? '');
-$status = (stripos($payment_method, 'online') !== false || stripos($payment_method, 'prepaid') !== false || stripos($payment_method, 'razorpay') !== false || stripos($payment_method, 'paid') !== false) ? 'Paid' : 'New';
+$status = (stripos($payment_method, 'partial') !== false) ? 'Partial Paid' : ((stripos($payment_method, 'online') !== false || stripos($payment_method, 'prepaid') !== false || stripos($payment_method, 'razorpay') !== false || stripos($payment_method, 'paid') !== false) ? 'Paid' : 'New');
 
 $clean_phone = preg_replace('/[^0-9]/', '', $phone);
 if (strlen($clean_phone) > 10 && substr($clean_phone, 0, 2) === '91') {

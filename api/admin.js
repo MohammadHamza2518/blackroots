@@ -276,10 +276,18 @@ module.exports = async (req, res) => {
       const order_id = body.order_id || ('#BR-' + (1025 + totalCount));
       const price = Number(body.price) || 499;
 
+      const isPartial = body.payment_method && String(body.payment_method).toLowerCase().includes('partial');
+      const isPaidOnline = body.payment_method && (String(body.payment_method).toLowerCase().includes('online') || String(body.payment_method).toLowerCase().includes('paid'));
+      const determinedStatus = body.status || (isPartial ? 'Partial Paid' : (isPaidOnline ? 'Paid' : 'New'));
+      const advancePaid = Number(body.advance_paid) || (isPartial ? 99 : (isPaidOnline ? price : 0));
+      const codBal = Number(body.cod_balance) || (isPartial ? Math.max(0, price - 99) : 0);
+
       const newOrd = Object.assign({
         order_id: order_id,
         created_at: new Date().toISOString().replace('T', ' ').slice(0, 19),
-        status: (body.payment_method && (body.payment_method.toLowerCase().includes('online') || body.payment_method.toLowerCase().includes('paid'))) ? 'Paid' : 'New',
+        status: determinedStatus,
+        advance_paid: advancePaid,
+        cod_balance: codBal,
         tracking_awb: body.tracking_awb || ('8839' + Math.floor(100000 + Math.random() * 900000)),
         courier: 'Delhivery Express Air'
       }, body);
@@ -356,15 +364,16 @@ module.exports = async (req, res) => {
                   billing_phone: newOrd.phone || '9580835179',
                   shipping_is_billing: true,
                   order_items: [{
-                    name: 'BlackRoots Herbal Hair Dye Shampoo (250ml)',
-                    sku: 'BR-SHAMPOO-250ML',
+                    name: newOrd.product_bundle || 'BlackRoots Herbal Hair Dye Shampoo (250ml)',
+                    sku: (String(newOrd.product_bundle || '').includes('2') || String(newOrd.product_bundle || '').includes('500')) ? 'BR-SHAMPOO-500ML' : 'BR-SHAMPOO-250ML',
                     units: 1,
-                    selling_price: price,
+                    selling_price: isPartial ? codBal : price,
                     discount: 0,
                     tax: 0
                   }],
-                  payment_method: String(newOrd.payment_method || '').toLowerCase().includes('online') ? 'Prepaid' : 'COD',
-                  sub_total: price,
+                  payment_method: isPartial ? 'COD' : (isPaidOnline ? 'Prepaid' : 'Prepaid'),
+                  sub_total: isPartial ? codBal : price,
+                  comment: isPartial ? `Partial COD: Rs.99 Paid Online via UPI (${newOrd.payment_id || 'Razorpay'}). Collect balance Rs.${codBal} at doorstep.` : 'Prepaid Order - Zero Doorstep Collection',
                   length: 15, breadth: 10, height: 8, weight: 0.35
                 })
               });
@@ -539,15 +548,16 @@ module.exports = async (req, res) => {
             billing_phone: ord.phone || '9580835179',
             shipping_is_billing: true,
             order_items: [{
-              name: 'BlackRoots Herbal Hair Dye Shampoo (250ml)',
-              sku: 'BR-SHAMPOO-250ML',
+              name: ord.product_bundle || 'BlackRoots Herbal Hair Dye Shampoo (250ml)',
+              sku: (String(ord.product_bundle || '').includes('2') || String(ord.product_bundle || '').includes('500')) ? 'BR-SHAMPOO-500ML' : 'BR-SHAMPOO-250ML',
               units: 1,
-              selling_price: Number(ord.price) || 499,
+              selling_price: (String(ord.payment_method || '').toLowerCase().includes('partial')) ? (Number(ord.cod_balance) || Math.max(0, (Number(ord.price) || 499) - 99)) : (Number(ord.price) || 499),
               discount: 0,
               tax: 0
             }],
-            payment_method: String(ord.payment_method || '').toLowerCase().includes('online') ? 'Prepaid' : 'COD',
-            sub_total: Number(ord.price) || 499,
+            payment_method: (String(ord.payment_method || '').toLowerCase().includes('partial')) ? 'COD' : ((String(ord.payment_method || '').toLowerCase().includes('online') || String(ord.status || '').toLowerCase() === 'paid') ? 'Prepaid' : 'Prepaid'),
+            sub_total: (String(ord.payment_method || '').toLowerCase().includes('partial')) ? (Number(ord.cod_balance) || Math.max(0, (Number(ord.price) || 499) - 99)) : (Number(ord.price) || 499),
+            comment: (String(ord.payment_method || '').toLowerCase().includes('partial')) ? `Partial COD: Rs.99 Paid Online via UPI (${ord.payment_id || 'Razorpay'}). Collect balance Rs.${Number(ord.cod_balance) || Math.max(0, (Number(ord.price) || 499) - 99)} at doorstep.` : 'Prepaid Order - Zero Doorstep Collection',
             length: 15, breadth: 10, height: 8, weight: 0.35
           })
         });
