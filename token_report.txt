@@ -231,7 +231,7 @@ ai-consultant.html:233: <a href="contact.html" class="hover:text-[#d4af37] trans
 ai-consultant.html:234: </div>
 ai-consultant.html:235: 
 ai-consultant.html:236: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-ai-consultant.html:237: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+ai-consultant.html:237: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 ai-consultant.html:238: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 ai-consultant.html:239: </div>
 ai-consultant.html:240: </footer>
@@ -244,7 +244,7 @@ contact.html:3: <head>
 contact.html:4: <meta charset="UTF-8">
 contact.html:5: <meta name="viewport" content="width=device-width, initial-scale=1.0">
 contact.html:6: <title>Contact Us & Customer Support  BlackRoots India</title>
-contact.html:7: <meta name="description" content="Contact BlackRoots customer support. Email blackroots.in@gmail.com or Whats₹pp +91 9580835179. Manufactured at Shuklaganj, UP.">
+contact.html:7: <meta name="description" content="Contact BlackRoots customer support. Email blackroots.in@gmail.com or Whats₹pp +91 88081 29388. Manufactured at Shuklaganj, UP.">
 contact.html:8: 
 contact.html:9: <script src="https://cdn.tailwindcss.com"></script>
 contact.html:10: <script>
@@ -338,12 +338,12 @@ contact.html:97: </div>
 contact.html:98: 
 contact.html:99: <div class="flex items-start gap-3">
 contact.html:100: <span class="text-emerald-400 font-bold">🔥 Whats₹pp Direct:</span>
-contact.html:101: <a href="https://wa.me/919580835179" target="_blank" class="text-emerald-400 font-bold hover:underline">+91 9580835179</a>
+contact.html:101: <a href="https://wa.me/918808129388" target="_blank" class="text-emerald-400 font-bold hover:underline">+91 88081 29388</a>
 contact.html:102: </div>
 contact.html:103: </div>
 contact.html:104: 
 contact.html:105: <div class="pt-4 border-t border-white/10">
-contact.html:106: <a href="https://wa.me/919580835179" target="_blank" class="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3.5 px-6 rounded-2xl transition-all uppercase">
+contact.html:106: <a href="https://wa.me/918808129388" target="_blank" class="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3.5 px-6 rounded-2xl transition-all uppercase">
 contact.html:107: <span>🔥 Chat Directly on Whats₹pp</span>
 contact.html:108: </a>
 contact.html:109: </div>
@@ -455,7 +455,7 @@ contact.html:214: <a href="contact.html" class="hover:text-[#d4af37] transition-
 contact.html:215: </div>
 contact.html:216: 
 contact.html:217: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-contact.html:218: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+contact.html:218: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 contact.html:219: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 contact.html:220: </div>
 contact.html:221: </footer>
@@ -686,7 +686,7 @@ how-to-use.html:221: <a href="contact.html" class="hover:text-[#d4af37] transiti
 how-to-use.html:222: </div>
 how-to-use.html:223: 
 how-to-use.html:224: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-how-to-use.html:225: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+how-to-use.html:225: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 how-to-use.html:226: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 how-to-use.html:227: </div>
 how-to-use.html:228: </footer>
@@ -1222,7 +1222,7 @@ index.html:526: <a href="contact.html" class="hover:text-[#d4af37] transition-co
 index.html:527: </div>
 index.html:528: 
 index.html:529: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh � 209861, Near Poni Road, India | Marketed by HRS Group</p>
-index.html:530: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+index.html:530: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 index.html:531: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 index.html:532: </div>
 index.html:533: </footer>
@@ -1496,7 +1496,7 @@ ingredients.html:263: <a href="contact.html" class="hover:text-[#d4af37] transit
 ingredients.html:264: </div>
 ingredients.html:265: 
 ingredients.html:266: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-ingredients.html:267: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+ingredients.html:267: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 ingredients.html:268: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 ingredients.html:269: </div>
 ingredients.html:270: </footer>
@@ -1612,7 +1612,7 @@ privacy-policy.html:102: <div class="bg-black/50 p-4 rounded-xl border border-wh
 privacy-policy.html:103: <p><strong>Brand Entity:</strong> BlackRoots India (Marketed by HRS Group)</p>
 privacy-policy.html:104: <p><strong>Manufacturing ₹ddress:</strong> Near Poni Road, Shuklaganj, Uttar Pradesh  209861, India</p>
 privacy-policy.html:105: <p><strong>Support Email:</strong> <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37] underline">blackroots.in@gmail.com</a></p>
-privacy-policy.html:106: <p><strong>Whats₹pp Support:</strong> <a href="https://wa.me/919580835179" class="text-emerald-400 underline">+91 9580835179</a> (MonSat: 10 ₹M to 7 PM IST)</p>
+privacy-policy.html:106: <p><strong>Whats₹pp Support:</strong> <a href="https://wa.me/918808129388" class="text-emerald-400 underline">+91 88081 29388</a> (MonSat: 10 ₹M to 7 PM IST)</p>
 privacy-policy.html:107: </div>
 privacy-policy.html:108: </section>
 privacy-policy.html:109: 
@@ -1641,7 +1641,7 @@ privacy-policy.html:131: <a href="contact.html" class="hover:text-[#d4af37] tran
 privacy-policy.html:132: </div>
 privacy-policy.html:133: 
 privacy-policy.html:134: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-privacy-policy.html:135: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+privacy-policy.html:135: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 privacy-policy.html:136: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 privacy-policy.html:137: </div>
 privacy-policy.html:138: </footer>
@@ -1936,7 +1936,7 @@ product.html:285: <a href="contact.html" class="hover:text-[#d4af37] transition-
 product.html:286: </div>
 product.html:287: 
 product.html:288: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-product.html:289: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+product.html:289: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 product.html:290: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 product.html:291: </div>
 product.html:292: </footer>
@@ -2009,7 +2009,7 @@ refund-policy.html:59: <section class="space-y-3 border-b border-white/10 pb-6">
 refund-policy.html:60: <h2 class="font-serif text-xl font-bold text-white">1. Order Cancellation Policy</h2>
 refund-policy.html:61: <p>You may cancel your order free of cost at any time prior to dispatch:</p>
 refund-policy.html:62: <ul class="list-disc pl-5 space-y-1.5 text-gray-300">
-refund-policy.html:63: <li><strong>Before Dispatch:</strong> Orders are dispatched from our Shuklaganj UP facility within 12 to 24 hours. To cancel before dispatch, please Whats₹pp us at <a href="https://wa.me/919580835179" class="text-emerald-400 font-bold">+91 9580835179</a> or email <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37] font-bold">blackroots.in@gmail.com</a> with your Order ID. 100% full refund will be issued immediately for prepaid orders.</li>
+refund-policy.html:63: <li><strong>Before Dispatch:</strong> Orders are dispatched from our Shuklaganj UP facility within 12 to 24 hours. To cancel before dispatch, please Whats₹pp us at <a href="https://wa.me/918808129388" class="text-emerald-400 font-bold">+91 88081 29388</a> or email <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37] font-bold">blackroots.in@gmail.com</a> with your Order ID. 100% full refund will be issued immediately for prepaid orders.</li>
 refund-policy.html:64: <li><strong>₹fter Dispatch:</strong> Once an order is handed over to the courier partner, it cannot be canceled in transit. However, you may refuse delivery at your doorstep or initiate a 7-day return upon receipt.</li>
 refund-policy.html:65: </ul>
 refund-policy.html:66: </section>
@@ -2028,7 +2028,7 @@ refund-policy.html:78: <section class="space-y-3 border-b border-white/10 pb-6">
 refund-policy.html:79: <h2 class="font-serif text-xl font-bold text-white">3. How to Request a Return or Replacement</h2>
 refund-policy.html:80: <ol class="list-decimal pl-5 space-y-2 text-gray-300">
 refund-policy.html:81: <li>Take 2 photos or a short 10-second unboxing video showing the damaged bottle/seal.</li>
-refund-policy.html:82: <li>Send the unboxing proof along with your Order ID to Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400 font-bold">+91 9580835179</a> or email <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a>.</li>
+refund-policy.html:82: <li>Send the unboxing proof along with your Order ID to Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400 font-bold">+91 88081 29388</a> or email <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a>.</li>
 refund-policy.html:83: <li>Our customer team will verify your request within 4 to 6 working hours and arrange a free reverse pickup courier from your doorstep.</li>
 refund-policy.html:84: </ol>
 refund-policy.html:85: </section>
@@ -2047,7 +2047,7 @@ refund-policy.html:97: <h2 class="font-serif text-xl font-bold text-white">5. Cu
 refund-policy.html:98: <div class="bg-black/50 p-4 rounded-xl border border-white/10 space-y-1 text-xs text-gray-300">
 refund-policy.html:99: <p><strong>BlackRoots Help & Refund Desk</strong></p>
 refund-policy.html:100: <p><strong>Email Support:</strong> <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37] underline">blackroots.in@gmail.com</a></p>
-refund-policy.html:101: <p><strong>Whats₹pp Support:</strong> <a href="https://wa.me/919580835179" class="text-emerald-400 underline">+91 9580835179</a> (MonSat: 10:00 ₹M  7:00 PM IST)</p>
+refund-policy.html:101: <p><strong>Whats₹pp Support:</strong> <a href="https://wa.me/918808129388" class="text-emerald-400 underline">+91 88081 29388</a> (MonSat: 10:00 ₹M  7:00 PM IST)</p>
 refund-policy.html:102: </div>
 refund-policy.html:103: </section>
 refund-policy.html:104: 
@@ -2076,7 +2076,7 @@ refund-policy.html:126: <a href="contact.html" class="hover:text-[#d4af37] trans
 refund-policy.html:127: </div>
 refund-policy.html:128: 
 refund-policy.html:129: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-refund-policy.html:130: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+refund-policy.html:130: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 refund-policy.html:131: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 refund-policy.html:132: </div>
 refund-policy.html:133: </footer>
@@ -2277,7 +2277,7 @@ reviews.html:191: <a href="contact.html" class="hover:text-[#d4af37] transition-
 reviews.html:192: </div>
 reviews.html:193: 
 reviews.html:194: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-reviews.html:195: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+reviews.html:195: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 reviews.html:196: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 reviews.html:197: </div>
 reviews.html:198: </footer>
@@ -2385,7 +2385,7 @@ shipping-policy.html:94: <div class="bg-black/50 p-4 rounded-xl border border-wh
 shipping-policy.html:95: <p><strong>BlackRoots Shipping Logistics Desk</strong></p>
 shipping-policy.html:96: <p><strong>Warehouse Origin:</strong> Shuklaganj, Uttar Pradesh  209861, India</p>
 shipping-policy.html:97: <p><strong>Email:</strong> <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37] underline">blackroots.in@gmail.com</a></p>
-shipping-policy.html:98: <p><strong>Whats₹pp Support:</strong> <a href="https://wa.me/919580835179" class="text-emerald-400 underline">+91 9580835179</a></p>
+shipping-policy.html:98: <p><strong>Whats₹pp Support:</strong> <a href="https://wa.me/918808129388" class="text-emerald-400 underline">+91 88081 29388</a></p>
 shipping-policy.html:99: </div>
 shipping-policy.html:100: </section>
 shipping-policy.html:101: 
@@ -2414,7 +2414,7 @@ shipping-policy.html:123: <a href="contact.html" class="hover:text-[#d4af37] tra
 shipping-policy.html:124: </div>
 shipping-policy.html:125: 
 shipping-policy.html:126: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-shipping-policy.html:127: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+shipping-policy.html:127: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 shipping-policy.html:128: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 shipping-policy.html:129: </div>
 shipping-policy.html:130: </footer>
@@ -2520,7 +2520,7 @@ terms.html:92: <p>For any inquiries regarding terms of service, merchant queries
 terms.html:93: <div class="bg-black/50 p-4 rounded-xl border border-white/10 space-y-1 text-xs text-gray-300">
 terms.html:94: <p><strong>BlackRoots India Support Desk</strong></p>
 terms.html:95: <p><strong>Email:</strong> <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37] underline">blackroots.in@gmail.com</a></p>
-terms.html:96: <p><strong>Whats₹pp Support:</strong> <a href="https://wa.me/919580835179" class="text-emerald-400 underline">+91 9580835179</a></p>
+terms.html:96: <p><strong>Whats₹pp Support:</strong> <a href="https://wa.me/918808129388" class="text-emerald-400 underline">+91 88081 29388</a></p>
 terms.html:97: </div>
 terms.html:98: </section>
 terms.html:99: 
@@ -2549,7 +2549,7 @@ terms.html:121: <a href="contact.html" class="hover:text-[#d4af37] transition-co
 terms.html:122: </div>
 terms.html:123: 
 terms.html:124: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-terms.html:125: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+terms.html:125: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 terms.html:126: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 terms.html:127: </div>
 terms.html:128: </footer>
@@ -2760,7 +2760,7 @@ track-order.html:201: <a href="contact.html" class="hover:text-[#d4af37] transit
 track-order.html:202: </div>
 track-order.html:203: 
 track-order.html:204: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-track-order.html:205: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+track-order.html:205: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 track-order.html:206: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 track-order.html:207: </div>
 track-order.html:208: </footer>
@@ -3000,7 +3000,7 @@ preview\ai-consultant.html:233: <a href="contact.html" class="hover:text-[#d4af3
 preview\ai-consultant.html:234: </div>
 preview\ai-consultant.html:235: 
 preview\ai-consultant.html:236: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-preview\ai-consultant.html:237: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+preview\ai-consultant.html:237: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 preview\ai-consultant.html:238: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 preview\ai-consultant.html:239: </div>
 preview\ai-consultant.html:240: </footer>
@@ -3013,7 +3013,7 @@ preview\contact.html:3: <head>
 preview\contact.html:4: <meta charset="UTF-8">
 preview\contact.html:5: <meta name="viewport" content="width=device-width, initial-scale=1.0">
 preview\contact.html:6: <title>Contact Us & Customer Support  BlackRoots India</title>
-preview\contact.html:7: <meta name="description" content="Contact BlackRoots customer support. Email blackroots.in@gmail.com or Whats₹pp +91 9580835179. Manufactured at Shuklaganj, UP.">
+preview\contact.html:7: <meta name="description" content="Contact BlackRoots customer support. Email blackroots.in@gmail.com or Whats₹pp +91 88081 29388. Manufactured at Shuklaganj, UP.">
 preview\contact.html:8: 
 preview\contact.html:9: <script src="https://cdn.tailwindcss.com"></script>
 preview\contact.html:10: <script>
@@ -3107,12 +3107,12 @@ preview\contact.html:97: </div>
 preview\contact.html:98: 
 preview\contact.html:99: <div class="flex items-start gap-3">
 preview\contact.html:100: <span class="text-emerald-400 font-bold">🔥 Whats₹pp Direct:</span>
-preview\contact.html:101: <a href="https://wa.me/919580835179" target="_blank" class="text-emerald-400 font-bold hover:underline">+91 9580835179</a>
+preview\contact.html:101: <a href="https://wa.me/918808129388" target="_blank" class="text-emerald-400 font-bold hover:underline">+91 88081 29388</a>
 preview\contact.html:102: </div>
 preview\contact.html:103: </div>
 preview\contact.html:104: 
 preview\contact.html:105: <div class="pt-4 border-t border-white/10">
-preview\contact.html:106: <a href="https://wa.me/919580835179" target="_blank" class="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3.5 px-6 rounded-2xl transition-all uppercase">
+preview\contact.html:106: <a href="https://wa.me/918808129388" target="_blank" class="w-full inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-3.5 px-6 rounded-2xl transition-all uppercase">
 preview\contact.html:107: <span>🔥 Chat Directly on Whats₹pp</span>
 preview\contact.html:108: </a>
 preview\contact.html:109: </div>
@@ -3224,7 +3224,7 @@ preview\contact.html:214: <a href="contact.html" class="hover:text-[#d4af37] tra
 preview\contact.html:215: </div>
 preview\contact.html:216: 
 preview\contact.html:217: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-preview\contact.html:218: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+preview\contact.html:218: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 preview\contact.html:219: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 preview\contact.html:220: </div>
 preview\contact.html:221: </footer>
@@ -3455,7 +3455,7 @@ preview\how-to-use.html:221: <a href="contact.html" class="hover:text-[#d4af37] 
 preview\how-to-use.html:222: </div>
 preview\how-to-use.html:223: 
 preview\how-to-use.html:224: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-preview\how-to-use.html:225: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+preview\how-to-use.html:225: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 preview\how-to-use.html:226: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 preview\how-to-use.html:227: </div>
 preview\how-to-use.html:228: </footer>
@@ -3991,7 +3991,7 @@ preview\index.html:526: <a href="contact.html" class="hover:text-[#d4af37] trans
 preview\index.html:527: </div>
 preview\index.html:528: 
 preview\index.html:529: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh � 209861, Near Poni Road, India | Marketed by HRS Group</p>
-preview\index.html:530: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+preview\index.html:530: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 preview\index.html:531: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 preview\index.html:532: </div>
 preview\index.html:533: </footer>
@@ -4265,7 +4265,7 @@ preview\ingredients.html:263: <a href="contact.html" class="hover:text-[#d4af37]
 preview\ingredients.html:264: </div>
 preview\ingredients.html:265: 
 preview\ingredients.html:266: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-preview\ingredients.html:267: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+preview\ingredients.html:267: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 preview\ingredients.html:268: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 preview\ingredients.html:269: </div>
 preview\ingredients.html:270: </footer>
@@ -4381,7 +4381,7 @@ preview\privacy-policy.html:102: <div class="bg-black/50 p-4 rounded-xl border b
 preview\privacy-policy.html:103: <p><strong>Brand Entity:</strong> BlackRoots India (Marketed by HRS Group)</p>
 preview\privacy-policy.html:104: <p><strong>Manufacturing ₹ddress:</strong> Near Poni Road, Shuklaganj, Uttar Pradesh  209861, India</p>
 preview\privacy-policy.html:105: <p><strong>Support Email:</strong> <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37] underline">blackroots.in@gmail.com</a></p>
-preview\privacy-policy.html:106: <p><strong>Whats₹pp Support:</strong> <a href="https://wa.me/919580835179" class="text-emerald-400 underline">+91 9580835179</a> (MonSat: 10 ₹M to 7 PM IST)</p>
+preview\privacy-policy.html:106: <p><strong>Whats₹pp Support:</strong> <a href="https://wa.me/918808129388" class="text-emerald-400 underline">+91 88081 29388</a> (MonSat: 10 ₹M to 7 PM IST)</p>
 preview\privacy-policy.html:107: </div>
 preview\privacy-policy.html:108: </section>
 preview\privacy-policy.html:109: 
@@ -4410,7 +4410,7 @@ preview\privacy-policy.html:131: <a href="contact.html" class="hover:text-[#d4af
 preview\privacy-policy.html:132: </div>
 preview\privacy-policy.html:133: 
 preview\privacy-policy.html:134: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-preview\privacy-policy.html:135: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+preview\privacy-policy.html:135: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 preview\privacy-policy.html:136: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 preview\privacy-policy.html:137: </div>
 preview\privacy-policy.html:138: </footer>
@@ -4705,7 +4705,7 @@ preview\product.html:285: <a href="contact.html" class="hover:text-[#d4af37] tra
 preview\product.html:286: </div>
 preview\product.html:287: 
 preview\product.html:288: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-preview\product.html:289: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+preview\product.html:289: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 preview\product.html:290: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 preview\product.html:291: </div>
 preview\product.html:292: </footer>
@@ -4778,7 +4778,7 @@ preview\refund-policy.html:59: <section class="space-y-3 border-b border-white/1
 preview\refund-policy.html:60: <h2 class="font-serif text-xl font-bold text-white">1. Order Cancellation Policy</h2>
 preview\refund-policy.html:61: <p>You may cancel your order free of cost at any time prior to dispatch:</p>
 preview\refund-policy.html:62: <ul class="list-disc pl-5 space-y-1.5 text-gray-300">
-preview\refund-policy.html:63: <li><strong>Before Dispatch:</strong> Orders are dispatched from our Shuklaganj UP facility within 12 to 24 hours. To cancel before dispatch, please Whats₹pp us at <a href="https://wa.me/919580835179" class="text-emerald-400 font-bold">+91 9580835179</a> or email <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37] font-bold">blackroots.in@gmail.com</a> with your Order ID. 100% full refund will be issued immediately for prepaid orders.</li>
+preview\refund-policy.html:63: <li><strong>Before Dispatch:</strong> Orders are dispatched from our Shuklaganj UP facility within 12 to 24 hours. To cancel before dispatch, please Whats₹pp us at <a href="https://wa.me/918808129388" class="text-emerald-400 font-bold">+91 88081 29388</a> or email <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37] font-bold">blackroots.in@gmail.com</a> with your Order ID. 100% full refund will be issued immediately for prepaid orders.</li>
 preview\refund-policy.html:64: <li><strong>₹fter Dispatch:</strong> Once an order is handed over to the courier partner, it cannot be canceled in transit. However, you may refuse delivery at your doorstep or initiate a 7-day return upon receipt.</li>
 preview\refund-policy.html:65: </ul>
 preview\refund-policy.html:66: </section>
@@ -4797,7 +4797,7 @@ preview\refund-policy.html:78: <section class="space-y-3 border-b border-white/1
 preview\refund-policy.html:79: <h2 class="font-serif text-xl font-bold text-white">3. How to Request a Return or Replacement</h2>
 preview\refund-policy.html:80: <ol class="list-decimal pl-5 space-y-2 text-gray-300">
 preview\refund-policy.html:81: <li>Take 2 photos or a short 10-second unboxing video showing the damaged bottle/seal.</li>
-preview\refund-policy.html:82: <li>Send the unboxing proof along with your Order ID to Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400 font-bold">+91 9580835179</a> or email <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a>.</li>
+preview\refund-policy.html:82: <li>Send the unboxing proof along with your Order ID to Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400 font-bold">+91 88081 29388</a> or email <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a>.</li>
 preview\refund-policy.html:83: <li>Our customer team will verify your request within 4 to 6 working hours and arrange a free reverse pickup courier from your doorstep.</li>
 preview\refund-policy.html:84: </ol>
 preview\refund-policy.html:85: </section>
@@ -4816,7 +4816,7 @@ preview\refund-policy.html:97: <h2 class="font-serif text-xl font-bold text-whit
 preview\refund-policy.html:98: <div class="bg-black/50 p-4 rounded-xl border border-white/10 space-y-1 text-xs text-gray-300">
 preview\refund-policy.html:99: <p><strong>BlackRoots Help & Refund Desk</strong></p>
 preview\refund-policy.html:100: <p><strong>Email Support:</strong> <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37] underline">blackroots.in@gmail.com</a></p>
-preview\refund-policy.html:101: <p><strong>Whats₹pp Support:</strong> <a href="https://wa.me/919580835179" class="text-emerald-400 underline">+91 9580835179</a> (MonSat: 10:00 ₹M  7:00 PM IST)</p>
+preview\refund-policy.html:101: <p><strong>Whats₹pp Support:</strong> <a href="https://wa.me/918808129388" class="text-emerald-400 underline">+91 88081 29388</a> (MonSat: 10:00 ₹M  7:00 PM IST)</p>
 preview\refund-policy.html:102: </div>
 preview\refund-policy.html:103: </section>
 preview\refund-policy.html:104: 
@@ -4845,7 +4845,7 @@ preview\refund-policy.html:126: <a href="contact.html" class="hover:text-[#d4af3
 preview\refund-policy.html:127: </div>
 preview\refund-policy.html:128: 
 preview\refund-policy.html:129: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-preview\refund-policy.html:130: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+preview\refund-policy.html:130: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 preview\refund-policy.html:131: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 preview\refund-policy.html:132: </div>
 preview\refund-policy.html:133: </footer>
@@ -5046,7 +5046,7 @@ preview\reviews.html:191: <a href="contact.html" class="hover:text-[#d4af37] tra
 preview\reviews.html:192: </div>
 preview\reviews.html:193: 
 preview\reviews.html:194: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-preview\reviews.html:195: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+preview\reviews.html:195: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 preview\reviews.html:196: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 preview\reviews.html:197: </div>
 preview\reviews.html:198: </footer>
@@ -5154,7 +5154,7 @@ preview\shipping-policy.html:94: <div class="bg-black/50 p-4 rounded-xl border b
 preview\shipping-policy.html:95: <p><strong>BlackRoots Shipping Logistics Desk</strong></p>
 preview\shipping-policy.html:96: <p><strong>Warehouse Origin:</strong> Shuklaganj, Uttar Pradesh  209861, India</p>
 preview\shipping-policy.html:97: <p><strong>Email:</strong> <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37] underline">blackroots.in@gmail.com</a></p>
-preview\shipping-policy.html:98: <p><strong>Whats₹pp Support:</strong> <a href="https://wa.me/919580835179" class="text-emerald-400 underline">+91 9580835179</a></p>
+preview\shipping-policy.html:98: <p><strong>Whats₹pp Support:</strong> <a href="https://wa.me/918808129388" class="text-emerald-400 underline">+91 88081 29388</a></p>
 preview\shipping-policy.html:99: </div>
 preview\shipping-policy.html:100: </section>
 preview\shipping-policy.html:101: 
@@ -5183,7 +5183,7 @@ preview\shipping-policy.html:123: <a href="contact.html" class="hover:text-[#d4a
 preview\shipping-policy.html:124: </div>
 preview\shipping-policy.html:125: 
 preview\shipping-policy.html:126: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-preview\shipping-policy.html:127: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+preview\shipping-policy.html:127: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 preview\shipping-policy.html:128: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 preview\shipping-policy.html:129: </div>
 preview\shipping-policy.html:130: </footer>
@@ -5289,7 +5289,7 @@ preview\terms.html:92: <p>For any inquiries regarding terms of service, merchant
 preview\terms.html:93: <div class="bg-black/50 p-4 rounded-xl border border-white/10 space-y-1 text-xs text-gray-300">
 preview\terms.html:94: <p><strong>BlackRoots India Support Desk</strong></p>
 preview\terms.html:95: <p><strong>Email:</strong> <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37] underline">blackroots.in@gmail.com</a></p>
-preview\terms.html:96: <p><strong>Whats₹pp Support:</strong> <a href="https://wa.me/919580835179" class="text-emerald-400 underline">+91 9580835179</a></p>
+preview\terms.html:96: <p><strong>Whats₹pp Support:</strong> <a href="https://wa.me/918808129388" class="text-emerald-400 underline">+91 88081 29388</a></p>
 preview\terms.html:97: </div>
 preview\terms.html:98: </section>
 preview\terms.html:99: 
@@ -5318,7 +5318,7 @@ preview\terms.html:121: <a href="contact.html" class="hover:text-[#d4af37] trans
 preview\terms.html:122: </div>
 preview\terms.html:123: 
 preview\terms.html:124: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-preview\terms.html:125: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+preview\terms.html:125: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 preview\terms.html:126: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 preview\terms.html:127: </div>
 preview\terms.html:128: </footer>
@@ -5529,7 +5529,7 @@ preview\track-order.html:201: <a href="contact.html" class="hover:text-[#d4af37]
 preview\track-order.html:202: </div>
 preview\track-order.html:203: 
 preview\track-order.html:204: <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh  209861, Near Poni Road, India | Marketed by HRS Group</p>
-preview\track-order.html:205: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+preview\track-order.html:205: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 preview\track-order.html:206: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>
 preview\track-order.html:207: </div>
 preview\track-order.html:208: </footer>

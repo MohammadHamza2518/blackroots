@@ -73,7 +73,7 @@ clean_auth_screen = """<!-- ====================================================
           <label class="flex items-center gap-2 cursor-pointer">
             <input type="checkbox" checked class="rounded accent-[#d4af37]"> Remember me
           </label>
-          <a href="https://wa.me/919580835179?text=Hello%20BlackRoots%20Team%2C%20I%20need%20assistance%20with%20my%20VIP%20Creator%20login%20credentials." target="_blank" class="text-amber-400 hover:underline">Need Help?</a>
+          <a href="https://wa.me/918808129388?text=Hello%20BlackRoots%20Team%2C%20I%20need%20assistance%20with%20my%20VIP%20Creator%20login%20credentials." target="_blank" class="text-amber-400 hover:underline">Need Help?</a>
         </div>
 
         <button type="submit" id="login-submit-btn" class="w-full btn-gold-action text-sm py-4 rounded-xl shadow-xl uppercase tracking-wider cursor-pointer font-black">

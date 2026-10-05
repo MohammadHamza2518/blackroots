@@ -260,8 +260,8 @@ track_order_html = """<!DOCTYPE html>
         <!-- WhatsApp Support Bar -->
         <div class="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
           <span class="text-gray-400 text-[11px]">Need urgent delivery help?</span>
-          <a href="https://wa.me/919580835179?text=Hello%20BlackRoots%20Team%2C%20I%20want%20to%20check%20my%20Order%20Status" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 px-4 py-2.5 rounded-xl font-bold transition-all w-full sm:w-auto justify-center">
-            <span>💬 WhatsApp Support: +91 9580835179</span>
+          <a href="https://wa.me/918808129388?text=Hello%20BlackRoots%20Team%2C%20I%20want%20to%20check%20my%20Order%20Status" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 px-4 py-2.5 rounded-xl font-bold transition-all w-full sm:w-auto justify-center">
+            <span>💬 WhatsApp Support: +91 88081 29388</span>
           </a>
         </div>
 
@@ -293,7 +293,7 @@ track_order_html = """<!DOCTYPE html>
       </div>
 
       <p class="text-gray-400">Manufactured at: Shuklaganj, Uttar Pradesh – 209861, Near Poni Road, India | Marketed by HRS Group</p>
-      <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | WhatsApp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+      <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | WhatsApp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
       <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. All Rights Reserved.</p>
     </div>
   </footer>

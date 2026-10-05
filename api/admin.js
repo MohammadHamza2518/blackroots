@@ -9,7 +9,7 @@ const DEFAULT_SETTINGS = {
   meta_test_code: '',
   ga4_measurement_id: '',
   gsc_verification_tag: 'google38ea945a664b564d',
-  whatsapp_support: '+919580835179',
+  whatsapp_support: '+918808129388',
   shiprocket_email: 'api@blackroots.in',
   shiprocket_password: 'S1bSO*3&H1fHiBC@!b7lqEsTI#Nwm8mt',
   shiprocket_auto_push: '1',
@@ -121,7 +121,7 @@ module.exports = async (req, res) => {
         meta_domain_verification: curSettings.meta_domain_verification || '',
         ga4_measurement_id: curSettings.ga4_measurement_id || '',
         gsc_verification_tag: curSettings.gsc_verification_tag || '',
-        whatsapp_support: curSettings.whatsapp_support || '+919580835179',
+        whatsapp_support: curSettings.whatsapp_support || '+918808129388',
       });
     }
 
@@ -361,7 +361,7 @@ module.exports = async (req, res) => {
                   billing_state: newOrd.state || 'Uttar Pradesh',
                   billing_country: 'India',
                   billing_email: newOrd.email || 'blackroots.in@gmail.com',
-                  billing_phone: newOrd.phone || '9580835179',
+                  billing_phone: newOrd.phone || '8808129388',
                   shipping_is_billing: true,
                   order_items: [{
                     name: newOrd.product_bundle || 'BlackRoots Herbal Hair Dye Shampoo (250ml)',
@@ -545,7 +545,7 @@ module.exports = async (req, res) => {
             billing_state: ord.state || 'Uttar Pradesh',
             billing_country: 'India',
             billing_email: ord.email || 'blackroots.in@gmail.com',
-            billing_phone: ord.phone || '9580835179',
+            billing_phone: ord.phone || '8808129388',
             shipping_is_billing: true,
             order_items: [{
               name: ord.product_bundle || 'BlackRoots Herbal Hair Dye Shampoo (250ml)',

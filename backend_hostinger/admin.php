@@ -14,7 +14,7 @@ if ($action === 'get_public_config') {
         'meta_domain_verification' => get_setting('meta_domain_verification', ''),
         'ga4_measurement_id' => get_setting('ga4_measurement_id', ''),
         'gsc_verification_tag' => get_setting('gsc_verification_tag', ''),
-        'whatsapp_support' => get_setting('whatsapp_support', '+919580835179'),
+        'whatsapp_support' => get_setting('whatsapp_support', '+918808129388'),
     ]);
     exit;
 }
@@ -349,7 +349,7 @@ if ($action === 'get_settings') {
             'meta_capi_token' => get_setting('meta_capi_token', ''),
             'ga4_measurement_id' => get_setting('ga4_measurement_id', ''),
             'gsc_verification_tag' => get_setting('gsc_verification_tag', ''),
-            'whatsapp_support' => get_setting('whatsapp_support', '+919580835179'),
+            'whatsapp_support' => get_setting('whatsapp_support', '+918808129388'),
             'shiprocket_email' => get_setting('shiprocket_email', ''),
             'shiprocket_password' => get_setting('shiprocket_password', ''),
             'shiprocket_auto_push' => get_setting('shiprocket_auto_push', '0'),

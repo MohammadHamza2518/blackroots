@@ -35,5 +35,5 @@
 491: <label class="block text-xs font-bold text-amber-300 uppercase mb-1">Complete House & Street ₹ddress</label>
 496: Confirm Order →
 516: <!-- Legal Compliance Links Row (Payment Gateway ₹pproved) -->
-530: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/919580835179" class="text-emerald-400">+91 9580835179</a></p>
+530: <p>Email: <a href="mailto:blackroots.in@gmail.com" class="text-[#d4af37]">blackroots.in@gmail.com</a> | Whats₹pp: <a href="https://wa.me/918808129388" class="text-emerald-400">+91 88081 29388</a></p>
 531: <p class="text-[11px] text-gray-500">&copy; 2026 BlackRoots India. ₹ll Rights Reserved.</p>

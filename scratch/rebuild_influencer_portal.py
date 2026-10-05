@@ -176,7 +176,7 @@ influencer_html = """<!DOCTYPE html>
       </form>
 
       <div class="text-center pt-3 border-t border-white/10 text-[11px] text-gray-400">
-        Need creator access? <a href="https://wa.me/919580835179?text=Hello%20BlackRoots%20Admin%2C%20I%20want%20to%20join%20the%20Creator%20Affiliate%20Program" target="_blank" class="text-amber-300 font-bold hover:underline">Apply via WhatsApp Support &rarr;</a>
+        Need creator access? <a href="https://wa.me/918808129388?text=Hello%20BlackRoots%20Admin%2C%20I%20want%20to%20join%20the%20Creator%20Affiliate%20Program" target="_blank" class="text-amber-300 font-bold hover:underline">Apply via WhatsApp Support &rarr;</a>
       </div>
     </div>
   </section>

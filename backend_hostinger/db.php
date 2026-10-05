@@ -157,7 +157,7 @@ try {
             'meta_capi_token' => '',
             'ga4_measurement_id' => '',
             'gsc_verification_tag' => '',
-            'whatsapp_support' => '+919580835179',
+            'whatsapp_support' => '+918808129388',
             'razorpay_key_id' => 'rzp_live_TV9VNPhiYYbB07',
             'razorpay_key_secret' => 'ianPeeSx3gMvq2OZk8TUW0sz',
             'razorpay_enabled' => '1',

@@ -116,7 +116,7 @@ influencer_html_code = """<!DOCTYPE html>
           <label class="flex items-center gap-2 cursor-pointer">
             <input type="checkbox" checked class="rounded accent-[#d4af37]"> Remember me
           </label>
-          <a href="https://wa.me/919580835179?text=Hello%20BlackRoots%20Team%2C%20I%20forgot%20my%20Influencer%20portal%20password." target="_blank" class="text-amber-400 hover:underline">Forgot?</a>
+          <a href="https://wa.me/918808129388?text=Hello%20BlackRoots%20Team%2C%20I%20forgot%20my%20Influencer%20portal%20password." target="_blank" class="text-amber-400 hover:underline">Forgot?</a>
         </div>
 
         <button type="submit" id="login-submit-btn" class="w-full btn-gold-action text-sm py-4 rounded-xl shadow-xl uppercase tracking-wider cursor-pointer">
@@ -1455,7 +1455,7 @@ admin_html_code = """<!DOCTYPE html>
             <h3 class="font-serif text-lg font-bold text-amber-300">3. WhatsApp &amp; Customer Support</h3>
             <div>
               <label class="block text-xs font-bold text-gray-300 uppercase mb-1">WhatsApp Business Support Number</label>
-              <input type="text" id="set-whatsapp-num" placeholder="+919580835179" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
+              <input type="text" id="set-whatsapp-num" placeholder="+918808129388" class="w-full px-4 py-3 rounded-xl bg-black border border-white/20 text-xs text-white focus:outline-none focus:border-[#d4af37]">
             </div>
           </div>
 
@@ -2090,7 +2090,7 @@ admin_html_code = """<!DOCTYPE html>
       document.getElementById('set-meta-token').value = s.meta_capi_token || '';
       document.getElementById('set-ga4-id').value = s.ga4_measurement_id || '';
       document.getElementById('set-gsc-tag').value = s.gsc_verification_tag || '';
-      document.getElementById('set-whatsapp-num').value = s.whatsapp_support || '+919580835179';
+      document.getElementById('set-whatsapp-num').value = s.whatsapp_support || '+918808129388';
       document.getElementById('set-shiprocket-email').value = s.shiprocket_email || '';
       document.getElementById('set-shiprocket-password').value = s.shiprocket_password || '';
       document.getElementById('set-shiprocket-auto').checked = s.shiprocket_auto_push === '1';

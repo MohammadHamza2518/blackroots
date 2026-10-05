@@ -7,7 +7,7 @@ html_files = [f for f in os.listdir(root_dir) if f.endswith('.html')]
 print("=== DEEP SCAN 3: PRICING AND CONTACT DETAILS AUDIT ===")
 
 email_pattern = r'blackroots\.in@gmail\.com'
-phone_pattern = r'9580835179'
+phone_pattern = r'8808129388'
 
 missing_email = []
 missing_phone = []
