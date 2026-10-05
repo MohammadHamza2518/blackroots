@@ -45,6 +45,25 @@
   <meta name="twitter:description" content="Turn grey hair naturally black in 10 minutes. 100% natural Japanese botanical formula with Indigo Leaf, Camellia Oil, Amla & Bhringraj. Stops hair fall and ends dandruff.">
   <meta name="twitter:image" content="https://www.blackroots.in/assets/blackroots-botanical-pedestal-1x1.jpg">
   <meta name="twitter:image:alt" content="BlackRoots Japanese Herbal Hair Dye Shampoo Bottle">
+
+  <!-- Meta Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '4485707268411631');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=4485707268411631&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+
   <!-- Google Search Rich Snippet & Structured Data (Schema.org JSON-LD) -->
   <script type="application/ld+json">
   {
@@ -391,12 +410,12 @@
       <!-- Right Header Actions (Desktop CTA + Mobile Pill & Hamburger) -->
       <div class="flex items-center gap-2">
         <!-- Desktop Buy Button -->
-        <button type="button" onclick="window.location.href='product.html';" class="hidden lg:inline-flex js-trigger-order btn-gold-luxury py-2.5 px-5 text-xs font-bold shadow-xl shrink-0 whitespace-nowrap cursor-pointer">
-          <span>Buy Now &mdash; &#8377; 499</span>
+        <button type="button" onclick="window.location.href='checkout.html?pack=1';" class="hidden lg:inline-flex js-trigger-order btn-gold-luxury py-2.5 px-5 text-xs font-bold shadow-xl shrink-0 whitespace-nowrap cursor-pointer">
+          <span>Buy Now &mdash; &#8377; 499 (COD)</span>
         </button>
 
         <!-- Mobile Quick Buy Pill -->
-        <button type="button" onclick="window.location.href='product.html';" class="inline-flex lg:hidden bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black font-extrabold text-[10px] px-3 py-1.5 rounded-full shadow-md items-center gap-1 shrink-0 uppercase tracking-tight cursor-pointer">
+        <button type="button" onclick="window.location.href='checkout.html?pack=1';" class="inline-flex lg:hidden bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black font-extrabold text-[10px] px-3 py-1.5 rounded-full shadow-md items-center gap-1 shrink-0 uppercase tracking-tight cursor-pointer">
           <span>Buy &#8377;499</span>
         </button>
 
@@ -439,11 +458,11 @@
       </p>
 
       <!-- CTA Action Buttons -->
-      <div class="anim-hero-4 flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-        <button onclick="window.location.href='product.html';" type="button" class="js-trigger-order group relative inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-extrabold text-xs sm:text-sm px-6 py-3 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.25)] hover:shadow-[0_15px_35px_rgba(212,175,55,0.4)] transition-all transform hover:-translate-y-0.5 cursor-pointer uppercase tracking-wider overflow-hidden">
+      <div class="anim-hero-4 flex flex-col sm:flex-row items-center justify-center gap-3.5 pt-2">
+        <button onclick="window.location.href='checkout.html?pack=1';" type="button" class="js-trigger-order group relative inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-extrabold text-xs sm:text-sm px-7 py-3.5 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.25)] hover:shadow-[0_15px_35px_rgba(212,175,55,0.4)] transition-all transform hover:-translate-y-0.5 cursor-pointer uppercase tracking-wider overflow-hidden">
           <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none"></span>
           <span class="flex items-center gap-2 relative z-10">
-            <span class="font-black tracking-wider">ORDER NOW</span>
+            <span class="font-black tracking-wider">ORDER NOW (COD)</span>
             <span class="text-black/40 font-normal">&bull;</span>
             <span class="font-black text-sm text-black">&#8377;499</span>
           </span>
@@ -452,8 +471,13 @@
           </span>
         </button>
 
-        <a href="ai-consultant.html" class="px-6 py-3 rounded-full border border-amber-400/50 text-amber-300 font-bold text-xs uppercase tracking-widest hover:bg-white/10 transition-all backdrop-blur-md">
-          🩺 Consult AI Hair Doctor
+        <a href="https://wa.me/919580835179?text=Namaste!%20Mujhe%20BlackRoots%20Hair%20Shampoo%20(Rs%20499)%20Cash%20on%20Delivery%20par%20order%20karna%20hai.%20Mera%20pata%20hai:" target="_blank" class="px-5 py-3 rounded-xl bg-emerald-950/60 border border-emerald-500/50 text-emerald-400 font-extrabold text-xs uppercase tracking-wider hover:bg-emerald-900/60 transition-all flex items-center justify-center gap-2 shadow-lg">
+          <span class="text-base">💬</span>
+          <span>Order via WhatsApp (COD)</span>
+        </a>
+
+        <a href="ai-consultant.html" class="px-5 py-3 rounded-xl border border-amber-400/40 text-amber-300 font-bold text-xs uppercase tracking-widest hover:bg-white/10 transition-all backdrop-blur-md">
+          🩺 AI Hair Doctor
         </a>
       </div>
 
@@ -561,7 +585,7 @@
                   </div>
                 </div>
               </div>
-              <a onclick="window.location.href='product.html';" href="product.html" class="js-trigger-order relative z-40 bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black text-[9px] font-black px-3.5 py-1.5 rounded-xl uppercase tracking-wider shrink-0 shadow-lg hover:scale-105 transition-transform pointer-events-auto">
+              <a onclick="window.location.href='checkout.html?pack=1';" href="checkout.html?pack=1" class="js-trigger-order relative z-40 bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black text-[9px] font-black px-3.5 py-1.5 rounded-xl uppercase tracking-wider shrink-0 shadow-lg hover:scale-105 transition-transform pointer-events-auto">
                 Buy Now &rarr;
               </a>
             </div>
@@ -604,7 +628,7 @@
                   </div>
                 </div>
               </div>
-              <a onclick="window.location.href='product.html';" href="product.html" class="js-trigger-order relative z-40 bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black text-[9px] font-black px-3.5 py-1.5 rounded-xl uppercase tracking-wider shrink-0 shadow-lg hover:scale-105 transition-transform pointer-events-auto">
+              <a onclick="window.location.href='checkout.html?pack=1';" href="checkout.html?pack=1" class="js-trigger-order relative z-40 bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black text-[9px] font-black px-3.5 py-1.5 rounded-xl uppercase tracking-wider shrink-0 shadow-lg hover:scale-105 transition-transform pointer-events-auto">
                 Buy Now &rarr;
               </a>
             </div>
@@ -643,7 +667,7 @@
                   </div>
                 </div>
               </div>
-              <a onclick="window.location.href='product.html';" href="product.html" class="js-trigger-order relative z-40 bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black text-[9px] font-black px-3.5 py-1.5 rounded-xl uppercase tracking-wider shrink-0 shadow-lg hover:scale-105 transition-transform pointer-events-auto">
+              <a onclick="window.location.href='checkout.html?pack=1';" href="checkout.html?pack=1" class="js-trigger-order relative z-40 bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black text-[9px] font-black px-3.5 py-1.5 rounded-xl uppercase tracking-wider shrink-0 shadow-lg hover:scale-105 transition-transform pointer-events-auto">
                 Buy Now &rarr;
               </a>
             </div>
@@ -682,7 +706,7 @@
                   </div>
                 </div>
               </div>
-              <a onclick="window.location.href='product.html';" href="product.html" class="js-trigger-order relative z-40 bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black text-[9px] font-black px-3.5 py-1.5 rounded-xl uppercase tracking-wider shrink-0 shadow-lg hover:scale-105 transition-transform pointer-events-auto">
+              <a onclick="window.location.href='checkout.html?pack=1';" href="checkout.html?pack=1" class="js-trigger-order relative z-40 bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black text-[9px] font-black px-3.5 py-1.5 rounded-xl uppercase tracking-wider shrink-0 shadow-lg hover:scale-105 transition-transform pointer-events-auto">
                 Buy Now &rarr;
               </a>
             </div>
@@ -724,7 +748,7 @@
                   </div>
                 </div>
               </div>
-              <a onclick="window.location.href='product.html';" href="product.html" class="js-trigger-order relative z-40 bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black text-[9px] font-black px-3.5 py-1.5 rounded-xl uppercase tracking-wider shrink-0 shadow-lg hover:scale-105 transition-transform pointer-events-auto">
+              <a onclick="window.location.href='checkout.html?pack=1';" href="checkout.html?pack=1" class="js-trigger-order relative z-40 bg-gradient-to-r from-[#d4af37] to-[#aa7c11] text-black text-[9px] font-black px-3.5 py-1.5 rounded-xl uppercase tracking-wider shrink-0 shadow-lg hover:scale-105 transition-transform pointer-events-auto">
                 Buy Now &rarr;
               </a>
             </div>
@@ -821,7 +845,7 @@
           </div>
 
           <div class="pt-2">
-            <button onclick="window.location.href='product.html';" type="button" class="js-trigger-order group relative inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-extrabold text-xs sm:text-sm px-6 py-3 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.25)] hover:shadow-[0_15px_35px_rgba(212,175,55,0.4)] transition-all transform hover:-translate-y-0.5 cursor-pointer uppercase tracking-wider overflow-hidden w-full sm:w-auto">
+            <button onclick="window.location.href='checkout.html?pack=1';" type="button" class="js-trigger-order group relative inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-extrabold text-xs sm:text-sm px-6 py-3 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.25)] hover:shadow-[0_15px_35px_rgba(212,175,55,0.4)] transition-all transform hover:-translate-y-0.5 cursor-pointer uppercase tracking-wider overflow-hidden w-full sm:w-auto">
               <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none"></span>
               <span class="flex items-center gap-2 relative z-10">
                 <span class="font-black tracking-wider">ORDER NOW</span>
@@ -996,7 +1020,7 @@
             <span class="text-[11px] text-gray-300">
               🌿 100% Botanical &bull; Zero Ammonia &bull; No Side Effects
             </span>
-            <a onclick="window.location.href='product.html';" href="product.html" class="js-trigger-order group relative inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-extrabold text-xs sm:text-sm px-6 py-3 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.25)] hover:shadow-[0_15px_35px_rgba(212,175,55,0.4)] transition-all transform hover:-translate-y-0.5 uppercase tracking-wider overflow-hidden w-full sm:w-auto text-center">
+            <a onclick="window.location.href='checkout.html?pack=1';" href="checkout.html?pack=1" class="js-trigger-order group relative inline-flex items-center justify-center gap-2.5 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-extrabold text-xs sm:text-sm px-6 py-3 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.25)] hover:shadow-[0_15px_35px_rgba(212,175,55,0.4)] transition-all transform hover:-translate-y-0.5 uppercase tracking-wider overflow-hidden w-full sm:w-auto text-center">
               <span class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none"></span>
               <span class="flex items-center gap-2 relative z-10">
                 <span class="font-black tracking-wider">ORDER NOW</span>
@@ -1464,8 +1488,8 @@
 
     <!-- 3. Drawer Footer CTA (Pinned & Classy) -->
     <div class="p-4 border-t border-white/10 bg-[#08090d] space-y-2 shrink-0 shadow-[0_-10px_25px_rgba(0,0,0,0.8)]">
-      <button type="button" onclick="window.location.href='product.html';" class="group relative w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-xs py-3.5 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.3)] hover:brightness-110 active:scale-95 transition-all uppercase tracking-wider text-center cursor-pointer">
-        <span>ORDER NOW &bull; ₹499</span>
+      <button type="button" onclick="window.location.href='checkout.html?pack=1';" class="group relative w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-[#d4af37] via-[#f7e7a7] to-[#aa7c11] text-black font-black text-xs py-3.5 rounded-xl border border-[#fff3b0]/70 shadow-[0_10px_25px_rgba(212,175,55,0.3)] hover:brightness-110 active:scale-95 transition-all uppercase tracking-wider text-center cursor-pointer">
+        <span>ORDER NOW (COD) &bull; ₹499</span>
         <span class="w-5 h-5 rounded-md bg-black text-[#d4af37] flex items-center justify-center font-black text-xs">
           🛍️
         </span>
@@ -1480,6 +1504,19 @@
   </div>
 
   <input type="hidden" value="blackroots.in" id="sellerDomain"/>
-<!-- ??? BlackRoots Ultra-Luxury Master D2C Checkout Drawer / Modal -->
+
+  <!-- 📱 MOBILE STICKY BOTTOM BUY BAR (Fixed for High Conversion on Meta Traffic) -->
+  <div class="fixed bottom-0 inset-x-0 z-50 p-2.5 bg-[#0a0b0e]/95 backdrop-blur-xl border-t border-[#d4af37]/30 sm:hidden flex items-center gap-2 shadow-[0_-10px_25px_rgba(0,0,0,0.8)]">
+    <a href="https://wa.me/919580835179?text=Namaste!%20Mujhe%20BlackRoots%20Hair%20Shampoo%20(Rs%20499)%20Cash%20on%20Delivery%20par%20order%20karna%20hai.%20Mera%20pata%20hai:" target="_blank" class="w-12 h-12 rounded-xl bg-emerald-600/25 border border-emerald-500/50 flex items-center justify-center text-xl shrink-0 text-emerald-400 shadow-md active:scale-95 transition-transform" title="Order on WhatsApp">
+      💬
+    </a>
+    <button type="button" onclick="window.location.href='checkout.html?pack=1';" class="flex-1 py-3 px-4 rounded-xl btn-gold-luxury font-black text-xs uppercase tracking-wider text-black flex items-center justify-between shadow-lg active:scale-95 transition-transform">
+      <span class="flex items-center gap-1.5">
+        <span>📦</span>
+        <span>ORDER NOW (COD)</span>
+      </span>
+      <span class="text-xs font-black">₹499 &rarr;</span>
+    </button>
+  </div>
 </body>
 </html>
